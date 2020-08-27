@@ -42,6 +42,69 @@ labels:
     color: 412b9b
   - name: bug
     description: Something isn't working
-    color: CC0000
+    color: cc0000
+  - name: dev-ops
+    description: Operations
+    color: 6530a5
+  - name: dev-tools
+    description: Tool Implementation and/or configuration
+    color: fef2c0
+  - name: documentation
+    description: Improvements or additions to documentation
+    color: 0075ca
+  - name: duplicate
+    description: This issue or pull request already exists
+    color: cfd3d7
+  - name: enhancement
+    description: Request for an enhancement or modification on an existing feature
+    color: a2eeef
   - name: feature
+    description: New feature
     color: 336699
+  - name: front-end
+    description: Front-end development
+    color: a1fce1
+  - name: impediment
+    description: Issue blocked by something else other than another issue
+    color: e6aa8c
+  - name: impediment
+    description: Issue blocked by something else other than another issue
+    color: e6aa8c
+  - name: invalid
+    description: This doesn't seem right
+    color: e4e669
+  - name: pr
+    description: Pull request
+    color: f29ba2
+  - name: qa
+    description: Quality Assurance
+    color: f28cc6
+  - name: security
+    description: Security issue
+    color: e59b97
+  - name: spike
+    description: Spike (Investigation)
+    color: 82cdf2
+  - name: tech-debt
+    description: Technical Debt
+    color: e99695
+  - name: training
+    description: Training (offsite, onsite, online)
+    color: bfdadc
+  - name: ui-design
+    description: UI Design
+    color: 05c63c
+  - name: ui
+    description: User Interface
+    color: 19aa8b
+  - name: ux
+    description: User Experience
+    color: abfcc9
+  - name: wontdo
+    description: This will not be worked on
+    color: f9d0c4
+  - name: wontfix
+    description: This will not be worked on (but the source is a bug or enhancement)
+    color: ffffff
+
+
