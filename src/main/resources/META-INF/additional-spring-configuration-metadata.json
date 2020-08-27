@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "app.server",
+      "type": "java.lang.String",
+      "description": "URL of the profile server."
+    },
+    {
+      "name": "app.mail.contact-account",
+      "type": "java.lang.String",
+      "description": "Email account to contact pipeline.one support service."
+    },
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret to create Jwt tokens."
+    },
+    {
+      "name": "app.cors.allowed-methods",
+      "type": "java.lang.String",
+      "description": "Methods allowed for Cross Origin requests"
+    }
+  ]
+}

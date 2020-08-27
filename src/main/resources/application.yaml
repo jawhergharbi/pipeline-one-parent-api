@@ -1,0 +1,115 @@
+spring:
+  application:
+    name: pipeline-one-api
+  profiles:
+    active: ${activatedProperties}
+  messages:
+    basename: message
+    fallback-to-system-locale: true
+    use-code-as-default-message: false
+management:
+  endpoint:
+    health:
+      enabled: true
+    env:
+      enabled: true
+    loggers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, env, loggers
+
+logging:
+  level:
+    root: INFO
+    com.sawoo.pipeline: DEBUG
+
+
+app:
+  jwt:
+    secret: defeAtmarmalaDeheatIngcyAn
+  cors:
+    allowed-methods: GET,POST,HEAD,PUT,DELETE,OPTIONS
+  auth:
+    controller-url: /api/auth/nebular
+
+---
+spring:
+  profiles: dev-local
+
+app:
+  server: "http://localhost:8080"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  cors:
+    allowed-origins: http://localhost:4200, http://localhost:8080
+
+
+---
+spring:
+  profiles: unit-tests
+
+app:
+  server: "http://localhost:8080"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+
+---
+spring:
+  profiles: dev
+
+# To fix GAE issue:
+# App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
+# As a consequence, nginx cannot be started. Performance may be degraded. Please listen on the port defined by the
+# PORT environment variable
+server:
+  port: 8081
+
+app:
+  server: "https://pipeline-api-dev.ew.r.appspot.com"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  cors:
+    allowed-origins: https://pipeline-web-dev.ew.r.appspot.com
+
+---
+spring:
+  profiles: test
+
+# To fix GAE issue:
+# App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
+# As a consequence, nginx cannot be started. Performance may be degraded. Please listen on the port defined by the
+# PORT environment variable
+server:
+  port: 8081
+
+app:
+  server: "https://pipeline-api-test.ew.r.appspot.com"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  cors:
+    allowed-origins: https://pipeline-web-test.ew.r.appspot.com
+
+
+
+---
+spring:
+  profiles: prod
+
+# To fix GAE issue:
+# App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
+# As a consequence, nginx cannot be started. Performance may be degraded. Please listen on the port defined by the
+# PORT environment variable
+server:
+  port: 8081
+
+app:
+  server: "https://pipeline-api-prod.ew.r.appspot.com"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  cors:
+    allowed-origins: https://pipeline-web-prod.ew.r.appspot.com
+
+
+

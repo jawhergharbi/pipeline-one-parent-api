@@ -1,0 +1,14 @@
+[
+  {
+    "id": "dummy_id1",
+    "name": "miguelito",
+    "number": 15,
+    "version": 1
+  },
+  {
+    "id": "dummy_id2",
+    "name": "miguelín",
+    "number": 23,
+    "version": 2
+  }
+]
