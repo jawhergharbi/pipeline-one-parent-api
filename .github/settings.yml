@@ -37,7 +37,11 @@ repository:
 
 # Labels: define labels for Issues and Pull Requests
 labels:
+  - name: back-end
+    description: Back-end development
+    color: 412b9b
   - name: bug
+    description: Something isn't working
     color: CC0000
   - name: feature
     color: 336699
