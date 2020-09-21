@@ -15,7 +15,7 @@ import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 public class UrlTitle {
 
     @JMap
-    private String title;
+    private String description;
 
     @JMap
     private String url;

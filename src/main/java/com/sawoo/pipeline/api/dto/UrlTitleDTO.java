@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UrlTitleDTO {
 
     @JMap
-    private String title;
+    private String description;
 
     @JMap
     private String url;

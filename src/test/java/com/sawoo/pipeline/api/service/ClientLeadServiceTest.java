@@ -460,7 +460,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         mockedEntity.setKey(key);
         mockedEntity.setStatus(status);
         mockedEntity.setType(type);
-        mockedEntity.setUrlInvite(UrlTitle.builder().url(urlInvite).build());
+        mockedEntity.setInvite(UrlTitle.builder().url(urlInvite).build());
         return mockedEntity;
     }
 

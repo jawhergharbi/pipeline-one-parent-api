@@ -63,6 +63,7 @@ public class AuthJwtControllerHelper {
     }
 
     protected void invalidateToken(String authId) throws AuthException {
+        // TODO remove token from hash when the cache mechanism is implemented
         log.debug("Invalidate token for user identifier: [{}]", authId);
     }
 

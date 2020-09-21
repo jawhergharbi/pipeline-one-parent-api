@@ -25,7 +25,7 @@ public class LeadInteractionBaseDTO {
     private Integer status;
 
     @JMap
-    private UrlTitleDTO urlInvite;
+    private UrlTitleDTO invite;
 
     @JMap
     private Note note;

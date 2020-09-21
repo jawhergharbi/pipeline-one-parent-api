@@ -107,7 +107,7 @@ public class LeadInteractionControllerTest extends BaseControllerTest {
         LeadInteractionRequestDTO mockedDTO = new LeadInteractionRequestDTO();
         mockedDTO.setStatus(status);
         mockedDTO.setType(type);
-        mockedDTO.setUrlInvite(UrlTitleDTO.builder().url(urlInvite).build());
+        mockedDTO.setInvite(UrlTitleDTO.builder().url(urlInvite).build());
         return mockedDTO;
     }
 
@@ -116,7 +116,7 @@ public class LeadInteractionControllerTest extends BaseControllerTest {
         mockedDTO.setId(id);
         mockedDTO.setStatus(status);
         mockedDTO.setType(type);
-        mockedDTO.setUrlInvite(UrlTitleDTO.builder().url(urlInvite).build());
+        mockedDTO.setInvite(UrlTitleDTO.builder().url(urlInvite).build());
         return mockedDTO;
     }
 }

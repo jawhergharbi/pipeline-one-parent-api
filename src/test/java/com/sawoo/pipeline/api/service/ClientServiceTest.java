@@ -599,7 +599,7 @@ public class ClientServiceTest extends BaseServiceTest {
         mockedEntity.setKey(createKey(leadId, id));
         mockedEntity.setStatus(status);
         mockedEntity.setType(type);
-        mockedEntity.setUrlInvite(UrlTitle.builder().url(urlInvite).build());
+        mockedEntity.setInvite(UrlTitle.builder().url(urlInvite).build());
         return mockedEntity;
     }
 
