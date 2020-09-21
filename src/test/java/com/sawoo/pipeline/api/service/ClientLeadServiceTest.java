@@ -12,7 +12,7 @@ import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
