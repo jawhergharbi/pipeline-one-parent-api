@@ -39,9 +39,5 @@ public class Authentication {
     private LocalDateTime signedUp;
 
     @JMap
-    @Field(name = "last_login")
-    private LocalDateTime lastLogin;
-
-    @JMap
     private LocalDateTime updated;
 }

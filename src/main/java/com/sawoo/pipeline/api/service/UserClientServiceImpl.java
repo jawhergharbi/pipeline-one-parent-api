@@ -87,18 +87,29 @@ public class UserClientServiceImpl implements UserClientService {
     }
 
     @Override
-    public List<ClientBasicDTO> findAll(String id) {
+    public List<ClientBasicDTO> findAll(String id) throws ResourceNotFoundException {
         log.debug("Retrieve clients for user id [{}]", id);
 
-        List<ClientBasicDTO> clients = clientRepository
-                .findByUserId(id)
-                .stream()
-                .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
-                .collect(Collectors.toList());
-
-        log.debug("[{}] client/s has/have been found for user id: [{}]", clients.size(), id);
-
-        return  clients;
+        return userRepository
+                .findById(id)
+                .map( (user) -> {
+                    List<Client> clients;
+                    if (user.getRoles().contains(Role.ADMIN.name())) {
+                        clients = StreamSupport
+                                .stream(clientRepository.findAll().spliterator(), false)
+                                .collect(Collectors.toList());
+                    } else {
+                        clients = clientRepository.findByUserId(id);
+                    }
+                    log.debug("[{}] client/s has/have been found for user id: [{}]", clients.size(), id);
+                    return clients
+                            .stream()
+                            .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
+                            .collect(Collectors.toList());
+                }).orElseThrow( () -> new ResourceNotFoundException(
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        new String[]{"User", id})
+                );
     }
 
     @Override

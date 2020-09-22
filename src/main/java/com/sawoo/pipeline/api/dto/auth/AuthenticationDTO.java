@@ -31,8 +31,5 @@ public class AuthenticationDTO {
     private LocalDateTime signedUp;
 
     @JMap
-    private LocalDateTime lastLogin;
-
-    @JMap
     private LocalDateTime updated;
 }

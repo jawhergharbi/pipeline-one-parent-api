@@ -13,7 +13,7 @@ public interface UserClientService {
 
     ClientBasicDTO add(String id, Long clientId) throws ResourceNotFoundException, UserClientException;
 
-    List<ClientBasicDTO> findAll(String id);
+    List<ClientBasicDTO> findAll(String id) throws ResourceNotFoundException;
 
     ClientBasicDTO remove(String id, Long clientId) throws ResourceNotFoundException, UserClientException;
 }

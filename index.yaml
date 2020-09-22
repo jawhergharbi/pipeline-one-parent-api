@@ -1,0 +1,27 @@
+indexes:
+  - kind: client
+    properties:
+      - name: customerSuccessManager
+      - name: fullName
+      - name: linked_in_url
+      - name: position
+      - name: company
+      - name: phone_number
+      - name: email
+      - name: status.value
+      - name: created
+      - name: updated
+  - kind: client
+    properties:
+      - name: salesAssistant
+      - name: fullName
+      - name: linked_in_url
+      - name: position
+      - name: company
+      - name: phone_number
+      - name: email
+      - name: status.value
+      - name: created
+      - name: updated
+
+
