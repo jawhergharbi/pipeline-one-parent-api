@@ -13,7 +13,7 @@ import com.sawoo.pipeline.api.dto.client.ClientLeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private final ClientRepository repository;
+    private final ClientRepositoryWrapper repository;
     private final CommonServiceMapper mapper;
     private final ClientServiceUtils utils;
     private final CompanyService companyService;

@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

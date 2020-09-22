@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.UserClientException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

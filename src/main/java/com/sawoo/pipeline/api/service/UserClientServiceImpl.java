@@ -7,8 +7,8 @@ import com.sawoo.pipeline.api.common.exceptions.UserClientException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.ClientRepository;
 import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -29,7 +27,7 @@ import java.util.stream.StreamSupport;
 public class UserClientServiceImpl implements UserClientService {
 
     private final UserRepository userRepository;
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepository;
     private final CommonServiceMapper mapper;
 
     @Override
@@ -60,9 +58,8 @@ public class UserClientServiceImpl implements UserClientService {
                                     throw new UserClientException(
                                             ExceptionMessageConstants.USER_CLIENT_ADD_CLIENT_USER_ALREADY_ADDED_EXCEPTION,
                                             new String[]{opsRole.name(), String.valueOf(client.getId()), client.getFullName(), user.getId(), user.getFullName(), Role.CSM.name()});
-                                } else {
-                                    remove(oldUser.getId(), clientId);
                                 }
+                                remove(oldUser.getId(), clientId);
                             }
 
                             user.getClients().add(client);
@@ -89,23 +86,33 @@ public class UserClientServiceImpl implements UserClientService {
 
     @Override
     public List<ClientBasicDTO> findAll(String id) throws ResourceNotFoundException {
-        log.debug("Retrieve all lead client for user id [{}]", id);
+        log.debug("Retrieve clients for user id [{}]", id);
 
-        return userRepository.findById(id)
-                .map((user) ->
-                        getClients(user)
-                                .stream()
-                                .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
-                                .collect(Collectors.toList()))
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{"User", id}));
+        return userRepository
+                .findById(id)
+                .map((user) -> {
+                    List<Client> clients;
+                    if (user.getRoles().contains(Role.ADMIN.name())) {
+                        clients = StreamSupport
+                                .stream(clientRepository.findAll().spliterator(), false)
+                                .collect(Collectors.toList());
+                    } else {
+                        clients = clientRepository.findByUserId(id);
+                    }
+                    log.debug("[{}] client/s has/have been found for user id: [{}]", clients.size(), id);
+                    return clients
+                            .stream()
+                            .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
+                            .collect(Collectors.toList());
+                }).orElseThrow(() -> new ResourceNotFoundException(
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        new String[]{"User", id})
+                );
     }
 
     @Override
     public ClientBasicDTO remove(String id, Long clientId) throws UserClientException, ResourceNotFoundException {
-        log.debug("Add client id [{}] to user id [{}]", clientId, id);
+        log.debug("Remove client id [{}] from user id [{}]", clientId, id);
         return userRepository
                 .findById(id)
                 .map((user) -> clientRepository.findById(clientId)
@@ -182,26 +189,6 @@ public class UserClientServiceImpl implements UserClientService {
                             user.getId(),
                             user.getFullName(),
                             Role.SA.name()});
-        }
-    }
-
-    private List<Client> getClients(User user) {
-        if (user.getRoles().contains(Role.ADMIN.name())) {
-            return StreamSupport
-                    .stream(clientRepository.findAll().spliterator(), false)
-                    .collect(Collectors.toList());
-        } else if (user.getRoles().contains(Role.CSM.name())) {
-            return Stream
-                    .concat(
-                            user.getClients().stream(),
-                            StreamSupport
-                                    .stream(clientRepository.findAll().spliterator(), false)
-                                    .filter( (client) -> client.getCustomerSuccessManager() == null))
-                    .collect(Collectors.toList());
-        } else if (user.getRoles().contains(Role.SA.name())) {
-            return user.getClients();
-        } else {
-            return Collections.emptyList();
         }
     }
 }
