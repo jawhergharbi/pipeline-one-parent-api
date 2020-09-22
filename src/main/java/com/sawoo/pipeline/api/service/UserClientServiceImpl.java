@@ -16,11 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -92,7 +90,7 @@ public class UserClientServiceImpl implements UserClientService {
 
         return userRepository
                 .findById(id)
-                .map( (user) -> {
+                .map((user) -> {
                     List<Client> clients;
                     if (user.getRoles().contains(Role.ADMIN.name())) {
                         clients = StreamSupport
@@ -106,7 +104,7 @@ public class UserClientServiceImpl implements UserClientService {
                             .stream()
                             .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
                             .collect(Collectors.toList());
-                }).orElseThrow( () -> new ResourceNotFoundException(
+                }).orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                         new String[]{"User", id})
                 );
@@ -191,26 +189,6 @@ public class UserClientServiceImpl implements UserClientService {
                             user.getId(),
                             user.getFullName(),
                             Role.SA.name()});
-        }
-    }
-
-    private List<Client> getClients(User user) {
-        if (user.getRoles().contains(Role.ADMIN.name())) {
-            return StreamSupport
-                    .stream(clientRepository.findAll().spliterator(), false)
-                    .collect(Collectors.toList());
-        } else if (user.getRoles().contains(Role.CSM.name())) {
-            return Stream
-                    .concat(
-                            user.getClients().stream(),
-                            StreamSupport
-                                    .stream(clientRepository.findAll().spliterator(), false)
-                                    .filter( (client) -> client.getCustomerSuccessManager() == null))
-                    .collect(Collectors.toList());
-        } else if (user.getRoles().contains(Role.SA.name())) {
-            return user.getClients();
-        } else {
-            return Collections.emptyList();
         }
     }
 }
