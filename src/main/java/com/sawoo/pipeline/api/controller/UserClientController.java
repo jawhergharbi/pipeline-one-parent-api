@@ -30,55 +30,10 @@ public class UserClientController {
 
     @RequestMapping(
             value = "/{id}/clients",
-            method = RequestMethod.POST,
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ClientBasicDTO> create(
-            @NotBlank @PathVariable("id") String id,
-            @Valid @RequestBody ClientBasicDTO client) {
-        ClientBasicDTO newEntity = service.create(id, client);
-        try {
-            return ResponseEntity
-                    .created(new URI("/api/users/" + id + "/clients/" + newEntity.getId()))
-                    .body(newEntity);
-        } catch (URISyntaxException exc) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @RequestMapping(
-            value = "/{id}/clients/{clientId}",
-            method = RequestMethod.POST,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> add(
-            @NotBlank @PathVariable("id") String id,
-            @NotBlank @PathVariable("clientId") Long clientId) {
-        ClientBasicDTO newEntity = service.add(id, clientId);
-        try {
-            return ResponseEntity
-                    .created(new URI("/api/users/" + id + "/clients/" + newEntity.getId()))
-                    .body(newEntity);
-        } catch (URISyntaxException exc) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @RequestMapping(
-            value = "/{id}/clients",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<ClientBasicDTO>> getAll(
             @NotBlank @PathVariable("id") String id) {
         return ResponseEntity.ok().body(service.findAll(id));
-    }
-
-    @RequestMapping(
-            value = "/{id}/clients/{clientId}",
-            method = RequestMethod.DELETE,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ClientBasicDTO> delete(
-            @NotNull @PathVariable("id") String id,
-            @NotNull @PathVariable("clientId") Long clientId) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.remove(id, clientId));
     }
 }
