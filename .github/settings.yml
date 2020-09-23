@@ -61,9 +61,6 @@ labels:
   - name: feature
     description: New feature
     color: 336699
-  - name: front-end
-    description: Front-end development
-    color: a1fce1
   - name: impediment
     description: Issue blocked by something else other than another issue
     color: e6aa8c
