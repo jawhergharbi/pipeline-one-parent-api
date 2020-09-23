@@ -7,12 +7,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.gcp.data.datastore.core.DatastoreTemplate;
@@ -87,11 +82,11 @@ public class LeadRepositoryTest {
 
     @Test
     void findByFullNameWhenEntityIdFoundReturnsSuccess() {
-        String LEAD_FULL_NAME = "Miguel Miguelito";
-        Optional<Lead> entity = repository.findByFullName(LEAD_FULL_NAME);
+        String LEAD_LINKED_IN_URL = "Miguel Miguelito";
+        Optional<Lead> entity = repository.findByLinkedInUrl(LEAD_LINKED_IN_URL);
 
-        Assertions.assertTrue(entity.isPresent(), String.format("Lead with [name]: %s can not be null", LEAD_FULL_NAME));
-        Assertions.assertEquals(LEAD_FULL_NAME, entity.get().getFullName(), String.format("Lead [name] must be %s", LEAD_FULL_NAME));
+        Assertions.assertTrue(entity.isPresent(), String.format("Lead with [linkedInUrl]: %s can not be null", LEAD_LINKED_IN_URL));
+        Assertions.assertEquals(LEAD_LINKED_IN_URL, entity.get().getLinkedInUrl(), String.format("Lead [linkedInUrl] must be %s", LEAD_LINKED_IN_URL));
     }
 
     @Test
@@ -104,10 +99,11 @@ public class LeadRepositoryTest {
 
     @Test
     void saveWhenCreateNewEntityReturnsSuccess() {
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
-        Lead mockedEntity = newMockedEntity(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
+        Lead mockedEntity = newMockedEntity(LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
 
         repository.save(mockedEntity);
         leadIdList.add(mockedEntity.getId());
@@ -123,9 +119,10 @@ public class LeadRepositoryTest {
     }
 
 
-    private Lead newMockedEntity(String fullName, String linkedInUrl, String linkedInThread) {
+    private Lead newMockedEntity(String firstName, String lastName, String linkedInUrl, String linkedInThread) {
         Lead mockedEntity = new Lead();
-        mockedEntity.setFullName(fullName);
+        mockedEntity.setFirstName(firstName);
+        mockedEntity.setLastName(lastName);
         mockedEntity.setLinkedInUrl(linkedInUrl);
         mockedEntity.setLinkedInThread(linkedInThread);
         mockedEntity.setEmail(FAKER.internet().emailAddress());

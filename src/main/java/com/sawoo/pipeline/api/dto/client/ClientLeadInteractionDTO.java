@@ -1,11 +1,7 @@
 package com.sawoo.pipeline.api.dto.client;
 
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor

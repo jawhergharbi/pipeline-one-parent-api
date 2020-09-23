@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.Status;
@@ -29,7 +30,13 @@ public class Lead {
     private Long id;
 
     @JMap
-    private String fullName;
+    private String salutation;
+
+    @JMap
+    private String firstName;
+
+    @JMap
+    private String lastName;
 
     @JMap
     private String position;
@@ -81,4 +88,10 @@ public class Lead {
 
     @JMap
     private LocalDateTime updated;
+
+    @JMapConversion(from = {"firstName", "lastName"}, to = {"fullName"})
+    public String conversion(String firstName, String lastName) {
+        // TODO: jmapper hack given that it's not possible to map from two source fields in to one destination field
+        return String.join(" ", this.firstName, this.lastName);
+    }
 }

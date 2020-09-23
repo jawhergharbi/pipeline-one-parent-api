@@ -24,11 +24,11 @@ public class LeadServiceUtils {
 
     public void preProcessLead(LeadBasicDTO lead, LocalDateTime datetime) throws CommonServiceException {
         repository
-                .findByFullName(lead.getFullName())
+                .findByLinkedInUrl(lead.getLinkedInUrl())
                 .ifPresent((leadItem) -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                            new String[]{"Lead", leadItem.getFullName()});
+                            new String[]{"Lead", leadItem.getLinkedInUrl()});
                 });
 
         // Process company info

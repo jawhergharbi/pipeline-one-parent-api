@@ -110,13 +110,13 @@ public class ClientServiceImpl implements ClientService {
                                         "Client [{}] id [{}] and lead full name [{}] and id [{}] has a next interaction",
                                         client.getFullName(),
                                         client.getId(),
-                                        lead.getFullName(),
+                                        String.join(" ", lead.getFirstName(), lead.getLastName()),
                                         lead.getId());
 
                                 clientDTO.setNextInteraction(
                                         ClientLeadInteractionDTO
                                                 .builder()
-                                                .leadName(lead.getFullName())
+                                                .leadName(String.join(" ", lead.getFirstName(), lead.getLastName()))
                                                 .interaction(
                                                         LeadUtils.findNextInteraction(lead.getInteractions(), datetime)
                                                                 .map((interaction) ->
