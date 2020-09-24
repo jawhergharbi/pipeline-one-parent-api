@@ -15,13 +15,9 @@ import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -259,10 +255,11 @@ public class ClientServiceTest extends BaseServiceTest {
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
 
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().firstName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_THREAD_URL = FAKER.internet().url();
-        Lead leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_THREAD_URL, true);
+        Lead leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_THREAD_URL, true);
         mockedEntity.getLeads().add(leadMockedEntity);
 
         // Set up the mocked repository

@@ -11,11 +11,7 @@ import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 import com.sawoo.pipeline.api.repository.LeadRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -248,12 +244,14 @@ public class LeadServiceTest extends BaseServiceTest {
     void deleteWhenCompanyEntityFoundReturnsSuccess() {
         // Set up mocked entities
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
+        String LEAD_FULL_NAME = String.join(" ", LEAD_FIRST_NAME, LEAD_LAST_NAME);
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
 
         Lead mockedEntity = getMockFactory()
-                .newLeadEntity(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
+                .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID);
@@ -292,7 +290,9 @@ public class LeadServiceTest extends BaseServiceTest {
     void createWhenLeadDoesNotExistReturnsSuccess() {
         // Set up mocked entities
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
+        String LEAD_FULL_NAME = String.join(" ", LEAD_FIRST_NAME, LEAD_LAST_NAME);
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
         String COMPANY_NAME = FAKER.company().name();
@@ -306,7 +306,7 @@ public class LeadServiceTest extends BaseServiceTest {
                 .url(COMPANY_URL).build());
 
         Lead mockedEntity = getMockFactory()
-                .newLeadEntity(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+                .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL, now));
         mockedEntity.setStatus(Status.
                 builder()
@@ -315,7 +315,7 @@ public class LeadServiceTest extends BaseServiceTest {
                 .build());
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByFullName(LEAD_FULL_NAME);
+        doReturn(Optional.empty()).when(repository).findByLinkedInUrl(LEAD_LINKED_IN_URL);
         doReturn(mockedEntity).when(repository).save(any());
         doReturn(Optional.empty()).when(companyService).findByName(COMPANY_NAME);
 
@@ -331,7 +331,7 @@ public class LeadServiceTest extends BaseServiceTest {
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getUpdated().toLocalDate(), "Updated time must be today");
 
         verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findByFullName(LEAD_FULL_NAME);
+        verify(repository, times(1)).findByLinkedInUrl(LEAD_LINKED_IN_URL);
         ArgumentCaptor<String> companyNameCaptor = ArgumentCaptor.forClass(String.class);
         verify(companyService, times(1)).findByName(companyNameCaptor.capture());
 
@@ -343,7 +343,9 @@ public class LeadServiceTest extends BaseServiceTest {
     void createWhenLeadDoesNotExistAndCompanyDoesExistReturnsSuccess() {
         // Set up mocked entities
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
+        String LEAD_FULL_NAME = String.join(" ", LEAD_FIRST_NAME, LEAD_LAST_NAME);
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
         String COMPANY_NAME = FAKER.company().name();
@@ -360,11 +362,11 @@ public class LeadServiceTest extends BaseServiceTest {
         LocalDateTime EXISTING_COMPANY_DATETIME = LocalDateTime.of(2020, 12, 31, 12, 0);
         CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
 
-        Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+        Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedEntity.setCompany(getMockFactory().newCompanyEntity(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME));
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByFullName(LEAD_FULL_NAME);
+        doReturn(Optional.empty()).when(repository).findByLinkedInUrl(LEAD_LINKED_THREAD_URL);
         doReturn(mockedEntity).when(repository).save(any());
         doReturn(Optional.of(existingCompanyDTO)).when(companyService).findByName(COMPANY_NAME);
 
@@ -380,7 +382,7 @@ public class LeadServiceTest extends BaseServiceTest {
         Assertions.assertNotEquals(now, returnedEntity.getCompany().getCreated(), "Company creation time can not be now");
 
         verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findByFullName(LEAD_FULL_NAME);
+        verify(repository, times(1)).findByLinkedInUrl(LEAD_LINKED_THREAD_URL);
         ArgumentCaptor<String> companyNameCaptor = ArgumentCaptor.forClass(String.class);
         verify(companyService, times(1)).findByName(companyNameCaptor.capture());
 
@@ -392,13 +394,15 @@ public class LeadServiceTest extends BaseServiceTest {
     void createWhenLeadDoesExistReturnsCommonException() {
         // Set up mocked entities
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
+        String LEAD_LINKED_IN_URL = FAKER.internet().url();
+        String LEAD_LINKED_IN_CHAT_URL = FAKER.internet().url();
         LeadBasicDTO mockedDTO = new LeadBasicDTO();
-        mockedDTO.setFullName(LEAD_FULL_NAME);
-        Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
+        Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_CHAT_URL, true);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findByFullName(anyString());
+        doReturn(Optional.of(mockedEntity)).when(repository).findByLinkedInUrl(anyString());
 
         // Execute the service call
         CommonServiceException exception = Assertions.assertThrows(
@@ -417,8 +421,8 @@ public class LeadServiceTest extends BaseServiceTest {
                 "Number of arguments in the exception must be 2");
 
         ArgumentCaptor<String> fullNameCaptor = ArgumentCaptor.forClass(String.class);
-        verify(repository, times(1)).findByFullName(fullNameCaptor.capture());
-        Assertions.assertEquals(fullNameCaptor.getValue(), LEAD_FULL_NAME, String.format("Lead fullName to be verified must be: [%s]", LEAD_FULL_NAME));
+        verify(repository, times(1)).findByLinkedInUrl(fullNameCaptor.capture());
+        Assertions.assertEquals(fullNameCaptor.getValue(), LEAD_LINKED_IN_URL, String.format("Lead [linkedInUrl] to be verified must be: [%s]", LEAD_LINKED_IN_URL));
     }
 
     @Test
@@ -426,15 +430,16 @@ public class LeadServiceTest extends BaseServiceTest {
     void updateWhenLeadEntityIsFoundReturnsSuccess() {
         // Set up mocked entities
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
+        String LEAD_FIRST_NAME = FAKER.name().firstName();
+        String LEAD_LAST_NAME = FAKER.name().lastName();
+        String LEAD_FULL_NAME = String.join(" ", LEAD_FIRST_NAME, LEAD_LAST_NAME);
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
         LeadBasicDTO mockedDTO = new LeadBasicDTO();
-        mockedDTO.setFullName(LEAD_FULL_NAME);
         mockedDTO.setLinkedInUrl(LEAD_LINKED_IN_URL);
 
         Lead mockedEntity = getMockFactory()
-                .newLeadEntity(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
+                .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID);

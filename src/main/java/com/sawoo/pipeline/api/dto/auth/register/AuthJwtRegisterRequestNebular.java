@@ -2,11 +2,7 @@ package com.sawoo.pipeline.api.dto.auth.register;
 
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface LeadRepository extends DatastoreRepository<Lead, Long> {
 
-    Optional<Lead> findByFullName(String fullName);
+    Optional<Lead> findByLinkedInUrl(String linkedInUrl);
 }

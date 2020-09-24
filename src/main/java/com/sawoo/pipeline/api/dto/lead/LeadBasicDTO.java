@@ -25,8 +25,18 @@ public class LeadBasicDTO {
     private Long id;
 
     @JMap
-    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+    private Integer salutation;
+
+    @JMap(attributes = {"firstName", "lastName"})
+
     private String fullName;
+    @JMap
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+    private String firstName;
+
+    @JMap
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+    private String lastName;
 
     @JMap
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)

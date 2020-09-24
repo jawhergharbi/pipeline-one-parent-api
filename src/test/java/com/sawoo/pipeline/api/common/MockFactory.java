@@ -50,6 +50,26 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
+    public LeadBasicDTO newLeadDTO(String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+        LeadBasicDTO mockEntityDTO = new LeadBasicDTO();
+        mockEntityDTO.setFirstName(firstName);
+        mockEntityDTO.setLastName(lastName);
+        mockEntityDTO.setFullName(String.join(" ", firstName, lastName));
+        mockEntityDTO.setLinkedInUrl(linkedInUrl);
+        mockEntityDTO.setLinkedInThread(linkedInThread);
+        mockEntityDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
+        mockEntityDTO.setEmail(FAKER.internet().emailAddress());
+        mockEntityDTO.setPosition(FAKER.company().profession());
+        if (addCompany) {
+            mockEntityDTO.setCompany(
+                    CompanyDTO.builder()
+                            .name(FAKER.company().name())
+                            .url(FAKER.company().url())
+                            .build());
+        }
+        return mockEntityDTO;
+    }
+
     public LeadBasicDTO newLeadDTO(Long leadId, String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
         LeadBasicDTO mockEntityDTO = new LeadBasicDTO();
         mockEntityDTO.setId(leadId);
@@ -133,11 +153,12 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public Lead newLeadEntity(Long id, String fullName, String linkedInUrl, String linkedInThread, Company company) {
+    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, Company company) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
         mockedEntity.setId(id);
-        mockedEntity.setFullName(fullName);
+        mockedEntity.setFirstName(firstName);
+        mockedEntity.setLastName(lastName);
         mockedEntity.setLinkedInUrl(linkedInUrl);
         mockedEntity.setLinkedInThread(linkedInThread);
         mockedEntity.setEmail(FAKER.internet().emailAddress());
@@ -149,11 +170,12 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public Lead newLeadEntity(Long id, String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
         mockedEntity.setId(id);
-        mockedEntity.setFullName(fullName);
+        mockedEntity.setFirstName(firstName);
+        mockedEntity.setLastName(lastName);
         mockedEntity.setLinkedInUrl(linkedInUrl);
         mockedEntity.setLinkedInThread(linkedInThread);
         mockedEntity.setEmail(FAKER.internet().emailAddress());
@@ -176,7 +198,8 @@ public class MockFactory {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
         mockedEntity.setId(id);
-        mockedEntity.setFullName(FAKER.name().fullName());
+        mockedEntity.setFirstName(FAKER.name().firstName());
+        mockedEntity.setFirstName(FAKER.name().lastName());
         mockedEntity.setLinkedInUrl(FAKER.internet().url());
         mockedEntity.setLinkedInThread(FAKER.internet().url());
         mockedEntity.setEmail(FAKER.internet().emailAddress());

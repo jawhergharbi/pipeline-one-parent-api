@@ -1,12 +1,7 @@
 package com.sawoo.pipeline.api.dto.auth;
 
 import com.googlecode.jmapper.annotations.JMap;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
