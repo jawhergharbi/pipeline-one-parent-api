@@ -5,6 +5,15 @@ public interface DomainConstants {
     Integer AUTHORIZATION_PROVIDER_TYPE_EMAIL = 0;
     Integer AUTHORIZATION_PROVIDER_TYPE_ID = 1;
 
+    Integer SALUTATION_EMPTY = 0;
+    Integer SALUTATION_MISTER = 1;
+    Integer SALUTATION_MISS = 2;
+    Integer SALUTATION_DOCTOR_HIM = 3;
+    Integer SALUTATION_DOCTOR_HER = 4;
+    Integer SALUTATION_PROFESSOR_HIM = 5;
+    Integer SALUTATION_PROFESSOR_HER = 6;
+
+
     enum LeadStatus {
         WARM,
         HOT,

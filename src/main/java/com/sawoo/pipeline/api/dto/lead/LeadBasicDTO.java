@@ -25,7 +25,7 @@ public class LeadBasicDTO {
     private Long id;
 
     @JMap
-    private String salutation;
+    private Integer salutation;
 
     @JMap(attributes = {"firstName", "lastName"})
 
