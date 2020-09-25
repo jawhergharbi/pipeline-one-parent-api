@@ -30,7 +30,7 @@ public class Lead {
     private Long id;
 
     @JMap
-    private String salutation;
+    private Integer salutation;
 
     @JMap
     private String firstName;
@@ -93,5 +93,10 @@ public class Lead {
     public String conversion(String firstName, String lastName) {
         // TODO: jmapper hack given that it's not possible to map from two source fields in to one destination field
         return String.join(" ", this.firstName, this.lastName);
+    }
+
+    @JMapConversion(from = {"salutation"}, to = {"salutation"})
+    public Integer salutationConversion(Integer salutation) {
+        return salutation == null ? 0 : salutation;
     }
 }

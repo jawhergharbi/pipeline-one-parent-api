@@ -43,6 +43,11 @@ public class LeadServiceUtils {
                     .build());
         }
 
+        // Lead salutation
+        if (lead.getSalutation() == null) {
+            lead.setSalutation(DomainConstants.SALUTATION_EMPTY);
+        }
+
         // Updated and Created datetime
         lead.setUpdated(datetime);
         lead.setCreated(datetime);
