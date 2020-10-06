@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonServiceMapper {
 
-    private final JMapper<LeadBasicDTO, Lead> leadDomainToDTOBaseMapper = new JMapper<>(LeadBasicDTO.class, Lead.class);
+    private final JMapper<LeadDTO, Lead> leadDomainToDTOBaseMapper = new JMapper<>(LeadDTO.class, Lead.class);
     private final JMapper<LeadMainDTO, Lead> leadDomainToDTOMainMapper = new JMapper<>(LeadMainDTO.class, Lead.class);
 
-    private final JMapper<Lead, LeadBasicDTO> leadDTOToDomainMapper = new JMapper<>(Lead.class, LeadBasicDTO.class);
+    private final JMapper<Lead, LeadDTO> leadDTOToDomainMapper = new JMapper<>(Lead.class, LeadDTO.class);
     private final JMapper<LeadInteractionDTO, LeadInteraction> leadInteractionDomainToDTOMapper = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
 
     private final JMapper<ClientBasicDTO, Client> clientDomainToDTOBasicMapper = new JMapper<>(ClientBasicDTO.class, Client.class);

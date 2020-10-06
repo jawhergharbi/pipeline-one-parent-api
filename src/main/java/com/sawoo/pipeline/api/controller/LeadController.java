@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.service.LeadService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +32,8 @@ public class LeadController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadBasicDTO> save(@Valid @RequestBody LeadBasicDTO lead) {
-        LeadBasicDTO newEntity = service.create(lead);
+    public ResponseEntity<LeadDTO> save(@Valid @RequestBody LeadDTO lead) {
+        LeadDTO newEntity = service.create(lead);
         try {
             return ResponseEntity
                     .created(new URI("/api/leads/" + newEntity.getId()))
@@ -46,7 +46,7 @@ public class LeadController {
     @RequestMapping(
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadBasicDTO>> getAll() {
+    public ResponseEntity<List<LeadDTO>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
@@ -65,7 +65,7 @@ public class LeadController {
             value = "/{id}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadBasicDTO> get(@PathVariable Long id) {
+    public ResponseEntity<LeadDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
@@ -73,7 +73,7 @@ public class LeadController {
             value = "/{id}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadBasicDTO> delete(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<LeadDTO> delete(@PathVariable Long id) throws ResourceNotFoundException {
         return service
                 .delete(id)
                 .map((lead) -> ResponseEntity.ok().body(lead))
@@ -89,7 +89,7 @@ public class LeadController {
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
-            @RequestBody LeadBasicDTO lead,
+            @RequestBody LeadDTO lead,
             @PathVariable("id") Long id) {
         return service.update(id, lead)
                 .map((updatedEntity) -> {

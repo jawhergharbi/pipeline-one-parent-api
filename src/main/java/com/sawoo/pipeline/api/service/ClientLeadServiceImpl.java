@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
@@ -32,7 +32,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     private final CommonServiceMapper mapper;
 
     @Override
-    public LeadBasicDTO create(Long clientId, LeadBasicDTO lead) throws ResourceNotFoundException, CommonServiceException {
+    public LeadDTO create(Long clientId, LeadDTO lead) throws ResourceNotFoundException, CommonServiceException {
         log.debug("Creating new lead for client id: [{}]. Lead: [{}]", clientId, lead);
 
         Client client = findClientById(clientId);
@@ -68,7 +68,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadBasicDTO add(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTO add(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Add lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -99,7 +99,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadBasicDTO remove(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTO remove(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Remove lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -126,7 +126,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadBasicDTO> findAll(Long clientId) throws ResourceNotFoundException {
+    public List<LeadDTO> findAll(Long clientId) throws ResourceNotFoundException {
         log.debug("Retrieving leads for client id [{}]", clientId);
 
         return findClientById(clientId)

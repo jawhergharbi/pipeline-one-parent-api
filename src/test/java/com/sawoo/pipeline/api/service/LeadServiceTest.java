@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.lead.Lead;
@@ -55,7 +55,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID);
 
         // Execute the service call
-        LeadBasicDTO returnedEntity = service.findById(LEAD_ID);
+        LeadDTO returnedEntity = service.findById(LEAD_ID);
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, "Lead entity with id " + LEAD_ID + " was not found");
@@ -101,7 +101,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(leadList).when(repository).findAll();
 
         // Execute the service call
-        List<LeadBasicDTO> returnedList = service.findAll();
+        List<LeadDTO> returnedList = service.findAll();
 
         // Assertions
         Assertions.assertFalse(returnedList.isEmpty(), "Returned list can not be empty");
@@ -120,7 +120,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(leads).when(repository).findAll();
 
         // Execute the service call
-        List<LeadBasicDTO> returnedList = service.findAll();
+        List<LeadDTO> returnedList = service.findAll();
 
         // Assertions
         Assertions.assertTrue(returnedList.isEmpty(), "Returned list must be empty");
@@ -257,7 +257,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID);
 
         // Execute the service call
-        Optional<LeadBasicDTO> returnedDTO = service.delete(LEAD_ID);
+        Optional<LeadDTO> returnedDTO = service.delete(LEAD_ID);
 
         // Assertions
         Assertions.assertTrue(returnedDTO.isPresent(), "Returned entity can not be null");
@@ -278,7 +278,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(Optional.empty()).when(repository).findById(LEAD_ID);
 
         // Execute the service call
-        Optional<LeadBasicDTO> returnedEntity = service.delete(LEAD_ID);
+        Optional<LeadDTO> returnedEntity = service.delete(LEAD_ID);
 
         Assertions.assertFalse(returnedEntity.isPresent(), "Returned entity must be null");
 
@@ -299,7 +299,7 @@ public class LeadServiceTest extends BaseServiceTest {
         String COMPANY_URL = FAKER.company().url();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        LeadBasicDTO mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+        LeadDTO mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedDTO.setCompany(CompanyDTO
                 .builder()
                 .name(COMPANY_NAME)
@@ -321,7 +321,7 @@ public class LeadServiceTest extends BaseServiceTest {
 
 
         // Execute the service call
-        LeadBasicDTO returnedEntity = service.create(mockedDTO);
+        LeadDTO returnedEntity = service.create(mockedDTO);
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -352,7 +352,7 @@ public class LeadServiceTest extends BaseServiceTest {
         String COMPANY_URL = FAKER.company().url();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        LeadBasicDTO mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+        LeadDTO mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedDTO.setCompany(CompanyDTO
                 .builder()
                 .name(COMPANY_NAME)
@@ -372,7 +372,7 @@ public class LeadServiceTest extends BaseServiceTest {
 
 
         // Execute the service call
-        LeadBasicDTO returnedEntity = service.create(mockedDTO);
+        LeadDTO returnedEntity = service.create(mockedDTO);
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -398,7 +398,7 @@ public class LeadServiceTest extends BaseServiceTest {
         String LEAD_LAST_NAME = FAKER.name().lastName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_CHAT_URL = FAKER.internet().url();
-        LeadBasicDTO mockedDTO = new LeadBasicDTO();
+        LeadDTO mockedDTO = new LeadDTO();
         Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_CHAT_URL, true);
 
         // Set up the mocked repository
@@ -435,7 +435,7 @@ public class LeadServiceTest extends BaseServiceTest {
         String LEAD_FULL_NAME = String.join(" ", LEAD_FIRST_NAME, LEAD_LAST_NAME);
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.internet().url();
-        LeadBasicDTO mockedDTO = new LeadBasicDTO();
+        LeadDTO mockedDTO = new LeadDTO();
         mockedDTO.setLinkedInUrl(LEAD_LINKED_IN_URL);
 
         Lead mockedEntity = getMockFactory()
@@ -445,7 +445,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID);
 
         // Execute the service call
-        Optional<LeadBasicDTO> returnedDTO = service.update(LEAD_ID, mockedDTO);
+        Optional<LeadDTO> returnedDTO = service.update(LEAD_ID, mockedDTO);
 
         // Assertions
         Assertions.assertTrue(returnedDTO.isPresent(), "Lead entity is not null");
@@ -469,7 +469,7 @@ public class LeadServiceTest extends BaseServiceTest {
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
-        LeadBasicDTO mockedDTO = new LeadBasicDTO();
+        LeadDTO mockedDTO = new LeadDTO();
         mockedDTO.setFullName(LEAD_FULL_NAME);
         mockedDTO.setLinkedInUrl(LEAD_LINKED_IN_URL);
 
@@ -477,7 +477,7 @@ public class LeadServiceTest extends BaseServiceTest {
         doReturn(Optional.empty()).when(repository).findById(LEAD_ID);
 
         // Execute the service call
-        Optional<LeadBasicDTO> returnedEntity = service.update(LEAD_ID, mockedDTO);
+        Optional<LeadDTO> returnedEntity = service.update(LEAD_ID, mockedDTO);
 
         // Assertions
         Assertions.assertFalse(returnedEntity.isPresent(), "Lead entity must be null");

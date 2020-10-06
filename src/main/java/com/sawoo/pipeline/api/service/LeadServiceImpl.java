@@ -4,7 +4,7 @@ import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
@@ -32,7 +32,7 @@ public class LeadServiceImpl implements LeadService {
     private final LeadRepository repository;
 
     @Override
-    public LeadBasicDTO create(LeadBasicDTO lead) throws CommonServiceException {
+    public LeadDTO create(LeadDTO lead) throws CommonServiceException {
         log.debug("Creating new lead. Name: [{}]", lead.getFullName());
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
@@ -48,7 +48,7 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public LeadBasicDTO findById(Long id) throws ResourceNotFoundException {
+    public LeadDTO findById(Long id) throws ResourceNotFoundException {
         log.debug("Retrieving lead by id. Id: [{}]", id);
 
         return repository
@@ -61,9 +61,9 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public List<LeadBasicDTO> findAll() {
+    public List<LeadDTO> findAll() {
         log.debug("Retrieving all lead entities");
-        List<LeadBasicDTO> leads = StreamSupport
+        List<LeadDTO> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
                 .map(mapper.getLeadDomainToDTOBaseMapper()::getDestination)
                 .collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public Optional<LeadBasicDTO> delete(Long id) {
+    public Optional<LeadDTO> delete(Long id) {
         log.debug("Deleting lead entity with id: [{}]", id);
 
         return repository
@@ -118,7 +118,7 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public Optional<LeadBasicDTO> update(Long id, LeadBasicDTO leadDTO) {
+    public Optional<LeadDTO> update(Long id, LeadDTO leadDTO) {
         log.debug("Updating lead with id: [{}]. Lead: [{}]", id, leadDTO);
 
         return repository

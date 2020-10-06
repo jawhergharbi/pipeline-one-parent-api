@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LeadMainDTO extends LeadBasicDTO {
+public class LeadMainDTO extends LeadDTO {
 
     private LeadInteractionDTO last;
 
