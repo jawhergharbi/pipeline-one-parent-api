@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.service;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +16,7 @@ public interface ClientService {
 
     List<ClientBasicDTO> findAll();
 
-    List<ClientMainDTO> findAllMain(LocalDateTime datetime);
+    List<ClientBasicDTO> findAllMain(LocalDateTime datetime);
 
     Optional<ClientBasicDTO> delete(Long id);
 

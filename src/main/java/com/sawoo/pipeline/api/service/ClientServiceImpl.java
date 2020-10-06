@@ -9,8 +9,6 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientLeadInteractionDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
@@ -33,7 +31,6 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepositoryWrapper repository;
     private final CommonServiceMapper mapper;
-    private final ClientServiceUtils utils;
     private final CompanyService companyService;
     private final UserService userService;
 
@@ -97,35 +94,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientMainDTO> findAllMain(LocalDateTime datetime) {
+    public List<ClientBasicDTO> findAllMain(LocalDateTime datetime) {
         log.debug("Retrieve all client entities together with their next interaction. Date time: [{}]", datetime);
 
-        List<ClientMainDTO> clients = StreamSupport
+        List<ClientBasicDTO> clients = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
-                .map((client) -> {
-                    ClientMainDTO clientDTO = mapper.getClientDomainToDTOMainMapper().getDestination(client);
-                    utils.getNextInteraction(client.getLeads(), datetime)
-                            .ifPresent((lead) -> {
-                                log.debug(
-                                        "Client [{}] id [{}] and lead full name [{}] and id [{}] has a next interaction",
-                                        client.getFullName(),
-                                        client.getId(),
-                                        String.join(" ", lead.getFirstName(), lead.getLastName()),
-                                        lead.getId());
-
-                                clientDTO.setNextInteraction(
-                                        ClientLeadInteractionDTO
-                                                .builder()
-                                                .leadName(String.join(" ", lead.getFirstName(), lead.getLastName()))
-                                                .interaction(
-                                                        LeadUtils.findNextInteraction(lead.getInteractions(), datetime)
-                                                                .map((interaction) ->
-                                                                        mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction))
-                                                                .orElse(null))
-                                                .build());
-                            });
-                    return clientDTO;
-                })
+                .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
                 .collect(Collectors.toList());
         log.debug("[{}] clients has been found", clients.size());
         return clients;

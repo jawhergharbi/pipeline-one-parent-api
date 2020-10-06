@@ -7,7 +7,6 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
@@ -379,8 +378,8 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public ClientMainDTO newClientMainDTO(Long id, String fullName, String linkedInUrl, boolean addCompany) {
-        ClientMainDTO mockedDTO = new ClientMainDTO();
+    public ClientBasicDTO newClientMainDTO(Long id, String fullName, String linkedInUrl, boolean addCompany) {
+        ClientBasicDTO mockedDTO = new ClientBasicDTO();
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
         mockedDTO.setId(id);
         mockedDTO.setFullName(fullName);

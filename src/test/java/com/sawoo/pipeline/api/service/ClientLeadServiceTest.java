@@ -229,47 +229,6 @@ public class ClientLeadServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("ClientLead Service: findAllMain when client found and there are leads and next or previous interactions for one of the leads - Success")
-    void findAllMainWhenThereIsOneClientFoundContainingMultipleLeadsAndNextInteractionReturnsSuccess() {
-        Long CLIENT_ID = FAKER.number().randomNumber();
-        Client clientEntity = getMockFactory().newClientEntity(CLIENT_ID);
-        int listSize = 3;
-        List<Lead> leadList = getMockedLeadList(listSize);
-        clientEntity.getLeads().addAll(leadList);
-
-        Lead lead = leadList.get(0);
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Long NEXT_INTERACTION_ID = FAKER.number().randomNumber();
-        LeadInteraction nextInteraction = newLeadInteractionEntity(
-                createInteractionKey(lead.getId(), NEXT_INTERACTION_ID),
-                FAKER.number().numberBetween(0, 4),
-                FAKER.number().numberBetween(0, 3),
-                FAKER.internet().url());
-        nextInteraction.setScheduled(now.plusDays(2).plusHours(10));
-        lead.getInteractions().add(nextInteraction);
-
-        Long PREVIOUS_INTERACTION_ID = FAKER.number().randomNumber();
-        LeadInteraction previousInteraction = newLeadInteractionEntity(
-                createInteractionKey(lead.getId(), PREVIOUS_INTERACTION_ID),
-                FAKER.number().numberBetween(0, 4),
-                FAKER.number().numberBetween(0, 3),
-                FAKER.internet().url());
-        previousInteraction.setScheduled(now.minusDays(2).plusHours(2));
-        lead.getInteractions().add(previousInteraction);
-
-        // Set up the mocked repository
-        doReturn(Collections.singletonList(clientEntity)).when(clientRepository).findAll();
-
-        // Execute the service call
-        List<LeadMainDTO> returnedList = service.findAllMain(now);
-
-        // Assertions
-        Assertions.assertEquals(listSize, returnedList.size(), String.format("Lead list size must be %d", listSize));
-        Assertions.assertNotNull(returnedList.get(0).getNext(), "First element in the lead list must have a next interaction");
-        Assertions.assertNotNull(returnedList.get(0).getLast(), "First element in the lead list must have a last interaction");
-    }
-
-    @Test
     @DisplayName("ClientLead Service: findAllMain when multiple clients found but no leads - Success")
     void findAllMainWhenThereAreClientsButNoLeadsReturnsSuccess() {
         int clientListSize = 3;
@@ -308,7 +267,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findClientsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(leadNumber, returnedList.size(), String.format("Number of leads in the list must be %d", leadNumber));
@@ -325,7 +284,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findClientsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(0, returnedList.size(), String.format("Number of leads in the list must be %d", 0));
@@ -340,7 +299,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(Collections.emptyList()).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findClientsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(0, returnedList.size(), String.format("Number of leads in the list must be %d", 0));

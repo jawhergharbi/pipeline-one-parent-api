@@ -100,6 +100,6 @@ public class ClientLeadController {
             @PathVariable("ids") List<Long> ids,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @NotBlank @PathVariable("datetime") LocalDateTime datetime) {
-        return ResponseEntity.ok().body(service.findClientsMain(ids, datetime));
+        return ResponseEntity.ok().body(service.findLeadsMain(ids, datetime));
     }
 }

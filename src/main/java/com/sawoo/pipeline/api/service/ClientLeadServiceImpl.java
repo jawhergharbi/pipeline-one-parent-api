@@ -8,7 +8,6 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -151,7 +149,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadMainDTO> findClientsMain(List<Long> clientIds, LocalDateTime datetime) {
+    public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime) {
         log.debug("Retrieve leads for client ids [{}]. Datetime: [{}]", clientIds, datetime);
         List<Client> clientList = StreamSupport
                 .stream(clientRepository.findAllById(clientIds).spliterator(), false)
@@ -179,23 +177,9 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                 .flatMap((client) -> {
                     ClientBaseDTO clientBase = mapper.getClientDomainToDTOBaseMapper().getDestination(client);
                     return client.getLeads().stream().map((lead) -> {
-                        LeadMainDTO leadMain = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
-                        List<LeadInteraction> interactions =
-                                lead.getInteractions()
-                                        .stream().sorted(Comparator.comparing(LeadInteraction::getScheduled))
-                                        .collect(Collectors.toList());
-                        log.debug("Lead id [{}] has [{}] interactions", leadMain.getId(), interactions.size());
-
-                        // find next interaction
-                        LeadUtils.findNextInteraction(interactions, datetime)
-                                .ifPresent((interaction) ->
-                                        leadMain.setNext(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                        // find last interaction
-                        LeadUtils.findLastInteraction(interactions, datetime)
-                                .ifPresent((interaction) ->
-                                        leadMain.setLast(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                        leadMain.setClient(clientBase);
-                        return leadMain;
+                        LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
+                        leadDTO.setClient(clientBase);
+                        return leadDTO;
                     });
                 })
                 .collect(Collectors.toList());

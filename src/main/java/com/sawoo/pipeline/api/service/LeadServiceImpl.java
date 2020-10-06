@@ -7,7 +7,6 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,24 +75,7 @@ public class LeadServiceImpl implements LeadService {
 
         List<LeadMainDTO> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
-                .map((lead) -> {
-                    LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
-                    List<LeadInteraction> interactions =
-                            lead.getInteractions()
-                                    .stream().sorted(Comparator.comparing(LeadInteraction::getScheduled))
-                                    .collect(Collectors.toList());
-                    log.debug("Lead id [{}] has [{}] interactions", leadDTO.getId(), interactions.size());
-
-                    // find next interaction
-                    LeadUtils.findNextInteraction(interactions, datetime)
-                            .ifPresent((interaction) ->
-                                    leadDTO.setNext(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                    // find last interaction
-                    LeadUtils.findLastInteraction(interactions, datetime)
-                            .ifPresent((interaction) ->
-                                    leadDTO.setLast(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                    return leadDTO;
-                })
+                .map((lead) -> mapper.getLeadDomainToDTOMainMapper().getDestination(lead))
                 .collect(Collectors.toList());
         log.debug("[{}] leads has been found", leads.size());
         return leads;

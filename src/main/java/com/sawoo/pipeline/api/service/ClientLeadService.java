@@ -20,5 +20,5 @@ public interface ClientLeadService {
 
     List<LeadMainDTO> findAllMain(LocalDateTime datetime);
 
-    List<LeadMainDTO> findClientsMain(List<Long> clientIds, LocalDateTime datetime);
+    List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime);
 }

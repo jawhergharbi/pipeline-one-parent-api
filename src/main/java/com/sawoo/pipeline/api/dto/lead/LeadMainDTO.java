@@ -12,9 +12,5 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class LeadMainDTO extends LeadDTO {
 
-    private LeadInteractionDTO last;
-
-    private LeadInteractionDTO next;
-
     private ClientBaseDTO client;
 }

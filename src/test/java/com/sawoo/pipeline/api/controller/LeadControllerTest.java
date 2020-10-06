@@ -6,7 +6,6 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.service.LeadService;
 import org.junit.jupiter.api.*;
@@ -20,7 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -225,42 +227,6 @@ public class LeadControllerTest extends BaseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @DisplayName("GET /api/leads/main/{datetime} one lead with first and last interaction - Success")
-    void findAllMainWhenOneSingleLeadButIncludesFirstAndLastInteractionsReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FULL_NAME = FAKER.name().fullName();
-        String LEAD_LINKED_IN_URL = FAKER.internet().url();
-        String LEAD_LINKED_IN_THREAD_URL = FAKER.internet().url();
-        LeadMainDTO mockedDTO = newMockedMainDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_THREAD_URL);
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-
-        LeadInteractionDTO last = new LeadInteractionDTO();
-        last.setScheduled(now.minusDays(30));
-        mockedDTO.setLast(last);
-
-        LeadInteractionDTO next = new LeadInteractionDTO();
-        next.setScheduled(now.plusDays(30));
-        mockedDTO.setNext(next);
-
-        // Setup the mock service
-        doReturn(Arrays.asList(mockedDTO)).when(service).findAllMain(now);
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/leads/main/{datetime}", now)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].next").exists())
-                .andExpect(jsonPath("$[0].last").exists());
     }
 
     @Test

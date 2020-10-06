@@ -463,7 +463,7 @@ public class ClientLeadControllerTest extends BaseControllerTest {
         String clientIds = Stream.of(CLIENT_ID)
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
-        doReturn(leadList).when(service).findClientsMain(Collections.singletonList(CLIENT_ID), now);
+        doReturn(leadList).when(service).findLeadsMain(Collections.singletonList(CLIENT_ID), now);
 
         // Execute the POST request
 
