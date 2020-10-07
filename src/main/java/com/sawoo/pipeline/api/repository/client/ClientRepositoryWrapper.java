@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository.client;
 
 import com.sawoo.pipeline.api.model.client.Client;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ public interface ClientRepositoryWrapper {
     Optional<Client> findByLinkedInUrl(String linkedInUrl);
 
     Optional<Client> findById(Long id);
+
+    List<Client> findAllById(List<Long> ids);
 
     List<Client> findByUserId(String id);
 

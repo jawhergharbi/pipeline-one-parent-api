@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class ClientLeadServiceImpl implements ClientLeadService {
 
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepository;
     private final LeadServiceUtils leadServiceUtils;
     private final CommonServiceMapper mapper;
 
@@ -44,7 +44,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
         Client entity = clientRepository.save(client);
 
         return mapper
-                .getLeadDomainToDTOBaseMapper()
+                .getLeadDomainToDTOMapper()
                 .getDestination(
                         entity
                                 .getLeads()
@@ -89,7 +89,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                             client.getLeads().size(),
                             lead);
 
-                    return mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
+                    return mapper.getLeadDomainToDTOMapper().getDestination(lead);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -116,7 +116,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                             client.getLeads().size(),
                             lead);
 
-                    return mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
+                    return mapper.getLeadDomainToDTOMapper().getDestination(lead);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -130,7 +130,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
         return findClientById(clientId)
                 .getLeads()
                 .stream()
-                .map((lead) -> mapper.getLeadDomainToDTOBaseMapper().getDestination(lead))
+                .map((lead) -> mapper.getLeadDomainToDTOMapper().getDestination(lead))
                 .collect(Collectors.toList());
     }
 
@@ -151,9 +151,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     @Override
     public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime) {
         log.debug("Retrieve leads for client ids [{}]. Datetime: [{}]", clientIds, datetime);
-        List<Client> clientList = StreamSupport
-                .stream(clientRepository.findAllById(clientIds).spliterator(), false)
-                .collect(Collectors.toList());
+        List<Client> clientList = clientRepository.findAllById(clientIds);
         if (clientList.size() < clientIds.size()) {
             log.warn(
                     "[{}] clients found for the following clientIds [{}]. Number of leads found does not match the clients requested",

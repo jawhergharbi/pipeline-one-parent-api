@@ -27,9 +27,9 @@ public class InteractionController {
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<InteractionDTO>> getByTypes(
-            @NotBlank @PathVariable("types") Integer[] types,
+            @PathVariable("types") Integer[] types,
             @PathVariable("clients") Long[] clients) {
-        List<InteractionDTO> lst = service.getByTypes(types, clients);
+        List<InteractionDTO> lst = service.getByType(types, clients);
         return ResponseEntity.ok().body(lst);
     }
 }

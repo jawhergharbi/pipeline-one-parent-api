@@ -42,7 +42,7 @@ public class LeadServiceImpl implements LeadService {
 
         log.debug("Lead has been successfully created. Entity: {}", entity);
 
-        return mapper.getLeadDomainToDTOBaseMapper().getDestination(entity);
+        return mapper.getLeadDomainToDTOMapper().getDestination(entity);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class LeadServiceImpl implements LeadService {
 
         return repository
                 .findById(id)
-                .map(mapper.getLeadDomainToDTOBaseMapper()::getDestination)
+                .map(mapper.getLeadDomainToDTOMapper()::getDestination)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -63,7 +63,7 @@ public class LeadServiceImpl implements LeadService {
         log.debug("Retrieving all lead entities");
         List<LeadDTO> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
-                .map(mapper.getLeadDomainToDTOBaseMapper()::getDestination)
+                .map(mapper.getLeadDomainToDTOMapper()::getDestination)
                 .collect(Collectors.toList());
         log.debug("[{}] lead/s has/have been found", leads.size());
         return leads;
@@ -90,7 +90,7 @@ public class LeadServiceImpl implements LeadService {
                 .map((company) -> {
                     repository.delete(company);
                     log.debug("Lead entity with id: [{}] has been deleted", id);
-                    return Optional.of(mapper.getLeadDomainToDTOBaseMapper().getDestination(company));
+                    return Optional.of(mapper.getLeadDomainToDTOMapper().getDestination(company));
                 })
                 .orElseGet(() -> {
                     log.info("Lead entity with id: [{}] does not exist", id);
@@ -116,7 +116,7 @@ public class LeadServiceImpl implements LeadService {
                     repository.save(lead);
 
                     log.debug("Lead entity with id [{}] has been successfully updated. Updated data: [{}]", id, leadDTO);
-                    return Optional.of(mapper.getLeadDomainToDTOBaseMapper().getDestination(lead));
+                    return Optional.of(mapper.getLeadDomainToDTOMapper().getDestination(lead));
                 })
                 .orElseGet(() -> {
                     log.info("Lead entity with id: [{}] does not exist", id);

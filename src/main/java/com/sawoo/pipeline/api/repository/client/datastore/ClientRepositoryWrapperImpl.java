@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -32,6 +33,14 @@ public class ClientRepositoryWrapperImpl implements ClientRepositoryWrapper {
     @Override
     public Optional<Client> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<Client> findAllById(List<Long> ids) {
+        Iterable<Client> clients = repository.findAllById(ids);
+        return StreamSupport
+                .stream(clients.spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     @Override
