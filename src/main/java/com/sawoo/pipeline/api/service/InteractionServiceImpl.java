@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,10 +26,14 @@ public class InteractionServiceImpl implements InteractionService {
     private final CommonServiceMapper mapper;
 
     @Override
-    public List<InteractionDTO> getByType(Integer[] types, Long[] clients) {
-        log.debug("Retrieve interactions for client ids [{}] and interaction types [{}]", clients, types);
-        List<Client> clientList = clientRepository.findAllById(Arrays.asList(clients));
-        if (clientList.size() < clients.length) {
+    public List<InteractionDTO> findBy(Integer[] types, Integer[] status, Long[] clients) {
+        log.debug("Retrieve interactions for client ids [{}] with type [{}] and status [{}]", clients, types, status);
+
+        List<Client> clientList = (clients != null && clients.length > 0) ?
+                clientRepository.findAllById(Arrays.asList(clients)) :
+                clientRepository.findAll();
+
+        if (clients != null && (clientList.size() < clients.length)) {
             log.warn(
                     "[{}] clients found for the following clientIds [{}]. Number of leads found does not match the clients requested",
                     clientList.size(),
@@ -40,11 +45,10 @@ public class InteractionServiceImpl implements InteractionService {
             return client.getLeads().stream().flatMap( (lead) -> {
                 LeadBaseDTO leadDTO = mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
                 List<LeadInteraction> interactions = lead.getInteractions();
-                if (types != null && types.length > 0) {
-                    List<Integer> typeListToFilter = Arrays.asList(types);
-                    Predicate<LeadInteraction> typeFilter = i -> typeListToFilter.contains(i.getType());
+                List<Predicate<LeadInteraction>> predicates = getFilters(types, status);
+                if (predicates.size() > 0) {
                     return interactions.stream()
-                            .filter(typeFilter)
+                            .filter(predicates.stream().reduce(x->true, Predicate::and))
                             .map((interaction) -> mapInteraction(interaction, clientDTO, leadDTO));
                 } else {
                     return interactions.stream()
@@ -52,6 +56,19 @@ public class InteractionServiceImpl implements InteractionService {
                 }
             });
         }).collect(Collectors.toList());
+    }
+
+    private List<Predicate<LeadInteraction>> getFilters(Integer[] types, Integer[] statusList) {
+        List<Predicate<LeadInteraction>> filters = new ArrayList<>();
+        if (types != null && types.length > 0) {
+            Predicate<LeadInteraction> typeFilter = i -> Arrays.asList(types).contains(i.getType());
+            filters.add(typeFilter);
+        }
+        if (statusList != null && statusList.length > 0) {
+            Predicate<LeadInteraction> statusFilter = i -> Arrays.asList(statusList).contains(i.getStatus());
+            filters.add(statusFilter);
+        }
+        return filters;
     }
 
     private InteractionDTO mapInteraction(LeadInteraction interaction, ClientBaseDTO client, LeadBaseDTO lead) {

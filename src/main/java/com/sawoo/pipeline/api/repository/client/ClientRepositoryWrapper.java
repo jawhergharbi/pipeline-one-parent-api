@@ -2,7 +2,6 @@ package com.sawoo.pipeline.api.repository.client;
 
 import com.sawoo.pipeline.api.model.client.Client;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public interface ClientRepositoryWrapper {
 
     Client save(Client client);
 
-    Iterable<Client> findAll();
+    List<Client> findAll();
 
     void delete(Client client);
 }

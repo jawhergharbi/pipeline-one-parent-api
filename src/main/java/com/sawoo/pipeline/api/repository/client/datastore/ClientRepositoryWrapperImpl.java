@@ -65,8 +65,10 @@ public class ClientRepositoryWrapperImpl implements ClientRepositoryWrapper {
     }
 
     @Override
-    public Iterable<Client> findAll() {
-        return repository.findAll();
+    public List<Client> findAll() {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     @Override

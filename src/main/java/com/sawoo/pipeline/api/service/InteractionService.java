@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface InteractionService {
 
-    List<InteractionDTO> getByType(Integer[] types, Long[] clients);
+    List<InteractionDTO> findBy(Integer[] types, Integer[] status, Long[] clients);
 }

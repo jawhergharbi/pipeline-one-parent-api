@@ -6,30 +6,31 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/leads/interactions")
+@RequestMapping("/api/interactions")
 public class InteractionController {
 
     private final InteractionService service;
 
     @RequestMapping(
-            value = "/types/{types}/clients/{clients}",
+            value = "",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionDTO>> getByTypes(
-            @PathVariable("types") Integer[] types,
-            @PathVariable("clients") Long[] clients) {
-        List<InteractionDTO> lst = service.getByType(types, clients);
+    public ResponseEntity<List<InteractionDTO>> findBy(
+            @RequestParam(value = "types", required = false) Integer[] types,
+            @RequestParam(value = "status", required = false) Integer[] status,
+            @RequestParam(value = "clients", required = false) Long[] clients) {
+        List<InteractionDTO> lst = service.findBy(types, status, clients);
         return ResponseEntity.ok().body(lst);
     }
 }
