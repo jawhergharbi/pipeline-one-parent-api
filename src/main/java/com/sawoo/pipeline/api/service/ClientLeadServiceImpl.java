@@ -5,11 +5,10 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
+import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,12 +25,12 @@ import java.util.stream.StreamSupport;
 @Service
 public class ClientLeadServiceImpl implements ClientLeadService {
 
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepository;
     private final LeadServiceUtils leadServiceUtils;
     private final CommonServiceMapper mapper;
 
     @Override
-    public LeadBasicDTO create(Long clientId, LeadBasicDTO lead) throws ResourceNotFoundException, CommonServiceException {
+    public LeadDTO create(Long clientId, LeadDTO lead) throws ResourceNotFoundException, CommonServiceException {
         log.debug("Creating new lead for client id: [{}]. Lead: [{}]", clientId, lead);
 
         Client client = findClientById(clientId);
@@ -46,7 +44,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
         Client entity = clientRepository.save(client);
 
         return mapper
-                .getLeadDomainToDTOBaseMapper()
+                .getLeadDomainToDTOMapper()
                 .getDestination(
                         entity
                                 .getLeads()
@@ -68,7 +66,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadBasicDTO add(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTO add(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Add lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -91,7 +89,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                             client.getLeads().size(),
                             lead);
 
-                    return mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
+                    return mapper.getLeadDomainToDTOMapper().getDestination(lead);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -99,7 +97,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadBasicDTO remove(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTO remove(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Remove lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -118,7 +116,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                             client.getLeads().size(),
                             lead);
 
-                    return mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
+                    return mapper.getLeadDomainToDTOMapper().getDestination(lead);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -126,13 +124,13 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadBasicDTO> findAll(Long clientId) throws ResourceNotFoundException {
+    public List<LeadDTO> findAll(Long clientId) throws ResourceNotFoundException {
         log.debug("Retrieving leads for client id [{}]", clientId);
 
         return findClientById(clientId)
                 .getLeads()
                 .stream()
-                .map((lead) -> mapper.getLeadDomainToDTOBaseMapper().getDestination(lead))
+                .map((lead) -> mapper.getLeadDomainToDTOMapper().getDestination(lead))
                 .collect(Collectors.toList());
     }
 
@@ -151,11 +149,9 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadMainDTO> findClientsMain(List<Long> clientIds, LocalDateTime datetime) {
+    public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime) {
         log.debug("Retrieve leads for client ids [{}]. Datetime: [{}]", clientIds, datetime);
-        List<Client> clientList = StreamSupport
-                .stream(clientRepository.findAllById(clientIds).spliterator(), false)
-                .collect(Collectors.toList());
+        List<Client> clientList = clientRepository.findAllById(clientIds);
         if (clientList.size() < clientIds.size()) {
             log.warn(
                     "[{}] clients found for the following clientIds [{}]. Number of leads found does not match the clients requested",
@@ -179,23 +175,9 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                 .flatMap((client) -> {
                     ClientBaseDTO clientBase = mapper.getClientDomainToDTOBaseMapper().getDestination(client);
                     return client.getLeads().stream().map((lead) -> {
-                        LeadMainDTO leadMain = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
-                        List<LeadInteraction> interactions =
-                                lead.getInteractions()
-                                        .stream().sorted(Comparator.comparing(LeadInteraction::getScheduled))
-                                        .collect(Collectors.toList());
-                        log.debug("Lead id [{}] has [{}] interactions", leadMain.getId(), interactions.size());
-
-                        // find next interaction
-                        LeadUtils.findNextInteraction(interactions, datetime)
-                                .ifPresent((interaction) ->
-                                        leadMain.setNext(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                        // find last interaction
-                        LeadUtils.findLastInteraction(interactions, datetime)
-                                .ifPresent((interaction) ->
-                                        leadMain.setLast(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                        leadMain.setClient(clientBase);
-                        return leadMain;
+                        LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
+                        leadDTO.setClient(clientBase);
+                        return leadDTO;
                     });
                 })
                 .collect(Collectors.toList());

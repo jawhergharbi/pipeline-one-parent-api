@@ -4,10 +4,9 @@ import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.lead.LeadBasicDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +30,7 @@ public class LeadServiceImpl implements LeadService {
     private final LeadRepository repository;
 
     @Override
-    public LeadBasicDTO create(LeadBasicDTO lead) throws CommonServiceException {
+    public LeadDTO create(LeadDTO lead) throws CommonServiceException {
         log.debug("Creating new lead. Name: [{}]", lead.getFullName());
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
@@ -44,16 +42,16 @@ public class LeadServiceImpl implements LeadService {
 
         log.debug("Lead has been successfully created. Entity: {}", entity);
 
-        return mapper.getLeadDomainToDTOBaseMapper().getDestination(entity);
+        return mapper.getLeadDomainToDTOMapper().getDestination(entity);
     }
 
     @Override
-    public LeadBasicDTO findById(Long id) throws ResourceNotFoundException {
+    public LeadDTO findById(Long id) throws ResourceNotFoundException {
         log.debug("Retrieving lead by id. Id: [{}]", id);
 
         return repository
                 .findById(id)
-                .map(mapper.getLeadDomainToDTOBaseMapper()::getDestination)
+                .map(mapper.getLeadDomainToDTOMapper()::getDestination)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -61,11 +59,11 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public List<LeadBasicDTO> findAll() {
+    public List<LeadDTO> findAll() {
         log.debug("Retrieving all lead entities");
-        List<LeadBasicDTO> leads = StreamSupport
+        List<LeadDTO> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
-                .map(mapper.getLeadDomainToDTOBaseMapper()::getDestination)
+                .map(mapper.getLeadDomainToDTOMapper()::getDestination)
                 .collect(Collectors.toList());
         log.debug("[{}] lead/s has/have been found", leads.size());
         return leads;
@@ -77,31 +75,14 @@ public class LeadServiceImpl implements LeadService {
 
         List<LeadMainDTO> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
-                .map((lead) -> {
-                    LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
-                    List<LeadInteraction> interactions =
-                            lead.getInteractions()
-                                    .stream().sorted(Comparator.comparing(LeadInteraction::getScheduled))
-                                    .collect(Collectors.toList());
-                    log.debug("Lead id [{}] has [{}] interactions", leadDTO.getId(), interactions.size());
-
-                    // find next interaction
-                    LeadUtils.findNextInteraction(interactions, datetime)
-                            .ifPresent((interaction) ->
-                                    leadDTO.setNext(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                    // find last interaction
-                    LeadUtils.findLastInteraction(interactions, datetime)
-                            .ifPresent((interaction) ->
-                                    leadDTO.setLast(mapper.getLeadInteractionDomainToDTOMapper().getDestination(interaction)));
-                    return leadDTO;
-                })
+                .map((lead) -> mapper.getLeadDomainToDTOMainMapper().getDestination(lead))
                 .collect(Collectors.toList());
         log.debug("[{}] leads has been found", leads.size());
         return leads;
     }
 
     @Override
-    public Optional<LeadBasicDTO> delete(Long id) {
+    public Optional<LeadDTO> delete(Long id) {
         log.debug("Deleting lead entity with id: [{}]", id);
 
         return repository
@@ -109,7 +90,7 @@ public class LeadServiceImpl implements LeadService {
                 .map((company) -> {
                     repository.delete(company);
                     log.debug("Lead entity with id: [{}] has been deleted", id);
-                    return Optional.of(mapper.getLeadDomainToDTOBaseMapper().getDestination(company));
+                    return Optional.of(mapper.getLeadDomainToDTOMapper().getDestination(company));
                 })
                 .orElseGet(() -> {
                     log.info("Lead entity with id: [{}] does not exist", id);
@@ -118,7 +99,7 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public Optional<LeadBasicDTO> update(Long id, LeadBasicDTO leadDTO) {
+    public Optional<LeadDTO> update(Long id, LeadDTO leadDTO) {
         log.debug("Updating lead with id: [{}]. Lead: [{}]", id, leadDTO);
 
         return repository
@@ -135,7 +116,7 @@ public class LeadServiceImpl implements LeadService {
                     repository.save(lead);
 
                     log.debug("Lead entity with id [{}] has been successfully updated. Updated data: [{}]", id, leadDTO);
-                    return Optional.of(mapper.getLeadDomainToDTOBaseMapper().getDestination(lead));
+                    return Optional.of(mapper.getLeadDomainToDTOMapper().getDestination(lead));
                 })
                 .orElseGet(() -> {
                     log.info("Lead entity with id: [{}] does not exist", id);

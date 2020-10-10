@@ -4,8 +4,6 @@ import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientLeadInteractionDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.service.ClientService;
@@ -209,7 +207,7 @@ public class ClientControllerTest extends BaseControllerTest {
         int listSize = 3;
         List<Long> clientIds = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        List<ClientMainDTO> clientList = IntStream.range(0, listSize)
+        List<ClientBasicDTO> clientList = IntStream.range(0, listSize)
                 .mapToObj((client) -> {
                     Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     clientIds.add(CLIENT_ID);
@@ -217,12 +215,6 @@ public class ClientControllerTest extends BaseControllerTest {
                     String CLIENT_LINKED_IN_URL = FAKER.internet().url();
                     return getMockFactory().newClientMainDTO(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
                 }).collect(Collectors.toList());
-        String NEXT_INTERACTION_LEAD_NAME = FAKER.name().fullName();
-        clientList.get(0).setNextInteraction(
-                ClientLeadInteractionDTO
-                        .builder()
-                        .leadName(NEXT_INTERACTION_LEAD_NAME)
-                        .build());
 
         // Setup the mock service
         doReturn(clientList).when(service).findAllMain(now);
@@ -238,10 +230,7 @@ public class ClientControllerTest extends BaseControllerTest {
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(listSize)))
                 .andExpect(jsonPath("$[0].id", is(clientIds.get(0).intValue())))
-                .andExpect(jsonPath("$[0].nextInteraction").exists())
-                .andExpect(jsonPath("$[0].nextInteraction.leadName", is(NEXT_INTERACTION_LEAD_NAME)))
-                .andExpect(jsonPath("$[1].id", is(clientIds.get(1).intValue())))
-                .andExpect(jsonPath("$[1].nextInteraction").doesNotExist());
+                .andExpect(jsonPath("$[1].id", is(clientIds.get(1).intValue())));
     }
 
     @Test

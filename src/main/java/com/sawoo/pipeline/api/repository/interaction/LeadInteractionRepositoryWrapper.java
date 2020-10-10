@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository.interaction;
 
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LeadInteractionRepositoryWrapper {

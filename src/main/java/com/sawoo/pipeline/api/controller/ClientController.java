@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.controller;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,10 +60,10 @@ public class ClientController {
             value = "/main/{datetime}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<ClientMainDTO>> getAllMain(
+    public ResponseEntity<List<ClientBasicDTO>> getAllMain(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @NotBlank @PathVariable("datetime") LocalDateTime datetime) {
-        List<ClientMainDTO> lst = service.findAllMain(datetime);
+        List<ClientBasicDTO> lst = service.findAllMain(datetime);
         return ResponseEntity.ok().body(lst);
     }
 

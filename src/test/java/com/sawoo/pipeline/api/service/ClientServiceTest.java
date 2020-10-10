@@ -6,7 +6,6 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.client.ClientMainDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
@@ -353,7 +352,7 @@ public class ClientServiceTest extends BaseServiceTest {
         doReturn(leadList).when(repository).findAll();
 
         // Execute the service call
-        List<ClientMainDTO> returnedList = service.findAllMain(now);
+        List<ClientBasicDTO> returnedList = service.findAllMain(now);
 
         Assertions.assertEquals(listSize, returnedList.size(), String.format("Returned list size must be [%d]", listSize));
 
@@ -390,50 +389,10 @@ public class ClientServiceTest extends BaseServiceTest {
         doReturn(Collections.singletonList(clientEntity)).when(repository).findAll();
 
         // Execute the service call
-        List<ClientMainDTO> returnedList = service.findAllMain(now);
+        List<ClientBasicDTO> returnedList = service.findAllMain(now);
 
         Assertions.assertEquals(1, returnedList.size(), String.format("Returned list size must be [%d]", 1));
         Assertions.assertEquals(leadListSize, returnedList.get(0).getLeadsSize(), String.format("Returned list size must be [%d]", leadListSize));
-        Assertions.assertNotNull(returnedList.get(0).getNextInteraction(), "Next interaction can not be null");
-
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Client service: findAllMain when multiple leads and all have past interactions - Success")
-    void findAllMainWhenThereIsOneClientWithMultipleLeadsAndNextNotFoundReturnsSuccess() {
-        // Set up mock entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        Client clientEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        int leadListSize = 3;
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        List<Lead> leadList = IntStream.range(0, leadListSize)
-                .mapToObj((lead) -> {
-                    Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    Lead leadEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
-                    Long LEAD_INTERACTION_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    String LEAD_INTERACTION_INVITE = FAKER.internet().url();
-                    LeadInteraction leadInteraction = newLeadInteractionEntity(LEAD_ID, LEAD_INTERACTION_ID, 0, 0, LEAD_INTERACTION_INVITE);
-                    leadInteraction.setScheduled(now
-                            .minusDays(FAKER.number().numberBetween(1, 30))
-                            .plusHours(FAKER.number().numberBetween(1, 10)));
-                    leadEntity.getInteractions().add(leadInteraction);
-                    return leadEntity;
-                }).collect(Collectors.toList());
-        clientEntity.getLeads().addAll(leadList);
-
-        // Set up the mocked repository
-        doReturn(Collections.singletonList(clientEntity)).when(repository).findAll();
-
-        // Execute the service call
-        List<ClientMainDTO> returnedList = service.findAllMain(now);
-
-        Assertions.assertEquals(1, returnedList.size(), String.format("Returned list size must be [%d]", 1));
-        Assertions.assertEquals(leadListSize, returnedList.get(0).getLeadsSize(), String.format("Returned list size must be [%d]", leadListSize));
-        Assertions.assertNull(returnedList.get(0).getNextInteraction(), "Next interaction can not be null");
 
         verify(repository, times(1)).findAll();
     }

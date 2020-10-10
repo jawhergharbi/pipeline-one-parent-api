@@ -11,11 +11,13 @@ public interface ClientRepositoryWrapper {
 
     Optional<Client> findById(Long id);
 
+    List<Client> findAllById(List<Long> ids);
+
     List<Client> findByUserId(String id);
 
     Client save(Client client);
 
-    Iterable<Client> findAll();
+    List<Client> findAll();
 
     void delete(Client client);
 }
