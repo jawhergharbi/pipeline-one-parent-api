@@ -25,4 +25,6 @@ public class LeadPersonality {
     @JMap
     private LocalDateTime updated;
 
+    @JMap
+    private Integer type;
 }

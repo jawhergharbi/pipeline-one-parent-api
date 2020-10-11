@@ -48,5 +48,5 @@ public class LeadBaseDTO {
     private CompanyDTO company;
 
     @JMap
-    private LeadPersonality personality;
+    private LeadPersonalityDTO personality;
 }

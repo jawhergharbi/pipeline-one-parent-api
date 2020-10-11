@@ -32,7 +32,6 @@ public class LeadInteraction {
     private Integer status;
 
     @JMap
-    @Field(name = "invite")
     private UrlTitle invite;
 
     @JMap
