@@ -22,4 +22,7 @@ public class LeadPersonalityDTO {
 
     @JMap
     private LocalDateTime updated;
+
+    @JMap
+    private Integer type;
 }
