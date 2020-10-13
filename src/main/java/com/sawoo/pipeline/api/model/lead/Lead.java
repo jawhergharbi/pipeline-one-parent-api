@@ -57,6 +57,10 @@ public class Lead {
     private String linkedInThread;
 
     @JMap
+    @Field(name = "profile_picture")
+    private String profilePicture;
+
+    @JMap
     @Field(name = "extra_notes")
     private Note extraNotes;
 

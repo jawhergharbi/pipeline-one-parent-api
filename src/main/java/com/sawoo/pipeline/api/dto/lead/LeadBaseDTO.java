@@ -43,6 +43,9 @@ public class LeadBaseDTO {
     private String linkedInThread;
 
     @JMap
+    private String profilePicture;
+
+    @JMap
     @Valid
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private CompanyDTO company;
