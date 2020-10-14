@@ -394,7 +394,7 @@ public class ClientLeadControllerTest extends BaseControllerTest {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         // setup the mocked service
-        doReturn(leadList).when(service).findAllMain(now);
+        doReturn(leadList).when(service).findAllLeadsMain(now);
 
         // Execute the POST request
         mockMvc.perform(get("/api/clients/all/leads/main/{datetime}", now)
@@ -418,7 +418,7 @@ public class ClientLeadControllerTest extends BaseControllerTest {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         // setup the mocked service
-        doReturn(Collections.emptyList()).when(service).findAllMain(now);
+        doReturn(Collections.emptyList()).when(service).findAllLeadsMain(now);
 
         // Execute the POST request
         mockMvc.perform(get("/api/clients/all/leads/main/{datetime}", now)
@@ -463,7 +463,7 @@ public class ClientLeadControllerTest extends BaseControllerTest {
         String clientIds = Stream.of(CLIENT_ID)
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
-        doReturn(leadList).when(service).findLeadsMain(Collections.singletonList(CLIENT_ID), now);
+        doReturn(leadList).when(service).findLeadsMain(Collections.singletonList(CLIENT_ID), null, null, now);
 
         // Execute the POST request
 

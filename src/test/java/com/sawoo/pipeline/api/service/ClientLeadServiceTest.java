@@ -222,7 +222,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAll();
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findAllMain(now);
+        List<LeadMainDTO> returnedList = service.findAllLeadsMain(now);
 
         // Assertions
         Assertions.assertEquals(totalLeadListSize, returnedList.size(), String.format("Lead list size must be %d", clientListSize));
@@ -246,7 +246,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAll();
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findAllMain(now);
+        List<LeadMainDTO> returnedList = service.findAllLeadsMain(now);
 
         Assertions.assertEquals(0, returnedList.size(), String.format("Lead list size must be %d", 0));
     }
@@ -267,7 +267,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), null, null, now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(leadNumber, returnedList.size(), String.format("Number of leads in the list must be %d", leadNumber));
@@ -284,7 +284,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(clientList).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), null, null, now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(0, returnedList.size(), String.format("Number of leads in the list must be %d", 0));
@@ -299,7 +299,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         doReturn(Collections.emptyList()).when(clientRepository).findAllById(anyList());
 
         // Execute the service call
-        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), now);
+        List<LeadMainDTO> returnedList = service.findLeadsMain(anyList(), null, null, now);
 
         Assertions.assertNotNull(returnedList, "The list of leads can not be null");
         Assertions.assertEquals(0, returnedList.size(), String.format("Number of leads in the list must be %d", 0));

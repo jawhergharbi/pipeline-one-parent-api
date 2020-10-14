@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
+import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -135,21 +137,19 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadMainDTO> findAllMain(LocalDateTime datetime) {
+    public List<LeadMainDTO> findAllLeadsMain(LocalDateTime datetime) {
         log.debug("Retrieving leads for all the clients");
 
-        List<Client> clients = StreamSupport
-                .stream(clientRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        List<Client> clients = clientRepository.findAll();
 
-        List<LeadMainDTO> leadsList = getLeadsFromClients(clients, datetime);
-        log.debug("[{}] lead found", leadsList.size());
+        List<LeadMainDTO> leadsList = getLeadsFromClients(clients, null, null, datetime);
+        log.debug("[{}] lead/s found", leadsList.size());
 
         return leadsList;
     }
 
     @Override
-    public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime) {
+    public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
         log.debug("Retrieve leads for client ids [{}]. Datetime: [{}]", clientIds, datetime);
         List<Client> clientList = clientRepository.findAllById(clientIds);
         if (clientList.size() < clientIds.size()) {
@@ -158,7 +158,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                     clientList.size(),
                     clientIds);
         }
-        return getLeadsFromClients(clientList, datetime);
+        return getLeadsFromClients(clientList, statusMin, statusMax, datetime);
     }
 
     private Client findClientById(Long id) throws ResourceNotFoundException {
@@ -169,20 +169,38 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                         new String[]{"Client", String.valueOf(id)}));
     }
 
-    private List<LeadMainDTO> getLeadsFromClients(List<Client> clients, LocalDateTime datetime) {
+    private List<LeadMainDTO> getLeadsFromClients(List<Client> clients, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
+        List<Predicate<Lead>> predicates = new ArrayList<>();
+        if (statusMin != null) {
+            Predicate<Lead> filter = l -> l.getStatus().getValue() >= statusMin;
+            predicates.add(filter);
+        }
+        if (statusMax != null) {
+            Predicate<Lead> filter = l -> l.getStatus().getValue() <= statusMax;
+            predicates.add(filter);
+        }
         List<LeadMainDTO> leadsList = clients
                 .stream()
                 .flatMap((client) -> {
                     ClientBaseDTO clientBase = mapper.getClientDomainToDTOBaseMapper().getDestination(client);
-                    return client.getLeads().stream().map((lead) -> {
-                        LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
-                        leadDTO.setClient(clientBase);
-                        return leadDTO;
-                    });
-                })
-                .collect(Collectors.toList());
+                    if (predicates.size() > 0) {
+                        return client.getLeads().stream()
+                                .filter(predicates.stream().reduce(x->true, Predicate::and))
+                                .map((lead) -> mapLead(lead, clientBase));
+                    } else {
+                        return client.getLeads().stream()
+                                .map((lead) -> mapLead(lead, clientBase));
+                    }
+                }).collect(Collectors.toList());
+
 
         log.debug("[{}] lead found", leadsList.size());
         return leadsList;
+    }
+
+    private LeadMainDTO mapLead(Lead lead, ClientBaseDTO client) {
+        LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
+        leadDTO.setClient(client);
+        return leadDTO;
     }
 }

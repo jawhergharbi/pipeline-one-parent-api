@@ -88,18 +88,20 @@ public class ClientLeadController {
     public ResponseEntity<List<LeadMainDTO>> getAll(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @NotBlank @PathVariable("datetime") LocalDateTime datetime) {
-        return ResponseEntity.ok().body(service.findAllMain(datetime));
+        return ResponseEntity.ok().body(service.findAllLeadsMain(datetime));
     }
 
     @RequestMapping(
             value = "/{ids}/leads/main/{datetime}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadMainDTO>> getClientsAll2(
+    public ResponseEntity<List<LeadMainDTO>> findLeadsByClient(
             @NotNull
             @PathVariable("ids") List<Long> ids,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            @NotBlank @PathVariable("datetime") LocalDateTime datetime) {
-        return ResponseEntity.ok().body(service.findLeadsMain(ids, datetime));
+            @NotBlank @PathVariable("datetime") LocalDateTime datetime,
+            @RequestParam(value = "statusMin", required = false) Integer statusMin,
+            @RequestParam(value = "statusMax", required = false) Integer statusMax) {
+        return ResponseEntity.ok().body(service.findLeadsMain(ids, statusMin, statusMax, datetime));
     }
 }
