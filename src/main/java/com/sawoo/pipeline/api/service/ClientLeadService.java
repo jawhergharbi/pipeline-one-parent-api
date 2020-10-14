@@ -18,7 +18,7 @@ public interface ClientLeadService {
 
     List<LeadDTO> findAll(Long clientId) throws ResourceNotFoundException;
 
-    List<LeadMainDTO> findAllMain(LocalDateTime datetime);
+    List<LeadMainDTO> findAllLeadsMain(LocalDateTime datetime);
 
-    List<LeadMainDTO> findLeadsMain(List<Long> clientIds, LocalDateTime datetime);
+    List<LeadMainDTO> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime);
 }
