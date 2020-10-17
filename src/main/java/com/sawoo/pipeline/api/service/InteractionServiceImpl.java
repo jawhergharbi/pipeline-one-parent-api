@@ -48,7 +48,7 @@ public class InteractionServiceImpl implements InteractionService {
                 List<Predicate<LeadInteraction>> predicates = getFilters(types, status);
                 if (predicates.size() > 0) {
                     return interactions.stream()
-                            .filter(predicates.stream().reduce(x->true, Predicate::and))
+                            .filter(predicates.stream().reduce(x -> true, Predicate::and))
                             .map((interaction) -> mapInteraction(interaction, clientDTO, leadDTO));
                 } else {
                     return interactions.stream()
