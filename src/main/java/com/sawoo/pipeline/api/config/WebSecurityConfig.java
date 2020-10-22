@@ -88,8 +88,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/api/auth/login",
                         "/api/auth/register",
-                        "/api/auth/nebular/login",
-                        "/api/auth/nebular/register",
                         "/api/common/**",
                         "/actuator/**")
                 .permitAll()

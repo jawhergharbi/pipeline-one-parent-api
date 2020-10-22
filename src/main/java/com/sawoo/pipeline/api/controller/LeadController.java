@@ -7,14 +7,18 @@ import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.service.LeadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -27,6 +31,9 @@ import java.util.List;
 public class LeadController {
 
     private final LeadService service;
+    private final ResourceLoader resourceLoader;
+
+
 
     @RequestMapping(
             method = RequestMethod.POST,
@@ -106,5 +113,28 @@ public class LeadController {
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{"Lead", String.valueOf(id)}));
+    }
+
+    @RequestMapping(
+            value = "/{id}/type/{type}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_PDF_VALUE})
+    public ResponseEntity<InputStreamResource> getReport(
+            @NotNull @PathVariable("id") Long id,
+            @PathVariable("type") String type) {
+        ByteArrayInputStream bis = service.getReport(id, type);
+
+        try {
+            Resource resource = resourceLoader.getResource("classpath:file-old.pdf");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(resource.contentLength());
+            headers.setContentDisposition(ContentDisposition.builder("inline").build());
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body( new InputStreamResource(resource.getInputStream()) );
+        } catch (IOException err) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

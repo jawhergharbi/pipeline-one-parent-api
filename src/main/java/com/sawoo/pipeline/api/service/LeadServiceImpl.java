@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -122,5 +123,10 @@ public class LeadServiceImpl implements LeadService {
                     log.info("Lead entity with id: [{}] does not exist", id);
                     return Optional.empty();
                 });
+    }
+
+    @Override
+    public ByteArrayInputStream getReport(Long id, String type) throws CommonServiceException {
+        return null;
     }
 }
