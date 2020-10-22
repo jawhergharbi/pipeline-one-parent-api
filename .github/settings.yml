@@ -1,12 +1,12 @@
 repository:
   # The name of the repository. Changing this will rename the repository
-  name: pipeline-api
+  name: pipeline-one-api
 
   # A short description of the repository that will show up on GitHub
   description: Pipeline One Backend API
 
   # A URL with more information about the repository
-  homepage: https://github.com/Sawoo-io/pipeline-api
+  homepage: https://github.com/Sawoo-io/pipeline-one-api
 
   # Either `true` to make the repository private, or `false` to make it public.
   private: true
