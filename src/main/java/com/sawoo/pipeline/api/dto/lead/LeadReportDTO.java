@@ -19,8 +19,8 @@ public class LeadReportDTO extends LeadBaseDTO {
     @JMap
     private String phoneNumber;
 
-    @JMap
-    private Note extraNotes;
+    @JMap("extraNotes")
+    private Note notes;
 
     @JMap
     private Note companyComments;

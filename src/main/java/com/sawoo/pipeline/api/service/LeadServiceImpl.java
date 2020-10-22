@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
 import com.googlecode.jmapper.api.enums.MappingType;
+import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -126,7 +126,20 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public ByteArrayInputStream getReport(Long id, String type) throws CommonServiceException {
+    public byte[] getReport(Long id, String type) throws CommonServiceException {
+        log.debug("Generating lead report. Lead id: [{}]. Report type: [{}]", id, type);
+        if (type == null) {
+            type = DomainConstants.PROSPECT_REPORT_TYPE_REPORT;
+        }
+
+        Lead lead = repository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{"Lead", String.valueOf(id)}));
+
+
         return null;
     }
 }

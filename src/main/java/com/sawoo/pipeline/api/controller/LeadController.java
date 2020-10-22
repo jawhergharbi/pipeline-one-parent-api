@@ -18,9 +18,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -122,19 +124,15 @@ public class LeadController {
     public ResponseEntity<InputStreamResource> getReport(
             @NotNull @PathVariable("id") Long id,
             @PathVariable("type") String type) {
-        ByteArrayInputStream bis = service.getReport(id, type);
+        byte[] pdfBytes = service.getReport(id, type);
 
-        try {
-            Resource resource = resourceLoader.getResource("classpath:file-old.pdf");
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentLength(resource.contentLength());
-            headers.setContentDisposition(ContentDisposition.builder("inline").build());
-            return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .body( new InputStreamResource(resource.getInputStream()) );
-        } catch (IOException err) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment; filename=" + type + ".pdf").build());
+        return ResponseEntity
+                .ok()
+                .contentLength(pdfBytes.length)
+                .headers(headers)
+                .body( new InputStreamResource(new ByteArrayInputStream(pdfBytes)) );
     }
 }

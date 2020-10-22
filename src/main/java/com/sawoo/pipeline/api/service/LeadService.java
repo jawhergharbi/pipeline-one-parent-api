@@ -24,5 +24,5 @@ public interface LeadService {
 
     Optional<LeadDTO> update(Long id, LeadDTO lead);
 
-    ByteArrayInputStream getReport(Long id, String type) throws CommonServiceException;
+    byte[] getReport(Long id, String type) throws CommonServiceException;
 }
