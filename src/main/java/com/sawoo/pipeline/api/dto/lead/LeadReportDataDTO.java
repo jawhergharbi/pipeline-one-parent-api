@@ -1,17 +1,11 @@
 package com.sawoo.pipeline.api.dto.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.DiscTypeDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.model.common.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -49,5 +43,5 @@ public class LeadReportDataDTO {
     private String companyNotes;
 
     @JMap
-    private LeadPersonalityDTO personality;
+    private DiscTypeDTO personality;
 }

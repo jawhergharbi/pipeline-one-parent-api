@@ -7,16 +7,20 @@ import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.DiscTypeDTO;
 import com.sawoo.pipeline.api.dto.ReportDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -40,11 +44,13 @@ import java.util.stream.StreamSupport;
 @Service
 public class LeadServiceImpl implements LeadService {
 
+    @Value("${app.report-api}")
+    private String reportAPI;
+
+    private final CommonDiscAnalysisData discAnalysisData;
     private final CommonServiceMapper mapper;
     private final LeadServiceUtils utils;
     private final LeadRepository repository;
-    @Value("${app.report-api}")
-    private String reportAPI;
 
     @Override
     public LeadDTO create(LeadDTO lead) throws CommonServiceException {
@@ -158,9 +164,25 @@ public class LeadServiceImpl implements LeadService {
 
         log.debug("Generating lead report. Lead id: [{}], Name: [{}]", id, leadReportData.getFullName());
 
+        // TODO externalize to a different component
+        validateReportData(leadReportData);
+
+        if (leadReportData.getPersonality().getType() != null) {
+            DiscTypeDTO discType = discAnalysisData.getDiscType(leadReportData.getPersonality().getType());
+            if (discType != null) {
+                leadReportData.setPersonality(discType);
+            }
+        }
+
         return getPDFReport(template, leadReportData, lan);
     }
 
+    private void validateReportData(LeadReportDataDTO reportData) {
+        // TODO implement
+        // company comments, lead comment and personality type can not be null
+    }
+
+    // TODO externalize to a different component
     private byte[] getPDFReport(String template, LeadReportDataDTO leadReportData, String lan) throws CommonServiceException {
         RestTemplate restTemplate = new RestTemplate();
         final String baseUrl = reportAPI + "/api/create-pdf";
