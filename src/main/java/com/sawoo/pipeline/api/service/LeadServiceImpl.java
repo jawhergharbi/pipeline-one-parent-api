@@ -1,21 +1,35 @@
 package com.sawoo.pipeline.api.service;
 
 import com.googlecode.jmapper.api.enums.MappingType;
+import com.googlecode.jmapper.api.enums.NullPointerControl;
+import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.ReportDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +43,8 @@ public class LeadServiceImpl implements LeadService {
     private final CommonServiceMapper mapper;
     private final LeadServiceUtils utils;
     private final LeadRepository repository;
+    @Value("${app.report-api}")
+    private String reportAPI;
 
     @Override
     public LeadDTO create(LeadDTO lead) throws CommonServiceException {
@@ -126,20 +142,55 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public byte[] getReport(Long id, String type) throws CommonServiceException {
-        log.debug("Generating lead report. Lead id: [{}]. Report type: [{}]", id, type);
-        if (type == null) {
-            type = DomainConstants.PROSPECT_REPORT_TYPE_REPORT;
+    public byte[] getReport(Long id, String template, String lan) throws CommonServiceException, ResourceNotFoundException {
+        log.debug("Generating lead report. Lead id: [{}]. Report template: [{}]. Language: [{}]", id, template, lan);
+        if (template == null) {
+            template = DomainConstants.PROSPECT_REPORT_TEMPLATE_REPORT;
         }
 
-        Lead lead = repository
+        LeadReportDataDTO leadReportData = repository
                 .findById(id)
+                .map( (lead) -> mapper.getLeadDomainToReportDTOMapper().getDestination(lead, NullPointerControl.SOURCE, MappingType.ONLY_VALUED_FIELDS))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{"Lead", String.valueOf(id)}));
 
+        log.debug("Generating lead report. Lead id: [{}], Name: [{}]", id, leadReportData.getFullName());
 
-        return null;
+        return getPDFReport(template, leadReportData, lan);
+    }
+
+    private byte[] getPDFReport(String template, LeadReportDataDTO leadReportData, String lan) throws CommonServiceException {
+        RestTemplate restTemplate = new RestTemplate();
+        final String baseUrl = reportAPI + "/api/create-pdf";
+        ReportDTO<LeadReportDataDTO> reportBody = ReportDTO
+                .<LeadReportDataDTO>builder()
+                .template(template)
+                .templateData(leadReportData)
+                .type(CommonConstants.REPORT_PDF_STREAM)
+                .locale(lan)
+                .build();
+        log.debug("Calling remote report API: [url:{}, report data: {}]", baseUrl, reportBody.toString());
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            HttpEntity<ReportDTO<LeadReportDataDTO>> request = new HttpEntity<>(reportBody, headers);
+            URI uri = new URI(baseUrl);
+            ResponseEntity<byte[]> result = restTemplate.postForEntity(uri, request, byte[].class);
+
+            if (result.getBody() == null || result.getBody().length == 0) {
+                throw new CommonServiceException(
+                        ExceptionMessageConstants.LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR,
+                        new String[]{baseUrl, reportBody.toString()});
+            }
+            return result.getBody();
+        } catch (URISyntaxException | HttpClientErrorException error) {
+            throw new CommonServiceException(
+                    ExceptionMessageConstants.LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION,
+                    new String[]{error.getMessage(), baseUrl, reportBody.toString()});
+        }
     }
 }

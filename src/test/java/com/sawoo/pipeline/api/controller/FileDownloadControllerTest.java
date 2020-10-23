@@ -126,7 +126,6 @@ public class FileDownloadControllerTest {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(ContentDisposition.builder("attachment; filename=file.pdf").build());
-            Resource resource = resourceLoader.getResource("classpath:downloads/file.pdf");
             File file = new File("./file.pdf");
             byte[] targetArray = Files.readAllBytes(file.toPath());
             System.out.printf("Target array length: %d", targetArray.length);

@@ -16,9 +16,24 @@
       "description": "Secret to create Jwt tokens."
     },
     {
+      "name": "app.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Origins allowed for Cross Origin requests."
+    },
+    {
+      "name": "app.report-api",
+      "type": "java.lang.String",
+      "description": "Report API url."
+    },
+    {
       "name": "app.cors.allowed-methods",
       "type": "java.lang.String",
-      "description": "Methods allowed for Cross Origin requests"
+      "description": "Methods allowed for Cross Origin requests."
+    },
+    {
+      "name": "app.auth.controller-url",
+      "type": "java.lang.String",
+      "description": "Description for app.auth.controller-url."
     }
   ]
 }
