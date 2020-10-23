@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.sawoo</groupId>
-    <artifactId>pipeline-api</artifactId>
+    <artifactId>pipeline-one-api</artifactId>
     <version>0-3-00-snapshot</version>
-    <name>pipeline-api</name>
+    <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
     <properties>
@@ -40,6 +40,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

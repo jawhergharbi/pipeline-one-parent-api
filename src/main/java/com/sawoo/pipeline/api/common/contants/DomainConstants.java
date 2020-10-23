@@ -13,6 +13,9 @@ public interface DomainConstants {
     Integer SALUTATION_PROFESSOR_HIM = 5;
     Integer SALUTATION_PROFESSOR_HER = 6;
 
+    String PROSPECT_REPORT_TEMPLATE_REPORT = "report";
+    String PROSPECT_REPORT_TEMPLATE_FULL_REPORT = "report-full";
+
 
     enum LeadStatus {
         WARM,

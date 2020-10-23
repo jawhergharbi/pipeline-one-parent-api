@@ -7,14 +7,15 @@ import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.service.LeadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -106,5 +107,24 @@ public class LeadController {
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{"Lead", String.valueOf(id)}));
+    }
+
+    @RequestMapping(
+            value = "/{id}/report",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_PDF_VALUE})
+    public ResponseEntity<InputStreamResource> getReport(
+            @NotNull @PathVariable("id") Long id,
+            @RequestParam(value = "template", required = false) String template,
+            @RequestParam(value = "lan", required = false) String lan) {
+        byte[] pdfBytes = service.getReport(id, template, lan);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment; filename=" + template + "." + id + ".pdf").build());
+        return ResponseEntity
+                .ok()
+                .contentLength(pdfBytes.length)
+                .headers(headers)
+                .body( new InputStreamResource(new ByteArrayInputStream(pdfBytes)) );
     }
 }

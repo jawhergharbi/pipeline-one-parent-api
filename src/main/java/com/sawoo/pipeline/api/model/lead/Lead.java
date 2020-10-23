@@ -103,4 +103,14 @@ public class Lead {
     public Integer salutationConversion(Integer salutation) {
         return salutation == null ? 0 : salutation;
     }
+
+    @JMapConversion(from = {"companyComments"}, to = {"companyNotes"})
+    public String companyNotesConversion(Note companyComments) {
+        return companyComments == null ? "" : companyComments.getText();
+    }
+
+    @JMapConversion(from = {"extraNotes"}, to = {"notes"})
+    public String extraNotesConversion(Note extraNotes) {
+        return extraNotes == null ? "" : extraNotes.getText();
+    }
 }
