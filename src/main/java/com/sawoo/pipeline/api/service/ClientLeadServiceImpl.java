@@ -32,13 +32,13 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     private final CommonServiceMapper mapper;
 
     @Override
-    public LeadDTO create(Long clientId, LeadDTO lead) throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Creating new lead for client id: [{}]. Lead: [{}]", clientId, lead);
+    public LeadDTO create(Long clientId, LeadDTO lead, int type) throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Creating new prospect for client id: [{}]. Prospect: [{}]", clientId, lead);
 
         Client client = findClientById(clientId);
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        leadServiceUtils.preProcessLead(lead, now);
+        leadServiceUtils.preProcessLead(lead, now, type);
 
         client.getLeads().add(mapper.getLeadDTOToDomainMapper().getDestination(lead));
         client.setUpdated(now);

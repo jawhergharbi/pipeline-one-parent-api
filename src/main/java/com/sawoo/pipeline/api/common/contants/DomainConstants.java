@@ -16,17 +16,6 @@ public interface DomainConstants {
     String PROSPECT_REPORT_TEMPLATE_REPORT = "report";
     String PROSPECT_REPORT_TEMPLATE_FULL_REPORT = "report-full";
 
-
-    enum LeadStatus {
-        WARM,
-        HOT,
-        DEAD,
-        MQL,
-        SQL,
-        OTHER,
-        NOT_CUSTOMER
-    }
-
     enum ClientStatus {
         ON_BOARDING,
         RUNNING,
@@ -39,11 +28,5 @@ public interface DomainConstants {
         CANCELLED,
         DONE,
         RESCHEDULED
-    }
-
-    enum InteractionType {
-        LINKED_IN,
-        EMAIL,
-        PHONE
     }
 }

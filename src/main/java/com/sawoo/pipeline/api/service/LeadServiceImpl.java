@@ -51,17 +51,17 @@ public class LeadServiceImpl implements LeadService {
     private final LeadRepository repository;
 
     @Override
-    public LeadDTO create(LeadDTO lead) throws CommonServiceException {
-        log.debug("Creating new lead. Name: [{}]", lead.getFullName());
+    public LeadDTO create(LeadDTO lead, int type) throws CommonServiceException {
+        log.debug("Creating new prospect. Name: [{}]. Type: [{}]", lead.getFullName(), type);
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        utils.preProcessLead(lead, now);
+        utils.preProcessLead(lead, now, type);
 
         Lead entity = mapper.getLeadDTOToDomainMapper().getDestination(lead);
         entity = repository.save(entity);
 
-        log.debug("Lead has been successfully created. Entity: {}", entity);
+        log.debug("Prospect has been successfully created. Entity: [{}]", entity);
 
         return mapper.getLeadDomainToDTOMapper().getDestination(entity);
     }

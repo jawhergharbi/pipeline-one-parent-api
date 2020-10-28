@@ -1,15 +1,15 @@
 package com.sawoo.pipeline.api.service;
 
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.lead.ProspectStatus;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -221,11 +221,11 @@ public class LeadServiceTest extends BaseServiceTest {
         Lead mockedEntity = getMockFactory()
                 .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL, now));
-        mockedEntity.setStatus(Status.
-                builder()
-                .value(DomainConstants.LeadStatus.WARM.ordinal())
-                .updated(now)
-                .build());
+        mockedEntity.setStatus(
+                Status.builder()
+                        .value(ProspectStatus.HOT.getStatus())
+                        .updated(now)
+                        .build());
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(LEAD_LINKED_IN_URL);
@@ -234,7 +234,7 @@ public class LeadServiceTest extends BaseServiceTest {
 
 
         // Execute the service call
-        LeadDTO returnedEntity = service.create(mockedDTO);
+        LeadDTO returnedEntity = service.create(mockedDTO, ProspectType.LEAD.getType());
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -285,7 +285,7 @@ public class LeadServiceTest extends BaseServiceTest {
 
 
         // Execute the service call
-        LeadDTO returnedEntity = service.create(mockedDTO);
+        LeadDTO returnedEntity = service.create(mockedDTO, ProspectType.LEAD.getType());
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -320,7 +320,7 @@ public class LeadServiceTest extends BaseServiceTest {
         // Execute the service call
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.create(mockedDTO),
+                () -> service.create(mockedDTO, ProspectType.LEAD.getType()),
                 "create must throw a CommonServiceException");
 
         // Assertions

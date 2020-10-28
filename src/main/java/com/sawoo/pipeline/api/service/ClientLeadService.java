@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ClientLeadService {
 
-    LeadDTO create(Long clientId, LeadDTO lead) throws CommonServiceException;
+    LeadDTO create(Long clientId, LeadDTO lead, int type) throws CommonServiceException;
 
     LeadDTO add(Long clientId, Long leadId) throws ResourceNotFoundException;
 
