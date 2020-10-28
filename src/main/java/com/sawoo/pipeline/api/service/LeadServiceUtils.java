@@ -5,7 +5,9 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.lead.ProspectStatus;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,28 +24,30 @@ public class LeadServiceUtils {
     private final LeadRepository repository;
     private final CompanyService companyService;
 
-    public void preProcessLead(LeadDTO lead, LocalDateTime datetime) throws CommonServiceException {
+    public void preProcessLead(LeadDTO lead, LocalDateTime datetime, int type) throws CommonServiceException {
         repository
                 .findByLinkedInUrl(lead.getLinkedInUrl())
                 .ifPresent((leadItem) -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                            new String[]{"Lead", leadItem.getLinkedInUrl()});
+                            new String[]{"Prospect", leadItem.getLinkedInUrl()});
                 });
 
         // Process company info
         processCompanyData(lead, datetime);
 
-        // Process lead status
+        // Process prospect status
         if (lead.getStatus() == null) {
             lead.setStatus(StatusDTO
                     .builder()
-                    .value(DomainConstants.LeadStatus.WARM.ordinal())
+                    .value( ProspectType.PROSPECT.getType() == type ?
+                            ProspectStatus.FUNNEL_ON_GOING.getStatus() :
+                            ProspectStatus.HOT.getStatus() )
                     .updated(datetime)
                     .build());
         }
 
-        // Lead salutation
+        // Prospect salutation
         if (lead.getSalutation() == null) {
             lead.setSalutation(DomainConstants.SALUTATION_EMPTY);
         }

@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
@@ -73,11 +74,11 @@ public class ClientLeadServiceTest extends BaseServiceTest {
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(clientRepository).findById(CLIENT_ID);
-        doNothing().when(leadServiceUtils).preProcessLead(any(), any());
+        doNothing().when(leadServiceUtils).preProcessLead(any(), any(), anyInt());
         doReturn(mockedClientEntity).when(clientRepository).save(any());
 
         // Execute the service call
-        LeadDTO returnedEntity = service.create(CLIENT_ID, mockedLeadDTO);
+        LeadDTO returnedEntity = service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType());
 
         // Assert the response
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with LinkedInUrl [%s] was found already in the system", LEAD_LINKED_IN_URL));
@@ -85,7 +86,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         Assertions.assertEquals(1, mockedClientEntity.getLeads().size(), String.format("Client lead list size must be %d", 1));
 
         verify(clientRepository, Mockito.times(1)).findById(anyLong());
-        verify(leadServiceUtils, Mockito.times(1)).preProcessLead(any(), any());
+        verify(leadServiceUtils, Mockito.times(1)).preProcessLead(any(), any(), anyInt());
         verify(clientRepository, Mockito.times(1)).save(any());
 
         verify(spyClientEntity, Mockito.atLeastOnce()).getLeads();
@@ -111,7 +112,7 @@ public class ClientLeadServiceTest extends BaseServiceTest {
         // Asserts
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.create(CLIENT_ID, mockedLeadDTO),
+                () -> service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType()),
                 "create must throw a ResourceNotFoundException");
 
         Assertions.assertEquals(
@@ -146,13 +147,13 @@ public class ClientLeadServiceTest extends BaseServiceTest {
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedClientEntity)).when(clientRepository).findById(anyLong());
-        doNothing().when(leadServiceUtils).preProcessLead(any(), any());
+        doNothing().when(leadServiceUtils).preProcessLead(any(), any(), anyInt());
         doReturn(spyClientEntity).when(clientRepository).save(any());
 
         // Asserts
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.create(CLIENT_ID, mockedLeadDTO),
+                () -> service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType()),
                 "create must throw a CommonServiceException");
 
         Assertions.assertEquals(

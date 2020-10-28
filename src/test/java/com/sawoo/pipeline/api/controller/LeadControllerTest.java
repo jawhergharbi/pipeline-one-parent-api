@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.service.LeadService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -298,7 +299,7 @@ public class LeadControllerTest extends BaseControllerTest {
         LeadDTO mockedEntity = newMockedDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).create(postEntity);
+        doReturn(mockedEntity).when(service).create(postEntity, ProspectType.LEAD.getType());
 
         // Execute the POST request
         mockMvc.perform(post("/api/leads/")
@@ -337,7 +338,7 @@ public class LeadControllerTest extends BaseControllerTest {
 
         // setup the mocked service
         doThrow(exception)
-                .when(service).create(postEntity);
+                .when(service).create(postEntity, ProspectType.LEAD.getType());
 
         // Execute the POST request
         mockMvc.perform(post("/api/leads/")

@@ -5,14 +5,13 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface LeadService {
 
-    LeadDTO create(LeadDTO lead) throws CommonServiceException;
+    LeadDTO create(LeadDTO lead, int type) throws CommonServiceException;
 
     LeadDTO findById(Long id) throws ResourceNotFoundException;
 

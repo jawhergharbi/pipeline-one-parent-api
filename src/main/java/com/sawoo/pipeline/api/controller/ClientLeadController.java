@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.service.ClientLeadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,15 @@ public class ClientLeadController {
     private final ClientLeadService service;
 
     @RequestMapping(
-            value = "/{id}/leads",
+            value = {"/{id}/leads", "/{id}/leads/{type}"},
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
-            @NotNull @PathVariable("id") Long clientId,
+            @PathVariable(value = "id") Long clientId,
+            @PathVariable(value = "type", required = false) ProspectType type,
             @Valid @RequestBody LeadDTO lead) {
-        LeadDTO newEntity = service.create(clientId, lead);
+        LeadDTO newEntity = service.create(clientId, lead, type != null ? type.getType() : ProspectType.PROSPECT.getType());
         try {
             return ResponseEntity
                     .created(new URI("/api/clients/" + clientId + "/leads/" + newEntity.getId()))
