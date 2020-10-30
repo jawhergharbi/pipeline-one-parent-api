@@ -44,7 +44,7 @@ app:
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
-    allowed-origins: http://localhost:4200, http://localhost:8080
+    allowed-origins: http://localhost:4200, http://saas.localhost:4200, http://laas.localhost:4200, http://localhost:8080
 
 
 ---
