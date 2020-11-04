@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.model.Authentication;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.AuthRepository;
 import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.service.auth.AuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

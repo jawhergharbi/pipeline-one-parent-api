@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.controller;
 
 import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.service.AuthJwtUserDetailsServiceImpl;
+import com.sawoo.pipeline.api.service.auth.AuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;

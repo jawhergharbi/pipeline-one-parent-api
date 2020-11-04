@@ -30,7 +30,7 @@ public class AuthJwtControllerBase {
     private final AuthJwtControllerHelper helper;
 
     @RequestMapping(
-            value = "/register",
+            value = "/registerOLD",
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -42,7 +42,7 @@ public class AuthJwtControllerBase {
     }
 
     @RequestMapping(
-            value = "/login",
+            value = "/loginOLD",
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})

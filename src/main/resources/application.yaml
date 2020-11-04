@@ -38,6 +38,12 @@ app:
 ---
 spring:
   profiles: dev-local
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: pipeline-core
+      auto-index-creation: true
 
 app:
   server: "http://localhost:8080"

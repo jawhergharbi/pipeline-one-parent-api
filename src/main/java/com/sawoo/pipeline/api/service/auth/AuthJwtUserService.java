@@ -1,16 +1,20 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.auth;
 
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.auth.AuthenticationDTO;
+import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 
 import java.util.List;
 
 
-public interface AuthJwtService {
+public interface AuthJwtUserService {
 
     AuthenticationDTO create(AuthJwtRegisterRequest authJwtRegisterRequest, String identifier) throws AuthException;
+
+    UserAuthDTO create(AuthJwtRegisterReq registerRequest) throws AuthException;
 
     AuthenticationDTO findById(String id) throws ResourceNotFoundException;
 

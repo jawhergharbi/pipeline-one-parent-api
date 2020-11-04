@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.auth;
 
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
@@ -7,10 +7,16 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.common.exceptions.UserException;
 import com.sawoo.pipeline.api.dto.auth.AuthenticationDTO;
+import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.Authentication;
+import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.repository.AuthRepository;
+import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
+import com.sawoo.pipeline.api.service.UserService;
+import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,11 +35,13 @@ import java.util.stream.StreamSupport;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthJwtServiceImpl implements AuthJwtService {
+public class AuthJwtUserServiceImpl implements AuthJwtUserService {
 
     private final AuthRepository authRepository;
+    private final UserRepositoryMongo userRepositoryMongo;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final CommonServiceMapper mapper;
 
     private final JMapper<AuthenticationDTO, Authentication> mapperDomainToDTO = new JMapper<>(AuthenticationDTO.class, Authentication.class);
 
@@ -68,6 +78,28 @@ public class AuthJwtServiceImpl implements AuthJwtService {
         }
 
         return mapperDomainToDTO.getDestination(authentication);
+    }
+
+    @Override
+    public UserAuthDTO create(AuthJwtRegisterReq registerRequest) throws AuthException {
+        log.debug("Creating authorization component for user with [email: {}, fullName: {}, role: {}].",
+                registerRequest.getEmail(),
+                registerRequest.getFullName(),
+                registerRequest.getRole());
+
+        userRepositoryMongo
+                .findByEmail(registerRequest.getEmail())
+                .ifPresent((auth) -> {
+                            throw new AuthException(
+                                    ExceptionMessageConstants.AUTH_REGISTER_IDENTIFIER_ALREADY_EXISTS_EXCEPTION,
+                                    new Object[]{ registerRequest.getEmail()} );
+                        });
+
+        UserMongoDB user = newUser(registerRequest);
+        user = userRepositoryMongo.insert(user);
+        log.debug("User entity has been successfully created. User identifier: {}", user.getEmail());
+
+        return mapper.getUserAuthDomainToDTOMapper().getDestination(user);
     }
 
     @Override
@@ -205,5 +237,19 @@ public class AuthJwtServiceImpl implements AuthJwtService {
                         registerRequest.getProviderType() :
                         DomainConstants.AUTHORIZATION_PROVIDER_TYPE_EMAIL);
         return authentication;
+    }
+
+    private UserMongoDB newUser(AuthJwtRegisterReq registerRequest) {
+        UserMongoDB user = new UserMongoDB();
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setEnabled(true);
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        user.setCreated(now);
+        user.setUpdated(now);
+        if (registerRequest.getRole() != null) {
+            user.setRoles(new HashSet<>(Collections.singletonList(registerRequest.getRole())));
+        }
+        return user;
     }
 }

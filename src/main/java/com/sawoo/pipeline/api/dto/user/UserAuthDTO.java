@@ -1,29 +1,28 @@
 package com.sawoo.pipeline.api.dto.user;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserAuthDTO {
+
     @JMap
-    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+    @Id
     private String id;
 
     @JMap
-    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private String fullName;
 
     @JMap
-    private Boolean active;
+    private boolean enabled;
 
     @JMap
     private Set<String> roles;
@@ -33,5 +32,10 @@ public class UserDTO {
 
     @JMap
     private LocalDateTime updated;
-}
 
+    @JMap
+    private LocalDateTime lastLogin;
+
+    @JMap
+    private String email;
+}

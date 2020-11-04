@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.auth.AuthenticationDTO;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
 import com.sawoo.pipeline.api.dto.auth.update.AuthJwtUpdatePasswordRequest;
 import com.sawoo.pipeline.api.dto.auth.update.AuthJwtUpdateRequest;
-import com.sawoo.pipeline.api.service.AuthJwtService;
+import com.sawoo.pipeline.api.service.auth.AuthJwtUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthJwtControllerHelper {
 
-    protected final AuthJwtService authService;
+    protected final AuthJwtUserService authService;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
