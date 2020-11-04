@@ -27,6 +27,7 @@ logging:
 
 
 app:
+  version: ${version}
   jwt:
     secret: defeAtmarmalaDeheatIngcyAn
   cors:
