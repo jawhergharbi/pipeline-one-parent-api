@@ -30,6 +30,9 @@ public class DummyController {
     @Value("${app.server}")
     private String server;
 
+    @Value("${app.version}")
+    private String appVersion;
+
     @RequestMapping(value = "/hello", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
     @ResponseBody
     public String hello() {
@@ -47,6 +50,11 @@ public class DummyController {
                 "<p>" +
                     "<span>" +
                         "<b>server</b> :: " + "<b>" + server + "</b>" +
+                    "</span>" +
+                "</p>" +
+                "<p>" +
+                    "<span>" +
+                        "<b>app.version</b> :: " + "<b>" +  appVersion + "</b>" +
                     "</span>" +
                 "</p>";
     }
