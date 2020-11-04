@@ -34,6 +34,11 @@
       "name": "app.auth.controller-url",
       "type": "java.lang.String",
       "description": "Description for app.auth.controller-url."
+    },
+    {
+      "name": "app.version",
+      "type": "java.lang.String",
+      "description": "App version taken from the POM file."
     }
   ]
 }

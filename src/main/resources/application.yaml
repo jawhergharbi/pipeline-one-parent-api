@@ -27,6 +27,7 @@ logging:
 
 
 app:
+  version: ${version}
   jwt:
     secret: defeAtmarmalaDeheatIngcyAn
   cors:
@@ -40,7 +41,6 @@ spring:
 
 app:
   server: "http://localhost:8080"
-  version: ${version}
   report-api: "http://localhost:4001"
   mail:
     contact-account: miguel.maquieira@sawoo.io
