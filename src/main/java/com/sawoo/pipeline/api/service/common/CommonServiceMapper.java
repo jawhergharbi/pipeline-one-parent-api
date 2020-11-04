@@ -43,5 +43,6 @@ public class CommonServiceMapper {
     private final JMapper<User, UserDTO> userDTOToDomainMapper = new JMapper<>(User.class, UserDTO.class);
 
     private final JMapper<UserAuthDTO, UserMongoDB> userAuthDomainToDTOMapper = new JMapper<>(UserAuthDTO.class, UserMongoDB.class);
+    private final JMapper<UserMongoDB, UserAuthDTO> userAuthDTOToDomainMapper = new JMapper<>(UserMongoDB.class, UserAuthDTO.class);
 
 }

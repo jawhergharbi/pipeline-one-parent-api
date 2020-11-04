@@ -34,7 +34,7 @@ public class UserMongoDB {
     private String fullName;
 
     @JMap
-    private Boolean enabled;
+    private Boolean active;
 
     @JMap
     @Indexed

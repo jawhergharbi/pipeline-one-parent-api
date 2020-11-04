@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
 import com.sawoo.pipeline.api.model.Authentication;
 import com.sawoo.pipeline.api.repository.AuthRepository;
-import com.sawoo.pipeline.api.service.auth.AuthJwtUserService;
+import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +30,10 @@ import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class AuthJwtUserServiceTest extends BaseServiceTest {
+public class UserAuthJwtServiceTest extends BaseServiceTest {
 
-    @Autowired
-    private AuthJwtUserService service;
+   /* @Autowired
+    private UserAuthJwtService service;
 
     @MockBean
     private AuthRepository repository;
@@ -351,5 +351,5 @@ public class AuthJwtUserServiceTest extends BaseServiceTest {
         mockAuthentication.setIdentifier(identifier);
 
         return mockAuthentication;
-    }
+    }*/
 }

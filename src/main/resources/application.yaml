@@ -32,8 +32,6 @@ app:
     secret: defeAtmarmalaDeheatIngcyAn
   cors:
     allowed-methods: GET,POST,HEAD,PUT,DELETE,OPTIONS
-  auth:
-    controller-url: /api/auth/nebular
 
 ---
 spring:

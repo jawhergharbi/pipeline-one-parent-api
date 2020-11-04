@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service.auth;
+package com.sawoo.pipeline.api.service.user;
 
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuthJwtUserDetailsServiceImpl implements UserDetailsService {
+public class UserAuthJwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepositoryMongo userRepositoryMongo;
     private final JMapper<UserAuthDetails, UserMongoDB> mapperDomainToDTO = new JMapper<>(UserAuthDetails.class, UserMongoDB.class);

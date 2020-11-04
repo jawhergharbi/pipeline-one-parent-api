@@ -22,7 +22,7 @@ public class UserAuthDTO {
     private String fullName;
 
     @JMap
-    private boolean enabled;
+    private Boolean active;
 
     @JMap
     private Set<String> roles;

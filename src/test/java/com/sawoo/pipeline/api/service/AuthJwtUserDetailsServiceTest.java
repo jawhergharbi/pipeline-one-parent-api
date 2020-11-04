@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.model.Authentication;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.AuthRepository;
 import com.sawoo.pipeline.api.repository.UserRepository;
-import com.sawoo.pipeline.api.service.auth.AuthJwtUserDetailsServiceImpl;
+import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 public class AuthJwtUserDetailsServiceTest extends BaseServiceTest {
 
     @Autowired
-    private AuthJwtUserDetailsServiceImpl service;
+    private UserAuthJwtUserDetailsServiceImpl service;
 
     @MockBean
     private AuthRepository authRepository;
