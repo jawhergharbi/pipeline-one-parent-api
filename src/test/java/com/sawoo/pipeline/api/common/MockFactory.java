@@ -4,6 +4,7 @@ package com.sawoo.pipeline.api.common;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
@@ -26,6 +27,7 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.UUID;
 
 @Component
 public class MockFactory {
@@ -429,6 +431,16 @@ public class MockFactory {
                         0);
     }
 
+    public AuthJwtRegisterReq newAuthRegisterReq(String email, String password, String confirmPassword, String fullName) {
+        return
+                new AuthJwtRegisterReq(
+                        email,
+                        password,
+                        confirmPassword,
+                        fullName,
+                        null);
+    }
+
     public Authentication newAuthenticationEntity(String id, String identifier) {
         Authentication mockAuthentication = new Authentication();
         LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
@@ -440,6 +452,18 @@ public class MockFactory {
         mockAuthentication.setIdentifier(identifier);
 
         return mockAuthentication;
+    }
+
+    public UserAuthDTO newUserAuthDTO(String email, String password, String role) {
+        UserAuthDTO mockUserAuth = new UserAuthDTO();
+        LocalDateTime now = LocalDateTime.now();
+        mockUserAuth.setId(UUID.randomUUID().toString());
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setActive(true);
+        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
+        mockUserAuth.setCreated(now);
+        mockUserAuth.setUpdated(now);
+        return mockUserAuth;
     }
 
     public User newUserEntity(String componentId) {
