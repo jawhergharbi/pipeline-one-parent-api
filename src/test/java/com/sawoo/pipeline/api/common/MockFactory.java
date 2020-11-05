@@ -14,10 +14,7 @@ import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
-import com.sawoo.pipeline.api.model.Authentication;
-import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import org.springframework.stereotype.Component;
@@ -495,6 +492,19 @@ public class MockFactory {
     public User newUserEntity(String componentId) {
         User user = new User();
         user.setId(componentId);
+        user.setFullName(FAKER.name().fullName());
+        user.getRoles().add(Role.SA.name());
+        user.setActive(true);
+        return user;
+    }
+
+    public UserMongoDB newUserAuthEntity(String email) {
+        UserMongoDB user = new UserMongoDB();
+        user.setEmail(email);
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreated(now);
+        user.setUpdated(now);
+        user.setId(UUID.randomUUID().toString());
         user.setFullName(FAKER.name().fullName());
         user.getRoles().add(Role.SA.name());
         user.setActive(true);

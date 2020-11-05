@@ -1,9 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
-import com.sawoo.pipeline.api.model.Authentication;
-import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.AuthRepository;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.validation.ConstraintDeclarationException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -24,72 +23,50 @@ public class AuthJwtUserDetailsServiceTest extends BaseServiceTest {
     private UserAuthJwtUserDetailsServiceImpl service;
 
     @MockBean
-    private AuthRepository authRepository;
-
-    @MockBean
-    private UserRepository userRepository;
+    private UserRepositoryMongo repository;
 
     @Test
     @DisplayName("loadUserByUsername: user found - Success")
     void loadUserByUsernameWhenUserFoundReturnsSuccess() {
         // Set up mock entity
-        String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
-        String AUTH_IDENTIFIER = FAKER.name().username();
-        Authentication mockedAuth = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
-        User mockedUser = getMockFactory().newUserEntity(AUTH_ID);
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedAuth)).when(authRepository).findByIdentifier(AUTH_IDENTIFIER);
-        doReturn(Optional.of(mockedUser)).when(userRepository).findById(AUTH_ID);
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findByEmail(AUTH_EMAIL);
 
         // Execute the service call
-        UserDetails userDetails = service.loadUserByUsername(AUTH_IDENTIFIER);
+        UserDetails userDetails = service.loadUserByUsername(AUTH_EMAIL);
 
         Assertions.assertNotNull(userDetails, "UserDetails can not be null");
         Assertions.assertEquals(
-                AUTH_IDENTIFIER,
+                AUTH_EMAIL,
                 userDetails.getUsername(),
-                String.format("Username must be the same: [%s]", AUTH_IDENTIFIER));
+                String.format("Email must be the same: [%s]", AUTH_EMAIL));
         Assertions.assertEquals(
-                mockedAuth.getPassword(),
+                mockedUserAuth.getPassword(),
                 userDetails.getPassword(),
-                String.format("Password must be the same: [%s]", mockedAuth.getPassword()));
+                String.format("Password must be the same: [%s]", mockedUserAuth.getPassword()));
         Assertions.assertEquals(
                 1,
                 userDetails.getAuthorities().size(),
                 String.format("Authorities must be greater than [%d]", 1));
 
-        verify(authRepository, times(1)).findByIdentifier(anyString());
-        verify(userRepository, times(1)).findById(anyString());
+        verify(repository, times(1)).findByEmail(anyString());
     }
 
     @Test
-    @DisplayName("loadUserByUsername: authorization not found - Success")
-    void loadUserByUsernameWhenAuthorizationNotFoundReturnsSuccess() {
+    @DisplayName("loadUserByUsername: user not found - Failure")
+    void loadUserByUsernameWhenUserNotFoundReturnsFailure() {
         // Set up mock entity
-        String AUTH_IDENTIFIER = FAKER.name().username();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(authRepository).findByIdentifier(AUTH_IDENTIFIER);
+        doReturn(Optional.empty()).when(repository).findByEmail(AUTH_EMAIL);
 
         Assertions.assertThrows(
                 UsernameNotFoundException.class,
-                () -> service.loadUserByUsername(AUTH_IDENTIFIER),
-                "loadUserByUsername must throw an UsernameNotFoundException");
-    }
-
-    @Test
-    @DisplayName("loadUserByUsername: user not found - Success")
-    void loadUserByUsernameWhenUserNotFoundReturnsSuccess() {
-        // Set up mock entity
-        String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(userRepository).findById(AUTH_ID);
-
-        Assertions.assertThrows(
-                UsernameNotFoundException.class,
-                () -> service.loadUserByUsername(AUTH_ID),
+                () -> service.loadUserByUsername(AUTH_EMAIL),
                 "loadUserByUsername must throw an UsernameNotFoundException");
     }
 }

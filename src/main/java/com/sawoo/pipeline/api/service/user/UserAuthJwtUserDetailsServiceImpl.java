@@ -20,14 +20,14 @@ public class UserAuthJwtUserDetailsServiceImpl implements UserDetailsService {
     private final JMapper<UserAuthDetails, UserMongoDB> mapperDomainToDTO = new JMapper<>(UserAuthDetails.class, UserMongoDB.class);
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.debug("Load user credentials: [{}]", email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.debug("Load user credentials: [{}]", username);
 
-        return userRepositoryMongo.findByEmail(email)
+        return userRepositoryMongo.findByEmail(username)
                 .map((user) -> {
                     log.debug("User component successfully found: [{}]", user);
 
                     return mapperDomainToDTO.getDestination(user);
-                }).orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                }).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }
