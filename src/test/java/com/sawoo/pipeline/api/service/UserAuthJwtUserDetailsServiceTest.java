@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class AuthJwtUserDetailsServiceTest extends BaseServiceTest {
+public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTest {
 
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;

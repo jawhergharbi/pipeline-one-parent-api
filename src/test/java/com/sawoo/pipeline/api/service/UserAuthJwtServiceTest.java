@@ -1,82 +1,84 @@
 package com.sawoo.pipeline.api.service;
 
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.common.exceptions.UserException;
-import com.sawoo.pipeline.api.dto.auth.AuthenticationDTO;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
-import com.sawoo.pipeline.api.model.Authentication;
-import com.sawoo.pipeline.api.repository.AuthRepository;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class UserAuthJwtServiceTest extends BaseServiceTest {
 
-   /* @Autowired
+    @Autowired
     private UserAuthJwtService service;
 
     @MockBean
-    private AuthRepository repository;
+    private UserRepositoryMongo repository;
 
     @Test
     @DisplayName("findById: entity exists - Success")
-    void findByIdWhenAuthenticationExistsReturnsSuccess() {
+    void findByEmailWhenUserAuthExistsReturnsSuccess() {
         // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
-        Authentication mockAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
+        String AUTH_ID = FAKER.internet().uuid();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        UserMongoDB mockUser = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockAuthentication)).when(repository).findById(AUTH_ID);
+        doReturn(Optional.of(mockUser)).when(repository).findById(anyString());
 
         // Execute the service call
-        AuthenticationDTO returnedAuthEntity = service.findById(AUTH_ID);
+        UserAuthDTO returnedAuthEntity = service.findById(AUTH_ID);
 
         // Assert the response
-        Assertions.assertNotNull(returnedAuthEntity, String.format("Authorization entity with id %s was not found", AUTH_ID));
-        Assertions.assertEquals(AUTH_ID, returnedAuthEntity.getId(), String.format("Authorization id must be %s", AUTH_ID));
-        Assertions.assertEquals(AUTH_IDENTIFIER, returnedAuthEntity.getIdentifier(), String.format("Authorization id must be %s", AUTH_IDENTIFIER));
+        Assertions.assertNotNull(
+                returnedAuthEntity,
+                String.format("Authorization entity with id %s was not found", AUTH_ID));
+        Assertions.assertEquals(
+                AUTH_ID,
+                returnedAuthEntity.getId(),
+                String.format("Authorization id must be %s", AUTH_ID));
+        Assertions.assertEquals(
+                AUTH_EMAIL,
+                returnedAuthEntity.getEmail(),
+                String.format("Authorization username must be %s", AUTH_EMAIL));
     }
 
     @Test
     @DisplayName("findById: entity not found - Failure")
-    void findByIdWhenAuthenticationNotFoundReturnsResourceNotRoundException() {
+    void findByIdWhenUserAuthNotFoundReturnsResourceNotRoundException() {
         // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
+        String AUTH_ID = FAKER.internet().uuid();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(AUTH_IDENTIFIER);
+        doReturn(Optional.empty()).when(repository).findById(AUTH_ID);
 
         // Asserts
         Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.findById(AUTH_IDENTIFIER),
+                () -> service.findById(AUTH_ID),
                 "findBy must throw an ResourceNotFoundException");
     }
 
-    @Test
+    /*@Test
     @DisplayName("findByIdentifier: entity exists - Success")
-    void findByIdentifierWhenAuthenticationExistsReturnsSuccess() {
+    void findByIdentifierWhenUserAuthExistsReturnsSuccess() {
         // Set up the mocked repository
         String AUTH_IDENTIFIER = FAKER.regexify(FAKER_USER_ID_REGEX);
         String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
@@ -92,80 +94,62 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         Assertions.assertNotNull(returnedAuthEntity, String.format("Authorization entity with id %s was not found", AUTH_ID));
         Assertions.assertEquals(AUTH_ID, returnedAuthEntity.getId(), String.format("Authorization id must be %s", AUTH_ID));
         Assertions.assertEquals(AUTH_IDENTIFIER, returnedAuthEntity.getIdentifier(), String.format("Authorization id must be %s", AUTH_IDENTIFIER));
-    }
+    }*/
 
     @Test
     @DisplayName("create: entity exists already - Failure")
-    void createWhenAuthenticationEntityExistsReturnsAuthException() {
+    void createWhenUserAuthEntityExistsReturnsAuthException() {
         // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
-        String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
-        AuthJwtRegisterRequestBase requestAuthentication = getMockFactory().newAuthRegisterRequest(AUTH_IDENTIFIER, AUTH_PASSWORD);
-        Authentication mockAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
+        String AUTH_ID = FAKER.internet().uuid();
+        UserAuthRegister requestAuth = getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD);
+        UserMongoDB mockUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockAuthentication)).when(repository).findByIdentifier(any());
+        doReturn(Optional.of(mockUserAuth)).when(repository).findByEmail(any());
 
         // Asserts
         Assertions.assertThrows(
                 AuthException.class,
-                () -> service.create(requestAuthentication, any()),
-                "create must throw an AuthException");
-    }
-
-    @Test
-    @DisplayName("create: entity exists already - Failure")
-    void createWhenUserServiceThrowsExceptionReturnsEserException() {
-        // Set up the mocked request entity
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        String AUTH_PASSWORD = FAKER.internet().password();
-        AuthJwtRegisterRequestBase requestAuthentication = getMockFactory().newAuthRegisterRequest(AUTH_IDENTIFIER, AUTH_PASSWORD);
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByIdentifier(AUTH_IDENTIFIER);
-        when(userService.create(any()))
-                .thenThrow(new UserException(
-                        ExceptionMessageConstants.USER_CREATE_USER_EXCEPTION,
-                        new String[]{AUTH_IDENTIFIER}));
-
-        // Asserts
-        Assertions.assertThrows(
-                AuthException.class,
-                () -> service.create(requestAuthentication, AUTH_IDENTIFIER),
+                () -> service.create(requestAuth),
                 "create must throw an AuthException");
     }
 
     @Test
     @DisplayName("create: new entity - Success")
-    void createWhenAuthenticationDataIsCorrectReturnsSuccess() {
+    void createWhenUserAuthDataIsCorrectReturnsSuccess() {
         // Set up the mocked request entity
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_ID = FAKER.internet().uuid();
         String AUTH_PASSWORD = FAKER.internet().password();
-        AuthJwtRegisterRequestBase requestAuthentication = getMockFactory().newAuthRegisterRequest(AUTH_IDENTIFIER, AUTH_PASSWORD);
-        AuthenticationDTO mockAuthenticationDTO = newAuthenticationDTOMockedEntity(requestAuthentication, AUTH_IDENTIFIER);
+        UserAuthRegister requestAuth = getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD);
+        UserMongoDB userAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByIdentifier(AUTH_IDENTIFIER);
+        doReturn(Optional.empty()).when(repository).findByEmail(anyString());
+        doReturn(userAuthEntity).when(repository).insert(any(UserMongoDB.class));
 
         // Execute the service call
-        AuthenticationDTO returnedAuthEntity = service.create(requestAuthentication, AUTH_IDENTIFIER);
+        UserAuthDTO returnedAuthEntity = service.create(requestAuth);
 
         // Asserts
-        Assertions.assertNotNull(returnedAuthEntity, "Authorization entity with identifier " + AUTH_IDENTIFIER + " was not created");
-        Assertions.assertNotNull(returnedAuthEntity.getSignedUp(), "Authorization.signedUp can not be null");
-        Assertions.assertEquals(mockAuthenticationDTO.getIdentifier(), returnedAuthEntity.getIdentifier(), "Authentication.identifier field should be equal");
-        Assertions.assertEquals(mockAuthenticationDTO.getProviderType(), DomainConstants.AUTHORIZATION_PROVIDER_TYPE_EMAIL, "Authentication.providerType field should be equal");
+        Assertions.assertNotNull(returnedAuthEntity, "UserAuth entity with username " + AUTH_EMAIL + " was not created");
+        Assertions.assertNotNull(returnedAuthEntity.getCreated(), "UserAuth.created can not be null");
+        Assertions.assertTrue(returnedAuthEntity.getActive(), "UserAuth.active field should be true");
+
+        verify(repository, times(1)).findByEmail(anyString());
+        verify(repository, times(1)).insert(any(UserMongoDB.class));
     }
 
     @Test
-    @DisplayName("Authentication Service: delete authentication when the entity does not exists - Failure")
+    @DisplayName("delete: when the entity does not exists - Failure")
     void deleteWhenAuthenticationEntityFoundReturnsSuccess() {
-        // Set up the mocked repository
-        String AUTH_ID = "user_id";
+        // Set up the mock entities
+        String AUTH_ID = FAKER.internet().uuid();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(AUTH_ID);
+        doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
         Assertions.assertThrows(
@@ -174,56 +158,56 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
                 "delete must throw an ResourceNotFoundException");
 
         // Verify behaviour
-        verify(repository, times(1)).findById(AUTH_ID);
-        verify(repository, never()).delete(any());
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, never()).deleteById(anyString());
     }
 
     @Test
-    @DisplayName("Authentication Service: delete authentication when the entity exists - Success")
+    @DisplayName("delete: authentication when the entity exists - Success")
     void deleteWhenAuthenticationEntityNotFoundReturns_Success() {
         // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        String AUTH_ID = "user_id";
-        Authentication mockedAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_ID = FAKER.internet().uuid();
+        UserMongoDB mockUserAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedAuthentication)).when(repository).findById(any());
+        doReturn(Optional.of(mockUserAuthEntity)).when(repository).findById(any());
 
         // Execute the service call
-        AuthenticationDTO returnedAuthEntity = service.delete(any());
+        UserAuthDTO returnedAuthEntity = service.delete(AUTH_ID);
 
         // Assertions
-        Assertions.assertNotNull(returnedAuthEntity, "Authentication entity can not be null");
-        Assertions.assertEquals(returnedAuthEntity.getId(), AUTH_ID, "Authentication.id have to be the same");
-        Assertions.assertEquals(returnedAuthEntity.getIdentifier(), AUTH_IDENTIFIER, "Authentication.identifier have to be the same");
-        Assertions.assertNotNull(returnedAuthEntity.getSignedUp(), "Authentication.signedUp can not be null");
+        Assertions.assertNotNull(returnedAuthEntity, "UserAuth entity can not be null");
+        Assertions.assertEquals(returnedAuthEntity.getId(), AUTH_ID, String.format("UserAuth.id value has to be %s", AUTH_ID));
+        Assertions.assertEquals(returnedAuthEntity.getEmail(), AUTH_EMAIL, String.format("UserAuth.email value has to be %s", AUTH_EMAIL));
+        Assertions.assertNotNull(returnedAuthEntity.getCreated(), "Authentication.signedUp can not be null");
 
         // Verify behaviour
-        verify(repository, times(1)).findById(any());
-        verify(repository, times(1)).delete(any());
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).deleteById(anyString());
     }
 
     @Test
-    @DisplayName("Auth Service: findAll when there are 2 auth entities - Success")
+    @DisplayName("findAll: when there are 2 auth entities - Success")
     void findAllWhenThereAreTwoAuthenticationEntitiesReturnsSuccess() {
         // Set up mock user entities
-        String AUTH_ID_1 = "my_component_id1";
-        String AUTH_ID_2 = "my_component_id2";
-        String AUTH_IDENTIFIER_1 = FAKER.internet().emailAddress();
-        String AUTH_IDENTIFIER_2 = FAKER.internet().emailAddress();
-        List<Authentication> authList = Arrays
-                .asList(
-                        getMockFactory().newAuthenticationEntity(AUTH_ID_1, AUTH_IDENTIFIER_1),
-                        getMockFactory().newAuthenticationEntity(AUTH_ID_2, AUTH_IDENTIFIER_2));
+        // Set up mock entities
+        int listSize = 3;
+        List<UserMongoDB> userAuthList = IntStream.range(0, listSize)
+                .mapToObj((user) -> {
+                    String AUTH_ID = FAKER.internet().uuid();
+                    String AUTH_EMAIL = FAKER.internet().emailAddress();
+                    return getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+                }).collect(Collectors.toList());
 
         // Set up the mocked repository
-        doReturn(authList).when(repository).findAll();
+        doReturn(userAuthList).when(repository).findAll();
 
         // Execute the service call
-        List<AuthenticationDTO> returnedUserList = service.findAll();
+        List<UserAuthDTO> returnedUserList = service.findAll();
 
         Assertions.assertFalse(returnedUserList.isEmpty(), "Returned list can not be empty");
-        Assertions.assertEquals(2, returnedUserList.size(), "Returned list size must be 2");
+        Assertions.assertEquals(returnedUserList.size(), listSize, String.format("Returned list size must be %d", listSize));
 
         // Verify behaviour
         verify(repository, times(1)).findAll();
@@ -232,22 +216,19 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     @Test
     @DisplayName("Auth Service: findAll empty list - Success")
     void findAllWhenThereAreNoEntitiesReturnsSuccess() {
-        // Set up mock user entities
-        List<Authentication> authenticationList = Collections.emptyList();
-
         // Set up the mocked repository
-        doReturn(authenticationList).when(repository).findAll();
+        doReturn(Collections.emptyList()).when(repository).findAll();
 
         // Execute the service call
-        List<AuthenticationDTO> returnedUserList = service.findAll();
+        List<UserAuthDTO> returnedUserList = service.findAll();
 
         // Assertions
-        Assertions.assertTrue(returnedUserList.isEmpty(), "Returned list can not be empty");
+        Assertions.assertTrue(returnedUserList.isEmpty(), "Returned list must be empty");
 
         verify(repository, times(1)).findAll();
     }
 
-    @Test
+    /*@Test
     @DisplayName("Auth Service: updatePassword auth component found - Success")
     void updatePasswordWhenAuthenticationFoundReturnsSuccess() {
         // Set up the mocked repository
@@ -334,19 +315,5 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(AUTH_IDENTIFIER);
-    }
-
-    private AuthenticationDTO newAuthenticationDTOMockedEntity(AuthJwtRegisterRequest registerRequest, String identifier) {
-        AuthenticationDTO mockAuthentication = new AuthenticationDTO();
-        LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
-        mockAuthentication.setId("user_id");
-        mockAuthentication.setSignedUp(SIGNED_UP_DATE_TIME);
-        mockAuthentication.setProviderType(
-                registerRequest.getProviderType() != null ?
-                        registerRequest.getProviderType() :
-                        DomainConstants.AUTHORIZATION_PROVIDER_TYPE_EMAIL);
-        mockAuthentication.setIdentifier(identifier);
-
-        return mockAuthentication;
     }*/
 }

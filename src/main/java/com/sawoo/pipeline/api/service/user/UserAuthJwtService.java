@@ -2,22 +2,17 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.auth.AuthenticationDTO;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequest;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface UserAuthJwtService {
 
-    UserAuthDTO create(AuthJwtRegisterReq registerRequest) throws AuthException;
+    UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException;
 
     UserAuthDTO delete(String id) throws ResourceNotFoundException;
 

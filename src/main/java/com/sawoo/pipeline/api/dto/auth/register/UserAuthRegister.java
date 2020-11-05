@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
-public class AuthJwtRegisterReq {
+public class UserAuthRegister {
 
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private String email;

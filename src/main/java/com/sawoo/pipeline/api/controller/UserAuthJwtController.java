@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
 import com.sawoo.pipeline.api.dto.auth.AuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.auth.login.AuthJwtLoginReq;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -45,7 +45,7 @@ public class UserAuthJwtController {
             method = RequestMethod.POST,
             produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<UserAuthDTO> create(@Valid @RequestBody AuthJwtRegisterReq registerRequest) throws AuthException {
+    public ResponseEntity<UserAuthDTO> create(@Valid @RequestBody UserAuthRegister registerRequest) throws AuthException {
         if (registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
             return Optional
                     .ofNullable( service.create(registerRequest))

@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.auth.login.AuthJwtLoginReq;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -52,7 +52,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister = getMockFactory()
+        UserAuthRegister postRegister = getMockFactory()
                 .newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
         UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_EMAIL, Role.ADMIN.name());
 
@@ -77,7 +77,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.email", is(AUTH_EMAIL)));
 
-        ArgumentCaptor<AuthJwtRegisterReq> authRequestCaptor = ArgumentCaptor.forClass(AuthJwtRegisterReq.class);
+        ArgumentCaptor<UserAuthRegister> authRequestCaptor = ArgumentCaptor.forClass(UserAuthRegister.class);
         verify(service, times(1)).create(authRequestCaptor.capture());
         Assertions.assertEquals(AUTH_EMAIL, authRequestCaptor.getValue().getEmail());
         Assertions.assertEquals(AUTH_FULL_NAME, authRequestCaptor.getValue().getFullName());
@@ -92,7 +92,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister = getMockFactory()
+        UserAuthRegister postRegister = getMockFactory()
                 .newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -113,7 +113,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -138,7 +138,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, "", AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -161,7 +161,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // setup the mocked service
@@ -182,7 +182,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         // Setup mock authentication entity
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(null, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
 
@@ -206,7 +206,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, null, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -228,7 +228,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         // Setup mock authentication entity
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, null, null, AUTH_FULL_NAME);
 
 
@@ -254,7 +254,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_FULL_NAME = FAKER.lorem().fixedString(101);
         String AUTH_PASSWORD = FAKER.internet().password();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -277,7 +277,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password(1, 5);
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        AuthJwtRegisterReq postRegister =
+        UserAuthRegister postRegister =
                 getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request

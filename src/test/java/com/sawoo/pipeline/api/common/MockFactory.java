@@ -4,7 +4,7 @@ package com.sawoo.pipeline.api.common;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
@@ -429,14 +429,36 @@ public class MockFactory {
                         0);
     }
 
-    public AuthJwtRegisterReq newAuthRegisterReq(String email, String password, String confirmPassword, String fullName) {
+    public UserAuthRegister newAuthRegisterReq(String email, String password) {
         return
-                new AuthJwtRegisterReq(
+                new UserAuthRegister(
+                        email,
+                        password,
+                        password,
+                        FAKER.name().fullName(),
+                        null);
+    }
+
+    public UserAuthRegister newAuthRegisterReq(String email, String password, String confirmPassword, String fullName) {
+        return
+                new UserAuthRegister(
                         email,
                         password,
                         confirmPassword,
                         fullName,
                         null);
+    }
+
+    public UserMongoDB newUserAuthEntity(String id, String email) {
+        UserMongoDB mockUserAuth = new UserMongoDB();
+        LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
+        mockUserAuth.setId(id);
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setCreated(SIGNED_UP_DATE_TIME);
+        mockUserAuth.setPassword(FAKER.internet().password());
+        mockUserAuth.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+
+        return mockUserAuth;
     }
 
     public Authentication newAuthenticationEntity(String id, String identifier) {

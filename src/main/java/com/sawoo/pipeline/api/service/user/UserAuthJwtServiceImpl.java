@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
+import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -41,7 +41,7 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
     private final CommonServiceMapper mapper;
 
     @Override
-    public UserAuthDTO create(AuthJwtRegisterReq registerRequest) throws AuthException {
+    public UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException {
         log.debug("Creating authorization component for user with [email: {}, fullName: {}, role: {}].",
                 registerRequest.getEmail(),
                 registerRequest.getFullName(),
@@ -185,7 +185,7 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
         }
     }
 
-    private UserMongoDB newUser(AuthJwtRegisterReq registerRequest) {
+    private UserMongoDB newUser(UserAuthRegister registerRequest) {
         UserMongoDB user = new UserMongoDB();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
