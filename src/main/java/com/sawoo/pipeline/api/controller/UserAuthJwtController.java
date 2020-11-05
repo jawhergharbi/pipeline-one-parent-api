@@ -17,11 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +39,6 @@ public class UserAuthJwtController {
 
     private final UserAuthJwtService service;
     private final JwtTokenUtil jwtTokenUtil;
-    private final AuthenticationManager authenticationManager;
 
     @RequestMapping(
             value = "/register",
@@ -71,8 +65,7 @@ public class UserAuthJwtController {
             consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<AuthJwtTokenResponse> login(@Valid @RequestBody AuthJwtLoginReq authRequest) throws AuthException {
         String email = authRequest.getEmail();
-        Authentication auth = authenticate(email, authRequest.getPassword());
-        UserAuthDetails user = (UserAuthDetails) auth.getPrincipal();
+        UserAuthDetails user = service.authenticate(email, authRequest.getPassword());
         try {
             final String token = jwtTokenUtil.generateToken(user, user.getId());
             return ResponseEntity.ok().body(new AuthJwtTokenResponse(token));
@@ -157,19 +150,5 @@ public class UserAuthJwtController {
                     new Object[]{ "roles", "UserAuthJwtController.findAllByRole"});
         }
         return ResponseEntity.ok().body(service.findAllByRole(Arrays.asList(roles)));
-    }
-
-    private Authentication authenticate(String email, String password) throws AuthException {
-        try {
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        } catch (DisabledException exc) {
-            throw new AuthException(
-                    ExceptionMessageConstants.AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION,
-                    new String[]{ email });
-        } catch (BadCredentialsException exc) {
-            throw new AuthException(
-                    ExceptionMessageConstants.AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION,
-                    new String[]{ email });
-        }
     }
 }

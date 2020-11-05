@@ -9,9 +9,7 @@ public interface ExceptionMessageConstants {
     String AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION = "auth.login.invalid-credentials-error.exception";
     String AUTH_LOGIN_USERNAME_NOT_FOUND_ERROR_EXCEPTION = "auth.login.username-not-found-error.exception";
     String AUTH_LOGIN_USER_IDENTIFIER_NOT_FOUND_ERROR_EXCEPTION = "auth.login.user-identifier-not-found-error.exception";
-
-    String USER_CREATE_USER_EXCEPTION = "user.create-user.exception";
-    String USER_CREATE_USER_ALREADY_EXISTS_EXCEPTION = "user.create.user-already-exists.exception";
+    String AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION = "auth.login.user-details-class-error.exception";
 
     String CLIENT_UPDATE_CSM_MATCH_SA_EXCEPTION = "client.update-csm.match-sa.exception";
     String CLIENT_UPDATE_SA_MATCH_CSM_EXCEPTION = "client.update-sa.match-csm.exception";

@@ -7,12 +7,18 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterReq;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +36,7 @@ import java.util.stream.Collectors;
 public class UserAuthJwtServiceImpl implements UserAuthJwtService {
 
     private final UserRepositoryMongo repository;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final CommonServiceMapper mapper;
 
@@ -147,6 +154,35 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                 .collect(Collectors.toList());
         log.debug("[{}] user/s with role/s [{}] has/have been found", users.size(), roles);
         return users;
+    }
+
+    @Override
+    public UserAuthDetails authenticate(String email, String password) throws AuthException {
+        log.debug("Authenticating user with email: [{}]", email);
+        Authentication auth = null;
+        try {
+            auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            return (UserAuthDetails) auth.getPrincipal();
+        } catch (ClassCastException | DisabledException exc) {
+            String message = ExceptionMessageConstants.AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION;
+            Object[] params;
+            if (exc instanceof ClassCastException) {
+                message = ExceptionMessageConstants.AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION;
+                params = new String[] {
+                        UserAuthDetails.class.getName(),
+                        (auth != null && auth.getPrincipal() != null) ?
+                            auth.getPrincipal().getClass().getName() :
+                            "null"
+                };
+            } else {
+                params = new String[]{ email };
+            }
+            throw new AuthException(message, params);
+        } catch (BadCredentialsException exc) {
+            throw new AuthException(
+                    ExceptionMessageConstants.AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION,
+                    new String[]{ email });
+        }
     }
 
     private UserMongoDB newUser(AuthJwtRegisterReq registerRequest) {

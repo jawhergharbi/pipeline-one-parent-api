@@ -12,6 +12,7 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.Authentication;
 import com.sawoo.pipeline.api.model.Company;
@@ -454,11 +455,36 @@ public class MockFactory {
         return mockAuthentication;
     }
 
-    public UserAuthDTO newUserAuthDTO(String email, String password, String role) {
+    public UserAuthDTO newUserAuthDTO(String email, String role) {
         UserAuthDTO mockUserAuth = new UserAuthDTO();
         LocalDateTime now = LocalDateTime.now();
         mockUserAuth.setId(UUID.randomUUID().toString());
         mockUserAuth.setEmail(email);
+        mockUserAuth.setActive(true);
+        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
+        mockUserAuth.setCreated(now);
+        mockUserAuth.setUpdated(now);
+        return mockUserAuth;
+    }
+
+    public UserAuthDTO newUserAuthDTO(String id, String email, String role) {
+        UserAuthDTO mockUserAuth = new UserAuthDTO();
+        LocalDateTime now = LocalDateTime.now();
+        mockUserAuth.setId(id);
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setActive(true);
+        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
+        mockUserAuth.setCreated(now);
+        mockUserAuth.setUpdated(now);
+        return mockUserAuth;
+    }
+
+    public UserAuthDetails newUserAuthDetails(String email, String password, String id, String role) {
+        UserAuthDetails mockUserAuth = new UserAuthDetails();
+        LocalDateTime now = LocalDateTime.now();
+        mockUserAuth.setId(id);
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setPassword(password);
         mockUserAuth.setActive(true);
         mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
         mockUserAuth.setCreated(now);
