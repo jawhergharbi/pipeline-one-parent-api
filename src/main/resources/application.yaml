@@ -41,7 +41,7 @@ spring:
       host: localhost
       port: 27017
       database: pipeline-core
-      auto-index-creation: true
+      auto-index-creation: false
 
 app:
   server: "http://localhost:8080"

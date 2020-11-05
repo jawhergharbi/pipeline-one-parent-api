@@ -1,20 +1,18 @@
-package com.sawoo.pipeline.api.model.client;
+package com.sawoo.pipeline.api.model;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.model.common.Note;
+import com.sawoo.pipeline.api.model.common.NoteMongoDB;
+import com.sawoo.pipeline.api.model.common.StatusMongoDB;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Reference;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,8 +21,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.CLIENT_DOCUMENT)
-public class Client {
+@Document(collection = DataStoreConstants.CLIENT_DOCUMENT)
+public class ClientMongoDB {
 
     @JMap
     @Id
@@ -48,25 +46,25 @@ public class Client {
     private String linkedInUrl;
 
     @JMap
-    private Note notes;
+    private NoteMongoDB notes;
 
     @JMap
-    @Reference
-    private Company company;
+    @DBRef
+    private CompanyMongoDB company;
 
     @JMap
-    private Status status;
+    private StatusMongoDB status;
 
     @Reference
     private List<Lead> leads;
 
     @JMap
-    @Reference
-    private User salesAssistant;
+    @DBRef
+    private UserMongoDB salesAssistant;
 
     @JMap
-    @Reference
-    private User customerSuccessManager;
+    @DBRef
+    private UserMongoDB customerSuccessManager;
 
     @JMap
     private LocalDateTime created;

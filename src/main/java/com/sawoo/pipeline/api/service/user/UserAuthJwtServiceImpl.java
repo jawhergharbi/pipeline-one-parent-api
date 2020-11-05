@@ -137,6 +137,18 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                                 new String[]{"User", userToUpdate.getId()}));
     }
 
+    @Override
+    public List<UserAuthDTO> findAllByRole(List<String> roles) {
+        log.debug("Retrieving all users with roles [{}]", roles);
+        List<UserAuthDTO> users = repository
+                .findByActiveTrueAndRolesIn(roles)
+                .stream()
+                .map(mapper.getUserAuthDomainToDTOMapper()::getDestination)
+                .collect(Collectors.toList());
+        log.debug("[{}] user/s with role/s [{}] has/have been found", users.size(), roles);
+        return users;
+    }
+
     private UserMongoDB newUser(AuthJwtRegisterReq registerRequest) {
         UserMongoDB user = new UserMongoDB();
         user.setEmail(registerRequest.getEmail());

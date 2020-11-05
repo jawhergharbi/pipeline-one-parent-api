@@ -38,9 +38,6 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     @MockBean
     private AuthRepository repository;
 
-    @MockBean
-    private UserService userService;
-
     @Test
     @DisplayName("findById: entity exists - Success")
     void findByIdWhenAuthenticationExistsReturnsSuccess() {

@@ -13,6 +13,7 @@ import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
+import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepositoryWrapper repository;
     private final CommonServiceMapper mapper;
     private final CompanyService companyService;
-    private final UserService userService;
+    private final UserAuthJwtService userService;
 
     @Override
     public ClientBasicDTO create(ClientBasicDTO client) throws CommonServiceException {
@@ -85,8 +85,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<ClientBasicDTO> findAll() {
         log.debug("Retrieving all client entities");
-        List<ClientBasicDTO> leads = StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+        List<ClientBasicDTO> leads = repository.findAll().stream()
                 .map(mapper.getClientDomainToDTOBasicMapper()::getDestination)
                 .collect(Collectors.toList());
         log.debug("[{}] client/s has/have been found", leads.size());
@@ -97,8 +96,7 @@ public class ClientServiceImpl implements ClientService {
     public List<ClientBasicDTO> findAllMain(LocalDateTime datetime) {
         log.debug("Retrieve all client entities together with their next interaction. Date time: [{}]", datetime);
 
-        List<ClientBasicDTO> clients = StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+        List<ClientBasicDTO> clients = repository.findAll().stream()
                 .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
                 .collect(Collectors.toList());
         log.debug("[{}] clients has been found", clients.size());
@@ -153,22 +151,24 @@ public class ClientServiceImpl implements ClientService {
     public Optional<ClientBasicDTO> updateCSM(Long id, String userId) {
         log.debug("Updating client Customer Success Manager. Client id: [{}]. User id: [{}]", id, userId);
 
-        UserDTO user = userService.findById(userId);
+        /*UserDTO user = userService.findById(userId);
         ClientBasicDTO client = new ClientBasicDTO();
         client.setId(id);
         client.setCustomerSuccessManager(user);
-        return update(id, client);
+        return update(id, client);*/
+        return null;
     }
 
     @Override
     public Optional<ClientBasicDTO> updateSA(Long id, String userId) {
         log.debug("Updating client Customer Success Manager. Client id: [{}]. User id: [{}]", id, userId);
 
-        UserDTO user = userService.findById(userId);
+        /*UserDTO user = userService.findById(userId);
         ClientBasicDTO client = new ClientBasicDTO();
         client.setId(id);
         client.setSalesAssistant(user);
-        return update(id, client);
+        return update(id, client);*/
+        return null;
     }
 
     private void processCompanyData(ClientBasicDTO client, LocalDateTime datetime) {

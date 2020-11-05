@@ -47,11 +47,11 @@ public class ClientRepositoryWrapperImpl implements ClientRepositoryWrapper {
     public List<Client> findByUserId(String id) {
         Comparator<Client> comparator = Comparator.comparing(Client::getId);
         // CSMs
-        Key csmKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_ENTITY_ENTITY).newKey(id);
+        Key csmKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_DOCUMENT).newKey(id);
         List<Client> csmClients = repository.findByCSMIs(csmKey);
 
         // SAa
-        Key saKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_ENTITY_ENTITY).newKey(id);
+        Key saKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_DOCUMENT).newKey(id);
         List<Client> saClients = repository.findBySAIs(saKey);
         return Stream
                 .concat(csmClients.stream(), saClients.stream())

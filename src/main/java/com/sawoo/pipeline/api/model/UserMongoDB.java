@@ -18,7 +18,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = DataStoreConstants.USER_ENTITY_ENTITY)
+@Document(collection = DataStoreConstants.USER_DOCUMENT)
 public class UserMongoDB {
 
     @JMap

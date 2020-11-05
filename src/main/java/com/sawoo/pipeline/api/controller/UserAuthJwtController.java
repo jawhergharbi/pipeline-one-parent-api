@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.controller;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
 import com.sawoo.pipeline.api.dto.auth.AuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.auth.login.AuthJwtLoginReq;
@@ -29,6 +30,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +42,7 @@ import java.util.Optional;
 @RequestMapping("/api/auth")
 public class UserAuthJwtController {
 
-    protected final UserAuthJwtService service;
+    private final UserAuthJwtService service;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
@@ -140,6 +142,21 @@ public class UserAuthJwtController {
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @RequestMapping(
+            value = "/role",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<UserAuthDTO>> findByRole(
+            @RequestParam(name = "roles")
+            @NotNull String[] roles) throws RestException {
+        if (roles.length == 0) {
+            throw new RestException(
+                    ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR,
+                    new Object[]{ "roles", "UserAuthJwtController.findAllByRole"});
+        }
+        return ResponseEntity.ok().body(service.findAllByRole(Arrays.asList(roles)));
     }
 
     private Authentication authenticate(String email, String password) throws AuthException {
