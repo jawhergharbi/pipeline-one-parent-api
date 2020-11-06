@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.auth.login;
+package com.sawoo.pipeline.api.dto.user;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
-public class AuthJwtLoginReq {
+public class UserAuthLogin {
 
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private String email;

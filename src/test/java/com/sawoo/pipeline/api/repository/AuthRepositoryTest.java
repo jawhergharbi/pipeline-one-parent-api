@@ -1,31 +1,13 @@
 package com.sawoo.pipeline.api.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.model.Authentication;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.gcp.data.datastore.core.DatastoreTemplate;
-
-import java.io.File;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class AuthRepositoryTest {
 
-    private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "auth-test-data.json").toFile();
+    /*private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "auth-test-data.json").toFile();
     private static final List<String> authIdList = new ArrayList<>();
 
     @Autowired
@@ -122,5 +104,5 @@ public class AuthRepositoryTest {
                         .stream(auths.spliterator(), false)
                         .collect(Collectors.toList()).size(),
                 "Should be 3 Auth entities in the database");
-    }
+    }*/
 }

@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.common.contants;
 
 public interface ExceptionMessageConstants {
 
-    String AUTH_REGISTER_PASSWORD_MATCH_EXCEPTION = "auth.register.password-must-match.exception";
+    String AUTH_COMMON_PASSWORD_MATCH_EXCEPTION = "auth.common.password-must-match.exception";
     String AUTH_REGISTER_IDENTIFIER_ALREADY_EXISTS_EXCEPTION = "auth.register.identifier-already-exists.exception";
     String AUTH_REGISTER_USER_SERVICE_ERROR_EXCEPTION = "auth.register.user-service-error.exception";
     String AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION = "auth.login.user-disable-error.exception";
@@ -27,6 +27,7 @@ public interface ExceptionMessageConstants {
     String COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION = "common.update-component.not-found.exception";
     String COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR = "common.field.can-not-be-empty-error";
     String COMMON_FIELD_CAN_NOT_BE_NULL_ERROR = "common.field.can-not-be-null-error";
+    String COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR = "common.field.can-not-be-empty-or-null-error";
     String COMMON_FIELD_CAN_NOT_EXCEED_MAX_SIZE_ERROR = "common.field.size-exceed-max-size";
     String COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR = "common.field.size-bellow-min-size";
     String COMMON_MISSING_REQUEST_PARAM_EXCEPTION_ERROR = "common.missing-request-param.error";

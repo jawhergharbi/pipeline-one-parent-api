@@ -4,8 +4,7 @@ package com.sawoo.pipeline.api.common;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
-import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
-import com.sawoo.pipeline.api.dto.auth.register.AuthJwtRegisterRequestBase;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
@@ -396,39 +395,6 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public AuthJwtRegisterRequestBase newAuthRegisterRequest(String authIdentifier, String password) {
-        return
-                new AuthJwtRegisterRequestBase(
-                        authIdentifier,
-                        password,
-                        password,
-                        FAKER.name().fullName(),
-                        null,
-                        0);
-    }
-
-    public AuthJwtRegisterRequestBase newAuthRegisterRequest(String authIdentifier, String password, String confirmPassword) {
-        return
-                new AuthJwtRegisterRequestBase(
-                        authIdentifier,
-                        password,
-                        confirmPassword,
-                        FAKER.name().fullName(),
-                        null,
-                        0);
-    }
-
-    public AuthJwtRegisterRequestBase newAuthRegisterRequest(String authIdentifier, String password, String confirmPassword, String fullName) {
-        return
-                new AuthJwtRegisterRequestBase(
-                        authIdentifier,
-                        password,
-                        confirmPassword,
-                        fullName,
-                        null,
-                        0);
-    }
-
     public UserAuthRegister newAuthRegisterReq(String email, String password) {
         return
                 new UserAuthRegister(
@@ -459,19 +425,6 @@ public class MockFactory {
         mockUserAuth.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
 
         return mockUserAuth;
-    }
-
-    public Authentication newAuthenticationEntity(String id, String identifier) {
-        Authentication mockAuthentication = new Authentication();
-        LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
-        mockAuthentication.setId(id);
-        mockAuthentication.setSignedUp(SIGNED_UP_DATE_TIME);
-        mockAuthentication.setPassword(FAKER.internet().password());
-        mockAuthentication.setProviderType(0);
-        mockAuthentication.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-        mockAuthentication.setIdentifier(identifier);
-
-        return mockAuthentication;
     }
 
     public UserAuthDTO newUserAuthDTO(String email, String role) {

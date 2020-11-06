@@ -4,8 +4,8 @@ import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.auth.login.AuthJwtLoginReq;
-import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
+import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -313,7 +313,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ID = FAKER.internet().uuid();
-        AuthJwtLoginReq loginRequest = new AuthJwtLoginReq(AUTH_EMAIL, AUTH_PASSWORD);
+        UserAuthLogin loginRequest = new UserAuthLogin(AUTH_EMAIL, AUTH_PASSWORD);
         UserAuthDetails mockUserDetails = getMockFactory().newUserAuthDetails(AUTH_EMAIL, AUTH_PASSWORD, AUTH_ID, Role.USER.name());
 
         // setup the mocked controllerHelper
@@ -334,7 +334,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
     void loginWhenInvalidRequestPasswordNotInformedReturnsFailure() throws Exception {
         // Setup mock entities
         String AUTH_EMAIL = FAKER.internet().emailAddress();
-        AuthJwtLoginReq loginRequest = new AuthJwtLoginReq(AUTH_EMAIL, null);
+        UserAuthLogin loginRequest = new UserAuthLogin(AUTH_EMAIL, null);
 
         // execute the POST request
         mockMvc.perform(post("/api/auth/login")

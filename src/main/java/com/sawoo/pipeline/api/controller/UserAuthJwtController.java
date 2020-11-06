@@ -5,9 +5,9 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
-import com.sawoo.pipeline.api.dto.auth.AuthJwtTokenResponse;
-import com.sawoo.pipeline.api.dto.auth.login.AuthJwtLoginReq;
-import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
+import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
+import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -53,7 +53,7 @@ public class UserAuthJwtController {
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } else {
             throw new AuthException(
-                    ExceptionMessageConstants.AUTH_REGISTER_PASSWORD_MATCH_EXCEPTION,
+                    ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION,
                     new Object[]{registerRequest.getEmail(), registerRequest.getFullName()});
         }
     }
@@ -63,12 +63,12 @@ public class UserAuthJwtController {
             method = RequestMethod.POST,
             produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<AuthJwtTokenResponse> login(@Valid @RequestBody AuthJwtLoginReq authRequest) throws AuthException {
+    public ResponseEntity<UserAuthJwtTokenResponse> login(@Valid @RequestBody UserAuthLogin authRequest) throws AuthException {
         String email = authRequest.getEmail();
         UserAuthDetails user = service.authenticate(email, authRequest.getPassword());
         try {
             final String token = jwtTokenUtil.generateToken(user, user.getId());
-            return ResponseEntity.ok().body(new AuthJwtTokenResponse(token));
+            return ResponseEntity.ok().body(new UserAuthJwtTokenResponse(token));
         } catch (UsernameNotFoundException exc) {
             throw new AuthException(
                     ExceptionMessageConstants.AUTH_LOGIN_USERNAME_NOT_FOUND_ERROR_EXCEPTION,

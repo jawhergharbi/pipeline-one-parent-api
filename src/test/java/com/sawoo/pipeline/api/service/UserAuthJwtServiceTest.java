@@ -1,9 +1,11 @@
 package com.sawoo.pipeline.api.service;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,26 +80,6 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
                 () -> service.findById(AUTH_ID),
                 "findBy must throw an ResourceNotFoundException");
     }
-
-    /*@Test
-    @DisplayName("findByIdentifier: entity exists - Success")
-    void findByIdentifierWhenUserAuthExistsReturnsSuccess() {
-        // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.regexify(FAKER_USER_ID_REGEX);
-        String AUTH_ID = FAKER.regexify(FAKER_USER_ID_REGEX);
-        Authentication mockAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockAuthentication)).when(repository).findByIdentifier(AUTH_IDENTIFIER);
-
-        // Execute the service call
-        AuthenticationDTO returnedAuthEntity = service.findByIdentifier(AUTH_IDENTIFIER);
-
-        // Assert the response
-        Assertions.assertNotNull(returnedAuthEntity, String.format("Authorization entity with id %s was not found", AUTH_ID));
-        Assertions.assertEquals(AUTH_ID, returnedAuthEntity.getId(), String.format("Authorization id must be %s", AUTH_ID));
-        Assertions.assertEquals(AUTH_IDENTIFIER, returnedAuthEntity.getIdentifier(), String.format("Authorization id must be %s", AUTH_IDENTIFIER));
-    }*/
 
     @Test
     @DisplayName("create: entity exists already - Failure")
@@ -228,45 +213,58 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         verify(repository, times(1)).findAll();
     }
 
-    /*@Test
-    @DisplayName("Auth Service: updatePassword auth component found - Success")
-    void updatePasswordWhenAuthenticationFoundReturnsSuccess() {
+    @Test
+    @DisplayName("update: password auth component found - Success")
+    void updatePasswordWhenUserAuthFoundReturnsSuccess() {
         // Set up the mocked repository
-        String AUTH_ID = "user_id";
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        String NEW_PASSWORD = FAKER.internet().password();
-        Authentication mockedAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
-        mockedAuthentication.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
+        String AUTH_ID = FAKER.internet().uuid();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_NEW_PASSWORD = FAKER.internet().password();
+        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        mockedUserAuth.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
 
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setId(AUTH_ID);
+        userUpdate.setPassword(AUTH_NEW_PASSWORD);
+        userUpdate.setConfirmPassword(AUTH_NEW_PASSWORD);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedAuthentication)).when(repository).findById(any());
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findById(anyString());
 
         // Execute the service call
-        AuthenticationDTO returnedAuthentication = service.updatePassword(any(), NEW_PASSWORD);
+        UserAuthDTO returnedAuthentication = service.update(userUpdate);
 
         // Assertions
         Assertions.assertNotNull(returnedAuthentication, "Returned authentication can not be null");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedAuthentication.getUpdated().toLocalDate(), "Updated datetime must be today");
 
-        verify(repository, times(1)).findById(any());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
-    @DisplayName("Auth Service: updatePassword auth component not found - Failure")
-    void updatePasswordWhenAuthenticationNotFoundReturnsResourceNotFoundException() {
+    @DisplayName("update password: password and confirmPassword do not match - Failure")
+    void updatePasswordWhenPasswordAndConfirmPasswordDoNotMatchReturnsAuthException() {
         // Set up the mocked repository
-        String AUTH_ID = "user_id";
+        String AUTH_ID = FAKER.internet().uuid();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_NEW_PASSWORD = FAKER.internet().password();
+        String AUTH_CONFIRM_PASSWORD = FAKER.internet().password();
+        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setId(AUTH_ID);
+        userUpdate.setPassword(AUTH_NEW_PASSWORD);
+        userUpdate.setConfirmPassword(AUTH_CONFIRM_PASSWORD);
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(any());
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findById(anyString());
 
         // Assertions
-        ResourceNotFoundException exception = Assertions.assertThrows(
-                ResourceNotFoundException.class,
-                () -> service.updatePassword(AUTH_ID, any()),
-                "updatePassword must throw an ResourceNotFoundException");
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        AuthException exception = Assertions.assertThrows(
+                AuthException.class,
+                () -> service.update(userUpdate),
+                "update password must throw an AuthException");
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION);
         Assertions.assertEquals(2, exception.getArgs().length);
 
 
@@ -274,21 +272,54 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Auth Service: updateIdentifier auth component found - Success")
-    void updateIdentifierWhenAuthenticationFoundReturnsSuccess() {
+    @DisplayName("update password: password and confirmPassword do not match - Failure")
+    void updatePasswordWhenPasswordLengthIsShorterThanMinReturnsAuthException() {
         // Set up the mocked repository
-        String AUTH_ID = "my_auth_id";
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        String NEW_AUTH_IDENTIFIER = FAKER.internet().emailAddress();
-        Authentication mockedAuthentication = getMockFactory().newAuthenticationEntity(AUTH_ID, AUTH_IDENTIFIER);
-        mockedAuthentication.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
+        String AUTH_ID = FAKER.internet().uuid();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_NEW_PASSWORD = FAKER.internet().password(0, 5);
+        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setId(AUTH_ID);
+        userUpdate.setPassword(AUTH_NEW_PASSWORD);
+        userUpdate.setConfirmPassword(AUTH_NEW_PASSWORD);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findById(anyString());
+
+        // Assertions
+        AuthException exception = Assertions.assertThrows(
+                AuthException.class,
+                () -> service.update(userUpdate),
+                "update password must throw an AuthException");
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+
+        verify(repository, times(1)).findById(any());
+    }
+
+    @Test
+    @DisplayName("update email: user auth component found - Success")
+    void updateEmailWhenAuthenticationFoundReturnsSuccess() {
+        // Set up the mocked repository
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_ID = FAKER.internet().uuid();
+
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setId(AUTH_ID);
+        userUpdate.setEmail(AUTH_EMAIL);
+
+        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        mockedUserAuth.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
 
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedAuthentication)).when(repository).findById(AUTH_ID);
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findById(AUTH_ID);
 
         // Execute the service call
-        AuthenticationDTO returnedAuthentication = service.updateIdentifier(AUTH_ID, NEW_AUTH_IDENTIFIER);
+        UserAuthDTO returnedAuthentication = service.update(userUpdate);
 
         // Assertions
         Assertions.assertNotNull(returnedAuthentication, "Returned authentication can not be null");
@@ -298,22 +329,46 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Auth Service: updateIdentifier auth component not found - Failure")
-    void updateIdentifierWhenAuthenticationNotFoundReturnsResourceNotFoundException() {
+    @DisplayName("update user: user auth component not found - Failure")
+    void updateEmailWhenUserAuthNotFoundReturnsResourceNotFoundException() {
         // Set up the mocked repository
-        String AUTH_IDENTIFIER = FAKER.internet().emailAddress();
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        String AUTH_ID = FAKER.internet().uuid();
+
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setId(AUTH_ID);
+        userUpdate.setEmail(AUTH_EMAIL);
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(AUTH_IDENTIFIER);
+        doReturn(Optional.empty()).when(repository).findById(AUTH_ID);
 
         // Assertions
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.updateIdentifier(AUTH_IDENTIFIER, any()),
-                "updateIdentifier must throw an ResourceNotFoundException");
+                () -> service.update(userUpdate),
+                "update must throw an ResourceNotFoundException");
+
         Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
         Assertions.assertEquals(2, exception.getArgs().length);
 
-        verify(repository, times(1)).findById(AUTH_IDENTIFIER);
-    }*/
+        verify(repository, times(1)).findById(AUTH_ID);
+    }
+
+    @Test
+    @DisplayName("update user: user id is not informed - Failure")
+    void updateEmailWhenUserAuthIdNotInformedReturnsAuthException() {
+        // Set up the mocked repository
+        String AUTH_EMAIL = FAKER.internet().emailAddress();
+        UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
+        userUpdate.setEmail(AUTH_EMAIL);
+
+        // Assertions
+        AuthException exception = Assertions.assertThrows(
+                AuthException.class,
+                () -> service.update(userUpdate),
+                "update must throw an AuthException");
+
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR);
+        Assertions.assertEquals(2, exception.getArgs().length);
+    }
 }

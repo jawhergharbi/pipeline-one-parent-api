@@ -1,11 +1,12 @@
 package com.sawoo.pipeline.api.service.user;
 
 import com.googlecode.jmapper.api.enums.MappingType;
+import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.auth.register.UserAuthRegister;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
@@ -110,9 +111,18 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
     public UserAuthDTO update(UserAuthUpdateDTO userToUpdate) throws ResourceNotFoundException, AuthException {
         log.debug("Updating user  with id: [{}]", userToUpdate.getId());
 
+        if (userToUpdate.getId() == null || userToUpdate.getId().length() == 0) {
+            throw new AuthException(
+                    ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR,
+                    new String[]{ "id", "User"});
+        }
+
         return repository
                 .findById(userToUpdate.getId())
                 .map((user) -> {
+                    // Validation
+                    userUpdateValidation(userToUpdate, user);
+
                     // Password
                     if (userToUpdate.getPassword() != null) {
                         user.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
@@ -200,5 +210,20 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
             user.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
         }
         return user;
+    }
+
+    private void userUpdateValidation(UserAuthUpdateDTO userToUpdate, UserMongoDB user) throws AuthException {
+        if (userToUpdate.getPassword() != null) {
+            if (!userToUpdate.getPassword().equals(userToUpdate.getConfirmPassword())) {
+                throw new AuthException(
+                        ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION,
+                        new String[]{ user.getEmail(), user.getFullName()});
+            }
+            if (userToUpdate.getPassword().length() < CommonConstants.AUTH_PASSWORD_MIN_LENGTH) {
+                throw new AuthException(
+                        ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR,
+                        new Object[]{ "password", CommonConstants.AUTH_PASSWORD_MIN_LENGTH });
+            }
+        }
     }
 }
