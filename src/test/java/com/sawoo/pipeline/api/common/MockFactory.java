@@ -4,7 +4,6 @@ package com.sawoo.pipeline.api.common;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
@@ -12,8 +11,12 @@ import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
-import com.sawoo.pipeline.api.model.*;
+import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.Status;
+import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import org.springframework.stereotype.Component;
@@ -395,7 +398,7 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public UserAuthRegister newAuthRegisterReq(String email, String password) {
+    public UserAuthRegister newUserAuthRegister(String email, String password) {
         return
                 new UserAuthRegister(
                         email,
@@ -405,7 +408,7 @@ public class MockFactory {
                         null);
     }
 
-    public UserAuthRegister newAuthRegisterReq(String email, String password, String confirmPassword, String fullName) {
+    public UserAuthRegister newUserAuthRegister(String email, String password, String confirmPassword, String fullName) {
         return
                 new UserAuthRegister(
                         email,
@@ -415,16 +418,31 @@ public class MockFactory {
                         null);
     }
 
-    public UserMongoDB newUserAuthEntity(String id, String email) {
+    public UserMongoDB newUserAuthEntity(String id, String email, String[] roles) {
         UserMongoDB mockUserAuth = new UserMongoDB();
+
         LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
         mockUserAuth.setId(id);
         mockUserAuth.setEmail(email);
         mockUserAuth.setCreated(SIGNED_UP_DATE_TIME);
         mockUserAuth.setPassword(FAKER.internet().password());
+        mockUserAuth.setActive(true);
+        if (roles != null) {
+            mockUserAuth.setRoles(new HashSet<>(Arrays.asList(roles)));
+        } else {
+            mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
+        }
         mockUserAuth.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
 
         return mockUserAuth;
+    }
+
+    public UserMongoDB newUserAuthEntity(String id, String email) {
+        return newUserAuthEntity(id, email, null);
+    }
+
+    public UserMongoDB newUserAuthEntity(String email) {
+        return newUserAuthEntity(UUID.randomUUID().toString(), email, null);
     }
 
     public UserAuthDTO newUserAuthDTO(String email, String role) {
@@ -470,37 +488,6 @@ public class MockFactory {
         user.setFullName(FAKER.name().fullName());
         user.getRoles().add(Role.SA.name());
         user.setActive(true);
-        return user;
-    }
-
-    public UserMongoDB newUserAuthEntity(String email) {
-        UserMongoDB user = new UserMongoDB();
-        user.setEmail(email);
-        LocalDateTime now = LocalDateTime.now();
-        user.setCreated(now);
-        user.setUpdated(now);
-        user.setId(UUID.randomUUID().toString());
-        user.setFullName(FAKER.name().fullName());
-        user.getRoles().add(Role.SA.name());
-        user.setActive(true);
-        return user;
-    }
-
-    public UserDTO newUserDTO(String componentId) {
-        UserDTO user = new UserDTO();
-        user.setId(componentId);
-        user.setFullName(FAKER.name().fullName());
-        user.setActive(true);
-        user.setRoles(new HashSet<>(Collections.singletonList(Role.SA.name())));
-        return user;
-    }
-
-    public UserDTO newUserDTO(String userId, String fullName) {
-        UserDTO user = new UserDTO();
-        user.setId(userId);
-        user.setFullName(fullName);
-        user.setActive(true);
-        user.setRoles(new HashSet<>(Collections.singletonList(Role.ADMIN.name())));
         return user;
     }
 

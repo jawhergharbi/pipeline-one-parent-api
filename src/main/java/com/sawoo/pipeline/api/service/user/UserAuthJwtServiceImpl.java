@@ -22,7 +22,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Validated
 public class UserAuthJwtServiceImpl implements UserAuthJwtService {
 
     private final UserRepositoryMongo repository;
@@ -155,8 +159,11 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
     }
 
     @Override
-    public List<UserAuthDTO> findAllByRole(List<String> roles) {
+    public List<UserAuthDTO> findAllByRole(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Size(min = 1, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR) List<String> roles) {
         log.debug("Retrieving all users with roles [{}]", roles);
+
         List<UserAuthDTO> users = repository
                 .findByActiveTrueAndRolesIn(roles)
                 .stream()

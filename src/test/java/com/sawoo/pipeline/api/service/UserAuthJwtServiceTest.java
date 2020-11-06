@@ -1,10 +1,11 @@
 package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
@@ -14,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +91,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ID = FAKER.internet().uuid();
-        UserAuthRegister requestAuth = getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD);
+        UserAuthRegister requestAuth = getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD);
         UserMongoDB mockUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
@@ -108,7 +111,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ID = FAKER.internet().uuid();
         String AUTH_PASSWORD = FAKER.internet().password();
-        UserAuthRegister requestAuth = getMockFactory().newAuthRegisterReq(AUTH_EMAIL, AUTH_PASSWORD);
+        UserAuthRegister requestAuth = getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD);
         UserMongoDB userAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
@@ -129,7 +132,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
 
     @Test
     @DisplayName("delete: when the entity does not exists - Failure")
-    void deleteWhenAuthenticationEntityFoundReturnsSuccess() {
+    void deleteWhenUserAuthEntityFoundReturnsSuccess() {
         // Set up the mock entities
         String AUTH_ID = FAKER.internet().uuid();
 
@@ -149,7 +152,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
 
     @Test
     @DisplayName("delete: authentication when the entity exists - Success")
-    void deleteWhenAuthenticationEntityNotFoundReturns_Success() {
+    void deleteWhenUserAuthEntityNotFoundReturns_Success() {
         // Set up the mocked repository
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ID = FAKER.internet().uuid();
@@ -174,8 +177,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
 
     @Test
     @DisplayName("findAll: when there are 2 auth entities - Success")
-    void findAllWhenThereAreTwoAuthenticationEntitiesReturnsSuccess() {
-        // Set up mock user entities
+    void findAllWhenThereAreTwoUserAuthEntitiesReturnsSuccess() {
         // Set up mock entities
         int listSize = 3;
         List<UserMongoDB> userAuthList = IntStream.range(0, listSize)
@@ -199,8 +201,8 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Auth Service: findAll empty list - Success")
-    void findAllWhenThereAreNoEntitiesReturnsSuccess() {
+    @DisplayName("findAll: empty list - Success")
+    void findAllWhenThereAreNoUserAuthEntitiesReturnsSuccess() {
         // Set up the mocked repository
         doReturn(Collections.emptyList()).when(repository).findAll();
 
@@ -214,7 +216,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("update: password auth component found - Success")
+    @DisplayName("update: password user auth component found - Success")
     void updatePasswordWhenUserAuthFoundReturnsSuccess() {
         // Set up the mocked repository
         String AUTH_ID = FAKER.internet().uuid();
@@ -355,7 +357,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("update user: user id is not informed - Failure")
+    @DisplayName("update email: user id is not informed - Failure")
     void updateEmailWhenUserAuthIdNotInformedReturnsAuthException() {
         // Set up the mocked repository
         String AUTH_EMAIL = FAKER.internet().emailAddress();
@@ -371,4 +373,62 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR);
         Assertions.assertEquals(2, exception.getArgs().length);
     }
+
+    @Test
+    @DisplayName("findAllByRole: when there are 2 user auth entities - Success")
+    void findAllByRolesWhenThereAreUserAuthEntitiesReturnsSuccess() {
+        // Set up mock entities
+        int listSize = 2;
+        List<UserMongoDB> userAuthList = IntStream.range(0, listSize)
+                .mapToObj((user) -> {
+                    String AUTH_ID = FAKER.internet().uuid();
+                    String AUTH_EMAIL = FAKER.internet().emailAddress();
+                    return getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL, new String[] {Role.SA.name()});
+                }).collect(Collectors.toList());
+
+        // Set up the mocked repository
+        doReturn(userAuthList).when(repository).findByActiveTrueAndRolesIn(anyList());
+
+        // Execute the service call
+        List<UserAuthDTO> returnedUserList = service.findAllByRole(Collections.singletonList(Role.SA.name()));
+
+        Assertions.assertFalse(returnedUserList.isEmpty(), "Returned list can not be empty");
+        Assertions.assertEquals(returnedUserList.size(), listSize, String.format("Returned list size must be %d", listSize));
+
+        // Verify behaviour
+        verify(repository, times(1)).findByActiveTrueAndRolesIn(anyList());
+    }
+
+    @Test
+    @DisplayName("findAllByRole: list of roles is null - Failure")
+    void findAllByRolesWhenListOfRolesIsNullReturnsConstraintViolationException() {
+
+        // Assertions
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> service.findAllByRole(null),
+                "update must throw an ConstraintViolationException");
+
+        // Asserts
+        Assertions.assertEquals(1, exception.getConstraintViolations().size());
+    }
+
+    @Test
+    @DisplayName("findAllByRole: list of roles is empty - Failure")
+    void findAllByRolesWhenListOfRolesIsEmptyReturnsConstraintViolationException() {
+
+        // Assertions
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> service.findAllByRole(Collections.emptyList()),
+                "update must throw an ConstraintViolationException");
+
+        // Asserts
+        Assertions.assertEquals(1, exception.getConstraintViolations().size());
+    }
+
+
+    /**
+     *   authenticate method is not tested
+     */
 }
