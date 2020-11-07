@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.repository.mongo;
+package com.sawoo.pipeline.api.repository;
 
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.*;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.model.client.Client;
@@ -36,8 +36,11 @@ public class CommonServiceMapper {
     private final JMapper<Client, ClientBasicDTO> clientDTOToDomainMapper = new JMapper<>(Client.class, ClientBasicDTO.class);
     private final JMapper<ClientBaseDTO, Client> clientDomainToDTOBaseMapper = new JMapper<>(ClientBaseDTO.class, Client.class);
 
-    private final JMapper<CompanyDTO, Company> companyDomainToDTOMapper = new JMapper<>(CompanyDTO.class, Company.class);
-    private final JMapper<Company, CompanyDTO> companyDTOToDomainMapper = new JMapper<>(Company.class, CompanyDTO.class);
+    /*private final JMapper<CompanyDTO, Company> companyDomainToDTOMapper = new JMapper<>(CompanyDTO.class, Company.class);
+    private final JMapper<Company, CompanyDTO> companyDTOToDomainMapper = new JMapper<>(Company.class, CompanyDTO.class);*/
+
+    private final JMapper<CompanyDTO, CompanyMongoDB> companyDomainToDTOMapper = new JMapper<>(CompanyDTO.class, CompanyMongoDB.class);
+    private final JMapper<CompanyMongoDB, CompanyDTO> companyDTOToDomainMapper = new JMapper<>(CompanyMongoDB.class, CompanyDTO.class);
 
     private final JMapper<UserDTO, User> userDomainToDTOMapper = new JMapper<>(UserDTO.class, User.class);
     private final JMapper<User, UserDTO> userDTOToDomainMapper = new JMapper<>(User.class, UserDTO.class);

@@ -5,42 +5,46 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.repository.CompanyRepository;
+import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.repository.CompanyRepositoryMongo;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Tag(value = "service")
+@Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class CompanyServiceTest extends BaseServiceTest {
 
     @Autowired
     private CompanyService service;
 
     @MockBean
-    private CompanyRepository repository;
+    private CompanyRepositoryMongo repository;
 
     @Test
-    @DisplayName("Company Service: findById - Success")
+    @DisplayName("findById: entity found - Success")
     void findByIdWhenCompanyDoesExitReturnsSuccess() {
         // Set up mock entities
-        Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        Company mockedEntity = newMockedEntity(COMPANY_ID);
+        String COMPANY_ID = FAKER.internet().uuid();
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(COMPANY_ID);
@@ -49,39 +53,40 @@ public class CompanyServiceTest extends BaseServiceTest {
         CompanyDTO returnedEntity = service.findById(COMPANY_ID);
 
         // Assert the response
-        Assertions.assertNotNull(returnedEntity, String.format("Company entity with id [%d] was not found", COMPANY_ID));
-        Assertions.assertEquals(returnedEntity.getId(), COMPANY_ID, "Company.id should be the same");
+        Assertions.assertNotNull(returnedEntity, String.format("Company entity with id [%s] was not found", COMPANY_ID));
+        Assertions.assertEquals(returnedEntity.getId(), COMPANY_ID, String.format("Company.id should be equals to [%s]", COMPANY_ID));
 
         verify(repository, Mockito.times(1)).findById(COMPANY_ID);
     }
 
     @Test
-    @DisplayName("Company Service: findById when company does not exists - Failure")
-    void findByIdWhenCompanyNotFoundReturnsResourceNot_FoundException() {
+    @DisplayName("findById: company does not exists - Failure")
+    void findByIdWhenCompanyNotFoundReturnsResourceNotFoundException() {
         // Set up mock entities
-        Long COMPONENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(COMPONENT_ID);
+        doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.findById(COMPONENT_ID),
+                () -> service.findById(COMPANY_ID),
                 "findById must throw a ResourceNotFoundException");
         Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
         Assertions.assertEquals(2, exception.getArgs().length);
 
-        verify(repository, Mockito.times(1)).findById(COMPONENT_ID);
+        verify(repository, Mockito.times(1)).findById(anyString());
     }
 
     @Test
-    @DisplayName("Company Service: findByName - Success")
+    @DisplayName("findByName: company found - Success")
     void findByNameWhenCompanyExitsReturnsSuccess() {
         // Set up mock entities
-        Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
-        Company mockedEntity = newMockedEntity(COMPANY_ID);
+        String COMPANY_URL = FAKER.company().url();
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
         mockedEntity.setName(COMPANY_NAME);
 
         // Set up the mocked repository
@@ -98,7 +103,7 @@ public class CompanyServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Company Service: findByName - Optional Empty")
+    @DisplayName("findByName: company not found return optional empty - Failure")
     void findByNameWhenCompanyDoesNotExitsReturnsOptionalEmpty() {
         // Set up mock entities
         String COMPANY_NAME = FAKER.company().name();
@@ -117,45 +122,45 @@ public class CompanyServiceTest extends BaseServiceTest {
 
 
     @Test
-    @DisplayName("Company Service: create when company does not exist - Success")
+    @DisplayName("create: when company does not exist - Success")
     void createWhenCompanyDoesNotExistReturnsSuccess() {
         // Set up mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(COMPANY_NAME);
         mockedDTO.setUrl(COMPANY_URL);
-        Company mockedEntity = newMockedEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL, LocalDateTime.now());
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByName(COMPANY_NAME);
-        doReturn(mockedEntity).when(repository).save(any());
+        doReturn(Optional.empty()).when(repository).findByName(anyString());
+        doReturn(mockedEntity).when(repository).insert(any(CompanyMongoDB.class));
 
         // Execute the service call
         CompanyDTO returnedEntity = service.create(mockedDTO);
 
         // Assert the response
-        Assertions.assertNotNull(returnedEntity, "Company entity with name " + COMPANY_NAME + " was found already in the system");
+        Assertions.assertNotNull(returnedEntity, "Company can not be null");
         Assertions.assertEquals(COMPANY_NAME, returnedEntity.getName(), "Company.name should be the same");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getCreated().toLocalDate(), "Creation time must be today");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getUpdated().toLocalDate(), "Update time must be today");
 
-        verify(repository, Mockito.times(1)).save(any());
-        verify(repository, Mockito.times(1)).findByName(COMPANY_NAME);
+        verify(repository, Mockito.times(1)).insert(any(CompanyMongoDB.class));
+        verify(repository, Mockito.times(1)).findByName(anyString());
     }
 
     @Test
-    @DisplayName("Company service: create when company does exist - Failure")
+    @DisplayName("create: when company does exist - Failure")
     void createWhenCompanyExistsReturnsCommonException() {
         // Set up mocked entities
-        Long COMPONENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(COMPANY_NAME);
         mockedDTO.setUrl(COMPANY_URL);
-        Company mockedEntity = newMockedEntity(COMPONENT_ID, COMPANY_NAME, COMPANY_URL);
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findByName(COMPANY_NAME);
@@ -179,18 +184,18 @@ public class CompanyServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Company Service: findAll - Success")
-    void findAllWhenThereAreTwoCompaniesReturnsSuccess() {
+    @DisplayName("findAll: multiple entities found - Success")
+    void findAllWhenThereAreMultipleCompaniesReturnsSuccess() {
         // Set up mock entities
-        Long COMPANY_ID_1 = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        Long COMPANY_ID_2 = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        List<Company> companies = Arrays
-                .asList(
-                        newMockedEntity(COMPANY_ID_1),
-                        newMockedEntity(COMPANY_ID_2));
+        int listSize = 2;
+        List<CompanyMongoDB> companyList = IntStream.range(0, listSize)
+                .mapToObj((company) -> {
+                    String COMPANY_ID = FAKER.internet().uuid();
+                    return getMockFactory().newCompanyEntity(COMPANY_ID);
+                }).collect(Collectors.toList());
 
         // Set up the mocked repository
-        doReturn(companies).when(repository).findAll();
+        doReturn(companyList).when(repository).findAll();
 
         // Execute the service call
         List<CompanyDTO> returnedList = service.findAll();
@@ -202,13 +207,10 @@ public class CompanyServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Company Service: findAll empty list - Success")
+    @DisplayName("findAll: empty list - Success")
     void findAllWhenThereAreNoCompanyEntitiesReturnsSuccess() {
-        // Set up mock entities
-        List<Company> companies = Collections.emptyList();
-
         // Set up the mocked repository
-        doReturn(companies).when(repository).findAll();
+        doReturn(Collections.emptyList()).when(repository).findAll();
 
         // Execute the service call
         List<CompanyDTO> returnedList = service.findAll();
@@ -219,69 +221,70 @@ public class CompanyServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Company Service: delete company entity found - Success")
+    @DisplayName("delete: company entity found - Success")
     void deleteWhenCompanyEntityFoundReturnsSuccess() {
         // Set up mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = Faker.instance().company().name();
         String COMPANY_URL = Faker.instance().company().url();
-        CompanyDTO mockedDTO = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
-        Company mockedEntity = newMockedEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(COMPANY_ID);
 
         // Execute the service call
-        Optional<CompanyDTO> returnedDTO = service.delete(COMPANY_ID);
+        CompanyDTO returnedDTO = service.delete(COMPANY_ID);
 
-        Assertions.assertTrue(returnedDTO.isPresent(), "Returned entity can not be null");
-        Assertions.assertEquals(mockedDTO.getId(), returnedDTO.get().getId(), "company.id fields are the same");
-        Assertions.assertEquals(mockedDTO.getName(), returnedDTO.get().getName(), "company.name fields are the same");
+        Assertions.assertNotNull(returnedDTO, "Returned entity can not be null");
+        Assertions.assertEquals(COMPANY_ID, returnedDTO.getId(), "company.id fields are the same");
+        Assertions.assertEquals(COMPANY_NAME, returnedDTO.getName(), "company.name fields are the same");
 
         verify(repository, Mockito.times(1)).findById(COMPANY_ID);
         verify(repository, Mockito.times(1)).delete(any());
     }
 
     @Test
-    @DisplayName("Company Service: delete company entity not found - Null")
-    void deleteWhenCompanyEntityNotFoundReturnsNull() {
-        // Set up mocked entities
-        Long COMPONENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-
+    @DisplayName("delete: company entity not found - failure")
+    void deleteWhenCompanyEntityNotFoundReturnsResourceNotFoundException() {
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(COMPONENT_ID);
+        doReturn(Optional.empty()).when(repository).findById(anyString());
 
-        // Execute the service call
-        Optional<CompanyDTO> returnedEntity = service.delete(COMPONENT_ID);
+        // Execute and assert
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> service.delete(anyString()),
+                "update must throw an ResourceNotFoundException");
 
-        Assertions.assertFalse(returnedEntity.isPresent(), "Returned entity must be null");
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
 
-        verify(repository, Mockito.times(1)).findById(COMPONENT_ID);
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
-    @DisplayName("Company Service: update company name when company does exist - Success")
+    @DisplayName("update: company name when company does exist - Success")
     void updateWhenCompanyFoundReturnsSuccess() {
         // Set up mocked entities
-        CompanyDTO mockedDTO = new CompanyDTO();
+        String COMPANY_ID = FAKER.internet().uuid();
         String NEW_COMPANY_NAME = Faker.instance().company().name();
+        CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(NEW_COMPANY_NAME);
+        mockedDTO.setId(COMPANY_ID);
 
-        Long COMPANY_ID = Faker.instance().number().randomNumber();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
-        Company mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
+        CompanyMongoDB mockedEntity = getMockFactory().newCompanyEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(COMPANY_ID);
 
         // Execute the service call
-        Optional<CompanyDTO> returnedDTO = service.update(COMPANY_ID, mockedDTO);
+        CompanyDTO returnedDTO = service.update(mockedDTO);
 
-        Assertions.assertTrue(returnedDTO.isPresent(), "Company entity is not null");
+        Assertions.assertNotNull(returnedDTO, "Company entity is not null");
         Assertions.assertEquals(
                 NEW_COMPANY_NAME,
-                returnedDTO.get().getName(),
+                returnedDTO.getName(),
                 String.format("Name must be '%s'", NEW_COMPANY_NAME));
 
         verify(repository, Mockito.times(1)).findById(COMPANY_ID);
@@ -289,40 +292,27 @@ public class CompanyServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("Company Service: update company when company does not exist - Failure")
-    void updateWhenCompanyNotFoundReturnsFailure() {
+    @DisplayName("update: when company does not exist - Failure")
+    void updateWhenCompanyNotFoundReturnsResourceNotFoundExceptionFailure() {
         // Set up mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String NEW_COMPANY_NAME = Faker.instance().company().name();
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(NEW_COMPANY_NAME);
+        mockedDTO.setId(COMPANY_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(COMPANY_ID);
+        doReturn(Optional.empty()).when(repository).findById(anyString());
 
-        // Execute the service call
-        Optional<CompanyDTO> returnedEntity = service.update(COMPANY_ID, mockedDTO);
+        // Execute and assert
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> service.update(mockedDTO),
+                "update must throw an ResourceNotFoundException");
 
-        Assertions.assertFalse(returnedEntity.isPresent(), "Company entity must be null");
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
 
-        verify(repository, Mockito.times(1)).findById(COMPANY_ID);
-        verify(repository, Mockito.never()).save(any());
-    }
-
-    private Company newMockedEntity(Long id) {
-        return newMockedEntity(
-                id,
-                Faker.instance().company().name(),
-                Faker.instance().company().url());
-    }
-
-    private Company newMockedEntity(Long id, String name, String url) {
-        Company entity = new Company();
-        entity.setId(id);
-        entity.setName(name);
-        entity.setUrl(url);
-        entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-        entity.setCreated(LocalDateTime.now(ZoneOffset.UTC));
-        return entity;
+        verify(repository, times(1)).findById(COMPANY_ID);
     }
 }

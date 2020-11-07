@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.model.UserMongoDB;
-import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

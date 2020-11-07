@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.lead.LeadInteraction;
 import org.junit.jupiter.api.*;
@@ -128,7 +128,7 @@ public class LeadRepositoryTest {
         mockedEntity.setEmail(FAKER.internet().emailAddress());
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
-        mockedEntity.setCompany(Company
+        mockedEntity.setCompany(CompanyMongoDB
                 .builder()
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())

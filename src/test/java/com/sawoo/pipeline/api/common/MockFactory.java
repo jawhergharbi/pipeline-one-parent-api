@@ -13,10 +13,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
-import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import org.springframework.stereotype.Component;
@@ -155,7 +152,7 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, Company company) {
+    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, CompanyMongoDB company) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
         mockedEntity.setId(id);
@@ -184,9 +181,9 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(Company
+            mockedEntity.setCompany(CompanyMongoDB
                     .builder()
-                    .id(FAKER.number().randomNumber())
+                    .id(FAKER.internet().uuid())
                     .name(FAKER.company().name())
                     .url(FAKER.company().url())
                     .build());
@@ -208,9 +205,9 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(Company
+            mockedEntity.setCompany(CompanyMongoDB
                     .builder()
-                    .id(FAKER.number().randomNumber())
+                    .id(FAKER.internet().uuid())
                     .name(FAKER.company().name())
                     .url(FAKER.company().url())
                     .build());
@@ -220,33 +217,23 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public CompanyDTO newCompanyDTO(Long id, String name, String url) {
+    public CompanyDTO newCompanyDTO(String id, String name, String url) {
         LocalDateTime created = LocalDateTime.of(2020, 1, 1, 1, 30);
         LocalDateTime updated = LocalDateTime.of(2020, 12, 1, 1, 30);
-        return CompanyDTO.builder()
-                .name(name)
-                .id(id)
-                .url(url)
-                .updated(updated)
-                .created(created)
-                .build();
-    }
-
-    public CompanyDTO newCompanyDTO(Long id, String name, String url, LocalDateTime dateTime) {
-        return CompanyDTO.builder()
-                .id(id)
-                .name(name)
-                .url(url)
-                .updated(dateTime)
-                .created(dateTime)
-                .build();
+        CompanyDTO company = newCompanyDTO(id, name, url, created);
+        company.setUpdated(updated);
+        return company;
     }
 
     public CompanyDTO newCompanyDTO(LocalDateTime dateTime) {
+        return newCompanyDTO(FAKER.internet().uuid(), FAKER.company().name(), FAKER.company().url(), dateTime);
+    }
+
+    public CompanyDTO newCompanyDTO(String id, String name, String url, LocalDateTime dateTime) {
         return CompanyDTO.builder()
-                .id(FAKER.number().randomNumber())
-                .name(FAKER.company().name())
-                .url(FAKER.company().url())
+                .id(id)
+                .name(name)
+                .url(url)
                 .updated(dateTime)
                 .created(dateTime)
                 .build();
@@ -267,6 +254,39 @@ public class MockFactory {
                 .id(id)
                 .name(name)
                 .url(url)
+                .build();
+    }
+
+    public CompanyMongoDB newCompanyEntity(String id, String name, String url) {
+        return CompanyMongoDB.builder()
+                .id(id)
+                .name(name)
+                .url(url)
+                .build();
+    }
+
+    public CompanyMongoDB newCompanyEntity(String id, String name, String url, LocalDateTime dateTime) {
+        return CompanyMongoDB.builder()
+                .id(id)
+                .name(name)
+                .url(url)
+                .updated(dateTime)
+                .created(dateTime)
+                .build();
+    }
+
+    public CompanyMongoDB newCompanyEntity(String name, String url) {
+        return CompanyMongoDB.builder()
+                .name(name)
+                .url(url)
+                .build();
+    }
+
+    public CompanyMongoDB newCompanyEntity(String id) {
+        return CompanyMongoDB.builder()
+                .id(id)
+                .name(FAKER.company().name())
+                .url(FAKER.company().url())
                 .build();
     }
 
@@ -360,7 +380,7 @@ public class MockFactory {
         mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedDTO.setEmail(FAKER.internet().emailAddress());
         mockedDTO.setPosition(FAKER.company().profession());
-        mockedDTO.setCompany(newCompanyDTO(FAKER.number().randomNumber(), FAKER.company().name(), FAKER.company().url(), dateTime));
+        mockedDTO.setCompany(newCompanyDTO(FAKER.internet().uuid(), FAKER.company().name(), FAKER.company().url(), dateTime));
         mockedDTO.setUpdated(dateTime);
         mockedDTO.setCreated(dateTime);
         return mockedDTO;
@@ -375,7 +395,7 @@ public class MockFactory {
         mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedDTO.setEmail(FAKER.internet().emailAddress());
         mockedDTO.setPosition(FAKER.company().profession());
-        mockedDTO.setCompany(newCompanyDTO(FAKER.number().randomNumber(), companyName, companyUrl, dateTime));
+        mockedDTO.setCompany(newCompanyDTO(FAKER.internet().uuid(), companyName, companyUrl, dateTime));
         mockedDTO.setUpdated(dateTime);
         mockedDTO.setCreated(dateTime);
         return mockedDTO;

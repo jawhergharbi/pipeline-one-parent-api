@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class CompanyDTO {
 
     @JMap
-    private Long id;
+    private String id;
 
     @JMap
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)

@@ -552,7 +552,7 @@ public class LeadControllerTest extends BaseControllerTest {
         mock.setPosition(FAKER.company().profession());
         mock.setCompany(
                 CompanyDTO.builder()
-                        .id(FAKER.number().randomNumber())
+                        .id(FAKER.internet().uuid())
                         .name(FAKER.company().name())
                         .url(FAKER.company().url())
                         .created(dateTime)

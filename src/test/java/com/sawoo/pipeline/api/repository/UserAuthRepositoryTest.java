@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.model.UserMongoDB;
-import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +42,8 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
         UserMongoDB[] userAuthList = mapper.readValue(AUTHENTICATION_JSON_DATA, UserMongoDB[].class);
         documentSize = userAuthList.length;
 
-        // Load each auth entity into the dataStore
-        repository.saveAll(Arrays.asList(userAuthList));
+        // Save each auth entity into the DB
+        repository.insert(Arrays.asList(userAuthList));
     }
 
     @AfterEach

@@ -115,7 +115,7 @@ public class ClientServiceTest extends BaseServiceTest {
                 .url(COMPANY_URL).build());
         ClientBasicDTO spyDTO = spy(mockedDTO);
 
-        Long EXISTING_COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String EXISTING_COMPANY_ID = FAKER.internet().uuid();
         LocalDateTime EXISTING_COMPANY_DATETIME = LocalDateTime.of(2020, 12, 31, 12, 0);
         CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
 

@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.model.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.common.Note;
@@ -66,7 +66,7 @@ public class Lead {
 
     @JMap
     @Reference
-    private Company company;
+    private CompanyMongoDB company;
 
     @JMap
     @Field(name = "company_comments")

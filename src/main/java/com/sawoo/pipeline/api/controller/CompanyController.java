@@ -1,7 +1,5 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class CompanyController {
             value = "/{id}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CompanyDTO> get(@PathVariable Long id) {
+    public ResponseEntity<CompanyDTO> get(@PathVariable String id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
@@ -43,14 +41,8 @@ public class CompanyController {
             value = "/{id}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CompanyDTO> delete(@PathVariable Long id) throws ResourceNotFoundException {
-        return service
-                .delete(id)
-                .map((company) -> ResponseEntity.ok().body(company))
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{"Company", String.valueOf(id)}));
+    public ResponseEntity<CompanyDTO> delete(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.delete(id));
     }
 
     @RequestMapping(
@@ -74,21 +66,16 @@ public class CompanyController {
             produces = { MediaType.APPLICATION_JSON_VALUE},
             consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> update(@RequestBody CompanyDTO company,
-                                    @PathVariable Long id) {
-        return service.update(id, company)
-                .map( (updatedEntity) -> {
-                    try {
-                        return ResponseEntity
-                                .ok()
-                                .location( new URI("/api/companies/" + updatedEntity.getId()) )
-                                .body(updatedEntity);
-                    } catch (URISyntaxException exc) {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                    }
-                })
-                .orElseThrow( () ->
-                        new ResourceNotFoundException(
-                                ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{"Company", String.valueOf(id)}));
+                                    @PathVariable String id) {
+        company.setId(id);
+        CompanyDTO updatedCompany = service.update(company);
+        try {
+            return ResponseEntity
+                    .ok()
+                    .location(new URI("/api/companies/" + updatedCompany.getId()))
+                    .body(updatedCompany);
+        } catch (URISyntaxException exc) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

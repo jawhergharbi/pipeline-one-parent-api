@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,7 +19,7 @@ public class CompanyMongoDB {
 
     @Id
     @JMap
-    private Long id;
+    private String id;
 
     @JMap
     private String name;

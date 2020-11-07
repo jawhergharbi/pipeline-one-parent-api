@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service.user;
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.UserMongoDB;
-import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

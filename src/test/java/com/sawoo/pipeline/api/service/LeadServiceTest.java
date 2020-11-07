@@ -220,7 +220,7 @@ public class LeadServiceTest extends BaseServiceTest {
 
         Lead mockedEntity = getMockFactory()
                 .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
-        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL, now));
+        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.internet().uuid(), COMPANY_NAME, COMPANY_URL, now));
         mockedEntity.setStatus(
                 Status.builder()
                         .value(ProspectStatus.HOT.getStatus())
@@ -271,7 +271,7 @@ public class LeadServiceTest extends BaseServiceTest {
                 .name(COMPANY_NAME)
                 .url(COMPANY_URL).build());
 
-        Long EXISTING_COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+        String EXISTING_COMPANY_ID = FAKER.internet().uuid();
         LocalDateTime EXISTING_COMPANY_DATETIME = LocalDateTime.of(2020, 12, 31, 12, 0);
         CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
 

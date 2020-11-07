@@ -3,34 +3,29 @@ package com.sawoo.pipeline.api.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.gcp.data.datastore.core.DatastoreTemplate;
+import org.springframework.context.annotation.Profile;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class CompanyRepositoryTest {
+@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Profile(value = {"unit-tests", "unit-tests-embedded"})
+public class CompanyRepositoryTest extends BaseRepositoryTest {
 
     private static final File COMPANY_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "company-test-data.json").toFile();
-    private static final List<Long> companyIdList = new ArrayList<>();
-    private final Faker FAKER = Faker.instance();
+    private int documentSize;
 
     @Autowired
-    private DatastoreTemplate datastoreTemplate;
-
-    @Autowired
-    private CompanyRepository repository;
+    private CompanyRepositoryMongo repository;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -39,74 +34,74 @@ public class CompanyRepositoryTest {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         // Deserialize our JSON file to an array of reviews
-        Company[] companyList = mapper.readValue(COMPANY_JSON_DATA, Company[].class);
+        CompanyMongoDB[] companyList = mapper.readValue(COMPANY_JSON_DATA, CompanyMongoDB[].class);
+        documentSize = companyList.length;
 
-        // Load each auth entity into the dataStore
-        Arrays.stream(companyList).forEach((company) -> {
-            companyIdList.add(company.getId());
-            datastoreTemplate.save(company);
-        });
+        // Load each auth entity into the DB
+        repository.insert(Arrays.asList(companyList));
     }
 
     @AfterEach
     void afterEach() {
-        // Drop the entity collection so we can start fresh
-        datastoreTemplate.deleteAll(Company.class);
-        companyIdList.clear();
+        repository.deleteAll();
     }
 
     @Test
-    void findAllWhenTwoEntitiesFoundReturnsSuccess() {
-        Iterable<Company> auths = repository.findAll();
+    @DisplayName("findAll: return the entities defined in the file - Success")
+    void findAllReturnsSuccess() {
+        List<CompanyMongoDB> companies = repository.findAll();
 
         Assertions.assertEquals(
-                companyIdList.size(),
-                (int) StreamSupport
-                        .stream(auths.spliterator(), true).count(),
-                String.format("Should be %d Company entities in the database", companyIdList.size()));
+                documentSize,
+                companies.size(),
+                String.format("Should be %d Company entities in the database", documentSize));
     }
 
     @Test
+    @DisplayName("findById: entity found - Success")
     void findByIdWhenEntityIdFoundReturnsSuccess() {
-        Long COMPANY_ID = 123L;
-        Optional<Company> entity = repository.findById(COMPANY_ID);
+        String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
+        Optional<CompanyMongoDB> entity = repository.findById(COMPANY_ID);
 
         Assertions.assertTrue(entity.isPresent(), String.format("Company with [id]: %s can not be null", COMPANY_ID));
         Assertions.assertEquals(COMPANY_ID, entity.get().getId(), String.format("Company [id] must be %s", COMPANY_ID));
     }
 
     @Test
+    @DisplayName("findByName: entity found - Success")
     void findByNameWhenEntityIdFoundReturnsSuccess() {
-        String COMPANY_NAME = "company_name_1";
-        Optional<Company> entity = repository.findByName(COMPANY_NAME);
+        String COMPANY_NAME = "google";
+        Optional<CompanyMongoDB> entity = repository.findByName(COMPANY_NAME);
 
         Assertions.assertTrue(entity.isPresent(), String.format("Company with [name]: %s can not be null", COMPANY_NAME));
         Assertions.assertEquals(COMPANY_NAME, entity.get().getName(), String.format("Company [name] must be %s", COMPANY_NAME));
     }
 
     @Test
-    void findByIdWhenEntityNotFoundReturnsSuccess() {
-        Long COMPANY_ID = 12345L;
-        Optional<Company> entity = repository.findById(COMPANY_ID);
+    @DisplayName("findByName: entity not found - Failure")
+    void findByIdWhenEntityNotFoundReturnsFailure() {
+        String COMPANY_ID = "wrong_id";
+        Optional<CompanyMongoDB> entity = repository.findById(COMPANY_ID);
 
-        Assertions.assertFalse(entity.isPresent(), String.format("Company with [id]: %s can be found", COMPANY_ID));
+        Assertions.assertFalse(entity.isPresent(), String.format("Company with [id]: %s can not be found", COMPANY_ID));
     }
 
     @Test
+    @DisplayName("save: entity saved - Success")
     void saveWhenAddNewEntityReturnsSuccess() {
-        Company company = new Company();
-        company.setName(FAKER.company().name());
-        company.setUrl(FAKER.company().url());
+        CompanyMongoDB company = getMockFactory()
+                .newCompanyEntity(FAKER.company().name(), FAKER.company().url());
 
-        repository.save(company);
-        companyIdList.add(company.getId());
+        CompanyMongoDB companyStored = repository.insert(company);
+        List<CompanyMongoDB> companies = repository.findAll();
 
-        Iterable<Company> companies = repository.findAll();
+        Assertions.assertNotNull(
+                companyStored.getId(),
+                "Company id can not be null for the new inserted document" );
+
         Assertions.assertEquals(
-                companyIdList.size(),
-                (int) StreamSupport
-                        .stream(companies.spliterator(), true).count(),
-                String.format("Should be [%d] company entities in the database", companyIdList.size()) );
-        Assertions.assertNotNull(company.getId(), "Company [id] can not be null after being saved");
+                documentSize + 1,
+                companies.size(),
+                String.format("Number of companies stored in the collection must be equal to %d", documentSize + 1));
     }
 }

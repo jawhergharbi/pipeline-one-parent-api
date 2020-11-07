@@ -6,14 +6,12 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.service.CompanyService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,14 +24,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+@Tag(value = "controller")
+@Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class CompanyControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -46,7 +47,7 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("GET /api/companies/{id}: company found - Success")
     void getByIdWhenCompanyFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO mockedDTOEntity = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
@@ -63,7 +64,7 @@ public class CompanyControllerTest extends BaseControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(COMPANY_ID.intValue())))
+                .andExpect(jsonPath("$.id", is(COMPANY_ID)))
                 .andExpect(jsonPath("$.name", is(COMPANY_NAME)))
                 .andExpect(jsonPath("$.url", is(COMPANY_URL)));
     }
@@ -72,7 +73,7 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("GET /api/companies/{id}: company not found - Failure")
     void getByIdWhenCompanyNotFoundReturnsResourceNoFoundException() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
 
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -100,10 +101,10 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("GET /api/companies/: two companies found - Success")
     void findAllWhenThereAreCompaniesReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        List<Long> companyIds = new ArrayList<>();
+        List<String> companyIds = new ArrayList<>();
         List<CompanyDTO> companyList = IntStream.range(0, 2)
                 .mapToObj((company) -> {
-                    Long COMPANY_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
+                    String COMPANY_ID = FAKER.internet().uuid();
                     companyIds.add(COMPANY_ID);
                     String COMPANY_NAME = FAKER.company().name();
                     String COMPANY_URL = FAKER.company().url();
@@ -123,7 +124,7 @@ public class CompanyControllerTest extends BaseControllerTest {
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(companyIds.get(0).intValue())));
+                .andExpect(jsonPath("$[0].id", is(companyIds.get(0))));
     }
 
     @Test
@@ -149,13 +150,13 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("DELETE /api/companies/{id}: delete company found - Success")
     void deleteWhenUserFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO mockedEntity = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // Setup the mock service
-        doReturn(Optional.of(mockedEntity)).when(service).delete(COMPANY_ID);
+        doReturn(mockedEntity).when(service).delete(COMPANY_ID);
 
         // Execute the GET request
         mockMvc.perform(delete("/api/companies/{id}", COMPANY_ID)
@@ -166,7 +167,7 @@ public class CompanyControllerTest extends BaseControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(COMPANY_ID.intValue())))
+                .andExpect(jsonPath("$.id", is(COMPANY_ID)))
                 .andExpect(jsonPath("$.url", is(COMPANY_URL)))
                 .andExpect(jsonPath("$.name", is(COMPANY_NAME)))
                 .andExpect(jsonPath("$.created").exists());
@@ -176,10 +177,16 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("DELETE /api/companies/{id}: company not found - Failure")
     void deleteWhenCompanyNotFoundReturnsResourceNotFoundException() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
 
         // setup the mocked service
-        doReturn(Optional.empty()).when(service).delete(COMPANY_ID);
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{"Company", COMPANY_ID});
+
+        // setup the mocked helper
+        doThrow(exception)
+                .when(service).delete(anyString());
 
         // Execute the DELETE request
         mockMvc.perform(delete("/api/companies/{id}", COMPANY_ID)
@@ -193,13 +200,16 @@ public class CompanyControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath(
                         "$.message",
                         containsString(String.format("DELETE operation. Component type [Company] and id [%s] was not found", COMPANY_ID))));
+
+        // Verify behavior
+        verify(service, times(1)).delete(anyString());
     }
 
     @Test
     @DisplayName("POST /api/companies: company create - Success")
     void createWhenCompanyCreateReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO postEntity = new CompanyDTO();
@@ -223,7 +233,7 @@ public class CompanyControllerTest extends BaseControllerTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/api/companies/" + COMPANY_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(COMPANY_ID.intValue())))
+                .andExpect(jsonPath("$.id", is(COMPANY_ID)))
                 .andExpect(jsonPath("$.name", is(COMPANY_NAME)));
     }
 
@@ -231,13 +241,10 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("POST /api/companies: company already exists - Failure")
     void createWhenCompanyAlreadyExistsReturnsFailure() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
-        CompanyDTO postEntity = new CompanyDTO();
-        postEntity.setId(COMPANY_ID);
-        postEntity.setName(COMPANY_NAME);
-        postEntity.setUrl(COMPANY_URL);
+        CompanyDTO postEntity = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         CommonServiceException exception = new CommonServiceException(
                 ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
@@ -266,7 +273,7 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("POST /api/companies: company name not informed - Failure")
     void createWhenNameAndSiteNotInformedReturnsFailure() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         CompanyDTO postEntity = new CompanyDTO();
         postEntity.setId(COMPANY_ID);
 
@@ -287,15 +294,16 @@ public class CompanyControllerTest extends BaseControllerTest {
     @DisplayName("PUT /api/companies/{id}: company exists - Success")
     void updateWhenCompanyFoundAndUpdatedReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
+        String COMPANY_ID = FAKER.internet().uuid();
         String COMPANY_NAME = FAKER.company().name();
         String COMPANY_URL = FAKER.company().url();
         CompanyDTO postEntity = new CompanyDTO();
         postEntity.setUrl(COMPANY_URL);
+        postEntity.setId(COMPANY_ID);
         CompanyDTO mockedDTOEntity = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // setup the mocked service
-        doReturn(Optional.of(mockedDTOEntity)).when(service).update(COMPANY_ID, postEntity);
+        doReturn(mockedDTOEntity).when(service).update(postEntity);
 
         // Execute the PUT request
         mockMvc.perform(put("/api/companies/{id}", COMPANY_ID)
@@ -310,21 +318,26 @@ public class CompanyControllerTest extends BaseControllerTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/api/companies/" + COMPANY_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(COMPANY_ID.intValue())))
+                .andExpect(jsonPath("$.id", is(COMPANY_ID)))
                 .andExpect(jsonPath("$.name", is(COMPANY_NAME)))
                 .andExpect(jsonPath("$.url", is(COMPANY_URL)));
     }
 
     @Test
     @DisplayName("PUT /api/companies/{id}: company not found - Failure")
-    void updateWhenCompanyNotFoundReturnsFailure() throws Exception {
+    void updateWhenCompanyNotFoundReturnsResourceNotFoundException() throws Exception {
         // Setup the mocked entities
-        Long COMPANY_ID = FAKER.number().numberBetween(Integer.MIN_VALUE, (long) Integer.MAX_VALUE);
-        CompanyDTO postEntity = new CompanyDTO();
-        postEntity.setId(COMPANY_ID);
+        String COMPANY_ID = FAKER.internet().uuid();
+        CompanyDTO postEntity = CompanyDTO.builder().id(COMPANY_ID).build();
 
         // setup the mocked service
-        doReturn(Optional.empty()).when(service).update(COMPANY_ID, postEntity);
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{"Company", COMPANY_ID});
+
+        // setup the mocked helper
+        doThrow(exception)
+                .when(service).update(postEntity);
 
         // Execute the POST request
         mockMvc.perform(put("/api/companies/{id}", COMPANY_ID)

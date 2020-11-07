@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.UserMongoDB;
-import com.sawoo.pipeline.api.repository.mongo.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

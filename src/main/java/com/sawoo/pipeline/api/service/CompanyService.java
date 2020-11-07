@@ -11,13 +11,13 @@ public interface CompanyService {
 
     CompanyDTO create(CompanyDTO company) throws CommonServiceException;
 
-    Optional<CompanyDTO> update(Long id, CompanyDTO company);
+    CompanyDTO update(CompanyDTO company);
 
     List<CompanyDTO> findAll();
 
-    CompanyDTO findById(Long id) throws ResourceNotFoundException;
+    CompanyDTO findById(String id) throws ResourceNotFoundException;
 
     Optional<CompanyDTO> findByName(String name);
 
-    Optional<CompanyDTO> delete(Long id) throws ResourceNotFoundException;
+    CompanyDTO delete(String id) throws ResourceNotFoundException;
 }
