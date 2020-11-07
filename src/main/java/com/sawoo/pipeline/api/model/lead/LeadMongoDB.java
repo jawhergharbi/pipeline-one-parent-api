@@ -4,30 +4,25 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.common.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Descendants;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Reference;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.LEAD_DOCUMENT)
-public class Lead {
+@Document(collection = DataStoreConstants.LEAD_DOCUMENT)
+public class LeadMongoDB {
 
     @JMap
     @Id
-    private Long id;
+    private String id;
 
     @JMap
     private Integer salutation;
@@ -61,31 +56,11 @@ public class Lead {
     private String profilePicture;
 
     @JMap
-    @Field(name = "extra_notes")
-    private Note extraNotes;
-
-    @JMap
-    @Reference
+    @DBRef
     private CompanyMongoDB company;
 
     @JMap
-    @Field(name = "company_comments")
-    private Note companyComments;
-
-    @JMap
-    private Status status;
-
-    @JMap
     private LeadPersonality personality;
-
-    @Descendants
-    private List<LeadInteraction> interactions;
-    public List<LeadInteraction> getInteractions() {
-        if (interactions == null) {
-            interactions = new ArrayList<>();
-        }
-        return interactions;
-    }
 
     @JMap
     private LocalDateTime created;
@@ -102,15 +77,5 @@ public class Lead {
     @JMapConversion(from = {"salutation"}, to = {"salutation"})
     public Integer salutationConversion(Integer salutation) {
         return salutation == null ? 0 : salutation;
-    }
-
-    @JMapConversion(from = {"companyComments"}, to = {"companyNotes"})
-    public String companyNotesConversion(Note companyComments) {
-        return companyComments == null ? "" : companyComments.getText();
-    }
-
-    @JMapConversion(from = {"extraNotes"}, to = {"notes"})
-    public String extraNotesConversion(Note extraNotes) {
-        return extraNotes == null ? "" : extraNotes.getText();
     }
 }

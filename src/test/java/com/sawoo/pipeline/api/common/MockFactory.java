@@ -290,16 +290,6 @@ public class MockFactory {
                 .build();
     }
 
-    public Company newCompanyEntity(Long id, String name, String url, LocalDateTime dateTime) {
-        return Company.builder()
-                .id(id)
-                .name(name)
-                .url(url)
-                .updated(dateTime)
-                .created(dateTime)
-                .build();
-    }
-
     public Client newClientEntity(Long id) {
         Client client = new Client();
         client.setId(id);

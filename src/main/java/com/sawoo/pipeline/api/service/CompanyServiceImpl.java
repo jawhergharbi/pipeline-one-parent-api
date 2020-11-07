@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
-import com.sawoo.pipeline.api.repository.CompanyRepositoryMongo;
+import com.sawoo.pipeline.api.repository.CompanyRepository;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Validated
 public class CompanyServiceImpl implements CompanyService {
 
-    private final CompanyRepositoryMongo repository;
+    private final CompanyRepository repository;
     private final CommonServiceMapper mapper;
 
     @Override

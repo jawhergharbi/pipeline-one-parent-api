@@ -25,7 +25,7 @@ public class CompanyRepositoryTest extends BaseRepositoryTest {
     private int documentSize;
 
     @Autowired
-    private CompanyRepositoryMongo repository;
+    private CompanyRepository repository;
 
     @BeforeEach
     void beforeEach() throws Exception {

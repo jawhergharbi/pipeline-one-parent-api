@@ -71,8 +71,8 @@ public class LeadInteractionServiceTest extends BaseServiceTest {
     }
 
     private Key createKey(Long leadId, Long interactionId) {
-        Key parentKey = dataStoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_ENTITY_ENTITY).newKey(leadId);
-        return Key.newBuilder(parentKey, DataStoreConstants.LEAD_INTERACTION_ENTITY_NAME, interactionId).build();
+        Key parentKey = dataStoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
+        return Key.newBuilder(parentKey, DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
     }
 
 }

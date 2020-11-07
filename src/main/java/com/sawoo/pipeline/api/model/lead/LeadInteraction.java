@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.LEAD_INTERACTION_ENTITY_NAME)
+@Entity(name = DataStoreConstants.LEAD_ACTION_DOCUMENT)
 public class LeadInteraction {
 
     @Id

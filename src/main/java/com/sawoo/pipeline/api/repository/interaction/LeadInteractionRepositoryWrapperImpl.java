@@ -23,11 +23,11 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     public LeadInteraction save(Long leadId, LeadInteraction interaction) {
         log.debug("Save interaction for lead id [{}]. Interaction: [{}]", leadId, interaction);
 
-        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_ENTITY_ENTITY).newKey(leadId);
+        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
         Key leadKey = Key.newBuilder(
                 parentKey,
-                DataStoreConstants.LEAD_INTERACTION_ENTITY_NAME,
-                datastoreKeyFactory.allocatedId(DataStoreConstants.LEAD_INTERACTION_ENTITY_NAME).getId()).build();
+                DataStoreConstants.LEAD_ACTION_DOCUMENT,
+                datastoreKeyFactory.allocatedId(DataStoreConstants.LEAD_ACTION_DOCUMENT).getId()).build();
         interaction.setKey(leadKey);
 
         log.debug("Key object created [{}]", leadKey.toString());
@@ -44,8 +44,8 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     public Optional<LeadInteraction> findById(Long leadId, Long interactionId) {
         log.debug("Retrieve interaction for lead id [{}] and lead interaction id[{}]", leadId, interactionId);
 
-        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_ENTITY_ENTITY).newKey(leadId);
-        Key leadKey = Key.newBuilder(parentKey,  DataStoreConstants.LEAD_INTERACTION_ENTITY_NAME, interactionId).build();
+        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
+        Key leadKey = Key.newBuilder(parentKey,  DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
 
         return repository.findById(leadKey);
     }

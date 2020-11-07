@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
-import com.sawoo.pipeline.api.repository.CompanyRepositoryMongo;
+import com.sawoo.pipeline.api.repository.CompanyRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CompanyServiceTest extends BaseServiceTest {
     private CompanyService service;
 
     @MockBean
-    private CompanyRepositoryMongo repository;
+    private CompanyRepository repository;
 
     @Test
     @DisplayName("findById: entity found - Success")
