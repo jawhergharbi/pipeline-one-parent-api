@@ -1,0 +1,64 @@
+[
+  {
+    "id": "5fa2e7c58b7a2a51f31f2bed",
+    "email": "miguel@gmail.com",
+    "fullName": "Miguelín",
+    "active": true,
+    "roles": [
+      "USER",
+      "SA"
+    ],
+    "created": "2020-11-04T16:41:25.130Z",
+    "updated": "2020-11-05T07:31:47.545Z",
+    "password": "$2a$10$S2luOACgSF9DILb3aHvfqu8VWI0rV2LVps2RPA1bC/FxnFBt/NllW"
+  },
+  {
+    "id": "5fa317cd0efe4d20ad3edd13",
+    "email": "miguel.maquieira@gmail.com",
+    "fullName": "Miguelín Miguelón",
+    "active": true,
+    "roles": [
+      "USER",
+      "ADMIN"
+    ],
+    "created": "2020-11-04T20:06:21.254Z",
+    "updated": "2020-11-04T22:16:32.833Z",
+    "password": "$2a$10$JLH0b18b09G6NPi8GNZPqe7fUcnI4OU8tgI.R37X9StLrkxmKJzKe"
+  },
+  {
+    "id": "5fa32fdd14eb800b88e47656",
+    "email": "miguel.maquieira@sawoo.io",
+    "fullName": "Miguel Maquieira",
+    "active": false,
+    "roles": [
+      "ADMIN"
+    ],
+    "created": "2020-11-04T21:49:01.829Z",
+    "updated": "2020-11-04T22:31:35.128Z",
+    "password": "$2a$10$8cjjLINJ8e7j7RJlRP8IX.Hj4nY4WE3cB9pgK3Ic.2GnxBJJ6mU0."
+  },
+  {
+    "id": "5fa3ce63ee4ef64d966da45a",
+    "email": "miguel.gonzalez@gmail.com",
+    "fullName": "Miguel Gonzalez",
+    "active": true,
+    "roles": [
+      "SA"
+    ],
+    "created": "2020-11-05T09:05:23.215Z",
+    "updated": "2020-11-05T09:05:23.215Z",
+    "password": "$2a$10$5nPOba5UUtU2.6MuMeDZiOa7ijVWu31JGxD/P0ZXYxKmaGNjxIqM."
+  },
+  {
+    "id": "5fd4ce63fe4gf43d543df23f",
+    "email": "miguel.g.maquieira@gmail.com",
+    "fullName": "Miguel Gonzalez Maquieira",
+    "roles": [
+      "ADMIN"
+    ],
+    "created": "2020-11-04T09:05:23.215Z",
+    "updated": "2020-11-06T09:09:23.234Z",
+    "password": "$2a$10$5nPOba5UUtU2.6MuMeDZiOa7ijVWu31JGxD/P0ZXYxKmaGNjxIqM."
+  }
+
+]

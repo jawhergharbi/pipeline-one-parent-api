@@ -20,11 +20,12 @@
         <google-cloud-bom.version>0.120.2-alpha</google-cloud-bom.version>
         <jmapper-core.version>1.6.1.CR2</jmapper-core.version>
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
-        <appengine-maven-plugin.version>2.1.0</appengine-maven-plugin.version>
         <hamcrest.version>2.2</hamcrest.version>
         <javafaker.version>1.0.2</javafaker.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
+        <!-- Plugin versions -->
+        <appengine-maven-plugin.version>2.1.0</appengine-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -181,6 +182,7 @@
             <id>dev-local</id>
             <properties>
                 <activatedProperties>dev-local</activatedProperties>
+                <rootLogLevel>INFO</rootLogLevel>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -190,13 +192,29 @@
             <id>unit-tests</id>
             <properties>
                 <activatedProperties>unit-tests</activatedProperties>
+                <rootLogLevel>ERROR</rootLogLevel>
             </properties>
+        </profile>
+        <profile>
+            <id>unit-tests-embedded</id>
+            <properties>
+                <activatedProperties>unit-tests-embedded</activatedProperties>
+                <rootLogLevel>ERROR</rootLogLevel>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>de.flapdoodle.embed</groupId>
+                    <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>dev</id>
             <properties>
                 <activatedProperties>dev</activatedProperties>
                 <appEngineProjectId>pipeline-api-dev</appEngineProjectId>
+                <rootLogLevel>INFO</rootLogLevel>
             </properties>
         </profile>
         <profile>
@@ -204,6 +222,7 @@
             <properties>
                 <activatedProperties>test</activatedProperties>
                 <appEngineProjectId>pipeline-api-test</appEngineProjectId>
+                <rootLogLevel>INFO</rootLogLevel>
             </properties>
         </profile>
         <profile>
@@ -211,6 +230,7 @@
             <properties>
                 <activatedProperties>prod</activatedProperties>
                 <appEngineProjectId>pipeline-api-prod</appEngineProjectId>
+                <rootLogLevel>ERROR</rootLogLevel>
             </properties>
         </profile>
     </profiles>
@@ -224,6 +244,8 @@
         </resources>
 
         <plugins>
+
+
             <!-- =================================== -->
             <!-- =     Maven profiles plugin      = -->
             <!-- =================================== -->

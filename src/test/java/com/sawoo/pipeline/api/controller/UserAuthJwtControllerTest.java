@@ -4,18 +4,16 @@ import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
-import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.*;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,7 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ActiveProfiles(value = "unit-tests")
+@Tag(value = "controller")
+@Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class UserAuthJwtControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -151,7 +150,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [authJwtRegisterReq] is bellow its min size")));
+                                containsString("Field or param [password] in component [userAuthRegister] is bellow its min size")));
     }
 
     @Test
@@ -196,7 +195,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [email] in component [authJwtRegisterReq] can not be empty")));
+                                containsString("Field or param [email] in component [userAuthRegister] can not be empty")));
     }
 
     @Test
@@ -219,7 +218,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [authJwtRegisterReq] can not be null")));
+                                containsString("Field or param [password] in component [userAuthRegister] can not be null")));
     }
 
     @Test
@@ -244,7 +243,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("in component [authJwtRegisterReq] can not be null")));
+                                containsString("in component [userAuthRegister] can not be null")));
     }
 
     @Test
@@ -267,7 +266,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [fullName] in component [authJwtRegisterReq] has exceeded its max size")));
+                                containsString("Field or param [fullName] in component [userAuthRegister] has exceeded its max size")));
     }
 
     @Test
@@ -290,7 +289,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.messages", hasSize(2)))
                 .andExpect(jsonPath(
                         "$.messages[0]",
-                        containsString("in component [authJwtRegisterReq] is bellow its min size")));
+                        containsString("in component [userAuthRegister] is bellow its min size")));
     }
 
     @Test

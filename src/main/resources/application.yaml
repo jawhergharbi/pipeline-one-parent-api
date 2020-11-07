@@ -22,7 +22,7 @@ management:
 
 logging:
   level:
-    root: INFO
+    root: ${rootLogLevel}
     com.sawoo.pipeline: DEBUG
 
 
@@ -55,6 +55,28 @@ app:
 ---
 spring:
   profiles: unit-tests
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: pipeline-core-test
+      auto-index-creation: false
+
+app:
+  server: "http://localhost:8080"
+  report-api: "http://localhost:4001"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+
+---
+spring:
+  profiles: unit-tests-embedded
+  data:
+    mongodb:
+      host: localhost
+      port: 0
+      database: pipeline-core-test
+      auto-index-creation: false
 
 app:
   server: "http://localhost:8080"
