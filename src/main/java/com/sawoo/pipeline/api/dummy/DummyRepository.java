@@ -1,6 +1,8 @@
 package com.sawoo.pipeline.api.dummy;
 
-import org.springframework.cloud.gcp.data.datastore.repository.DatastoreRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface DummyRepository extends DatastoreRepository<DummyEntity, String> {
+@Repository
+public interface DummyRepository extends MongoRepository<DummyEntity, String> {
 }

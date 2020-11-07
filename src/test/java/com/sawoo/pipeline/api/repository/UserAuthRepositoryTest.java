@@ -107,7 +107,7 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findByEmail: entity found Success")
+    @DisplayName("save: entity saved - Success")
     void saveWhenAddNewEntityReturnsSuccess() {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         UserMongoDB user = getMockFactory().newUserAuthEntity(AUTH_EMAIL);

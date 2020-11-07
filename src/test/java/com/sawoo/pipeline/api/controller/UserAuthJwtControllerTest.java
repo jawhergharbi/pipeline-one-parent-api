@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class UserAuthJwtControllerTest extends BaseControllerTest {
@@ -54,7 +53,6 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         UserAuthRegister postRegister = getMockFactory()
                 .newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
         UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_EMAIL, Role.ADMIN.name());
-
 
         // setup the mocked service
         doReturn(mockUserAuth).when(service).create(postRegister);
