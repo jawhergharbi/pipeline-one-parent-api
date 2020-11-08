@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.dto.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
@@ -15,11 +16,11 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeadBaseDTO {
+public class ProspectBaseDTO {
     @JMap
-    private Long id;
+    private String id;
 
-    @JMap(attributes = {"firstName", "lastName"})
+    @JMap
     private String fullName;
 
     @JMap
@@ -52,4 +53,10 @@ public class LeadBaseDTO {
 
     @JMap
     private PersonalityDTO personality;
+
+    @JMapConversion(from = {"firstName", "lastName"}, to = {"fullName"})
+    public String conversion(String firstName, String lastName) {
+        // TODO: jmapper hack given that it's not possible to map from two source fields in to one destination field
+        return String.join(" ", this.firstName, this.lastName);
+    }
 }

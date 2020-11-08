@@ -4,7 +4,7 @@ import com.google.cloud.datastore.Key;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
 import org.junit.jupiter.api.*;

@@ -1,28 +1,33 @@
-package com.sawoo.pipeline.api.model.lead;
+package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.Status;
+import com.sawoo.pipeline.api.model.common.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cloud.gcp.data.datastore.core.mapping.Descendants;
+import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Reference;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = DataStoreConstants.LEAD_DOCUMENT)
-public class LeadMongoDB {
+@Entity(name = DataStoreConstants.LEAD_DOCUMENT)
+public class Lead {
 
     @JMap
     @Id
-    private String id;
+    private Long id;
 
     @JMap
     private Integer salutation;
@@ -56,11 +61,31 @@ public class LeadMongoDB {
     private String profilePicture;
 
     @JMap
-    @DBRef
+    @Field(name = "extra_notes")
+    private Note extraNotes;
+
+    @JMap
+    @Reference
     private CompanyMongoDB company;
 
     @JMap
-    private LeadPersonality personality;
+    @Field(name = "company_comments")
+    private Note companyComments;
+
+    @JMap
+    private Status status;
+
+    @JMap
+    private Personality personality;
+
+    @Descendants
+    private List<LeadInteraction> interactions;
+    public List<LeadInteraction> getInteractions() {
+        if (interactions == null) {
+            interactions = new ArrayList<>();
+        }
+        return interactions;
+    }
 
     @JMap
     private LocalDateTime created;
@@ -77,5 +102,15 @@ public class LeadMongoDB {
     @JMapConversion(from = {"salutation"}, to = {"salutation"})
     public Integer salutationConversion(Integer salutation) {
         return salutation == null ? 0 : salutation;
+    }
+
+    @JMapConversion(from = {"companyComments"}, to = {"companyNotes"})
+    public String companyNotesConversion(Note companyComments) {
+        return companyComments == null ? "" : companyComments.getText();
+    }
+
+    @JMapConversion(from = {"extraNotes"}, to = {"notes"})
+    public String extraNotesConversion(Note extraNotes) {
+        return extraNotes == null ? "" : extraNotes.getText();
     }
 }

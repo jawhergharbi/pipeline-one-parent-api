@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.repository.interaction;
 
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 
 import java.util.Optional;
 

@@ -9,13 +9,14 @@ import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.lead.ProspectDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.prospect.Lead;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -215,6 +216,39 @@ public class MockFactory {
         mockedEntity.setCreated(now);
         mockedEntity.setUpdated(now);
         return mockedEntity;
+    }
+
+    public ProspectDTO newProspectBaseDTO(String id, String firstName, String lastName) {
+        ProspectDTO prospectBaseDTO = new ProspectDTO();
+        prospectBaseDTO.setId(id);
+        prospectBaseDTO.setFirstName(firstName);
+        prospectBaseDTO.setLastName(lastName);
+        prospectBaseDTO.setCompany(newCompanyDTO(LocalDateTime.now()));
+        prospectBaseDTO.setLinkedInThread(FAKER.internet().url());
+        prospectBaseDTO.setLinkedInUrl(FAKER.internet().url());
+        prospectBaseDTO.setPosition(FAKER.company().profession());
+        prospectBaseDTO.setProfilePicture(FAKER.internet().url());
+        return prospectBaseDTO;
+    }
+
+    public ProspectDTO newProspectDTO(String id, String firstName, String lastName) {
+        ProspectDTO prospectDTO = new ProspectDTO();
+        prospectDTO.setId(id);
+        prospectDTO.setFirstName(firstName);
+        prospectDTO.setLastName(lastName);
+        prospectDTO.setCompany(newCompanyDTO(LocalDateTime.now()));
+        prospectDTO.setLinkedInThread(FAKER.internet().url());
+        prospectDTO.setLinkedInUrl(FAKER.internet().url());
+        prospectDTO.setPosition(FAKER.company().profession());
+        prospectDTO.setProfilePicture(FAKER.internet().url());
+        prospectDTO.setSalutation(0);
+        prospectDTO.setCreated(LocalDateTime.now());
+        prospectDTO.setUpdated(LocalDateTime.now());
+        return prospectDTO;
+    }
+
+    public ProspectDTO newProspectDTO(String firstName, String lastName) {
+        return newProspectDTO(FAKER.internet().uuid(), firstName, lastName);
     }
 
     public CompanyDTO newCompanyDTO(String id, String name, String url) {

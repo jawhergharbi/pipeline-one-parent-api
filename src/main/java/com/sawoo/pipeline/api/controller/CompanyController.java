@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CompanyController {
             value = "/{id}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CompanyDTO> delete(@PathVariable String id) {
+    public ResponseEntity<CompanyDTO> delete(@NotNull @PathVariable String id) {
         return ResponseEntity.ok().body(service.delete(id));
     }
 
@@ -49,7 +50,7 @@ public class CompanyController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CompanyDTO> save(@Valid @RequestBody CompanyDTO company) {
+    public ResponseEntity<CompanyDTO> create(@Valid @RequestBody CompanyDTO company) {
         CompanyDTO newEntity = service.create(company);
         try {
             return ResponseEntity

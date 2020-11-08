@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.common.Note;
-import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.prospect.Lead;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

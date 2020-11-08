@@ -12,7 +12,7 @@ import com.sawoo.pipeline.api.dto.ReportDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
-import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.prospect.Lead;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;

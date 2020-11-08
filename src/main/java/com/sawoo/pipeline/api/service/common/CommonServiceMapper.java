@@ -12,8 +12,8 @@ import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,9 +35,6 @@ public class CommonServiceMapper {
     private final JMapper<ClientBasicDTO, Client> clientDomainToDTOBasicMapper = new JMapper<>(ClientBasicDTO.class, Client.class);
     private final JMapper<Client, ClientBasicDTO> clientDTOToDomainMapper = new JMapper<>(Client.class, ClientBasicDTO.class);
     private final JMapper<ClientBaseDTO, Client> clientDomainToDTOBaseMapper = new JMapper<>(ClientBaseDTO.class, Client.class);
-
-    /*private final JMapper<CompanyDTO, Company> companyDomainToDTOMapper = new JMapper<>(CompanyDTO.class, Company.class);
-    private final JMapper<Company, CompanyDTO> companyDTOToDomainMapper = new JMapper<>(Company.class, CompanyDTO.class);*/
 
     private final JMapper<CompanyDTO, CompanyMongoDB> companyDomainToDTOMapper = new JMapper<>(CompanyDTO.class, CompanyMongoDB.class);
     private final JMapper<CompanyMongoDB, CompanyDTO> companyDTOToDomainMapper = new JMapper<>(CompanyMongoDB.class, CompanyDTO.class);

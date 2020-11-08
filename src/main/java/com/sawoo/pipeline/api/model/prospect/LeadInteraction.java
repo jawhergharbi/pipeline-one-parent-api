@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.model.lead;
+package com.sawoo.pipeline.api.model.prospect;
 
 
 import com.google.cloud.datastore.Key;

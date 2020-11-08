@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionRequestDTO;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
 import lombok.RequiredArgsConstructor;

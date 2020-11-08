@@ -2,21 +2,17 @@
   {
     "id": 987,
     "fullName": "Miguel Miguelin",
-    "linkedInUrl": "http://google.com",
-    "linkedInThread": "http://google.com/thread",
+    "linkedInUrl": "http://linkedin.com/miguel.miguelin",
+    "linkedInThread": "http://linkedin.com/thread/miguel.miguelin",
     "position": "Managing Director",
     "email": "miguel@gmail.com",
     "phoneNumber": "1234568345",
     "company": {
       "id": 123,
-      "name": "company_name_1",
+      "name": "google",
       "url": "http://google.com",
       "created": "2020-06-02T12:59:49.494472",
       "updated": "2020-06-02T05:59:49.494472"
-    },
-    "companyComments": {
-      "text": "here some other comments",
-      "updated": "2020-06-02T11:59:49.494472"
     },
     "created": "2020-06-02T12:59:49.494472",
     "updated": "2020-06-02T05:59:49.494472"
@@ -24,15 +20,15 @@
   {
     "id": 988,
     "fullName": "Miguel Miguelito",
-    "linkedInUrl": "http://google.com",
+    "linkedInUrl": "http://linkedin.com/miguel.miguelito",
     "linkedInThread": "http://google.com/thread",
     "position": "Managing Director",
     "email": "miguelito@gmail.com",
     "phoneNumber": "1234568345",
     "company": {
       "id": 1234,
-      "name": "company_name_2",
-      "url": "http://google.com",
+      "name": "sawoo",
+      "url": "http://sawoo.io",
       "created": "2020-06-02T12:59:49.494472",
       "updated": "2020-06-04T05:59:49.494472"
     },

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
-import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class LeadRepositoryTest {
+public class LeadRepositoryTestOld {
 
     private static final File LEAD_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "lead-test-data.json").toFile();
     private static final List<Long> leadIdList = new ArrayList<>();
