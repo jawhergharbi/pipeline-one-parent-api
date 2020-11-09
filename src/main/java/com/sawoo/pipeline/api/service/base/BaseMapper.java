@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.base;
 
 import com.googlecode.jmapper.JMapper;
 

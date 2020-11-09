@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.base;
 
 import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -26,6 +26,20 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
     private BaseMapper<D, M> mapper;
     private R repository;
     private String entityType;
+    private BaseServiceEventListener<D, M> eventListener;
+
+    public BaseServiceImpl(R repository, BaseMapper<D, M> mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.entityType = entityType;
+        this.eventListener = eventListener;
+    }
+
+    public BaseServiceImpl(R repository, BaseMapper<D, M> mapper, String entityType) {
+        this(repository, mapper, entityType, null);
+    }
+
+    public abstract Optional<M> entityExists(D entityToCreate);
 
     @Override
     public D create(@Valid D dto) throws CommonServiceException {
@@ -41,20 +55,15 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         entity.setCreated(now);
         entity.setUpdated(now);
+        if (eventListener != null) {
+            eventListener.onBeforeCreate(dto, entity);
+        }
         entity = repository.insert(entity);
 
         log.debug("Entity type [{}] has been successfully created. Entity: [{}]", entityType, entity);
 
         return mapper.getMapperOut().getDestination(entity);
     }
-
-    public BaseServiceImpl(R repository, BaseMapper<D, M> mapper, String entityType) {
-        this.repository = repository;
-        this.mapper = mapper;
-        this.entityType = entityType;
-    }
-
-    public abstract Optional<M> entityExists(D entityToCreate);
 
     @Override
     public D findById(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id)
@@ -114,6 +123,9 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
                                     MappingType.ALL_FIELDS,
                                     MappingType.ONLY_VALUED_FIELDS);
                     entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+                    if (eventListener != null) {
+                        eventListener.onBeforeUpdate(dto, entity);
+                    }
                     getRepository().save(entity);
 
                     log.debug(

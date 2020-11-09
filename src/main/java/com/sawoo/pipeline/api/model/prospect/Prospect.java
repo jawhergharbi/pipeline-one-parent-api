@@ -1,7 +1,6 @@
 package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.EntityBase;
@@ -35,7 +34,7 @@ public class Prospect extends EntityBase {
     @JMap
     private String lastName;
 
-    @JMap(attributes = {"firstName", "lastName"})
+    @JMap
     @Indexed
     private String fullName;
 
@@ -68,9 +67,4 @@ public class Prospect extends EntityBase {
 
     @JMap
     private Personality personality;
-
-    @JMapConversion(from = {"salutation"}, to = {"salutation"})
-    public Integer salutationConversion(Integer salutation) {
-        return salutation == null ? 0 : salutation;
-    }
 }

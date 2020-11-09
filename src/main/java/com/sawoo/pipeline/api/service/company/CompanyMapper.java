@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service.company;
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
-import com.sawoo.pipeline.api.service.BaseMapper;
+import com.sawoo.pipeline.api.service.base.BaseMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

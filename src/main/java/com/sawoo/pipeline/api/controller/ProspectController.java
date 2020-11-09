@@ -70,8 +70,7 @@ public class ProspectController {
     public ResponseEntity<?> update(
             @RequestBody ProspectDTO prospect,
             @NotBlank @PathVariable("id") String id) {
-        prospect.setId(id);
-        ProspectDTO prospectUpdated = service.update(prospect);
+        ProspectDTO prospectUpdated = service.update(id, prospect);
         try {
             return ResponseEntity
                     .ok()

@@ -304,7 +304,7 @@ public class ProspectControllerTest extends BaseControllerTest {
         ProspectDTO mockedDTOEntity = getMockFactory().newProspectDTO(PROSPECT_ID, PROSPECT_FIRST_NAME, PROSPECT_LAST_NAME);
 
         // setup the mocked service
-        doReturn(mockedDTOEntity).when(service).update(ArgumentMatchers.any(ProspectDTO.class));
+        doReturn(mockedDTOEntity).when(service).update(anyString(), ArgumentMatchers.any(ProspectDTO.class));
 
         // Execute the PUT request
         mockMvc.perform(put("/api/prospects/{id}", PROSPECT_ID)
@@ -339,7 +339,7 @@ public class ProspectControllerTest extends BaseControllerTest {
 
         // setup the mocked helper
         doThrow(exception)
-                .when(service).update(postEntity);
+                .when(service).update(PROSPECT_ID, postEntity);
 
         // Execute the POST request
         mockMvc.perform(put("/api/prospects/{id}", PROSPECT_ID)

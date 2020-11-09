@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
-import com.sawoo.pipeline.api.service.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
