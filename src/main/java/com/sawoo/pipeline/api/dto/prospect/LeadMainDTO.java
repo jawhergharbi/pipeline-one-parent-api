@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.lead;
+package com.sawoo.pipeline.api.dto.prospect;
 
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import lombok.AllArgsConstructor;

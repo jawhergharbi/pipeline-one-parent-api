@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.dto.interaction;
 
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBaseDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

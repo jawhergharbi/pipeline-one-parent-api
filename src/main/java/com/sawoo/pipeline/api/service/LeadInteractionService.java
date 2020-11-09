@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionRequestDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 
 import java.util.List;
 import java.util.Optional;

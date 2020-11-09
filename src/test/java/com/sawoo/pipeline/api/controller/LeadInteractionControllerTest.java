@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionRequestDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import com.sawoo.pipeline.api.service.LeadInteractionService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;

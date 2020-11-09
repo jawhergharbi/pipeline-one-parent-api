@@ -26,6 +26,10 @@ public class CompanyServiceImpl extends BaseServiceImpl<CompanyDTO, CompanyMongo
 
     @Override
     public Optional<CompanyMongoDB> entityExists(CompanyDTO entityToCreate) {
+        log.debug(
+                "Checking entity existence. [type: {}, name: {}]",
+                DataStoreConstants.PROSPECT_DOCUMENT,
+                entityToCreate.getName());
         return getRepository().findByName(entityToCreate.getName());
     }
 

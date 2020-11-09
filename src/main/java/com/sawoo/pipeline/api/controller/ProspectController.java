@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.dto.lead.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.lead;
+package com.sawoo.pipeline.api.dto.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -15,11 +15,11 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProspectBaseDTO {
+public class LeadBaseDTO {
     @JMap
-    private String id;
+    private Long id;
 
-    @JMap
+    @JMap(attributes = {"firstName", "lastName"})
     private String fullName;
 
     @JMap

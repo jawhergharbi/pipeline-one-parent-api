@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.service.LeadService;
 import lombok.RequiredArgsConstructor;

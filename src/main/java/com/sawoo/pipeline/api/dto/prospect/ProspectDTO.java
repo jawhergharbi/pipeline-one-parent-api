@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.lead;
+package com.sawoo.pipeline.api.dto.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
 import lombok.*;

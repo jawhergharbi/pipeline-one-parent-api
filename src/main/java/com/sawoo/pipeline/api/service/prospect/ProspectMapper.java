@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service.prospect;
 
 import com.googlecode.jmapper.JMapper;
-import com.sawoo.pipeline.api.dto.lead.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.service.base.BaseMapper;
 import lombok.Getter;

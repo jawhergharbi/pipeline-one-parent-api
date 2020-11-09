@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadBaseDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;

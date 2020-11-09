@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
-import com.sawoo.pipeline.api.dto.lead.*;
+import com.sawoo.pipeline.api.dto.prospect.*;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;

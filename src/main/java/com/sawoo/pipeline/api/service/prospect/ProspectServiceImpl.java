@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service.prospect;
 
 
-import com.sawoo.pipeline.api.dto.lead.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.repository.ProspectRepository;
@@ -25,6 +25,10 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
 
     @Override
     public Optional<Prospect> entityExists(ProspectDTO entityToCreate) {
+        log.debug(
+                "Checking entity existence. [type: {}, linkedIn: {}]",
+                DataStoreConstants.PROSPECT_DOCUMENT,
+                entityToCreate.getLinkedInUrl());
         return getRepository().findByLinkedInUrl(entityToCreate.getLinkedInUrl());
     }
 }

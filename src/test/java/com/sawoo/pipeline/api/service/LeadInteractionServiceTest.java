@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
 import com.google.cloud.datastore.Key;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
