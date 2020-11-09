@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.service.CompanyService;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,8 +68,7 @@ public class CompanyController {
             consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> update(@RequestBody CompanyDTO company,
                                     @PathVariable String id) {
-        company.setId(id);
-        CompanyDTO updatedCompany = service.update(company);
+        CompanyDTO updatedCompany = service.update(id, company);
         try {
             return ResponseEntity
                     .ok()

@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.CompanyMongoDB;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -246,13 +247,16 @@ public class CompanyServiceTest extends BaseServiceTest {
     @Test
     @DisplayName("delete: company entity not found - failure")
     void deleteWhenCompanyEntityNotFoundReturnsResourceNotFoundException() {
+        // Set up mocked entities
+        String COMPANY_ID = FAKER.internet().uuid();
+
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute and assert
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.delete(anyString()),
+                () -> service.delete(COMPANY_ID),
                 "update must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
@@ -279,7 +283,7 @@ public class CompanyServiceTest extends BaseServiceTest {
         doReturn(Optional.of(mockedEntity)).when(repository).findById(COMPANY_ID);
 
         // Execute the service call
-        CompanyDTO returnedDTO = service.update(mockedDTO);
+        CompanyDTO returnedDTO = service.update(COMPANY_ID, mockedDTO);
 
         Assertions.assertNotNull(returnedDTO, "Company entity is not null");
         Assertions.assertEquals(
@@ -307,7 +311,7 @@ public class CompanyServiceTest extends BaseServiceTest {
         // Execute and assert
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.update(mockedDTO),
+                () -> service.update(COMPANY_ID, mockedDTO),
                 "update must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);

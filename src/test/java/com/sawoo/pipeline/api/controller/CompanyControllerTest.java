@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.service.CompanyService;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,7 +301,7 @@ public class CompanyControllerTest extends BaseControllerTest {
         CompanyDTO mockedDTOEntity = getMockFactory().newCompanyDTO(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // setup the mocked service
-        doReturn(mockedDTOEntity).when(service).update(ArgumentMatchers.any(CompanyDTO.class));
+        doReturn(mockedDTOEntity).when(service).update(anyString(), ArgumentMatchers.any(CompanyDTO.class));
 
         // Execute the PUT request
         mockMvc.perform(put("/api/companies/{id}", COMPANY_ID)
@@ -335,7 +335,7 @@ public class CompanyControllerTest extends BaseControllerTest {
 
         // setup the mocked helper
         doThrow(exception)
-                .when(service).update(postEntity);
+                .when(service).update(COMPANY_ID, postEntity);
 
         // Execute the POST request
         mockMvc.perform(put("/api/companies/{id}", COMPANY_ID)

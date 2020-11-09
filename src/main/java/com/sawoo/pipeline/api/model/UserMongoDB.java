@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = DataStoreConstants.USER_DOCUMENT)
-public class UserMongoDB {
+public class UserMongoDB extends EntityBase {
 
     @JMap
     @Id
@@ -39,12 +39,6 @@ public class UserMongoDB {
     @JMap
     @Indexed
     private Set<String> roles;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 
     @JMap
     @Field(name = "last_login")

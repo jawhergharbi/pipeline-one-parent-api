@@ -9,6 +9,7 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.prospect.Lead;
 import com.sawoo.pipeline.api.model.prospect.ProspectStatus;
 import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

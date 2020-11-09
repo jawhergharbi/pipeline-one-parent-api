@@ -16,6 +16,7 @@ import com.sawoo.pipeline.api.model.prospect.Lead;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;

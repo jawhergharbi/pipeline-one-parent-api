@@ -329,8 +329,8 @@ public class MockFactory {
                 .id(id)
                 .name(name)
                 .url(url)
-                .updated(dateTime)
                 .created(dateTime)
+                .updated(dateTime)
                 .build();
     }
 

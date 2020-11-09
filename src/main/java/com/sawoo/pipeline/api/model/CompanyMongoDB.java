@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,9 +14,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Document(collection = DataStoreConstants.COMPANY_DOCUMENT)
-public class CompanyMongoDB {
+public class CompanyMongoDB extends EntityBase {
 
     @Id
     @JMap
@@ -29,10 +30,4 @@ public class CompanyMongoDB {
 
     @JMap
     private Integer headcount;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 }

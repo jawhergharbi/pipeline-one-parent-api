@@ -11,6 +11,7 @@ import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.prospect.Lead;
 import com.sawoo.pipeline.api.model.prospect.ProspectStatus;
 import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -139,7 +139,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_ID = FAKER.internet().uuid();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(anyString());
+        doReturn(Optional.empty()).when(repository).findById(AUTH_ID);
 
         // Asserts
         Assertions.assertThrows(

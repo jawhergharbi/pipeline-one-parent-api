@@ -10,12 +10,16 @@ import java.util.List;
 
 public interface BaseService<D> {
 
-    public D create(@Valid D dto) throws CommonServiceException;
+    D create(@Valid D dto) throws CommonServiceException;
 
     D findById(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id)
             throws ResourceNotFoundException;
 
     List<D> findAll();
 
-    D delete(String id) throws ResourceNotFoundException;
+    D delete(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id)
+            throws ResourceNotFoundException;
+
+    D update(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id, D dto)
+            throws ResourceNotFoundException;
 }

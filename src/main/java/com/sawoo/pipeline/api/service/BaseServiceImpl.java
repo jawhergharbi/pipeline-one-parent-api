@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.service;
 
+import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
@@ -82,7 +83,7 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
     }
 
     @Override
-    public D delete(String id) throws ResourceNotFoundException {
+    public D delete(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)  String id) throws ResourceNotFoundException {
         log.debug("Deleting [{}] entity with id: [{}]", entityType, id);
 
         return repository
@@ -95,5 +96,36 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                         new String[]{entityType, id}));
+    }
+
+    @Override
+    public D update(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)  String id,
+            D dto) throws ResourceNotFoundException {
+        log.debug("Updating entity type [{}] with id: [{}]", entityType, id);
+
+        return getRepository()
+                .findById(id)
+                .map((entity) -> {
+                    entity = getMapper().getMapperIn()
+                            .getDestination(
+                                    entity,
+                                    dto,
+                                    MappingType.ALL_FIELDS,
+                                    MappingType.ONLY_VALUED_FIELDS);
+                    entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+                    getRepository().save(entity);
+
+                    log.debug(
+                            "Entity type [{}] with id [{}] has been successfully updated. Updated data: [{}]",
+                            entityType,
+                            id,
+                            entity);
+                    return getMapper().getMapperOut().getDestination(entity);
+                })
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{entityType, id}));
     }
 }

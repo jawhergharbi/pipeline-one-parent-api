@@ -13,6 +13,7 @@ import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
+import com.sawoo.pipeline.api.service.company.CompanyService;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
