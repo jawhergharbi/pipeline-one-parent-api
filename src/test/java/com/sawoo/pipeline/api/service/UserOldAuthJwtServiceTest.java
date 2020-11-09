@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
-import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtServiceTest extends BaseServiceTest {
+public class UserOldAuthJwtServiceTest extends BaseServiceTest {
 
     @Autowired
     private UserAuthJwtService service;
@@ -48,7 +48,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         // Set up the mocked repository
         String AUTH_ID = FAKER.internet().uuid();
         String AUTH_EMAIL = FAKER.internet().emailAddress();
-        UserMongoDB mockUser = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockUser = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockUser)).when(repository).findById(anyString());
@@ -94,7 +94,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ID = FAKER.internet().uuid();
         UserAuthDTO postEntity = getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD);
-        UserMongoDB mockUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockUserAuth)).when(repository).findByEmail(any());
@@ -114,11 +114,11 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_ID = FAKER.internet().uuid();
         String AUTH_PASSWORD = FAKER.internet().password();
         UserAuthDTO postEntity = getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD);
-        UserMongoDB userAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User userAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByEmail(anyString());
-        doReturn(userAuthEntity).when(repository).insert(any(UserMongoDB.class));
+        doReturn(userAuthEntity).when(repository).insert(any(User.class));
 
         // Execute the service call
         UserAuthDTO returnedAuthEntity = service.create(postEntity);
@@ -129,7 +129,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         Assertions.assertTrue(returnedAuthEntity.getActive(), "UserAuth.active field should be true");
 
         verify(repository, times(1)).findByEmail(anyString());
-        verify(repository, times(1)).insert(any(UserMongoDB.class));
+        verify(repository, times(1)).insert(any(User.class));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         // Set up the mocked repository
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ID = FAKER.internet().uuid();
-        UserMongoDB mockUserAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockUserAuthEntity = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockUserAuthEntity)).when(repository).findById(any());
@@ -182,7 +182,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     void findAllWhenThereAreTwoUserAuthEntitiesReturnsSuccess() {
         // Set up mock entities
         int listSize = 3;
-        List<UserMongoDB> userAuthList = IntStream.range(0, listSize)
+        List<User> userAuthList = IntStream.range(0, listSize)
                 .mapToObj((user) -> {
                     String AUTH_ID = FAKER.internet().uuid();
                     String AUTH_EMAIL = FAKER.internet().emailAddress();
@@ -224,7 +224,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_ID = FAKER.internet().uuid();
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_NEW_PASSWORD = FAKER.internet().password();
-        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
         mockedUserAuth.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
 
         UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
@@ -253,7 +253,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_NEW_PASSWORD = FAKER.internet().password();
         String AUTH_CONFIRM_PASSWORD = FAKER.internet().password();
-        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
         userUpdate.setId(AUTH_ID);
@@ -282,7 +282,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         String AUTH_ID = FAKER.internet().uuid();
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_NEW_PASSWORD = FAKER.internet().password(0, 5);
-        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
 
         UserAuthUpdateDTO userUpdate = new UserAuthUpdateDTO();
         userUpdate.setId(AUTH_ID);
@@ -315,7 +315,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
         userUpdate.setId(AUTH_ID);
         userUpdate.setEmail(AUTH_EMAIL);
 
-        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
+        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL);
         mockedUserAuth.setUpdated(LocalDateTime.of(2020, 1, 31, 12, 0));
 
 
@@ -381,7 +381,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
     void findAllByRolesWhenThereAreUserAuthEntitiesReturnsSuccess() {
         // Set up mock entities
         int listSize = 2;
-        List<UserMongoDB> userAuthList = IntStream.range(0, listSize)
+        List<User> userAuthList = IntStream.range(0, listSize)
                 .mapToObj((user) -> {
                     String AUTH_ID = FAKER.internet().uuid();
                     String AUTH_EMAIL = FAKER.internet().emailAddress();

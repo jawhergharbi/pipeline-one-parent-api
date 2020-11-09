@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Validated
-public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMongoDB, UserRepositoryMongo> implements UserAuthJwtService {
+public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepositoryMongo> implements UserAuthJwtService {
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -53,7 +53,7 @@ public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMon
     }
 
     @Override
-    public Optional<UserMongoDB> entityExists(UserAuthDTO entityToCreate) {
+    public Optional<User> entityExists(UserAuthDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, email: {}]",
                 DataStoreConstants.USER_DOCUMENT,
@@ -152,7 +152,7 @@ public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMon
         }
     }
 
-    private void userUpdateValidation(UserAuthUpdateDTO userToUpdate, UserMongoDB user) throws AuthException {
+    private void userUpdateValidation(UserAuthUpdateDTO userToUpdate, User user) throws AuthException {
         if (userToUpdate.getPassword() != null) {
             if (!userToUpdate.getPassword().equals(userToUpdate.getConfirmPassword())) {
                 throw new AuthException(

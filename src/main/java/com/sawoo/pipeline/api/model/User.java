@@ -5,8 +5,11 @@ import com.googlecode.jmapper.annotations.JMapConversion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
+import lombok.ToString;
+import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,27 +18,34 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.USER_DOCUMENT)
-public class User {
+@Document(collection = DataStoreConstants.USER_DOCUMENT)
+public class User extends BaseEntity {
 
     @JMap
     @Id
     private String id;
 
     @JMap
+    @Indexed
+    private String email;
+
+    @JMap
+    @Indexed
     private String fullName;
 
     @JMap
     private Boolean active;
 
     @JMap
+    @Indexed
     private Set<String> roles;
 
     @JMap
-    private LocalDateTime created;
+    @Field(name = "last_login")
+    private LocalDateTime lastLogin;
 
-    @JMap
-    private LocalDateTime updated;
+    @ToString.Exclude
+    private String password;
 
     @JMapConversion(from = {"active"}, to = {"active"})
     public Boolean conversion(Boolean active) {

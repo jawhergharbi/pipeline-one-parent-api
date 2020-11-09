@@ -4,7 +4,7 @@ import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.model.EntityBase;
+import com.sawoo.pipeline.api.model.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 @Getter
-public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRepository<M, String>> implements BaseService<D> {
+public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRepository<M, String>> implements BaseService<D> {
 
     private BaseMapper<D, M> mapper;
     private R repository;

@@ -5,22 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@Document(collection = DataStoreConstants.COMPANY_DOCUMENT)
-public class CompanyMongoDB extends EntityBase {
+@Builder
+@Entity(name = "company")
+public class CompanyOld {
 
     @Id
     @JMap
-    private String id;
+    private Long id;
 
     @JMap
     private String name;
@@ -30,4 +29,10 @@ public class CompanyMongoDB extends EntityBase {
 
     @JMap
     private Integer headcount;
+
+    @JMap
+    private LocalDateTime created;
+
+    @JMap
+    private LocalDateTime updated;
 }

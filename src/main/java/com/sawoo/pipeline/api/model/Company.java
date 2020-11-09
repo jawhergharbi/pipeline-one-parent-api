@@ -1,25 +1,23 @@
 package com.sawoo.pipeline.api.model;
 
 import com.googlecode.jmapper.annotations.JMap;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
-
-import java.time.LocalDateTime;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity(name = "company")
-public class Company {
+@SuperBuilder
+@Document(collection = DataStoreConstants.COMPANY_DOCUMENT)
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
+public class Company extends BaseEntity {
 
     @Id
     @JMap
-    private Long id;
+    private String id;
 
     @JMap
     private String name;
@@ -29,10 +27,4 @@ public class Company {
 
     @JMap
     private Integer headcount;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 }

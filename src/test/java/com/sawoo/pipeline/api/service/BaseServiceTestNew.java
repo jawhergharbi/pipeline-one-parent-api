@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.mock.MockFactory;
-import com.sawoo.pipeline.api.model.EntityBase;
+import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.service.base.BaseService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @NoArgsConstructor
 @Getter
-public abstract class BaseServiceTestNew<D, M extends EntityBase, R extends MongoRepository<M, String>, S extends BaseService<D>> {
+public abstract class BaseServiceTestNew<D, M extends BaseEntity, R extends MongoRepository<M, String>, S extends BaseService<D>> {
 
     @Setter
     private R repository;

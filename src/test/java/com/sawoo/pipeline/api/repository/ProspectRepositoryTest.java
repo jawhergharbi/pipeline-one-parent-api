@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.repository;
 
-import com.sawoo.pipeline.api.model.prospect.Lead;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.mock;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
         entity.setEmail(FAKER.internet().emailAddress());
         entity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         entity.setPosition(FAKER.company().profession());
-        entity.setCompany(CompanyMongoDB.builder()
+        entity.setCompany(Company.builder()
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())
                 .build());

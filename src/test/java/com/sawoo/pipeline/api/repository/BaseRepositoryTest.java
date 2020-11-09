@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.MockFactory;
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
-import com.sawoo.pipeline.api.model.UserMongoDB;
 import lombok.Getter;
 import org.junit.jupiter.api.*;
 import org.springframework.data.mongodb.repository.MongoRepository;

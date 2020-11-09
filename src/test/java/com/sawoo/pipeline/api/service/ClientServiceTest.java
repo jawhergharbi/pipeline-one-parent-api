@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.Lead;
@@ -73,7 +73,7 @@ public class ClientServiceTest extends BaseServiceTest {
         ClientBasicDTO spyDTO = spy(mockedDTO);
 
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
+        mockedEntity.setCompanyOld(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
@@ -121,7 +121,7 @@ public class ClientServiceTest extends BaseServiceTest {
         CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
 
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
+        mockedEntity.setCompanyOld(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
@@ -472,8 +472,8 @@ public class ClientServiceTest extends BaseServiceTest {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        User mockedUserEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
-        spyClientEntity.setSalesAssistant(mockedUserEntity);
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
+        spyClientEntity.setSalesAssistant(mockedUserOldEntity);
 
         UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
 
@@ -502,8 +502,8 @@ public class ClientServiceTest extends BaseServiceTest {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        User mockedUserEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
-        spyClientEntity.setCustomerSuccessManager(mockedUserEntity);
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
+        spyClientEntity.setCustomerSuccessManager(mockedUserOldEntity);
 
         UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
 

@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.repository.listener;
 
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ProspectEventListener extends AbstractMongoEventListener<Prospect> 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Prospect> event) {
         Prospect prospect = event.getSource();
-        CompanyMongoDB company = prospect.getCompany();
+        Company company = prospect.getCompany();
         if (company != null) {
             if (company.getId() == null) {
                 companyRepository

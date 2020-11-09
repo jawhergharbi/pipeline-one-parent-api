@@ -2,10 +2,10 @@ package com.sawoo.pipeline.api.model.client;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyOld;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.prospect.Lead;
 import lombok.AllArgsConstructor;
@@ -52,7 +52,7 @@ public class Client {
 
     @JMap
     @Reference
-    private Company company;
+    private CompanyOld companyOld;
 
     @JMap
     private Status status;
@@ -62,11 +62,11 @@ public class Client {
 
     @JMap
     @Reference
-    private User salesAssistant;
+    private UserOld salesAssistant;
 
     @JMap
     @Reference
-    private User customerSuccessManager;
+    private UserOld customerSuccessManager;
 
     @JMap
     private LocalDateTime created;

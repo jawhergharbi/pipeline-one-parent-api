@@ -1,13 +1,10 @@
 package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.EntityBase;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -19,7 +16,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Document(collection = DataStoreConstants.PROSPECT_DOCUMENT)
-public class Prospect extends EntityBase {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
+public class Prospect extends BaseEntity {
 
     @JMap
     @Id
@@ -63,7 +62,7 @@ public class Prospect extends EntityBase {
 
     @JMap
     @DBRef
-    private CompanyMongoDB company;
+    private Company company;
 
     @JMap
     private Personality personality;

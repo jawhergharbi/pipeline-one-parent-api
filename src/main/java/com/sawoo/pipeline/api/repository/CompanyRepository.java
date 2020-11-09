@@ -1,13 +1,13 @@
 package com.sawoo.pipeline.api.repository;
 
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.model.Company;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface CompanyRepository extends MongoRepository<CompanyMongoDB, String> {
+public interface CompanyRepository extends MongoRepository<Company, String> {
 
-    Optional<CompanyMongoDB> findByName(String name);
+    Optional<Company> findByName(String name);
 }

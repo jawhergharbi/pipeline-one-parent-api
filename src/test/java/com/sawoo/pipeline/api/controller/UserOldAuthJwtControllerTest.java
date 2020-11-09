@@ -4,7 +4,10 @@ import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.user.*;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
+import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -34,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtControllerTest extends BaseControllerTest {
+public class UserOldAuthJwtControllerTest extends BaseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

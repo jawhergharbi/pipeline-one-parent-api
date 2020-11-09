@@ -165,7 +165,7 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(CompanyMongoDB
+            mockedEntity.setCompany(Company
                     .builder()
                     .id(FAKER.internet().uuid())
                     .name(FAKER.company().name())
@@ -189,7 +189,7 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(CompanyMongoDB
+            mockedEntity.setCompany(Company
                     .builder()
                     .id(FAKER.internet().uuid())
                     .name(FAKER.company().name())
@@ -213,7 +213,7 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(CompanyMongoDB
+            mockedEntity.setCompany(Company
                     .builder()
                     .id(FAKER.internet().uuid())
                     .name(FAKER.company().name())
@@ -280,8 +280,8 @@ public class MockFactory {
                 .build();
     }
 
-    public Company newCompanyEntity(LocalDateTime dateTime) {
-        return Company.builder()
+    public CompanyOld newCompanyEntity(LocalDateTime dateTime) {
+        return CompanyOld.builder()
                 .id(FAKER.number().randomNumber())
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())
@@ -290,16 +290,16 @@ public class MockFactory {
                 .build();
     }
 
-    public Company newCompanyEntity(Long id, String name, String url) {
-        return Company.builder()
+    public CompanyOld newCompanyEntity(Long id, String name, String url) {
+        return CompanyOld.builder()
                 .id(id)
                 .name(name)
                 .url(url)
                 .build();
     }
 
-    public CompanyMongoDB newCompanyEntity(String id, String name, String url, LocalDateTime dateTime) {
-        return CompanyMongoDB.builder()
+    public Company newCompanyEntity(String id, String name, String url, LocalDateTime dateTime) {
+        return Company.builder()
                 .id(id)
                 .name(name)
                 .url(url)
@@ -308,8 +308,8 @@ public class MockFactory {
                 .build();
     }
 
-    public CompanyMongoDB newCompanyEntity(String name, String url) {
-        return CompanyMongoDB.builder()
+    public Company newCompanyEntity(String name, String url) {
+        return Company.builder()
                 .name(name)
                 .url(url)
                 .build();
@@ -323,8 +323,8 @@ public class MockFactory {
         client.setEmail(FAKER.internet().emailAddress());
         client.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         client.setPosition(FAKER.company().profession());
-        client.setCompany(
-                Company
+        client.setCompanyOld(
+                CompanyOld
                         .builder()
                         .name(FAKER.company().name())
                         .url(FAKER.company().url())
@@ -351,7 +351,7 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompany(newCompanyEntity(now));
+            mockedEntity.setCompanyOld(newCompanyEntity(now));
         }
         mockedEntity.setCreated(now);
         mockedEntity.setUpdated(now);
@@ -451,8 +451,8 @@ public class MockFactory {
         return mockUserAuth;
     }
 
-    public UserMongoDB newUserAuthEntity(String id, String email, String[] roles) {
-        UserMongoDB mockUserAuth = new UserMongoDB();
+    public User newUserAuthEntity(String id, String email, String[] roles) {
+        User mockUserAuth = new User();
 
         LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
         mockUserAuth.setId(id);
@@ -470,11 +470,11 @@ public class MockFactory {
         return mockUserAuth;
     }
 
-    public UserMongoDB newUserAuthEntity(String id, String email) {
+    public User newUserAuthEntity(String id, String email) {
         return newUserAuthEntity(id, email, null);
     }
 
-    public UserMongoDB newUserAuthEntity(String email) {
+    public User newUserAuthEntity(String email) {
         return newUserAuthEntity(UUID.randomUUID().toString(), email, null);
     }
 
@@ -515,22 +515,22 @@ public class MockFactory {
         return mockUserAuth;
     }
 
-    public User newUserEntity(String componentId) {
-        User user = new User();
-        user.setId(componentId);
-        user.setFullName(FAKER.name().fullName());
-        user.getRoles().add(Role.SA.name());
-        user.setActive(true);
-        return user;
+    public UserOld newUserEntity(String componentId) {
+        UserOld userOld = new UserOld();
+        userOld.setId(componentId);
+        userOld.setFullName(FAKER.name().fullName());
+        userOld.getRoles().add(Role.SA.name());
+        userOld.setActive(true);
+        return userOld;
     }
 
-    public User newUserEntity(String componentId, String fullName, String[] roles) {
-        User user = new User();
-        user.setId(componentId);
-        user.setFullName(fullName);
-        user.setRoles(new HashSet<>(Arrays.asList(roles)));
-        user.setActive(true);
-        return user;
+    public UserOld newUserEntity(String componentId, String fullName, String[] roles) {
+        UserOld userOld = new UserOld();
+        userOld.setId(componentId);
+        userOld.setFullName(fullName);
+        userOld.setRoles(new HashSet<>(Arrays.asList(roles)));
+        userOld.setActive(true);
+        return userOld;
     }
 
     public UserDTOOld newUserDTO(String componentId, String fullName, String[] roles) {

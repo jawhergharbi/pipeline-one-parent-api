@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.mock.CompanyMockFactory;
-import com.sawoo.pipeline.api.model.CompanyMongoDB;
+import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
 import com.sawoo.pipeline.api.service.company.CompanyService;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMongoDB, CompanyRepository, CompanyService> {
+public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, Company, CompanyRepository, CompanyService> {
 
     @MockBean
     private CompanyRepository repository;
@@ -40,7 +40,7 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
     }
 
     @Override
-    protected String getEntityId(CompanyMongoDB component) {
+    protected String getEntityId(Company component) {
         return component.getId();
     }
 
@@ -50,7 +50,7 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
     }
 
     @Override
-    protected void mockedEntityExists(CompanyMongoDB entity) {
+    protected void mockedEntityExists(Company entity) {
         doReturn(Optional.of(entity)).when(repository).findByName(anyString());
     }
 
@@ -60,7 +60,7 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
         // Set up mock entities
         String COMPANY_ID = getMockFactory().getComponentId();
         String COMPANY_NAME = getMockFactory().getFAKER().company().name();
-        CompanyMongoDB mockedEntity = getMockFactory().newEntity(COMPANY_ID);
+        Company mockedEntity = getMockFactory().newEntity(COMPANY_ID);
         mockedEntity.setName(COMPANY_NAME);
 
         // Set up the mocked repository
@@ -104,11 +104,11 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(COMPANY_NAME);
         mockedDTO.setUrl(COMPANY_URL);
-        CompanyMongoDB mockedEntity = getMockFactory().newEntity(COMPANY_ID);
+        Company mockedEntity = getMockFactory().newEntity(COMPANY_ID);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByName(anyString());
-        doReturn(mockedEntity).when(repository).insert(any(CompanyMongoDB.class));
+        doReturn(mockedEntity).when(repository).insert(any(Company.class));
 
         // Execute the service call
         CompanyDTO returnedEntity = getService().create(mockedDTO);
@@ -119,7 +119,7 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getCreated().toLocalDate(), "Creation time must be today");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getUpdated().toLocalDate(), "Update time must be today");
 
-        verify(repository, times(1)).insert(any(CompanyMongoDB.class));
+        verify(repository, times(1)).insert(any(Company.class));
         verify(repository, times(1)).findByName(anyString());
     }
 
@@ -132,7 +132,7 @@ public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, CompanyMo
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(NEW_COMPANY_NAME);
 
-        CompanyMongoDB mockedEntity = getMockFactory().newEntity(COMPANY_ID);
+        Company mockedEntity = getMockFactory().newEntity(COMPANY_ID);
         mockedEntity.setName(NEW_COMPANY_NAME);
 
         // Set up the mocked repository

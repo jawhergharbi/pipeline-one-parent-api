@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class EntityBase {
+public abstract class BaseEntity {
 
     @JMap
     private LocalDateTime created;

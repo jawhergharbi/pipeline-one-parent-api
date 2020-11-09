@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,12 +13,12 @@ import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
-public class UserAuthServiceEventListener implements BaseServiceEventListener<UserAuthDTO, UserMongoDB> {
+public class UserAuthServiceEventListener implements BaseServiceEventListener<UserAuthDTO, User> {
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void onBeforeCreate(UserAuthDTO dto, UserMongoDB entity) {
+    public void onBeforeCreate(UserAuthDTO dto, User entity) {
         if (entity != null) {
             // password
             entity.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -34,7 +34,7 @@ public class UserAuthServiceEventListener implements BaseServiceEventListener<Us
     }
 
     @Override
-    public void onBeforeUpdate(UserAuthDTO dto, UserMongoDB entity) {
+    public void onBeforeUpdate(UserAuthDTO dto, User entity) {
         // nothing
     }
 }

@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.service;
 
-import com.sawoo.pipeline.api.model.UserMongoDB;
+import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTest {
+public class UserAuthJwtUserOldDetailsServiceTest extends BaseServiceTest {
 
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;
@@ -32,7 +32,7 @@ public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTest {
     void loadUserByUsernameWhenUserFoundReturnsSuccess() {
         // Set up mock entity
         String AUTH_EMAIL = FAKER.internet().emailAddress();
-        UserMongoDB mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
+        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedUserAuth)).when(repository).findByEmail(AUTH_EMAIL);

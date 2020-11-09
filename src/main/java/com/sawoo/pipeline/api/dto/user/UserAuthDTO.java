@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;

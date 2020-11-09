@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
-class UserClientServiceTest extends BaseServiceTest {
+class UserOldClientServiceTest extends BaseServiceTest {
 
     @Autowired
     private UserClientService service;
@@ -49,10 +49,10 @@ class UserClientServiceTest extends BaseServiceTest {
                 }).collect(Collectors.toList());
         String USER_ID = FAKER.name().username();
         String USER_FULL_NAME = FAKER.name().fullName();
-        User mockedUserEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[] {Role.CSM.name()});
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[] {Role.CSM.name()});
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedUserEntity)).when(userRepository).findById(anyString());
+        doReturn(Optional.of(mockedUserOldEntity)).when(userRepository).findById(anyString());
         doReturn(clientList).when(clientRepository).findByUserId(USER_ID);
 
         // Execute the service call
@@ -74,20 +74,20 @@ class UserClientServiceTest extends BaseServiceTest {
         int listSize = 3;
         String USER_ID_CSM = FAKER.regexify(FAKER_USER_ID_REGEX);
         String USER_FULL_NAME_CSM = FAKER.name().fullName();
-        User userCSM = getMockFactory().newUserEntity(USER_ID_CSM, USER_FULL_NAME_CSM, new String[]{Role.CSM.name(), Role.USER.name()});
+        UserOld userOldCSM = getMockFactory().newUserEntity(USER_ID_CSM, USER_FULL_NAME_CSM, new String[]{Role.CSM.name(), Role.USER.name()});
         String USER_ID_ADMIN = FAKER.regexify(FAKER_USER_ID_REGEX);
         String USER_FULL_NAME_ADMIN = FAKER.name().fullName();
-        User userADMIN = getMockFactory().newUserEntity(USER_ID_ADMIN, USER_FULL_NAME_ADMIN, new String[]{Role.ADMIN.name(), Role.USER.name()});
+        UserOld userOldADMIN = getMockFactory().newUserEntity(USER_ID_ADMIN, USER_FULL_NAME_ADMIN, new String[]{Role.ADMIN.name(), Role.USER.name()});
         List<Client> clientList = IntStream.range(0, listSize)
                 .mapToObj((client) -> {
                     Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     return getMockFactory().newClientEntity(CLIENT_ID);
                 }).collect(Collectors.toList());
-        clientList.get(0).setCustomerSuccessManager(userCSM);
+        clientList.get(0).setCustomerSuccessManager(userOldCSM);
 
         // Set up the mocked repository
-        doReturn(Optional.of(userCSM))
-                .doReturn(Optional.of(userADMIN))
+        doReturn(Optional.of(userOldCSM))
+                .doReturn(Optional.of(userOldADMIN))
                 .when(userRepository).findById(anyString());
         doReturn(Collections.singletonList(clientList.get(0)))
                 .when(clientRepository).findByUserId(anyString());
@@ -114,10 +114,10 @@ class UserClientServiceTest extends BaseServiceTest {
     void findAllWhenThereAreNoClientReturnsSuccess() {
         // Set up mock entities
         String USER_ID = FAKER.name().username();
-        User mockedUserEntity = getMockFactory().newUserEntity(USER_ID);
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedUserEntity)).when(userRepository).findById(anyString());
+        doReturn(Optional.of(mockedUserOldEntity)).when(userRepository).findById(anyString());
 
         // Execute the service call
         List<ClientBasicDTO> returnedList = service.findAll(USER_ID);
