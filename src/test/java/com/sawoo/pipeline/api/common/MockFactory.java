@@ -153,23 +153,6 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, CompanyMongoDB company) {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Lead mockedEntity = new Lead();
-        mockedEntity.setId(id);
-        mockedEntity.setFirstName(firstName);
-        mockedEntity.setLastName(lastName);
-        mockedEntity.setLinkedInUrl(linkedInUrl);
-        mockedEntity.setLinkedInThread(linkedInThread);
-        mockedEntity.setEmail(FAKER.internet().emailAddress());
-        mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedEntity.setPosition(FAKER.company().profession());
-        mockedEntity.setCompany(company);
-        mockedEntity.setCreated(now);
-        mockedEntity.setUpdated(now);
-        return mockedEntity;
-    }
-
     public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
