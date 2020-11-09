@@ -23,10 +23,11 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest<UserMongoDB, User
 
     private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "user-auth-test-data.json").toFile();
     private static final int ADMIN_USERS = 1;
+    private static final String USER_ID = "5fa2e7c58b7a2a51f31f2bed";
 
     @Autowired
     public UserAuthRepositoryTest(UserRepositoryMongo repository) {
-        super(repository, AUTHENTICATION_JSON_DATA);
+        super(repository, AUTHENTICATION_JSON_DATA, USER_ID, UserMongoDB.class.getSimpleName());
     }
 
     @Override
@@ -34,30 +35,14 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest<UserMongoDB, User
         return UserMongoDB[].class;
     }
 
-    @Test
-    @DisplayName("findAll: return the entities defined in the file - Success")
-    void findAllReturnsSuccess() {
-        List<UserMongoDB> users = getRepository().findAll();
-        Assertions.assertEquals(getDocumentSize(), users.size());
+    @Override
+    protected String getComponentId(UserMongoDB component) {
+        return component.getId();
     }
 
-    @Test
-    @DisplayName("findById: entity found - Success")
-    void findByIdWhenEntityIdFoundReturnsSuccess() {
-        String AUTH_ID = "5fa2e7c58b7a2a51f31f2bed";
-        Optional<UserMongoDB> user = getRepository().findById(AUTH_ID);
-
-        Assertions.assertTrue(user.isPresent(), String.format("User with [id]: %s can not be null", AUTH_ID));
-        Assertions.assertEquals(AUTH_ID, user.get().getId(), String.format("User [id] must be %s", AUTH_ID));
-    }
-
-    @Test
-    @DisplayName("findById: entity not found -  Failure")
-    void findByIdWhenEntityNotFoundReturnsSuccess() {
-        String AUTH_ID = "wrong_id";
-        Optional<UserMongoDB> user = getRepository().findById(AUTH_ID);
-
-        Assertions.assertFalse(user.isPresent(), String.format("User with [id]: %s can be found", AUTH_ID));
+    @Override
+    protected UserMongoDB getNewEntity() {
+        return getMockFactory().newUserAuthEntity(FAKER.internet().emailAddress());
     }
 
     @Test
@@ -84,18 +69,6 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest<UserMongoDB, User
         Assertions.assertFalse(
                 user.isPresent(),
                 String.format("User with [email]: %s can not be found", AUTH_EMAIL));
-    }
-
-    @Test
-    @DisplayName("save: entity saved - Success")
-    void saveWhenAddNewEntityReturnsSuccess() {
-        String AUTH_EMAIL = FAKER.internet().emailAddress();
-        UserMongoDB user = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
-
-        getRepository().save(user);
-        List<UserMongoDB> users = getRepository().findAll();
-
-        Assertions.assertEquals(getDocumentSize() + 1, users.size());
     }
 
     @Test

@@ -18,10 +18,11 @@ import java.util.Optional;
 public class CompanyRepositoryTest extends BaseRepositoryTest<CompanyMongoDB, CompanyRepository> {
 
     private static final File COMPANY_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "company-test-data.json").toFile();
+    private static final String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
 
     @Autowired
     public CompanyRepositoryTest(CompanyRepository repository) {
-        super(repository, COMPANY_JSON_DATA);
+        super(repository, COMPANY_JSON_DATA, COMPANY_ID, CompanyMongoDB.class.getSimpleName());
     }
 
     @Override
@@ -29,25 +30,15 @@ public class CompanyRepositoryTest extends BaseRepositoryTest<CompanyMongoDB, Co
         return CompanyMongoDB[].class;
     }
 
-    @Test
-    @DisplayName("findAll: return the entities defined in the file - Success")
-    void findAllReturnsSuccess() {
-        List<CompanyMongoDB> companies = getRepository().findAll();
-
-        Assertions.assertEquals(
-                getDocumentSize(),
-                companies.size(),
-                String.format("Should be %d Company entities in the database", getDocumentSize()));
+    @Override
+    protected String getComponentId(CompanyMongoDB component) {
+        return component.getId();
     }
 
-    @Test
-    @DisplayName("findById: entity found - Success")
-    void findByIdWhenEntityIdFoundReturnsSuccess() {
-        String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
-        Optional<CompanyMongoDB> entity = getRepository().findById(COMPANY_ID);
-
-        Assertions.assertTrue(entity.isPresent(), String.format("Company with [id]: %s can not be null", COMPANY_ID));
-        Assertions.assertEquals(COMPANY_ID, entity.get().getId(), String.format("Company [id] must be %s", COMPANY_ID));
+    @Override
+    protected CompanyMongoDB getNewEntity() {
+        return getMockFactory()
+                .newCompanyEntity(FAKER.company().name(), FAKER.company().url());
     }
 
     @Test
@@ -67,24 +58,5 @@ public class CompanyRepositoryTest extends BaseRepositoryTest<CompanyMongoDB, Co
         Optional<CompanyMongoDB> entity = getRepository().findById(COMPANY_ID);
 
         Assertions.assertFalse(entity.isPresent(), String.format("Company with [id]: %s can not be found", COMPANY_ID));
-    }
-
-    @Test
-    @DisplayName("save: entity saved - Success")
-    void saveWhenAddNewEntityReturnsSuccess() {
-        CompanyMongoDB company = getMockFactory()
-                .newCompanyEntity(FAKER.company().name(), FAKER.company().url());
-
-        CompanyMongoDB companyStored = getRepository().insert(company);
-        List<CompanyMongoDB> companies = getRepository().findAll();
-
-        Assertions.assertNotNull(
-                companyStored.getId(),
-                "Company id can not be null for the new inserted document" );
-
-        Assertions.assertEquals(
-                getDocumentSize() + 1,
-                companies.size(),
-                String.format("Number of companies stored in the collection must be equal to %d", getDocumentSize() + 1));
     }
 }

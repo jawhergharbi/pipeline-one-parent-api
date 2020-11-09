@@ -17,6 +17,7 @@ import com.sawoo.pipeline.api.dto.user.UserDTO;
 import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -197,6 +198,30 @@ public class MockFactory {
     public Lead newLeadEntity(Long id, boolean addCompany) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Lead mockedEntity = new Lead();
+        mockedEntity.setId(id);
+        mockedEntity.setFirstName(FAKER.name().firstName());
+        mockedEntity.setFirstName(FAKER.name().lastName());
+        mockedEntity.setLinkedInUrl(FAKER.internet().url());
+        mockedEntity.setLinkedInThread(FAKER.internet().url());
+        mockedEntity.setEmail(FAKER.internet().emailAddress());
+        mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
+        mockedEntity.setPosition(FAKER.company().profession());
+        if (addCompany) {
+            mockedEntity.setCompany(CompanyMongoDB
+                    .builder()
+                    .id(FAKER.internet().uuid())
+                    .name(FAKER.company().name())
+                    .url(FAKER.company().url())
+                    .build());
+        }
+        mockedEntity.setCreated(now);
+        mockedEntity.setUpdated(now);
+        return mockedEntity;
+    }
+
+    public Prospect newProspectEntity(String id, boolean addCompany) {
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        Prospect mockedEntity = new Prospect();
         mockedEntity.setId(id);
         mockedEntity.setFirstName(FAKER.name().firstName());
         mockedEntity.setFirstName(FAKER.name().lastName());
