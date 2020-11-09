@@ -21,17 +21,29 @@ public class ProspectEventListener extends AbstractMongoEventListener<Prospect> 
     public void onBeforeConvert(BeforeConvertEvent<Prospect> event) {
         Prospect prospect = event.getSource();
         CompanyMongoDB company = prospect.getCompany();
-        if (company != null && company.getId() == null) {
-            companyRepository
-                    .findByName(company.getName())
-                    .ifPresentOrElse(
-                            prospect::setCompany,
-                            () -> {
-                                LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-                                company.setCreated(now);
-                                company.setUpdated(now);
-                                companyRepository.insert(company);
-                            });
+        if (company != null) {
+            if (company.getId() == null) {
+                companyRepository
+                        .findByName(company.getName())
+                        .ifPresentOrElse(
+                                prospect::setCompany,
+                                () -> {
+                                    LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+                                    company.setCreated(now);
+                                    company.setUpdated(now);
+                                    companyRepository.insert(company);
+                                });
+            } else {
+                companyRepository
+                        .findById(company.getId())
+                        .ifPresentOrElse(
+                                prospect::setCompany,
+                                () -> {
+                                    LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+                                    company.setUpdated(now);
+                                    companyRepository.save(company);
+                                });
+            }
         }
         super.onBeforeConvert(event);
     }

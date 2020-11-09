@@ -1,8 +1,5 @@
 package com.sawoo.pipeline.api.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import org.junit.jupiter.api.*;
@@ -14,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,48 +19,33 @@ import java.util.Optional;
 @ExtendWith(SpringExtension.class)
 @Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthRepositoryTest extends BaseRepositoryTest {
+public class UserAuthRepositoryTest extends BaseRepositoryTest<UserMongoDB, UserRepositoryMongo> {
 
     private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "user-auth-test-data.json").toFile();
-    private int documentSize;
     private static final int ADMIN_USERS = 1;
 
     @Autowired
-    private UserRepositoryMongo repository;
-
-    @BeforeEach
-    void beforeEach() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        // Deserialize our JSON file to an array of reviews
-        UserMongoDB[] userAuthList = mapper.readValue(AUTHENTICATION_JSON_DATA, UserMongoDB[].class);
-        documentSize = userAuthList.length;
-
-        // Save each auth entity into the DB
-        repository.insert(Arrays.asList(userAuthList));
+    public UserAuthRepositoryTest(UserRepositoryMongo repository) {
+        super(repository, AUTHENTICATION_JSON_DATA);
     }
 
-    @AfterEach
-    void afterEach() {
-        // Drop the entity collection so we can start fresh
-        repository.deleteAll();
+    @Override
+    protected Class<UserMongoDB[]> getClazz() {
+        return UserMongoDB[].class;
     }
-
 
     @Test
     @DisplayName("findAll: return the entities defined in the file - Success")
     void findAllReturnsSuccess() {
-        List<UserMongoDB> users = repository.findAll();
-        Assertions.assertEquals(documentSize, users.size());
+        List<UserMongoDB> users = getRepository().findAll();
+        Assertions.assertEquals(getDocumentSize(), users.size());
     }
 
     @Test
     @DisplayName("findById: entity found - Success")
     void findByIdWhenEntityIdFoundReturnsSuccess() {
         String AUTH_ID = "5fa2e7c58b7a2a51f31f2bed";
-        Optional<UserMongoDB> user = repository.findById(AUTH_ID);
+        Optional<UserMongoDB> user = getRepository().findById(AUTH_ID);
 
         Assertions.assertTrue(user.isPresent(), String.format("User with [id]: %s can not be null", AUTH_ID));
         Assertions.assertEquals(AUTH_ID, user.get().getId(), String.format("User [id] must be %s", AUTH_ID));
@@ -74,7 +55,7 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
     @DisplayName("findById: entity not found -  Failure")
     void findByIdWhenEntityNotFoundReturnsSuccess() {
         String AUTH_ID = "wrong_id";
-        Optional<UserMongoDB> user = repository.findById(AUTH_ID);
+        Optional<UserMongoDB> user = getRepository().findById(AUTH_ID);
 
         Assertions.assertFalse(user.isPresent(), String.format("User with [id]: %s can be found", AUTH_ID));
     }
@@ -83,7 +64,7 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
     @DisplayName("findByEmail: entity found - Success")
     void findByEmailWhenEntityFoundReturnsSuccess() {
         String AUTH_EMAIL = "miguel@gmail.com";
-        Optional<UserMongoDB> user = repository.findByEmail(AUTH_EMAIL);
+        Optional<UserMongoDB> user = getRepository().findByEmail(AUTH_EMAIL);
 
         Assertions.assertTrue(
                 user.isPresent(),
@@ -98,7 +79,7 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
     @DisplayName("findByEmail: entity not found - Failure")
     void findByEmailWhenEntityNotFoundReturnsSuccess() {
         String AUTH_EMAIL = "wrong_email";
-        Optional<UserMongoDB> user = repository.findByEmail(AUTH_EMAIL);
+        Optional<UserMongoDB> user = getRepository().findByEmail(AUTH_EMAIL);
 
         Assertions.assertFalse(
                 user.isPresent(),
@@ -111,16 +92,16 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         UserMongoDB user = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
 
-        repository.save(user);
-        List<UserMongoDB> users = repository.findAll();
+        getRepository().save(user);
+        List<UserMongoDB> users = getRepository().findAll();
 
-        Assertions.assertEquals(documentSize + 1, users.size());
+        Assertions.assertEquals(getDocumentSize() + 1, users.size());
     }
 
     @Test
     @DisplayName("findAllByRole: entity found Success")
     void findAllByRolesIdWhenRoleAdminReturnsSuccess() {
-        List<UserMongoDB> users = repository.findByActiveTrueAndRolesIn(Collections.singletonList(Role.ADMIN.name()));
+        List<UserMongoDB> users = getRepository().findByActiveTrueAndRolesIn(Collections.singletonList(Role.ADMIN.name()));
 
         Assertions.assertFalse(
                 users.isEmpty(),
