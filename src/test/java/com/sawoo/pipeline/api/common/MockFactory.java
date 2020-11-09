@@ -298,14 +298,6 @@ public class MockFactory {
                 .build();
     }
 
-    public CompanyMongoDB newCompanyEntity(String id, String name, String url) {
-        return CompanyMongoDB.builder()
-                .id(id)
-                .name(name)
-                .url(url)
-                .build();
-    }
-
     public CompanyMongoDB newCompanyEntity(String id, String name, String url, LocalDateTime dateTime) {
         return CompanyMongoDB.builder()
                 .id(id)
@@ -320,14 +312,6 @@ public class MockFactory {
         return CompanyMongoDB.builder()
                 .name(name)
                 .url(url)
-                .build();
-    }
-
-    public CompanyMongoDB newCompanyEntity(String id) {
-        return CompanyMongoDB.builder()
-                .id(id)
-                .name(FAKER.company().name())
-                .url(FAKER.company().url())
                 .build();
     }
 
