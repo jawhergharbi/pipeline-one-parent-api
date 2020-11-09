@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ClientException;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
+import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.client.Client;
@@ -442,11 +442,11 @@ public class ClientServiceTest extends BaseServiceTest {
         Client mockedClientEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTO mockedUserDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedClientEntity)).when(repository).findById(CLIENT_ID);
-        doReturn(mockedUserDTO).when(userService).findById(USER_ID);
+        doReturn(mockedUserDTOOld).when(userService).findById(USER_ID);
 
         // Execute the service call
         Optional<ClientBasicDTO> returnedDTO = service.updateCSM(CLIENT_ID, USER_ID);
@@ -475,11 +475,11 @@ public class ClientServiceTest extends BaseServiceTest {
         User mockedUserEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
         spyClientEntity.setSalesAssistant(mockedUserEntity);
 
-        UserDTO mockedUserDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);
-        doReturn(mockedUserDTO).when(userService).findById(USER_ID);
+        doReturn(mockedUserDTOOld).when(userService).findById(USER_ID);
 
         ClientException exception = Assertions.assertThrows(
                 ClientException.class,
@@ -505,11 +505,11 @@ public class ClientServiceTest extends BaseServiceTest {
         User mockedUserEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
         spyClientEntity.setCustomerSuccessManager(mockedUserEntity);
 
-        UserDTO mockedUserDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);
-        doReturn(mockedUserDTO).when(userService).findById(USER_ID);
+        doReturn(mockedUserDTOOld).when(userService).findById(USER_ID);
 
         ClientException exception = Assertions.assertThrows(
                 ClientException.class,
@@ -532,11 +532,11 @@ public class ClientServiceTest extends BaseServiceTest {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTO mockedUserDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);
-        doReturn(mockedUserDTO).when(userService).findById(USER_ID);
+        doReturn(mockedUserDTOOld).when(userService).findById(USER_ID);
 
         ClientException exception = Assertions.assertThrows(
                 ClientException.class,

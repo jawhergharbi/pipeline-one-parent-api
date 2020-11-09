@@ -4,7 +4,7 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.NoteDTO;
 import com.sawoo.pipeline.api.dto.StatusDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
+import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -35,10 +35,10 @@ public class ClientBasicDTO extends ClientBaseDTO {
     private int leadsSize;
 
     @JMap
-    private UserDTO salesAssistant;
+    private UserDTOOld salesAssistant;
 
     @JMap
-    private UserDTO customerSuccessManager;
+    private UserDTOOld customerSuccessManager;
 
     @JMap
     private LocalDateTime created;

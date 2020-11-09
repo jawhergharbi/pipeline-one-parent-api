@@ -12,8 +12,7 @@ import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
+import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.Lead;
@@ -467,24 +466,22 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public UserAuthRegister newUserAuthRegister(String email, String password) {
-        return
-                new UserAuthRegister(
-                        email,
-                        password,
-                        password,
-                        FAKER.name().fullName(),
-                        null);
+    public UserAuthDTO newUserAuthRegister(String email, String password) {
+        UserAuthDTO mockUserAuth = new UserAuthDTO();
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setPassword(password);
+        mockUserAuth.setConfirmPassword(password);
+        mockUserAuth.setFullName(FAKER.name().fullName());
+        return mockUserAuth;
     }
 
-    public UserAuthRegister newUserAuthRegister(String email, String password, String confirmPassword, String fullName) {
-        return
-                new UserAuthRegister(
-                        email,
-                        password,
-                        confirmPassword,
-                        fullName,
-                        null);
+    public UserAuthDTO newUserAuthRegister(String email, String password, String confirmPassword, String fullName) {
+        UserAuthDTO mockUserAuth = new UserAuthDTO();
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setPassword(password);
+        mockUserAuth.setConfirmPassword(confirmPassword);
+        mockUserAuth.setFullName(fullName);
+        return mockUserAuth;
     }
 
     public UserMongoDB newUserAuthEntity(String id, String email, String[] roles) {
@@ -569,8 +566,8 @@ public class MockFactory {
         return user;
     }
 
-    public UserDTO newUserDTO(String componentId, String fullName, String[] roles) {
-        UserDTO user = new UserDTO();
+    public UserDTOOld newUserDTO(String componentId, String fullName, String[] roles) {
+        UserDTOOld user = new UserDTOOld();
         user.setId(componentId);
         user.setFullName(fullName);
         user.setActive(true);

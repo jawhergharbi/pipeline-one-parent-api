@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
+import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.service.ClientService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -465,7 +465,7 @@ public class ClientControllerTest extends BaseControllerTest {
     void updateWhenClientFoundAndUpdatedCustomerSuccessManagerFieldReturnsSuccess() throws Exception {
         // Setup the mocked entities
         ClientBasicDTO postEntity = new ClientBasicDTO();
-        UserDTO customerSuccessManager = new UserDTO();
+        UserDTOOld customerSuccessManager = new UserDTOOld();
         customerSuccessManager.setId(FAKER.regexify(FAKER_USER_ID_REGEX));
         customerSuccessManager.setFullName(FAKER.name().fullName());
         customerSuccessManager.setRoles(Set.of(new String[]{"USER", "MANAGER"}));
@@ -503,7 +503,7 @@ public class ClientControllerTest extends BaseControllerTest {
 
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTO mockedCSMDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{"MANAGER"});
+        UserDTOOld mockedCSMDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{"MANAGER"});
         mockedClientDTO.setCustomerSuccessManager(mockedCSMDTO);
 
         // setup the mocked service
@@ -594,7 +594,7 @@ public class ClientControllerTest extends BaseControllerTest {
 
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTO mockedCSMDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{"USER"});
+        UserDTOOld mockedCSMDTO = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{"USER"});
         mockedClientDTO.setSalesAssistant(mockedCSMDTO);
 
         // setup the mocked service

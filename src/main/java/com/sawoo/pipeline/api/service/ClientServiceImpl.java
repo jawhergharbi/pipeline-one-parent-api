@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTO;
+import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
@@ -191,7 +191,7 @@ public class ClientServiceImpl implements ClientService {
     private void validateClientUpdate(ClientBasicDTO clientUpdate, Client clientToBeUpdated) throws ClientException {
 
         // Customer Success Manager must have that role
-        UserDTO csmUser = clientUpdate.getCustomerSuccessManager();
+        UserDTOOld csmUser = clientUpdate.getCustomerSuccessManager();
         if (csmUser != null &&
                 csmUser
                         .getRoles()
@@ -206,7 +206,7 @@ public class ClientServiceImpl implements ClientService {
                             csmUser.getRoles().toString()});
         }
         // Sales Assistant must have that role
-        UserDTO saUser = clientUpdate.getSalesAssistant();
+        UserDTOOld saUser = clientUpdate.getSalesAssistant();
         if (saUser != null &&
                 saUser.getRoles()
                         .stream()

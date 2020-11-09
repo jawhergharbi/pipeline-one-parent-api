@@ -8,7 +8,6 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.UserMongoDB;
@@ -29,8 +28,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,35 +53,17 @@ public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMon
     }
 
     @Override
-    public UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException {
-        log.debug("Creating authorization component for user with [email: {}, fullName: {}, role: {}].",
-                registerRequest.getEmail(),
-                registerRequest.getFullName(),
-                registerRequest.getRole());
-
-        getRepository()
-                .findByEmail(registerRequest.getEmail())
-                .ifPresent((auth) -> {
-                            throw new AuthException(
-                                    ExceptionMessageConstants.AUTH_REGISTER_IDENTIFIER_ALREADY_EXISTS_EXCEPTION,
-                                    new Object[]{ registerRequest.getEmail()} );
-                        });
-
-        UserMongoDB user = newUser(registerRequest);
-        user = getRepository().insert(user);
-        log.debug("User entity has been successfully created. User identifier: {}", user.getEmail());
-
-        return getMapper().getMapperOut().getDestination(user);
-    }
-
-    @Override
     public Optional<UserMongoDB> entityExists(UserAuthDTO entityToCreate) {
-        return Optional.empty();
+        log.debug(
+                "Checking entity existence. [type: {}, email: {}]",
+                DataStoreConstants.USER_DOCUMENT,
+                entityToCreate.getEmail());
+        return getRepository().findByEmail(entityToCreate.getEmail());
     }
 
     @Override
     public UserAuthDTO update(UserAuthUpdateDTO userToUpdate) throws ResourceNotFoundException, AuthException {
-        log.debug("Updating user  with id: [{}]", userToUpdate.getId());
+        log.debug("Updating user with id: [{}]", userToUpdate.getId());
 
         if (userToUpdate.getId() == null || userToUpdate.getId().length() == 0) {
             throw new AuthException(
@@ -171,23 +150,6 @@ public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMon
                     ExceptionMessageConstants.AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION,
                     new String[]{ email });
         }
-    }
-
-    private UserMongoDB newUser(UserAuthRegister registerRequest) {
-        UserMongoDB user = new UserMongoDB();
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setActive(true);
-        user.setFullName(registerRequest.getFullName());
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        user.setCreated(now);
-        user.setUpdated(now);
-        if (registerRequest.getRole() != null) {
-            user.setRoles(new HashSet<>(Collections.singletonList(registerRequest.getRole())));
-        } else {
-            user.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
-        }
-        return user;
     }
 
     private void userUpdateValidation(UserAuthUpdateDTO userToUpdate, UserMongoDB user) throws AuthException {

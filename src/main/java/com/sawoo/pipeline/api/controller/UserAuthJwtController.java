@@ -40,16 +40,16 @@ public class UserAuthJwtController {
             method = RequestMethod.POST,
             produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<UserAuthDTO> create(@Valid @RequestBody UserAuthRegister registerRequest) throws AuthException {
-        if (registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+    public ResponseEntity<UserAuthDTO> create(@Valid @RequestBody UserAuthDTO userAuth) throws AuthException {
+        if (userAuth.getPassword().equals(userAuth.getConfirmPassword())) {
             return Optional
-                    .ofNullable( service.create(registerRequest))
+                    .ofNullable( service.create(userAuth))
                     .map(usr -> ResponseEntity.status(HttpStatus.CREATED).body(usr))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } else {
             throw new AuthException(
                     ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION,
-                    new Object[]{registerRequest.getEmail(), registerRequest.getFullName()});
+                    new Object[]{userAuth.getEmail(), userAuth.getFullName()});
         }
     }
 

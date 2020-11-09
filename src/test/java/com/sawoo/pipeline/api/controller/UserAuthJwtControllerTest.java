@@ -49,7 +49,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister = getMockFactory()
+        UserAuthDTO postRegister = getMockFactory()
                 .newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
         UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_EMAIL, Role.ADMIN.name());
 
@@ -73,7 +73,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.email", is(AUTH_EMAIL)));
 
-        ArgumentCaptor<UserAuthRegister> authRequestCaptor = ArgumentCaptor.forClass(UserAuthRegister.class);
+        ArgumentCaptor<UserAuthDTO> authRequestCaptor = ArgumentCaptor.forClass(UserAuthDTO.class);
         verify(service, times(1)).create(authRequestCaptor.capture());
         Assertions.assertEquals(AUTH_EMAIL, authRequestCaptor.getValue().getEmail());
         Assertions.assertEquals(AUTH_FULL_NAME, authRequestCaptor.getValue().getFullName());
@@ -88,7 +88,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister = getMockFactory()
+        UserAuthDTO postRegister = getMockFactory()
                 .newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -109,7 +109,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -132,9 +132,9 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
     void registerWhenInvalidRequestPasswordEmptyReturnsFailure() throws Exception {
         // Setup mock authentication entity
         String AUTH_EMAIL = FAKER.internet().emailAddress();
-        String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
+        String AUTH_ANOTHER_PASSWORD = FAKER.internet().password(6, 12);
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, "", AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -147,7 +147,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [userAuthRegister] is bellow its min size")));
+                                containsString("Field or param [password] in component [userAuthDTO] is bellow its min size")));
     }
 
     @Test
@@ -157,11 +157,11 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // setup the mocked service
-        doReturn(null).when(service).create(any(UserAuthRegister.class));
+        doReturn(null).when(service).create(any(UserAuthDTO.class));
 
         // execute the POST request
         mockMvc.perform(post("/api/auth/register")
@@ -176,9 +176,9 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
     @DisplayName("POST /api/auth/register: Invalid request body. email is null - Failure")
     void registerWhenRequestBodyInvalidEmailNullReturnsFailure() throws Exception {
         // Setup mock authentication entity
-        String AUTH_PASSWORD = FAKER.internet().password();
+        String AUTH_PASSWORD = FAKER.internet().password(6, 12);
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(null, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
 
@@ -192,7 +192,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [email] in component [userAuthRegister] can not be empty")));
+                                containsString("Field or param [email] in component [userAuthDTO] can not be empty")));
     }
 
     @Test
@@ -202,7 +202,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ANOTHER_PASSWORD = FAKER.internet().password();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, null, AUTH_ANOTHER_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -215,7 +215,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [userAuthRegister] can not be null")));
+                                containsString("Field or param [password] in component [userAuthDTO] can not be null")));
     }
 
     @Test
@@ -224,7 +224,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         // Setup mock authentication entity
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, null, null, AUTH_FULL_NAME);
 
 
@@ -240,7 +240,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("in component [userAuthRegister] can not be null")));
+                                containsString("in component [userAuthDTO] can not be null")));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_FULL_NAME = FAKER.lorem().fixedString(101);
         String AUTH_PASSWORD = FAKER.internet().password();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -263,7 +263,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [fullName] in component [userAuthRegister] has exceeded its max size")));
+                                containsString("Field or param [fullName] in component [userAuthDTO] has exceeded its max size")));
     }
 
     @Test
@@ -273,7 +273,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_PASSWORD = FAKER.internet().password(1, 5);
         String AUTH_FULL_NAME = FAKER.name().fullName();
-        UserAuthRegister postRegister =
+        UserAuthDTO postRegister =
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // execute the POST request
@@ -286,7 +286,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.messages", hasSize(2)))
                 .andExpect(jsonPath(
                         "$.messages[0]",
-                        containsString("in component [userAuthRegister] is bellow its min size")));
+                        containsString("in component [userAuthDTO] is bellow its min size")));
     }
 
     @Test

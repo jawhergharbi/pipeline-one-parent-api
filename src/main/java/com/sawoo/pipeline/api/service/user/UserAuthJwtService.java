@@ -5,7 +5,6 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
@@ -15,8 +14,6 @@ import java.util.List;
 
 
 public interface UserAuthJwtService extends BaseService<UserAuthDTO> {
-
-    UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException;
 
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 
