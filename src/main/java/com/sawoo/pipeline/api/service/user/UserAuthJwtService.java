@@ -7,21 +7,16 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.service.base.BaseService;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
 
-public interface UserAuthJwtService {
+public interface UserAuthJwtService extends BaseService<UserAuthDTO> {
 
     UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException;
-
-    UserAuthDTO delete(String id) throws ResourceNotFoundException;
-
-    UserAuthDTO findById(String id) throws ResourceNotFoundException;
-
-    List<UserAuthDTO> findAll();
 
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 

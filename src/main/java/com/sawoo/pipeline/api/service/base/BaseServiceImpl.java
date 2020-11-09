@@ -97,10 +97,10 @@ public abstract class BaseServiceImpl<D, M extends EntityBase, R extends MongoRe
 
         return repository
                 .findById(id)
-                .map((company) -> {
-                    repository.delete(company);
+                .map((entity) -> {
+                    repository.deleteById(id);
                     log.debug("[{}] entity with id: [{}] has been deleted", entityType, id);
-                    return mapper.getMapperOut().getDestination(company);
+                    return mapper.getMapperOut().getDestination(entity);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,

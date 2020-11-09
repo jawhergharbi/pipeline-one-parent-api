@@ -10,11 +10,12 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthRegister;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.UserMongoDB;
 import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
-import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
-import lombok.RequiredArgsConstructor;
+import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -31,19 +32,28 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Validated
-public class UserAuthJwtServiceImpl implements UserAuthJwtService {
+public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, UserMongoDB, UserRepositoryMongo> implements UserAuthJwtService {
 
-    private final UserRepositoryMongo repository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final CommonServiceMapper mapper;
+
+    @Autowired
+    public UserAuthJwtServiceImpl(UserRepositoryMongo repository,
+                                  UserAuthMapper mapper,
+                                  UserAuthServiceEventListener eventListener,
+                                  AuthenticationManager authenticationManager,
+                                  PasswordEncoder passwordEncoder) {
+        super(repository, mapper, DataStoreConstants.PROSPECT_DOCUMENT, eventListener);
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserAuthDTO create(UserAuthRegister registerRequest) throws AuthException {
@@ -52,7 +62,7 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                 registerRequest.getFullName(),
                 registerRequest.getRole());
 
-        repository
+        getRepository()
                 .findByEmail(registerRequest.getEmail())
                 .ifPresent((auth) -> {
                             throw new AuthException(
@@ -61,54 +71,15 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                         });
 
         UserMongoDB user = newUser(registerRequest);
-        user = repository.insert(user);
+        user = getRepository().insert(user);
         log.debug("User entity has been successfully created. User identifier: {}", user.getEmail());
 
-        return mapper.getUserAuthDomainToDTOMapper().getDestination(user);
+        return getMapper().getMapperOut().getDestination(user);
     }
 
     @Override
-    public UserAuthDTO delete(String id) throws ResourceNotFoundException {
-        log.info("Deleting user component by [id: {}]", id);
-        return repository
-                .findById(id)
-                .map((user) -> {
-                    log.debug("User [id: {}, email: {}] has been found", id, user.getEmail());
-
-                    repository.deleteById(id);
-                    log.info("User [id: {}, email: {}] has been deleted", id, user.getEmail());
-                    return mapper.getUserAuthDomainToDTOMapper().getDestination(user);
-                })
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{"User", id}));
-    }
-
-    @Override
-    public UserAuthDTO findById(String id) throws ResourceNotFoundException {
-        log.info("Retrieving user component by [id: {}]", id);
-
-        return repository
-                .findById(id)
-                .map((user) -> {
-                    log.debug("User [id: {}, email: {}] has been found", id, user.getEmail());
-                    return mapper.getUserAuthDomainToDTOMapper().getDestination(user);
-                })
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{"User", id}));
-    }
-
-    @Override
-    public List<UserAuthDTO> findAll() {
-        log.debug("Retrieving all users entities");
-        List<UserAuthDTO> users = repository
-                .findAll()
-                .stream()
-                .map(mapper.getUserAuthDomainToDTOMapper()::getDestination)
-                .collect(Collectors.toList());
-        log.debug("{} user has been found", users.size());
-        return users;
+    public Optional<UserMongoDB> entityExists(UserAuthDTO entityToCreate) {
+        return Optional.empty();
     }
 
     @Override
@@ -121,7 +92,7 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                     new String[]{ "id", "User"});
         }
 
-        return repository
+        return getRepository()
                 .findById(userToUpdate.getId())
                 .map((user) -> {
                     // Validation
@@ -137,20 +108,20 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
                         user.getRoles().clear();
                         user.getRoles().add(Role.USER.name());
                     }
-                    user = mapper.getUserAuthDTOToDomainMapper()
+                    user = getMapper().getMapperIn()
                             .getDestination(
                                     user,
                                     userToUpdate,
                                     MappingType.ALL_FIELDS,
                                     MappingType.ONLY_VALUED_FIELDS);
                     user.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-                    repository.save(user);
+                    getRepository().save(user);
 
                     log.debug("User entity with id [{}] has been successfully updated. Updated data: {}",
                             user.getId(),
                             userToUpdate);
 
-                    return mapper.getUserAuthDomainToDTOMapper().getDestination(user);
+                    return getMapper().getMapperOut().getDestination(user);
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
@@ -164,10 +135,10 @@ public class UserAuthJwtServiceImpl implements UserAuthJwtService {
             @Size(min = 1, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR) List<String> roles) {
         log.debug("Retrieving all users with roles [{}]", roles);
 
-        List<UserAuthDTO> users = repository
+        List<UserAuthDTO> users = getRepository()
                 .findByActiveTrueAndRolesIn(roles)
                 .stream()
-                .map(mapper.getUserAuthDomainToDTOMapper()::getDestination)
+                .map(getMapper().getMapperOut()::getDestination)
                 .collect(Collectors.toList());
         log.debug("[{}] user/s with role/s [{}] has/have been found", users.size(), roles);
         return users;

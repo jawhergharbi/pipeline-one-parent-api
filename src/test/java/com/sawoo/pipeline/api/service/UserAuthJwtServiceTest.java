@@ -154,7 +154,7 @@ public class UserAuthJwtServiceTest extends BaseServiceTest {
 
     @Test
     @DisplayName("delete: authentication when the entity exists - Success")
-    void deleteWhenUserAuthEntityNotFoundReturns_Success() {
+    void deleteWhenUserAuthEntityNotFoundReturnsSuccess() {
         // Set up the mocked repository
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ID = FAKER.internet().uuid();

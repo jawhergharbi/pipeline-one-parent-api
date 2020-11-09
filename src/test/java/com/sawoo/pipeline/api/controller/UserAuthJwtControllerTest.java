@@ -161,7 +161,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 getMockFactory().newUserAuthRegister(AUTH_EMAIL, AUTH_PASSWORD, AUTH_PASSWORD, AUTH_FULL_NAME);
 
         // setup the mocked service
-        doReturn(null).when(service).create(any());
+        doReturn(null).when(service).create(any(UserAuthRegister.class));
 
         // execute the POST request
         mockMvc.perform(post("/api/auth/register")
