@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.repository.listener;
 
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.account.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ProspectEventListener extends AbstractMongoEventListener<Prospect> {
+public class AccountEventListener extends AbstractMongoEventListener<Account> {
 
     private final CompanyCascadeOperationDelegator companyCascadeDelegator;
 
     @Override
-    public void onBeforeConvert(BeforeConvertEvent<Prospect> event) {
-        Prospect prospect = event.getSource();
-        companyCascadeDelegator.onSave(prospect.getCompany(), prospect::setCompany);
+    public void onBeforeConvert(BeforeConvertEvent<Account> event) {
+        Account account = event.getSource();
+        companyCascadeDelegator.onSave(account.getCompany(), account::setCompany);
         super.onBeforeConvert(event);
     }
 }

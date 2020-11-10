@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.model.prospect;
 
-public enum ProspectStatus {
+public enum ProspectStatusList {
 
     FUNNEL_ON_GOING(0),
     INDIVIDUALLY_APPROACHED(1),
@@ -15,7 +15,7 @@ public enum ProspectStatus {
 
     private final int status;
 
-    private ProspectStatus(int status) {
+    private ProspectStatusList(int status) {
         this.status = status;
     }
 

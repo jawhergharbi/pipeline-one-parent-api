@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.common.Note;
 import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,6 +23,7 @@ public class Account extends BaseEntity {
     private String id;
 
     @JMap
+    @Indexed
     private String fullName;
 
     @JMap
@@ -35,6 +37,7 @@ public class Account extends BaseEntity {
     private String phoneNumber;
 
     @JMap
+    @Indexed
     @Field(name = "linked_in_url")
     private String linkedInUrl;
 

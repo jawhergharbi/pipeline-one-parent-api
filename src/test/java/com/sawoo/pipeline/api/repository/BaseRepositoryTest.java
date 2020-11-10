@@ -43,12 +43,12 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         // Deserialize our JSON file to an array of reviews
-        M[] leadList = mapper.readValue(testDataFile, getClazz());
-        documentSize = leadList.length;
+        M[] entityList = mapper.readValue(testDataFile, getClazz());
+        documentSize = entityList.length;
 
 
         // Load each entity into the DB
-        repository.insert(Arrays.asList(leadList));
+        repository.insert(Arrays.asList(entityList));
     }
 
     @AfterEach

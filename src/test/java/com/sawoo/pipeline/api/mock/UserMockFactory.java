@@ -22,7 +22,10 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
 
     @Override
     public User newEntity(String id) {
-        return null;
+        String USER_ID = getFAKER().internet().uuid();
+        String USER_EMAIL = getFAKER().internet().emailAddress();
+        String USER_PASSWORD = getFAKER().internet().password(6, 12);
+        return newEntity(USER_ID, USER_EMAIL, USER_PASSWORD, null);
     }
 
     public User newEntity(String email, String password) {

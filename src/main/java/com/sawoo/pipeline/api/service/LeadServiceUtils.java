@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatus;
+import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
 import com.sawoo.pipeline.api.repository.LeadRepository;
 import com.sawoo.pipeline.api.service.company.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +42,8 @@ public class LeadServiceUtils {
             lead.setStatus(StatusDTO
                     .builder()
                     .value( ProspectType.PROSPECT.getType() == type ?
-                            ProspectStatus.FUNNEL_ON_GOING.getStatus() :
-                            ProspectStatus.HOT.getStatus() )
+                            ProspectStatusList.FUNNEL_ON_GOING.getStatus() :
+                            ProspectStatusList.HOT.getStatus() )
                     .updated(datetime)
                     .build());
         }
