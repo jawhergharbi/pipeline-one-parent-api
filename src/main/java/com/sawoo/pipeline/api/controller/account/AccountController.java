@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.controller;
+package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;

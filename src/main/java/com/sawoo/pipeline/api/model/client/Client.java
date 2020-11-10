@@ -52,7 +52,7 @@ public class Client {
 
     @JMap
     @Reference
-    private CompanyOld companyOld;
+    private CompanyOld company;
 
     @JMap
     private Status status;

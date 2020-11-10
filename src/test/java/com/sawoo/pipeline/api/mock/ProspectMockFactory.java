@@ -20,6 +20,10 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
 
     @Override
     public Prospect newEntity(String id) {
+        return newEntity(id, true);
+    }
+
+    public Prospect newEntity(String id, boolean addCompany) {
         Faker FAKER = getFAKER();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Prospect entity = new Prospect();
@@ -31,14 +35,15 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
         entity.setEmail(FAKER.internet().emailAddress());
         entity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         entity.setPosition(FAKER.company().profession());
-        entity.setCompany(Company.builder()
-                .name(FAKER.company().name())
-                .url(FAKER.company().url())
-                .build());
+        if (addCompany) {
+            entity.setCompany(Company.builder()
+                    .name(FAKER.company().name())
+                    .url(FAKER.company().url())
+                    .build());
+        }
         entity.setCreated(now);
         entity.setUpdated(now);
         return entity;
-
     }
 
     @Override

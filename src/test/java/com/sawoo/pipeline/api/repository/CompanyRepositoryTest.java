@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.repository;
 
+import com.sawoo.pipeline.api.mock.CompanyMockFactory;
 import com.sawoo.pipeline.api.model.Company;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +15,14 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRepository> {
+public class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRepository, CompanyMockFactory> {
 
     private static final File COMPANY_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "company-test-data.json").toFile();
     private static final String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
 
     @Autowired
-    public CompanyRepositoryTest(CompanyRepository repository) {
-        super(repository, COMPANY_JSON_DATA, COMPANY_ID, Company.class.getSimpleName());
+    public CompanyRepositoryTest(CompanyRepository repository, CompanyMockFactory mockFactory) {
+        super(repository, COMPANY_JSON_DATA, COMPANY_ID, Company.class.getSimpleName(), mockFactory);
     }
 
     @Override
@@ -36,8 +37,9 @@ public class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRe
 
     @Override
     protected Company getNewEntity() {
-        return getMockFactory()
-                .newCompanyEntity(FAKER.company().name(), FAKER.company().url());
+        String COMPANY_NAME  = getMockFactory().getFAKER().company().name();
+        String COMPANY_URL  = getMockFactory().getFAKER().company().url();
+        return getMockFactory().newEntity(COMPANY_NAME, COMPANY_URL);
     }
 
     @Test

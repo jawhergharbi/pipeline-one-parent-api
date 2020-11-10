@@ -11,7 +11,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Validated
-public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepositoryMongo> implements UserAuthJwtService {
+public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepository> implements UserAuthJwtService {
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAuthJwtServiceImpl(UserRepositoryMongo repository,
+    public UserAuthJwtServiceImpl(UserRepository repository,
                                   UserAuthMapper mapper,
                                   UserAuthServiceEventListener eventListener,
                                   AuthenticationManager authenticationManager,

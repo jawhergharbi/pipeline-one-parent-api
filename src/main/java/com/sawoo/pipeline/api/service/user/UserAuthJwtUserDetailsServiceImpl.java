@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service.user;
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserAuthJwtUserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepositoryMongo userRepositoryMongo;
+    private final UserRepository userRepository;
     private final JMapper<UserAuthDetails, User> mapperDomainToDTO = new JMapper<>(UserAuthDetails.class, User.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Load user credentials: [{}]", username);
 
-        return userRepositoryMongo.findByEmail(username)
+        return userRepository.findByEmail(username)
                 .map((user) -> {
                     log.debug("User component successfully found: [{}]", user);
 

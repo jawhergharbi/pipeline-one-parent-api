@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.repository.UserRepositoryOld;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -35,7 +35,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
     private ClientRepositoryWrapper clientRepository;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserRepositoryOld userRepositoryOld;
 
     @Test
     @DisplayName("UserClient Service: findAll - Success")
@@ -52,7 +52,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[] {Role.CSM.name()});
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedUserOldEntity)).when(userRepository).findById(anyString());
+        doReturn(Optional.of(mockedUserOldEntity)).when(userRepositoryOld).findById(anyString());
         doReturn(clientList).when(clientRepository).findByUserId(USER_ID);
 
         // Execute the service call
@@ -62,7 +62,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         Assertions.assertEquals(listSize, returnedList.size(), String.format("Returned list size must be %d", listSize));
 
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository, atMostOnce()).findById(userIdCaptor.capture());
+        verify(userRepositoryOld, atMostOnce()).findById(userIdCaptor.capture());
 
         Assertions.assertEquals(userIdCaptor.getValue(), USER_ID, String.format("User id to be verified must be: [%s]", USER_ID));
     }
@@ -88,7 +88,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         // Set up the mocked repository
         doReturn(Optional.of(userOldCSM))
                 .doReturn(Optional.of(userOldADMIN))
-                .when(userRepository).findById(anyString());
+                .when(userRepositoryOld).findById(anyString());
         doReturn(Collections.singletonList(clientList.get(0)))
                 .when(clientRepository).findByUserId(anyString());
         doReturn(clientList)
@@ -104,7 +104,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         Assertions.assertFalse(returnedListADMIN.isEmpty(), "Returned list can not be empty");
         Assertions.assertEquals(listSize, returnedListADMIN.size(), String.format("Returned list size must be %d", listSize));
 
-        verify(userRepository, Mockito.times(2)).findById(any());
+        verify(userRepositoryOld, Mockito.times(2)).findById(any());
         verify(clientRepository, Mockito.atMostOnce()).findAll();
         verify(clientRepository, Mockito.atMostOnce()).findByUserId(anyString());
     }
@@ -117,7 +117,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedUserOldEntity)).when(userRepository).findById(anyString());
+        doReturn(Optional.of(mockedUserOldEntity)).when(userRepositoryOld).findById(anyString());
 
         // Execute the service call
         List<ClientBasicDTO> returnedList = service.findAll(USER_ID);
@@ -133,7 +133,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         String USER_ID = FAKER.name().username();
 
         // Set up the mocked repository
-        doReturn(Optional.empty()).when(userRepository).findById(anyString());
+        doReturn(Optional.empty()).when(userRepositoryOld).findById(anyString());
 
         // Execute the service call
         ResourceNotFoundException exception = Assertions.assertThrows(
@@ -146,7 +146,7 @@ class UserOldClientServiceTest extends BaseServiceTest {
         Assertions.assertEquals(2, exception.getArgs().length);
 
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository, atMostOnce()).findById(userIdCaptor.capture());
+        verify(userRepositoryOld, atMostOnce()).findById(userIdCaptor.capture());
 
         Assertions.assertEquals(userIdCaptor.getValue(), USER_ID, String.format("User id to be verified must be: [%s]", USER_ID));
     }

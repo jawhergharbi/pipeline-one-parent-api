@@ -4,15 +4,15 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.common.Note;
 import lombok.*;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.ACCOUNT_DOCUMENT)
+@Document(collection = DataStoreConstants.ACCOUNT_DOCUMENT)
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 public class Account extends BaseEntity {

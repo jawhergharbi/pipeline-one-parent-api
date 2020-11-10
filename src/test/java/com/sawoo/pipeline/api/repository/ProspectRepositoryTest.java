@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.repository;
 
+import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,16 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, ProspectRepository> {
+public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, ProspectRepository, ProspectMockFactory> {
 
-    private static final File LEAD_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "prospect-test-data.json").toFile();
+    private static final File PROSPECT_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "prospect-test-data.json").toFile();
     private static final String PROSPECT_ID = "5fa3ce63rt4ef23d963da45b";
 
     private final CompanyRepository companyRepository;
 
     @Autowired
-    public ProspectRepositoryTest(ProspectRepository repository, CompanyRepository companyRepository) {
-        super(repository, LEAD_JSON_DATA, PROSPECT_ID, Prospect.class.getSimpleName());
+    public ProspectRepositoryTest(ProspectRepository repository, CompanyRepository companyRepository, ProspectMockFactory mockFactory) {
+        super(repository, PROSPECT_JSON_DATA, PROSPECT_ID, Prospect.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
 
@@ -40,8 +41,8 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
 
     @Override
     protected Prospect getNewEntity() {
-        String PROSPECT_ID = FAKER.internet().uuid();
-        return getMockFactory().newProspectEntity(PROSPECT_ID, false);
+        String PROSPECT_ID = getMockFactory().getFAKER().internet().uuid();
+        return getMockFactory().newEntity(PROSPECT_ID, false);
     }
 
     @AfterEach

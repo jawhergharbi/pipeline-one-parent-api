@@ -16,7 +16,6 @@ import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -201,30 +200,6 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public Prospect newProspectEntity(String id, boolean addCompany) {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Prospect mockedEntity = new Prospect();
-        mockedEntity.setId(id);
-        mockedEntity.setFirstName(FAKER.name().firstName());
-        mockedEntity.setFirstName(FAKER.name().lastName());
-        mockedEntity.setLinkedInUrl(FAKER.internet().url());
-        mockedEntity.setLinkedInThread(FAKER.internet().url());
-        mockedEntity.setEmail(FAKER.internet().emailAddress());
-        mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedEntity.setPosition(FAKER.company().profession());
-        if (addCompany) {
-            mockedEntity.setCompany(Company
-                    .builder()
-                    .id(FAKER.internet().uuid())
-                    .name(FAKER.company().name())
-                    .url(FAKER.company().url())
-                    .build());
-        }
-        mockedEntity.setCreated(now);
-        mockedEntity.setUpdated(now);
-        return mockedEntity;
-    }
-
     public ProspectDTO newProspectBaseDTO(String id, String firstName, String lastName) {
         ProspectDTO prospectBaseDTO = new ProspectDTO();
         prospectBaseDTO.setId(id);
@@ -252,10 +227,6 @@ public class MockFactory {
         prospectDTO.setCreated(LocalDateTime.now());
         prospectDTO.setUpdated(LocalDateTime.now());
         return prospectDTO;
-    }
-
-    public ProspectDTO newProspectDTO(String firstName, String lastName) {
-        return newProspectDTO(FAKER.internet().uuid(), firstName, lastName);
     }
 
     public CompanyDTO newCompanyDTO(String id, String name, String url) {
@@ -308,13 +279,6 @@ public class MockFactory {
                 .build();
     }
 
-    public Company newCompanyEntity(String name, String url) {
-        return Company.builder()
-                .name(name)
-                .url(url)
-                .build();
-    }
-
     public Client newClientEntity(Long id) {
         Client client = new Client();
         client.setId(id);
@@ -323,7 +287,7 @@ public class MockFactory {
         client.setEmail(FAKER.internet().emailAddress());
         client.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         client.setPosition(FAKER.company().profession());
-        client.setCompanyOld(
+        client.setCompany(
                 CompanyOld
                         .builder()
                         .name(FAKER.company().name())
@@ -351,7 +315,7 @@ public class MockFactory {
         mockedEntity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         mockedEntity.setPosition(FAKER.company().profession());
         if (addCompany) {
-            mockedEntity.setCompanyOld(newCompanyEntity(now));
+            mockedEntity.setCompany(newCompanyEntity(now));
         }
         mockedEntity.setCreated(now);
         mockedEntity.setUpdated(now);

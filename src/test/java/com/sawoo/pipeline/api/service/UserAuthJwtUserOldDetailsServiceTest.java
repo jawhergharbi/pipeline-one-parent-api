@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class UserAuthJwtUserOldDetailsServiceTest extends BaseServiceTest {
     private UserAuthJwtUserDetailsServiceImpl service;
 
     @MockBean
-    private UserRepositoryMongo repository;
+    private UserRepository repository;
 
     @Test
     @DisplayName("loadUserByUsername: user found - Success")

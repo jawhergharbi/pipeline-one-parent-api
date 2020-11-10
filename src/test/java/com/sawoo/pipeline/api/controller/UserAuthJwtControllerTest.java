@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserOldAuthJwtControllerTest extends BaseControllerTest {
+public class UserAuthJwtControllerTest extends BaseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

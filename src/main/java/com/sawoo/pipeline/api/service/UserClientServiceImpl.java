@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.repository.UserRepositoryOld;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class UserClientServiceImpl implements UserClientService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryOld userRepositoryOld;
     private final ClientRepositoryWrapper clientRepository;
     private final CommonServiceMapper mapper;
 
@@ -29,7 +29,7 @@ public class UserClientServiceImpl implements UserClientService {
     public List<ClientBasicDTO> findAll(String id) throws ResourceNotFoundException {
         log.debug("Retrieve clients for user id [{}]", id);
 
-        return userRepository
+        return userRepositoryOld
                 .findById(id)
                 .map((user) -> {
                     List<Client> clients;

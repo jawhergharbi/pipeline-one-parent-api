@@ -1,13 +1,12 @@
 package com.sawoo.pipeline.api.repository;
 
 import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.User;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -15,19 +14,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserOldAuthRepositoryTest extends BaseRepositoryTest<User, UserRepositoryMongo> {
+public class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserRepository, UserMockFactory> {
 
     private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "user-auth-test-data.json").toFile();
     private static final int ADMIN_USERS = 1;
     private static final String USER_ID = "5fa2e7c58b7a2a51f31f2bed";
 
     @Autowired
-    public UserOldAuthRepositoryTest(UserRepositoryMongo repository) {
-        super(repository, AUTHENTICATION_JSON_DATA, USER_ID, User.class.getSimpleName());
+    public UserAuthRepositoryTest(UserRepository repository, UserMockFactory mockFactory) {
+        super(repository, AUTHENTICATION_JSON_DATA, USER_ID, User.class.getSimpleName(), mockFactory);
     }
 
     @Override
@@ -42,7 +41,9 @@ public class UserOldAuthRepositoryTest extends BaseRepositoryTest<User, UserRepo
 
     @Override
     protected User getNewEntity() {
-        return getMockFactory().newUserAuthEntity(FAKER.internet().emailAddress());
+        String USER_EMAIL = getMockFactory().getFAKER().internet().emailAddress();
+        String USER_PASSWORD = getMockFactory().getFAKER().internet().password(6, 12);
+        return getMockFactory().newEntity(USER_EMAIL, USER_PASSWORD);
     }
 
     @Test

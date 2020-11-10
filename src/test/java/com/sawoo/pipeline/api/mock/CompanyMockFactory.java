@@ -27,6 +27,16 @@ public class CompanyMockFactory extends BaseMockFactory<CompanyDTO, Company> {
                 .build();
     }
 
+    public Company newEntity(String name, String url) {
+        Faker FAKER = getFAKER();
+        return Company.builder()
+                .name(name)
+                .url(url)
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
+                .build();
+    }
+
     @Override
     public CompanyDTO newDTO(String id) {
         Faker FAKER = getFAKER();

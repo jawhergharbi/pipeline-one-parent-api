@@ -73,7 +73,7 @@ public class ClientServiceTest extends BaseServiceTest {
         ClientBasicDTO spyDTO = spy(mockedDTO);
 
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompanyOld(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
+        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
@@ -121,7 +121,7 @@ public class ClientServiceTest extends BaseServiceTest {
         CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
 
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompanyOld(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
+        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);

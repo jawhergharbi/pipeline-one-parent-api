@@ -1,10 +1,17 @@
 package com.sawoo.pipeline.api.repository;
 
-import com.sawoo.pipeline.api.model.UserOld;
-import org.springframework.cloud.gcp.data.datastore.repository.DatastoreRepository;
+import com.sawoo.pipeline.api.model.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends DatastoreRepository<UserOld, String> {
-    List<UserOld> findAllByRoles(String role);
+@Repository
+public interface UserRepository extends MongoRepository<User, String> {
+
+    Optional<User> findByEmail(String email);
+
+    List<User> findByActiveTrueAndRolesIn(List<String> roles);
+
 }

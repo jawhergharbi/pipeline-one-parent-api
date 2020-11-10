@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepositoryMongo;
+import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +34,13 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserOldAuthJwtServiceTest extends BaseServiceTest {
+public class UserAuthJwtServiceTest extends BaseServiceTest {
 
     @Autowired
     private UserAuthJwtService service;
 
     @MockBean
-    private UserRepositoryMongo repository;
+    private UserRepository repository;
 
     @Test
     @DisplayName("findById: entity exists - Success")
