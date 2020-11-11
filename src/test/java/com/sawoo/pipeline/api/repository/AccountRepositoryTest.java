@@ -90,10 +90,12 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     @DisplayName("searchByFullName: entity found - Success")
     void searchByFullNameWhenEntitiesFoundReturnsSuccess() {
         String SEARCH_TEXT = "Fernandez";
+        String SEARCH_TEXT_CASE_INSENSITIVE = "fernandez";
 
         List<Account> entities =  getRepository().searchByFullName(SEARCH_TEXT);
+        List<Account> entitiesIgnoreCase =  getRepository().searchByFullName(SEARCH_TEXT_CASE_INSENSITIVE);
 
-        Assertions.assertAll("Company entity must be properly stored",
+        Assertions.assertAll("Account search text by the full name: last name capitalized",
                 () -> Assertions.assertFalse(entities.isEmpty(), "List of accounts found can not be empty"),
                 () -> Assertions.assertEquals(
                         2,
@@ -101,6 +103,16 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
                         String.format(
                                 "List of account found with the text [%s] in the [fullName] has to be [%d]",
                                 SEARCH_TEXT,
+                                2)));
+
+        Assertions.assertAll("Account search text by the full name: last name lower case",
+                () -> Assertions.assertFalse(entitiesIgnoreCase.isEmpty(), "List of accounts found can not be empty"),
+                () -> Assertions.assertEquals(
+                        2,
+                        entitiesIgnoreCase.size(),
+                        String.format(
+                                "List of account found with the text [%s] in the [fullName] has to be [%d]",
+                                SEARCH_TEXT_CASE_INSENSITIVE,
                                 2)));
     }
 }

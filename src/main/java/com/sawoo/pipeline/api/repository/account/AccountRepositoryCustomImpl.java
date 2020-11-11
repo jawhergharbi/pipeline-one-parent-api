@@ -20,6 +20,7 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
     public List<Account> searchByFullName(String fullName) {
         TextCriteria queryTextFullName = TextCriteria
                 .forDefaultLanguage()
+                .caseSensitive(false)
                 .matching(fullName);
         Query byFullName = TextQuery.queryText(queryTextFullName).sortByScore();
 
