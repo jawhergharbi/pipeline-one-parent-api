@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/prospects")
+@RequestMapping(ControllerConstants.PROSPECT_CONTROLLER_API_BASE_URI)
 public class ProspectController {
 
     private final ProspectService service;

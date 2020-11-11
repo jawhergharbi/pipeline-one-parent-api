@@ -86,7 +86,7 @@ public class ProspectServiceTest extends BaseServiceTestNew<ProspectDTO, Prospec
     }
 
     @Test
-    @DisplayName("update: company name when company does exist - Success")
+    @DisplayName("update: entity does exist - Success")
     void updateWhenEntityFoundReturnsSuccess() {
         // Set up mocked entities
         String PROSPECT_ID = getMockFactory().getComponentId();
