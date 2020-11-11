@@ -42,7 +42,29 @@
       "url": "http://new_company.com",
       "created": "2020-06-02T12:59:49.494472",
       "updated": "2020-06-04T05:59:49.494472",
-      "headcount": 500
+      "headcount": 2500
+    },
+    "notes": {
+      "text": "here some comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "created": "2020-06-02T11:59:49.494472",
+    "updated": "2020-06-03T05:59:49.494472"
+  },
+  {
+    "id": "3eed964e66da46de664af",
+    "fullName": "Miguel Fernandez",
+    "linkedInUrl": "http://linkedin.com/miguel.fernandez",
+    "position": "Managing Director",
+    "email": "miguel.fernandez@gmail.com",
+    "phoneNumber": "34342354454",
+    "company": {
+      "id": "d6fe666fe663t45fg3223red3234w",
+      "name": "other_company",
+      "url": "http://other_company.com",
+      "created": "2020-06-02T12:59:49.494472",
+      "updated": "2020-06-04T05:59:49.494472",
+      "headcount": 1500
     },
     "notes": {
       "text": "here some comments",

@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository;
 
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -73,7 +75,7 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
 
     @Test
     @DisplayName("save: company cascade saving - Success")
-    void saveWhenCompanyDoesNotExistReturnsSuccess() {
+    void saveWhenCompanyAccountDoesNotExistReturnsSuccess() {
        Account entity = getMockFactory().newEntity(getComponentId());
        entity.getCompany().setId(null);
 
@@ -82,5 +84,23 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
        Assertions.assertAll("Company entity must be properly stored",
                () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
                () -> Assertions.assertNotNull(savedEntity.getCompany().getId(), "Company id can not be null"));
+    }
+
+    @Test
+    @DisplayName("searchByFullName: entity found - Success")
+    void searchByFullNameWhenEntitiesFoundReturnsSuccess() {
+        String SEARCH_TEXT = "Fernandez";
+
+        List<Account> entities =  getRepository().searchByFullName(SEARCH_TEXT);
+
+        Assertions.assertAll("Company entity must be properly stored",
+                () -> Assertions.assertFalse(entities.isEmpty(), "List of accounts found can not be empty"),
+                () -> Assertions.assertEquals(
+                        2,
+                        entities.size(),
+                        String.format(
+                                "List of account found with the text [%s] in the [fullName] has to be [%d]",
+                                SEARCH_TEXT,
+                                2)));
     }
 }
