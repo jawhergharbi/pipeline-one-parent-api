@@ -33,6 +33,7 @@ public interface ExceptionMessageConstants {
     String COMMON_MISSING_REQUEST_PARAM_EXCEPTION_ERROR = "common.missing-request-param.error";
     String COMMON_REFERENCE_CHILD_WAS_NOT_FOUND_ERROR = "common.reference-child.not-found.exception";
     String COMMON_DISC_ANALYSIS_LOADING_EXCEPTION = "common.disc-analysis-loading.exception";
+    String COMMON_METHOD_NOT_ALLOWED_EXCEPTION = "common.method-not-allowed.exception";
 
     String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
     String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";

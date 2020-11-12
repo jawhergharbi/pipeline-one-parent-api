@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtControllerTest extends BaseControllerTest {
+public class UserControllerTest extends BaseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -150,7 +150,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [userAuthDTO] is bellow its min size")));
+                                stringContainsInOrder("Field or param", "in component", "is bellow its min size")));
     }
 
     @Test
@@ -195,7 +195,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [email] in component [userAuthDTO] can not be empty")));
+                                stringContainsInOrder("Field or param", "in component", "can not be empty")));
     }
 
     @Test
@@ -218,7 +218,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [password] in component [userAuthDTO] can not be null")));
+                                stringContainsInOrder("Field or param", "in component", "can not be null")));
     }
 
     @Test
@@ -243,7 +243,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("in component [userAuthDTO] can not be null")));
+                                stringContainsInOrder("Field or param", "in component", "can not be null")));
     }
 
     @Test
@@ -266,7 +266,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(
                         jsonPath(
                                 "$.messages[0]",
-                                containsString("Field or param [fullName] in component [userAuthDTO] has exceeded its max size")));
+                                stringContainsInOrder("Field or param", "in component","has exceeded its max size")));
     }
 
     @Test
@@ -289,17 +289,17 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.messages", hasSize(2)))
                 .andExpect(jsonPath(
                         "$.messages[0]",
-                        containsString("in component [userAuthDTO] is bellow its min size")));
+                        stringContainsInOrder("in component", "is bellow its min size")));
     }
 
     @Test
-    @DisplayName("DELETE /api/auth/logout/{identifier} logout valid request - Success")
+    @DisplayName("DELETE /api/auth/logout/{id} logout valid request - Success")
     void logoutWhenRequestIsCorrectReturnsSuccess() throws Exception {
         // Setup mock entities
         String AUTH_ID = FAKER.internet().uuid();
 
         // execute the DELETE request
-        mockMvc.perform(delete("/api/auth/logout/{ud}", AUTH_ID))
+        mockMvc.perform(delete("/api/auth/logout/{id}", AUTH_ID))
 
                 // Validate the response code and content type
                 .andExpect(status().isNoContent());
@@ -508,7 +508,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.SA.name());
 
         // setup the mocked helper
-        doReturn(mockUserAuth).when(service).update(any());
+        doReturn(mockUserAuth).when(service).update(any(UserAuthUpdateDTO.class));
 
         // execute the PUT request
         mockMvc.perform(put("/api/auth/{id}", AUTH_ID)
@@ -536,7 +536,7 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
         mockUserAuth.setFullName(AUTH_NEW_FULL_NAME);
 
         // setup the mocked helper
-        doReturn(mockUserAuth).when(service).update(any());
+        doReturn(mockUserAuth).when(service).update(any(UserAuthUpdateDTO.class));
 
         // execute the PUT request
         mockMvc.perform(put("/api/auth/{id}", AUTH_ID)
@@ -623,6 +623,6 @@ public class UserAuthJwtControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath(
                         "$.message",
-                        containsString("Field or param [roles] in component [UserAuthJwtController.findAllByRole] is bellow its min size")));
+                        stringContainsInOrder("Field or param", "in component", "is bellow its min size")));
     }
 }

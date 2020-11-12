@@ -4,7 +4,6 @@ import com.sawoo.pipeline.api.common.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.prospect.ProspectBaseDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import org.junit.jupiter.api.*;

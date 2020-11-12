@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.base;
 
 import com.sawoo.pipeline.api.service.base.BaseService;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import java.util.List;
 @Validated
 public abstract class BaseControllerDelegator<D, S extends BaseService<D>> implements ControllerDelegation<D> {
 
+    @Getter
     private final S service;
     private final String resourceURI;
 

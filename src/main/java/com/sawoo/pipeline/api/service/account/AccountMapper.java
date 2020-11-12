@@ -2,9 +2,7 @@ package com.sawoo.pipeline.api.service.account;
 
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.account.Account;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.service.base.BaseMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
