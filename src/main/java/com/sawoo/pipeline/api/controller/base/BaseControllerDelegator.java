@@ -3,12 +3,15 @@ package com.sawoo.pipeline.api.controller.base;
 import com.sawoo.pipeline.api.service.base.BaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@Validated
 public abstract class BaseControllerDelegator<D, S extends BaseService<D>> implements ControllerDelegation<D> {
 
     private final S service;
@@ -42,12 +45,12 @@ public abstract class BaseControllerDelegator<D, S extends BaseService<D>> imple
     }
 
     @Override
-    public ResponseEntity<D> deleteById(String id) {
+    public ResponseEntity<D> deleteById(@NotBlank String id) {
         return ResponseEntity.ok().body(service.delete(id));
     }
 
     @Override
-    public ResponseEntity<D> update(String id, D dto) {
+    public ResponseEntity<?> update(String id, D dto) {
         D entityUpdated = service.update(id, dto);
         try {
             return ResponseEntity

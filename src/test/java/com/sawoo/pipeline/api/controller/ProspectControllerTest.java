@@ -84,7 +84,7 @@ public class ProspectControllerTest extends BaseControllerTest {
                 .when(service).findById(PROSPECT_ID);
 
         // Execute the GET request
-        mockMvc.perform(get("/api/prospect/{id}", PROSPECT_ID)
+        mockMvc.perform(get("/api/prospects/{id}", PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -189,7 +189,7 @@ public class ProspectControllerTest extends BaseControllerTest {
                 .when(service).delete(PROSPECT_ID);
 
         // Execute the DELETE request
-        mockMvc.perform(delete("/api/prospect/{id}", PROSPECT_ID)
+        mockMvc.perform(delete("/api/prospects/{id}", PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -271,12 +271,10 @@ public class ProspectControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("POST /api/prospect: resource firstName not informed - Failure")
-    void createWhenNameAndSiteNotInformedReturnsFailure() throws Exception {
+    void createWhenFirstNameNotInformedReturnsFailure() throws Exception {
         String PROSPECT_ID = FAKER.internet().uuid();
-        String PROSPECT_FIRST_NAME = FAKER.name().firstName();
         String PROSPECT_LAST_NAME = FAKER.name().lastName();
-        ProspectBaseDTO postEntity = getMockFactory().newProspectBaseDTO(PROSPECT_ID, PROSPECT_FIRST_NAME, PROSPECT_LAST_NAME);
-        postEntity.setFirstName(null);
+        ProspectDTO postEntity = getMockFactory().newProspectBaseDTO(PROSPECT_ID, null, PROSPECT_LAST_NAME);
 
         // Execute the POST request
         mockMvc.perform(post("/api/prospects/")
