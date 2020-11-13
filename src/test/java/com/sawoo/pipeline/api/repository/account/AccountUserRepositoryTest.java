@@ -30,7 +30,8 @@ import java.util.stream.Collectors;
 public class AccountUserRepositoryTest {
 
     private static final File ACCOUNT_USER_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "account-user-test-data.json").toFile();
-    private static final String ACCOUNT_ID = "3eed964e66da46de664af";
+    private static final String ACCOUNT_ID_NO_USERS = "3eed964e66da46de664af";
+    private static final String ACCOUNT_ID = "3ee4e66da4d966de664af";
     private static final String USER_ID = "5fa317cd0efe4d20ad3edd13";
 
     private final AccountRepository repository;
@@ -71,8 +72,8 @@ public class AccountUserRepositoryTest {
     }
 
     @Test
-    @DisplayName("save: add user role manager - Success")
-    void saveWhenAddUserRoleManagerReturnsSuccess() {
+    @DisplayName("save: add user - Success")
+    void saveWhenAddUserReturnsSuccess() {
         String USER_PASSWORD = mockFactory.getFAKER().internet().password(6, 12);
         String USER_EMAIL = mockFactory.getFAKER().internet().emailAddress();
         User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{Role.MNG.name()});
@@ -80,13 +81,13 @@ public class AccountUserRepositoryTest {
         long userDocSize = mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT);
 
         repository
-                .findById(ACCOUNT_ID)
+                .findById(ACCOUNT_ID_NO_USERS)
                 .ifPresent((account) -> {
                     account.getUsers().add(user);
                     repository.save(account);
                 });
 
-        Optional<Account> account = repository.findById(ACCOUNT_ID);
+        Optional<Account> account = repository.findById(ACCOUNT_ID_NO_USERS);
 
         Assertions.assertEquals(
                 userDocSize,
@@ -102,6 +103,68 @@ public class AccountUserRepositoryTest {
                     Assertions.assertNotNull(savedUser.getId(), "User id can not be null");
                     Assertions.assertEquals(user.getId(), savedUser.getId(), String.format("User id must equal to [%s]", user.getId()));
                 });
+    }
+
+    @Test
+    @DisplayName("save: add twice the same user - Success")
+    void saveWhenAddTwiceSameUserReturnsSuccess() {
+        String USER_PASSWORD = mockFactory.getFAKER().internet().password(6, 12);
+        String USER_EMAIL = mockFactory.getFAKER().internet().emailAddress();
+        User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{Role.MNG.name()});
+        mongoTemplate.save(user);
+
+        repository
+                .findById(ACCOUNT_ID_NO_USERS)
+                .ifPresent((account) -> {
+                    account.getUsers().add(user);
+                    account.getUsers().add(user);
+                    repository.save(account);
+                });
+
+        Optional<Account> account = repository.findById(ACCOUNT_ID_NO_USERS);
+
+        Assertions.assertTrue(account.isPresent(), "Account must be present");
+        Assertions.assertAll("Saved user account validation",
+                () -> Assertions.assertNotNull(account.get().getUsers(), "User list can not be null"),
+                () -> Assertions.assertFalse(account.get().getUsers().isEmpty(), "User list can not be empty"),
+                () -> Assertions.assertEquals(
+                        1,
+                        account.get().getUsers().size(),
+                        String.format("User list size must be [%d]", 1)));
+    }
+
+    @Test
+    @DisplayName("save: remove user - Success")
+    void saveWhenRemoveUserReturnsSuccess() {
+        Optional<Account> account = repository.findById(ACCOUNT_ID);
+        long userDocSize = mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT);
+        int accountUsers = 1;
+
+        account.ifPresentOrElse( (acc) -> {
+            Assertions.assertEquals(
+                    accountUsers,
+                    acc.getUsers().size(),
+                    String.format("User list size must be [%d]", accountUsers));
+
+            User user = acc.getUsers().iterator().next();
+            acc.getUsers().remove(user);
+            repository.save(acc);
+        }, () -> Assertions.fail(String.format("Account with id: [%s] can not be mull", ACCOUNT_ID)));
+
+        Optional<Account> accountSaved = repository.findById(ACCOUNT_ID);
+
+        Assertions.assertEquals(
+                userDocSize,
+                mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT),
+                String.format("User repository size has to be equal to [%d]", userDocSize));
+
+        Assertions.assertTrue(accountSaved.isPresent(), "Account must be present");
+        Assertions.assertAll("Saved user account validation",
+                () -> Assertions.assertNotNull(accountSaved.get().getUsers(), "User list can not be null"),
+                () -> Assertions.assertEquals(
+                        accountUsers - 1,
+                        accountSaved.get().getUsers().size(),
+                        String.format("User list size must be [%d]", accountUsers - 1)));
     }
 
     @Test
