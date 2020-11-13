@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CompanyServiceTest extends BaseServiceTestNew<CompanyDTO, Company, CompanyRepository, CompanyService> {
+public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, CompanyRepository, CompanyService> {
 
     @MockBean
     private CompanyRepository repository;

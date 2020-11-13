@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccountServiceTest extends BaseServiceTestNew<AccountDTO, Account, AccountRepository, AccountService> {
+public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRepository, AccountService> {
 
     @MockBean
     private AccountRepository repository;

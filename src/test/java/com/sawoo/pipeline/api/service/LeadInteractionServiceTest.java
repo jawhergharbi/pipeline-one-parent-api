@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class LeadInteractionServiceTest extends BaseServiceTest {
+public class LeadInteractionServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private DataStoreKeyFactory dataStoreKeyFactory;

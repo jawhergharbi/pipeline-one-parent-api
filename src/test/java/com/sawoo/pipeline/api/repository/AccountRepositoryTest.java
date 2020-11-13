@@ -12,6 +12,8 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -22,9 +24,12 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     private static final File ACCOUNT_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "account-test-data.json").toFile();
     private static final String ACCOUNT_ID = "5fce6a364d9da6645ba36";
 
+    private final CompanyRepository companyRepository;
+
    @Autowired
-   public AccountRepositoryTest(AccountRepository repository, AccountMockFactory mockFactory) {
+   public AccountRepositoryTest(AccountRepository repository, AccountMockFactory mockFactory, CompanyRepository companyRepository) {
         super(repository, ACCOUNT_JSON_DATA, ACCOUNT_ID, Account.class.getSimpleName(), mockFactory);
+        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -41,6 +46,13 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     protected Account getNewEntity() {
         String ACCOUNT_ID = getMockFactory().getFAKER().internet().uuid();
         return getMockFactory().newEntity(ACCOUNT_ID);
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Drop the entity collection so we can start fresh
+        super.afterEach();
+        companyRepository.deleteAll();
     }
 
     @Test
@@ -76,10 +88,10 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     @Test
     @DisplayName("save: company cascade saving - Success")
     void saveWhenCompanyAccountDoesNotExistReturnsSuccess() {
-       Account entity = getMockFactory().newEntity(getComponentId());
+       Account entity = getMockFactory().newEntity(null);
        entity.getCompany().setId(null);
 
-       Account savedEntity =  getRepository().save(entity);
+       Account savedEntity =  getRepository().insert(entity);
 
        Assertions.assertAll("Company entity must be properly stored",
                () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
@@ -114,5 +126,57 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
                                 "List of account found with the text [%s] in the [fullName] has to be [%d]",
                                 SEARCH_TEXT_CASE_INSENSITIVE,
                                 2)));
+    }
+
+    @Test
+    @DisplayName("findAllById: entities found - Success")
+    void findAllByIdWhenEntitiesFoundReturnsSuccess() {
+        int listSize = 3;
+        List<Account> entityList = IntStream.range(0, listSize)
+                .mapToObj((entity) -> {
+                    String COMPONENT_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().newEntity(COMPONENT_ID);
+                }).collect(Collectors.toList());
+        List<String> ids = entityList.stream().limit(listSize - 1).map(Account::getId).collect(Collectors.toList());
+
+        getRepository().insert(entityList);
+
+        Iterable<Account> accountsFound = getRepository().findAllById(ids);
+
+        Assertions.assertAll("Assert accounts found by a list of ids",
+                () -> Assertions.assertTrue(
+                        accountsFound.iterator().hasNext(),
+                        "List of accounts can not be empty"),
+                () -> Assertions.assertEquals(
+                        ids.size(),
+                        accountsFound.spliterator().getExactSizeIfKnown(),
+                        String.format("List size must be [%d]", ids.size())));
+    }
+
+    @Test
+    @DisplayName("findAllById: entities found but not for all of the ids in the list - Success")
+    void findAllByIdWhenEntitiesFoundButNotAllIdsAllReturnsSuccess() {
+        int listSize = 3;
+        List<Account> entityList = IntStream.range(0, listSize)
+                .mapToObj((entity) -> {
+                    String COMPONENT_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().newEntity(COMPONENT_ID);
+                }).collect(Collectors.toList());
+        List<String> ids = entityList.stream().limit(listSize - 1).map(Account::getId).collect(Collectors.toList());
+        // add extra Id not present in the entity list
+        ids.add(getMockFactory().getFAKER().internet().uuid());
+
+        getRepository().insert(entityList);
+
+        Iterable<Account> accountsFound = getRepository().findAllById(ids);
+
+        Assertions.assertAll("Assert accounts found by a list of ids",
+                () -> Assertions.assertTrue(
+                        accountsFound.iterator().hasNext(),
+                        "List of accounts can not be empty"),
+                () -> Assertions.assertEquals(
+                        ids.size() - 1,
+                        accountsFound.spliterator().getExactSizeIfKnown(),
+                        String.format("List size must be [%d]", (ids.size() - 1))));
     }
 }

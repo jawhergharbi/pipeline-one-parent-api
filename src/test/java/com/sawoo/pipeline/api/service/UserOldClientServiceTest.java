@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
-class UserOldClientServiceTest extends BaseServiceTest {
+class UserOldClientServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private UserClientService service;

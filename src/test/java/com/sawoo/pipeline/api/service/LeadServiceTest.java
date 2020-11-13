@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class LeadServiceTest extends BaseServiceTest {
+public class LeadServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private LeadService service;

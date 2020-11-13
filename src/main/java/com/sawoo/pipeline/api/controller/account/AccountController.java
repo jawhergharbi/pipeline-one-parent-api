@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
@@ -59,4 +62,14 @@ public class AccountController {
             @PathVariable("id") String id) {
         return delegator.update(id, dto);
     }
+
+    /*@RequestMapping(
+            value = "/{id}/mng/{userId}",
+            method = RequestMethod.PUT,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> updateCSM(
+            @PathVariable("id") String id,
+            @PathVariable("userId") String userId) {
+        return updateResponse(getUpdateCSM(), id, userId);
+    }*/
 }

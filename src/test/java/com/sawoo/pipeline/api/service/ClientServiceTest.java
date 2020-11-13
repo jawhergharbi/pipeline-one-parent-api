@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class ClientServiceTest extends BaseServiceTest {
+public class ClientServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private DataStoreKeyFactory dataStoreKeyFactory;

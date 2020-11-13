@@ -24,7 +24,7 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     private final CompanyRepository companyRepository;
 
     @Autowired
-    public ProspectRepositoryTest(ProspectRepository repository, CompanyRepository companyRepository, ProspectMockFactory mockFactory) {
+    public ProspectRepositoryTest(ProspectRepository repository, ProspectMockFactory mockFactory, CompanyRepository companyRepository) {
         super(repository, PROSPECT_JSON_DATA, PROSPECT_ID, Prospect.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
@@ -48,7 +48,7 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     @AfterEach
     void afterEach() {
         // Drop the entity collection so we can start fresh
-        getRepository().deleteAll();
+        super.afterEach();
         companyRepository.deleteAll();
     }
 
@@ -70,6 +70,7 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     }
 
     @Test
+    @DisplayName("findByLinkedInUrl: entities found - Success")
     void findByLinkedInUrlWhenEntityIdFoundReturnsSuccess() {
         String PROSPECT_LINKED_IN_URL = "http://linkedin.com/miguel.miguelin";
         Optional<Prospect> entity = getRepository().findByLinkedInUrl(PROSPECT_LINKED_IN_URL);
@@ -81,5 +82,18 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
                 PROSPECT_LINKED_IN_URL,
                 entity.get().getLinkedInUrl(),
                 String.format("Prospect [linkedInUrl] must be %s", PROSPECT_LINKED_IN_URL));
+    }
+
+    @Test
+    @DisplayName("save: company cascade saving - Success")
+    void saveWhenCompanyProfileDoesNotExistReturnsSuccess() {
+        Prospect entity = getMockFactory().newEntity(null);
+        entity.getCompany().setId(null);
+
+        Prospect savedEntity =  getRepository().insert(entity);
+
+        Assertions.assertAll("Company entity must be properly stored",
+                () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
+                () -> Assertions.assertNotNull(savedEntity.getCompany().getId(), "Company id can not be null"));
     }
 }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtUserOldDetailsServiceTest extends BaseServiceTest {
+public class UserAuthJwtUserOldDetailsServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;
