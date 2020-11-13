@@ -442,7 +442,7 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Client mockedClientEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.MNG.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedClientEntity)).when(repository).findById(CLIENT_ID);
@@ -472,10 +472,10 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.AST.name(), Role.MNG.name()});
         spyClientEntity.setSalesAssistant(mockedUserOldEntity);
 
-        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.SA.name(), Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.AST.name(), Role.MNG.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);
@@ -502,10 +502,10 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[]{Role.MNG.name(), Role.AST.name()});
         spyClientEntity.setCustomerSuccessManager(mockedUserOldEntity);
 
-        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name(), Role.SA.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.MNG.name(), Role.AST.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);
@@ -532,7 +532,7 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true));
         String USER_ID = FAKER.lorem().fixedString(16);
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.CSM.name()});
+        UserDTOOld mockedUserDTOOld = getMockFactory().newUserDTO(USER_ID, USER_FULL_NAME, new String[]{Role.MNG.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(spyClientEntity)).when(repository).findById(CLIENT_ID);

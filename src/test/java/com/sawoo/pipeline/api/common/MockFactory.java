@@ -483,7 +483,7 @@ public class MockFactory {
         UserOld userOld = new UserOld();
         userOld.setId(componentId);
         userOld.setFullName(FAKER.name().fullName());
-        userOld.getRoles().add(Role.SA.name());
+        userOld.getRoles().add(Role.AST.name());
         userOld.setActive(true);
         return userOld;
     }

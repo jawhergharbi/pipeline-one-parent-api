@@ -385,14 +385,14 @@ public class UserAuthJwtServiceTest extends BaseServiceTestOld {
                 .mapToObj((user) -> {
                     String AUTH_ID = FAKER.internet().uuid();
                     String AUTH_EMAIL = FAKER.internet().emailAddress();
-                    return getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL, new String[] {Role.SA.name()});
+                    return getMockFactory().newUserAuthEntity(AUTH_ID, AUTH_EMAIL, new String[] {Role.AST.name()});
                 }).collect(Collectors.toList());
 
         // Set up the mocked repository
         doReturn(userAuthList).when(repository).findByActiveTrueAndRolesIn(anyList());
 
         // Execute the service call
-        List<UserAuthDTO> returnedUserList = service.findAllByRole(Collections.singletonList(Role.SA.name()));
+        List<UserAuthDTO> returnedUserList = service.findAllByRole(Collections.singletonList(Role.AST.name()));
 
         Assertions.assertFalse(returnedUserList.isEmpty(), "Returned list can not be empty");
         Assertions.assertEquals(returnedUserList.size(), listSize, String.format("Returned list size must be %d", listSize));

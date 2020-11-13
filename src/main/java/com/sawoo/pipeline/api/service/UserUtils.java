@@ -11,7 +11,7 @@ public class UserUtils {
     public static Optional<Role> getOpsRole(Set<String> roles) {
         return roles
                 .stream()
-                .filter((role) -> role.equals(Role.CSM.name()) || role.equals(Role.SA.name()))
+                .filter((role) -> role.equals(Role.MNG.name()) || role.equals(Role.AST.name()))
                 .findFirst()
                 .map(Role::valueOf);
     }

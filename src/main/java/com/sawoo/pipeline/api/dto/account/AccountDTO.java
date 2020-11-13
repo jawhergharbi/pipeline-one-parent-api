@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -55,10 +56,7 @@ public class AccountDTO {
     private Status status;
 
     @JMap
-    private UserAuthDTO assistant;
-
-    @JMap
-    private UserAuthDTO manager;
+    private Set<UserAuthDTO> users;
 
     @JMap
     private LocalDateTime created;

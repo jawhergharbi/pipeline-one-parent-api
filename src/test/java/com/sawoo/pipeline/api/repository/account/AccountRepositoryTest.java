@@ -1,8 +1,9 @@
-package com.sawoo.pipeline.api.repository;
+package com.sawoo.pipeline.api.repository.account;
 
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.account.Account;
-import com.sawoo.pipeline.api.repository.account.AccountRepository;
+import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
+import com.sawoo.pipeline.api.repository.CompanyRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,9 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     private final CompanyRepository companyRepository;
 
    @Autowired
-   public AccountRepositoryTest(AccountRepository repository, AccountMockFactory mockFactory, CompanyRepository companyRepository) {
+   public AccountRepositoryTest(AccountRepository repository,
+                                AccountMockFactory mockFactory,
+                                CompanyRepository companyRepository) {
         super(repository, ACCOUNT_JSON_DATA, ACCOUNT_ID, Account.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
@@ -49,7 +52,7 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     }
 
     @AfterEach
-    void afterEach() {
+    protected void afterEach() {
         // Drop the entity collection so we can start fresh
         super.afterEach();
         companyRepository.deleteAll();
@@ -86,8 +89,8 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
     }
 
     @Test
-    @DisplayName("save: company cascade saving - Success")
-    void saveWhenCompanyAccountDoesNotExistReturnsSuccess() {
+    @DisplayName("insert: company cascade saving - Success")
+    void insertWhenCompanyAccountDoesNotExistReturnsSuccess() {
        Account entity = getMockFactory().newEntity(null);
        entity.getCompany().setId(null);
 
@@ -178,5 +181,26 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
                         ids.size() - 1,
                         accountsFound.spliterator().getExactSizeIfKnown(),
                         String.format("List size must be [%d]", (ids.size() - 1))));
+    }
+
+    @Test
+    @DisplayName("findAllById: entities not found - Success")
+    void findAllByIdWhenEntitiesNotFoundReturnsSuccess() {
+        int listSize = 2;
+        List<String> ids = IntStream
+                .range(0, listSize)
+                .mapToObj(s -> getMockFactory().getFAKER().internet().uuid())
+                .collect(Collectors.toList());
+
+        Iterable<Account> accountsFound = getRepository().findAllById(ids);
+
+        Assertions.assertAll("Assert accounts found by a list of ids",
+                () -> Assertions.assertFalse(
+                        accountsFound.iterator().hasNext(),
+                        "List of accounts can not have any element"),
+                () -> Assertions.assertEquals(
+                        0,
+                        accountsFound.spliterator().getExactSizeIfKnown(),
+                        String.format("List size must be [%d]", 0)));
     }
 }

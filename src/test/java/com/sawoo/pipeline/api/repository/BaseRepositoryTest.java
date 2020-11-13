@@ -37,7 +37,7 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
     protected abstract M getNewEntity();
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    protected void beforeEach() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -52,7 +52,7 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
     }
 
     @AfterEach
-    void afterEach() {
+    protected void afterEach() {
         // Drop the entity collection so we can start fresh
         repository.deleteAll();
     }
@@ -95,8 +95,8 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
     }
 
     @Test
-    @DisplayName("save: entity saved - Success")
-    void saveWhenAddNewEntityReturnsSuccess() {
+    @DisplayName("insert: entity saved - Success")
+    void insertWhenAddNewEntityReturnsSuccess() {
         M newEntity = getRepository().insert(getNewEntity());
         List<M> entities = getRepository().findAll();
 

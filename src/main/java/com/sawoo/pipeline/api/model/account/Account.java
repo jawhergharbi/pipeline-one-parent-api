@@ -11,6 +11,9 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -54,9 +57,12 @@ public class Account extends BaseEntity {
 
     @JMap
     @DBRef
-    private User assistant;
+    private Set<User> users;
 
-    @JMap
-    @DBRef
-    private User manager;
+    public Set<User> getUsers() {
+        if (users == null) {
+            users = new HashSet<>();
+        }
+        return users;
+    }
 }

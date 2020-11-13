@@ -7,13 +7,19 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.account.Account;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
+@RequiredArgsConstructor
 public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
+
+    @Getter
+    private final UserMockFactory userMockFactory;
 
     @Override
     public String getComponentId() {

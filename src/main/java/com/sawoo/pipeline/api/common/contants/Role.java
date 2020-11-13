@@ -4,8 +4,8 @@ public enum Role {
 
     USER(0),
     ADMIN(1),
-    SA(2),
-    CSM(3),
+    AST(2),
+    MNG(3),
     CLIENT(4);
 
     private int roleValue;

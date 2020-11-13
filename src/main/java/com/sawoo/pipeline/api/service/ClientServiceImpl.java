@@ -196,7 +196,7 @@ public class ClientServiceImpl implements ClientService {
                 csmUser
                         .getRoles()
                         .stream()
-                        .noneMatch((role) -> role.equals(Role.CSM.name()))) {
+                        .noneMatch((role) -> role.equals(Role.MNG.name()))) {
             throw new ClientException(
                     ExceptionMessageConstants.CLIENT_UPDATE_CSM_MUST_HAVE_ROLE_CSM_EXCEPTION,
                     new String[]{
@@ -210,7 +210,7 @@ public class ClientServiceImpl implements ClientService {
         if (saUser != null &&
                 saUser.getRoles()
                         .stream()
-                        .noneMatch((role) -> role.equals(Role.SA.name()))) {
+                        .noneMatch((role) -> role.equals(Role.AST.name()))) {
             throw new ClientException(
                     ExceptionMessageConstants.CLIENT_UPDATE_SA_MUST_HAVE_ROLE_SA_EXCEPTION,
                     new String[]{

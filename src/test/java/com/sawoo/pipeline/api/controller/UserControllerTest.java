@@ -351,7 +351,7 @@ public class UserControllerTest extends BaseControllerTest {
         // Setup mock authentication entity
         String AUTH_ID = FAKER.bothify(FAKER_USER_ID_REGEX);
         String AUTH_EMAIL = FAKER.internet().emailAddress();
-        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.SA.name());
+        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.AST.name());
 
         // setup the mocked helper
         doReturn(mockUserAuth).when(service).delete(AUTH_ID);
@@ -433,7 +433,7 @@ public class UserControllerTest extends BaseControllerTest {
         // Setup mock authentication entity
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         String AUTH_ID = FAKER.bothify(FAKER_USER_ID_REGEX);
-        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.SA.name());
+        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.AST.name());
 
         // setup the mocked helper
         doReturn(mockUserAuth).when(service).findById(AUTH_ID);
@@ -459,8 +459,8 @@ public class UserControllerTest extends BaseControllerTest {
         String AUTH_EMAIL_2 = FAKER.internet().emailAddress();
         List<UserAuthDTO> userList =
                 Arrays.asList(
-                        getMockFactory().newUserAuthDTO(AUTH_EMAIL_1, Role.SA.name()),
-                        getMockFactory().newUserAuthDTO(AUTH_EMAIL_2, Role.CSM.name()));
+                        getMockFactory().newUserAuthDTO(AUTH_EMAIL_1, Role.AST.name()),
+                        getMockFactory().newUserAuthDTO(AUTH_EMAIL_2, Role.MNG.name()));
 
         // setup the mocked helper
         doReturn(userList).when(service).findAll();
@@ -505,7 +505,7 @@ public class UserControllerTest extends BaseControllerTest {
         UserAuthUpdateDTO updateRequest = new UserAuthUpdateDTO();
         updateRequest.setPassword(AUTH_NEW_PASSWORD);
         updateRequest.setConfirmPassword(AUTH_NEW_PASSWORD);
-        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.SA.name());
+        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.AST.name());
 
         // setup the mocked helper
         doReturn(mockUserAuth).when(service).update(any(UserAuthUpdateDTO.class));
@@ -532,7 +532,7 @@ public class UserControllerTest extends BaseControllerTest {
         String AUTH_EMAIL = FAKER.internet().emailAddress();
         UserAuthUpdateDTO updateRequest = new UserAuthUpdateDTO();
         updateRequest.setFullName(AUTH_NEW_FULL_NAME);
-        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.SA.name());
+        UserAuthDTO mockUserAuth = getMockFactory().newUserAuthDTO(AUTH_ID, AUTH_EMAIL, Role.AST.name());
         mockUserAuth.setFullName(AUTH_NEW_FULL_NAME);
 
         // setup the mocked helper
@@ -570,7 +570,7 @@ public class UserControllerTest extends BaseControllerTest {
         List<UserAuthDTO> userList = IntStream.range(0, listSize)
                 .mapToObj((user) -> {
                     String AUTH_EMAIL = FAKER.internet().emailAddress();
-                    return getMockFactory().newUserAuthDTO(AUTH_EMAIL, Role.SA.name());
+                    return getMockFactory().newUserAuthDTO(AUTH_EMAIL, Role.AST.name());
                 }).collect(Collectors.toList());
 
         // setup the mocked service
@@ -587,7 +587,7 @@ public class UserControllerTest extends BaseControllerTest {
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(listSize)))
-                .andExpect(jsonPath("$[0].roles", containsInAnyOrder(Role.SA.name())))
+                .andExpect(jsonPath("$[0].roles", containsInAnyOrder(Role.AST.name())))
                 .andExpect(jsonPath("$[0].active", is(true)));
     }
 

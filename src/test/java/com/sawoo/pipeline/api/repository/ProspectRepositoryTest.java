@@ -46,7 +46,7 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     }
 
     @AfterEach
-    void afterEach() {
+    protected void afterEach() {
         // Drop the entity collection so we can start fresh
         super.afterEach();
         companyRepository.deleteAll();

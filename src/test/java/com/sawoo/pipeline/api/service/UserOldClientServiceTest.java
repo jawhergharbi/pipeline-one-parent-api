@@ -49,7 +49,7 @@ class UserOldClientServiceTest extends BaseServiceTestOld {
                 }).collect(Collectors.toList());
         String USER_ID = FAKER.name().username();
         String USER_FULL_NAME = FAKER.name().fullName();
-        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[] {Role.CSM.name()});
+        UserOld mockedUserOldEntity = getMockFactory().newUserEntity(USER_ID, USER_FULL_NAME, new String[] {Role.MNG.name()});
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedUserOldEntity)).when(userRepositoryOld).findById(anyString());
@@ -74,7 +74,7 @@ class UserOldClientServiceTest extends BaseServiceTestOld {
         int listSize = 3;
         String USER_ID_CSM = FAKER.regexify(FAKER_USER_ID_REGEX);
         String USER_FULL_NAME_CSM = FAKER.name().fullName();
-        UserOld userOldCSM = getMockFactory().newUserEntity(USER_ID_CSM, USER_FULL_NAME_CSM, new String[]{Role.CSM.name(), Role.USER.name()});
+        UserOld userOldCSM = getMockFactory().newUserEntity(USER_ID_CSM, USER_FULL_NAME_CSM, new String[]{Role.MNG.name(), Role.USER.name()});
         String USER_ID_ADMIN = FAKER.regexify(FAKER_USER_ID_REGEX);
         String USER_FULL_NAME_ADMIN = FAKER.name().fullName();
         UserOld userOldADMIN = getMockFactory().newUserEntity(USER_ID_ADMIN, USER_FULL_NAME_ADMIN, new String[]{Role.ADMIN.name(), Role.USER.name()});
