@@ -69,7 +69,7 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
         postEntity.setId(COMPANY_ID);
 
         // Execute the POST request
-        mockMvc.perform(post("/api/companies/")
+        mockMvc.perform(post(getResourceURI())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -96,7 +96,7 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
         doReturn(mockedDTOEntity).when(service).update(anyString(), ArgumentMatchers.any(CompanyDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put("/api/companies/{id}", COMPONENT_ID)
+        mockMvc.perform(put(getResourceURI() + "/{id}", COMPONENT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -105,7 +105,7 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/api/companies/" + COMPONENT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID))
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(COMPONENT_ID)))

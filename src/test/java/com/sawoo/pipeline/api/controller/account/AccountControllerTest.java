@@ -1,14 +1,13 @@
-package com.sawoo.pipeline.api.controller.prospect;
+package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.mock.ProspectMockFactory;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.service.prospect.ProspectService;
+import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.service.account.AccountService;
 import org.junit.jupiter.api.*;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +22,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,38 +34,40 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, ProspectService, ProspectMockFactory> {
+public class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, AccountService, AccountMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ProspectService service;
+    private AccountService service;
 
     @Autowired
-    public ProspectControllerTest(ProspectMockFactory mockFactory, ProspectService service, MockMvc mockMvc) {
+    public AccountControllerTest(AccountMockFactory mockFactory, AccountService service, MockMvc mockMvc) {
         super(mockFactory,
-                ControllerConstants.PROSPECT_CONTROLLER_API_BASE_URI,
-                DataStoreConstants.PROSPECT_DOCUMENT,
+                ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI,
+                DataStoreConstants.ACCOUNT_DOCUMENT,
                 service,
                 mockMvc);
     }
 
     @Override
     protected String getExistCheckProperty() {
-        return "linkedInUrl";
+        return "email";
     }
 
     @Override
     protected List<String> getResourceFieldsToBeChecked() {
-        return Arrays.asList("linkedInUrl", "firstName", "lastName", "created");
+        return Arrays.asList("email", "fullName", "created");
     }
 
     @Test
-    @DisplayName("POST /api/prospect: firstName not informed - Failure")
-    void createWhenFirstNameNotInformedReturnsFailure() throws Exception {
-        String PROSPECT_LAST_NAME = getMockFactory().getFAKER().name().lastName();
-        ProspectDTO postEntity = getMockFactory().newDTO(null, null, PROSPECT_LAST_NAME);
+    @DisplayName("POST /api/accounts: resource name not informed - Failure")
+    void createWhenFullNameAndPositionNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        AccountDTO postEntity = getMockFactory().newDTO(null);
+        postEntity.setFullName(null);
+        postEntity.setPosition(null);
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI())
@@ -77,25 +79,25 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.messages", hasSize(1)));
+                .andExpect(jsonPath("$.messages", hasSize(2)));
     }
 
     @Test
-    @DisplayName("PUT /api/prospects/{id}: resource exists - Success")
+    @DisplayName("PUT /api/accounts/{id}: resource exists - Success")
     void updateWhenResourceFoundAndUpdatedReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        String PROSPECT_POSITION = getMockFactory().getFAKER().company().profession();
-        ProspectDTO postEntity = new ProspectDTO();
-        postEntity.setPosition(PROSPECT_POSITION);
-        ProspectDTO mockedEntity = getMockFactory().newDTO(PROSPECT_ID);
-        mockedEntity.setPosition(PROSPECT_POSITION);
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String ACCOUNT_POSITION = getMockFactory().getFAKER().company().profession();
+        AccountDTO postEntity = new AccountDTO();
+        postEntity.setPosition(ACCOUNT_POSITION);
+        AccountDTO mockedDTO = getMockFactory().newDTO(ACCOUNT_ID);
+        mockedDTO.setPosition(ACCOUNT_POSITION);
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).update(anyString(), ArgumentMatchers.any(ProspectDTO.class));
+        doReturn(mockedDTO).when(service).update(anyString(), any(AccountDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put(getResourceURI() + "/{id}", PROSPECT_ID)
+        mockMvc.perform(put(getResourceURI() + "/{id}", ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -104,10 +106,10 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + ACCOUNT_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
-                .andExpect(jsonPath("$.position", is(PROSPECT_POSITION)));
+                .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
+                .andExpect(jsonPath("$.position", is(ACCOUNT_POSITION)));
     }
 }

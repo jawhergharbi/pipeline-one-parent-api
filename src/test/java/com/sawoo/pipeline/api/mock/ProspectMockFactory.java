@@ -47,12 +47,16 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
 
     @Override
     public ProspectDTO newDTO(String id) {
+        return newDTO(id, getFAKER().name().firstName(), getFAKER().name().lastName());
+    }
+
+    public ProspectDTO newDTO(String id, String firstName, String lastName) {
         ProspectDTO dto = new ProspectDTO();
         Faker FAKER = getFAKER();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         dto.setId(id);
-        dto.setFirstName(FAKER.name().firstName());
-        dto.setLastName(FAKER.name().lastName());
+        dto.setFirstName(firstName);
+        dto.setLastName(lastName);
         dto.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         dto.setEmail(FAKER.internet().emailAddress());
         dto.setCompany(CompanyDTO.builder()
@@ -70,13 +74,14 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
 
     @Override
     public ProspectDTO newDTO(String id, ProspectDTO dto) {
-        ProspectDTO entity = dto.toBuilder().build();
-        entity.setId(id);
-        entity.setFirstName(dto.getFirstName());
-        entity.setLastName(dto.getLastName());
-        entity.setLinkedInUrl(dto.getLinkedInUrl());
-        entity.setProfilePicture(dto.getProfilePicture());
-        entity.setPosition(dto.getPosition());
-        return entity;
+        ProspectDTO newDTO = dto.toBuilder().build();
+        newDTO.setId(id);
+        newDTO.setFirstName(dto.getFirstName());
+        newDTO.setLastName(dto.getLastName());
+        newDTO.setLinkedInUrl(dto.getLinkedInUrl());
+        newDTO.setProfilePicture(dto.getProfilePicture());
+        newDTO.setPosition(dto.getPosition());
+        newDTO.setCompany(dto.getCompany());
+        return newDTO;
     }
 }
