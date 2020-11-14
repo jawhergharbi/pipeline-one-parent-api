@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Builder(toBuilder = true)
 public class ProspectDTO extends ProspectBaseDTO {
 
     @JMap

@@ -31,7 +31,6 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
         entity.setFirstName(FAKER.name().firstName());
         entity.setLastName(FAKER.name().lastName());
         entity.setLinkedInUrl(FAKER.internet().url());
-        entity.setLinkedInThread(FAKER.internet().url());
         entity.setEmail(FAKER.internet().emailAddress());
         entity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         entity.setPosition(FAKER.company().profession());
@@ -54,11 +53,12 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
         dto.setId(id);
         dto.setFirstName(FAKER.name().firstName());
         dto.setLastName(FAKER.name().lastName());
+        dto.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
+        dto.setEmail(FAKER.internet().emailAddress());
         dto.setCompany(CompanyDTO.builder()
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())
                 .build());
-        dto.setLinkedInThread(FAKER.internet().url());
         dto.setLinkedInUrl(FAKER.internet().url());
         dto.setPosition(FAKER.company().profession());
         dto.setProfilePicture(FAKER.internet().url());
@@ -70,6 +70,13 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
 
     @Override
     public ProspectDTO newDTO(String id, ProspectDTO dto) {
-        return (ProspectDTO)dto.withId(id);
+        ProspectDTO entity = dto.toBuilder().build();
+        entity.setId(id);
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setLinkedInUrl(dto.getLinkedInUrl());
+        entity.setProfilePicture(dto.getProfilePicture());
+        entity.setPosition(dto.getPosition());
+        return entity;
     }
 }

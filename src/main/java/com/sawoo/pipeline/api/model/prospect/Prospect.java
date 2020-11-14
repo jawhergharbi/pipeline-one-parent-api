@@ -53,10 +53,6 @@ public class Prospect extends BaseEntity {
     private String linkedInUrl;
 
     @JMap
-    @Field(name = "linked_in_thread")
-    private String linkedInThread;
-
-    @JMap
     @Field(name = "profile_picture")
     private String profilePicture;
 
