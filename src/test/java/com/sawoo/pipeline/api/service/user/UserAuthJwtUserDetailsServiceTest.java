@@ -1,7 +1,8 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.service.BaseServiceTestOld;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtUserOldDetailsServiceTest extends BaseServiceTestOld {
+public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTestOld {
 
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;

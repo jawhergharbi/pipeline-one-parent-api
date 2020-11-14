@@ -1,11 +1,11 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.prospect;
 
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.repository.ProspectRepository;
-import com.sawoo.pipeline.api.service.prospect.ProspectService;
+import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, ProspectRepository, ProspectService> {
+public class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, ProspectRepository, ProspectService, ProspectMockFactory> {
 
     @MockBean
     private ProspectRepository repository;

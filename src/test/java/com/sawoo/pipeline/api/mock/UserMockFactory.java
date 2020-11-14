@@ -32,6 +32,14 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         return newEntity(null, email, password, null);
     }
 
+    public User newEntity(String id, String[] roles) {
+        return newEntity(
+                id,
+                getFAKER().internet().emailAddress(),
+                getFAKER().internet().password(6, 12),
+                roles);
+    }
+
     public User newEntity(String id, String email, String password, String[] roles) {
         User entity = new User();
         LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);

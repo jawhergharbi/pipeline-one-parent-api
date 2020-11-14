@@ -479,15 +479,6 @@ public class MockFactory {
         return mockUserAuth;
     }
 
-    public UserOld newUserEntity(String componentId) {
-        UserOld userOld = new UserOld();
-        userOld.setId(componentId);
-        userOld.setFullName(FAKER.name().fullName());
-        userOld.getRoles().add(Role.AST.name());
-        userOld.setActive(true);
-        return userOld;
-    }
-
     public UserOld newUserEntity(String componentId, String fullName, String[] roles) {
         UserOld userOld = new UserOld();
         userOld.setId(componentId);

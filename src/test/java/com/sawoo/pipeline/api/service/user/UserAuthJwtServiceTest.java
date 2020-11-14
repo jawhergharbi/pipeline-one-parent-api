@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
@@ -9,6 +9,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.service.BaseServiceTestOld;
 import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

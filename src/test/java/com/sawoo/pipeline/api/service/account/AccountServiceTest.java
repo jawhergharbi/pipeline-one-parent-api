@@ -1,11 +1,11 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.account;
 
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
-import com.sawoo.pipeline.api.service.account.AccountService;
+import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRepository, AccountService> {
+public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRepository, AccountService, AccountMockFactory> {
 
     @MockBean
     private AccountRepository repository;
@@ -111,7 +111,7 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
         // Execute the service call
         AccountDTO returnedDTO = getService().update(ACCOUNT_ID, mockedDTO);
 
-        Assertions.assertNotNull(returnedDTO, "Prospect entity can not be null");
+        Assertions.assertNotNull(returnedDTO, "Account entity can not be null");
         Assertions.assertEquals(
                 ACCOUNT_NEW_FULL_NAME,
                 returnedDTO.getFullName(),

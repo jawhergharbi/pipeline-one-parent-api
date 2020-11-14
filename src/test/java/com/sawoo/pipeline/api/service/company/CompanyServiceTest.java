@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.service;
+package com.sawoo.pipeline.api.service.company;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.mock.CompanyMockFactory;
 import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
+import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, CompanyRepository, CompanyService> {
+public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, CompanyRepository, CompanyService, CompanyMockFactory> {
 
     @MockBean
     private CompanyRepository repository;
@@ -52,6 +53,11 @@ public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, Com
     @Override
     protected void mockedEntityExists(Company entity) {
         doReturn(Optional.of(entity)).when(repository).findByName(anyString());
+    }
+
+    @BeforeAll
+    public void setup() {
+        setRepository(repository);
     }
 
     @Test
@@ -104,7 +110,7 @@ public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, Com
         CompanyDTO mockedDTO = new CompanyDTO();
         mockedDTO.setName(COMPANY_NAME);
         mockedDTO.setUrl(COMPANY_URL);
-        Company mockedEntity = getMockFactory().newEntity(COMPANY_ID);
+        Company mockedEntity = getMockFactory().newEntity(COMPANY_ID, COMPANY_NAME, COMPANY_URL);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByName(anyString());
