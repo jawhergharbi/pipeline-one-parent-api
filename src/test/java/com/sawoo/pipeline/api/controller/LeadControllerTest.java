@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class LeadControllerTest extends BaseControllerTest {
+public class LeadControllerTest extends BaseControllerTestOld {
 
     @Autowired
     private MockMvc mockMvc;

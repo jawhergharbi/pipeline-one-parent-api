@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserControllerTest extends BaseControllerTest {
+public class UserControllerTest extends BaseControllerTestOld {
 
     @Autowired
     private MockMvc mockMvc;

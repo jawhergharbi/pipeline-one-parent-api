@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.dummy;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class DummyControllerTest extends BaseControllerTest {
+public class DummyControllerTest extends BaseControllerTestOld {
 
     @Autowired
     private MockMvc mockMvc;

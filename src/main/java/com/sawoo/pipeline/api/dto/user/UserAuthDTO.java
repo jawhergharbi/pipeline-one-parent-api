@@ -3,10 +3,7 @@ package com.sawoo.pipeline.api.dto.user;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class UserAuthDTO {
 
     @JMap

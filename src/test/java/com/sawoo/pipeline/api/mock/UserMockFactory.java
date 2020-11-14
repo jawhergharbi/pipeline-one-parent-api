@@ -66,6 +66,11 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
                 null);
     }
 
+    @Override
+    public UserAuthDTO newDTO(String id, UserAuthDTO dto) {
+        return dto.toBuilder().id(id).build();
+    }
+
     public UserAuthDTO newDTO(String id, String email, String password, String[] roles) {
         return newDTO(id, email, password, password, roles);
     }

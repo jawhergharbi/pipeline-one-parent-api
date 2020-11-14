@@ -46,4 +46,20 @@ public class CompanyMockFactory extends BaseMockFactory<CompanyDTO, Company> {
                 .updated(LocalDateTime.now())
                 .build();
     }
+
+    @Override
+    public CompanyDTO newDTO(String id, CompanyDTO dto) {
+        return dto.toBuilder().id(id).build();
+    }
+
+    public CompanyDTO newDTO(String id, String name, String url) {
+        Faker FAKER = getFAKER();
+        return CompanyDTO.builder()
+                .id(id)
+                .name(name)
+                .url(url)
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
+                .build();
+    }
 }

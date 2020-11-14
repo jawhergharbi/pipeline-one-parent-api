@@ -84,4 +84,9 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
         entity.setCreated(dateTime);
         return entity;
     }
+
+    @Override
+    public AccountDTO newDTO(String id, AccountDTO dto) {
+        return dto.toBuilder().id(id).build();
+    }
 }

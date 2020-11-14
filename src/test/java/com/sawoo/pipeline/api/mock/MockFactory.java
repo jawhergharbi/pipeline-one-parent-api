@@ -10,5 +10,7 @@ public interface MockFactory<D, M> {
 
     D newDTO(String id);
 
+    D newDTO(String id, D dto);
+
     Faker getFAKER();
 }

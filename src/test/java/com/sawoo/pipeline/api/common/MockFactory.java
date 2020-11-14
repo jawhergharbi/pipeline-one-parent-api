@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.common;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
@@ -13,13 +12,15 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
-import com.sawoo.pipeline.api.model.*;
+import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.CompanyOld;
+import com.sawoo.pipeline.api.model.Status;
+import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.Lead;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
@@ -403,25 +404,6 @@ public class MockFactory {
         mockUserAuth.setPassword(password);
         mockUserAuth.setConfirmPassword(confirmPassword);
         mockUserAuth.setFullName(fullName);
-        return mockUserAuth;
-    }
-
-    public User newUserAuthEntity(String id, String email, String[] roles) {
-        User mockUserAuth = new User();
-
-        LocalDateTime SIGNED_UP_DATE_TIME = LocalDateTime.of(2020, Month.DECEMBER, 12, 12, 0);
-        mockUserAuth.setId(id);
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setCreated(SIGNED_UP_DATE_TIME);
-        mockUserAuth.setPassword(FAKER.internet().password());
-        mockUserAuth.setActive(true);
-        if (roles != null) {
-            mockUserAuth.setRoles(new HashSet<>(Arrays.asList(roles)));
-        } else {
-            mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
-        }
-        mockUserAuth.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-
         return mockUserAuth;
     }
 

@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class LeadInteractionControllerTest extends BaseControllerTest {
+public class LeadInteractionControllerTest extends BaseControllerTestOld {
 
     @Autowired
     private MockMvc mockMvc;

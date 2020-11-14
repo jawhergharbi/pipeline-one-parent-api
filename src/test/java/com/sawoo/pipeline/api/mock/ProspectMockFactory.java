@@ -67,4 +67,9 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
         dto.setUpdated(now);
         return dto;
     }
+
+    @Override
+    public ProspectDTO newDTO(String id, ProspectDTO dto) {
+        return (ProspectDTO)dto.withId(id);
+    }
 }
