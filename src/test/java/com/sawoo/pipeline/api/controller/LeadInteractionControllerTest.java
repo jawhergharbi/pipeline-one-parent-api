@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.common.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;

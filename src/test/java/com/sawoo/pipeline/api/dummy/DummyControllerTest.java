@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.dummy;
 
-import com.sawoo.pipeline.api.common.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

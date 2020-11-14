@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.controller.account;
 
-import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
@@ -61,6 +58,15 @@ public class AccountController {
             @RequestBody AccountDTO dto,
             @PathVariable("id") String id) {
         return delegator.update(id, dto);
+    }
+
+    @RequestMapping(
+            value = "/user/{id}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<AccountDTO>> findByUserId(
+            @PathVariable("id") String userId) {
+        return delegator.findByUserId(userId);
     }
 
     /*@RequestMapping(

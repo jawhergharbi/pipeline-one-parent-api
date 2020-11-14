@@ -1,9 +1,10 @@
-package com.sawoo.pipeline.api.common;
+package com.sawoo.pipeline.api.controller.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
+import com.sawoo.pipeline.api.common.MockFactory;
 
 public abstract class BaseControllerTest {
 

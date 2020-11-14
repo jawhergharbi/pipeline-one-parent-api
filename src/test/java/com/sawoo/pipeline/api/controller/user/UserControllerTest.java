@@ -1,6 +1,6 @@
-package com.sawoo.pipeline.api.controller;
+package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.common.BaseControllerTest;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;

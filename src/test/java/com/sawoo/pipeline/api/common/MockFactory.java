@@ -397,15 +397,6 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public UserAuthDTO newUserAuthRegister(String email, String password) {
-        UserAuthDTO mockUserAuth = new UserAuthDTO();
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setPassword(password);
-        mockUserAuth.setConfirmPassword(password);
-        mockUserAuth.setFullName(FAKER.name().fullName());
-        return mockUserAuth;
-    }
-
     public UserAuthDTO newUserAuthRegister(String email, String password, String confirmPassword, String fullName) {
         UserAuthDTO mockUserAuth = new UserAuthDTO();
         mockUserAuth.setEmail(email);
@@ -432,10 +423,6 @@ public class MockFactory {
         mockUserAuth.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
 
         return mockUserAuth;
-    }
-
-    public User newUserAuthEntity(String id, String email) {
-        return newUserAuthEntity(id, email, null);
     }
 
     public UserAuthDTO newUserAuthDTO(String email, String role) {

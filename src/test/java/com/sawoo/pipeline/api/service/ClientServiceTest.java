@@ -4,7 +4,6 @@ import com.google.cloud.datastore.Key;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
-import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
@@ -149,104 +148,6 @@ public class ClientServiceTest extends BaseServiceTestOld {
     }
 
     @Test
-    @DisplayName("Client service: create when client does exist - Failure")
-    void createWhenClientExistsReturnsCommonException() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        mockedDTO.setLinkedInUrl(CLIENT_LINKED_IN_URL);
-
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
-
-        // Asserts
-        CommonServiceException exception = Assertions.assertThrows(
-                CommonServiceException.class,
-                () -> service.create(mockedDTO),
-                "create must throw a CommonServiceException");
-
-        Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                "Exception message must be " + ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION);
-        Assertions.assertEquals(
-                2,
-                exception.getArgs().length,
-                "Number of arguments in the exception must be 2");
-
-        verify(repository, times(1)).findByLinkedInUrl(any());
-    }
-
-    @Test
-    @DisplayName("Client Service: delete client entity found - Success")
-    void deleteWhenCompanyEntityFoundReturnsSuccess() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedDTO = service.delete(CLIENT_ID);
-
-        Assertions.assertTrue(returnedDTO.isPresent(), "Returned entity can not be null");
-        Assertions.assertEquals(CLIENT_ID, returnedDTO.get().getId(), "Client.id fields must be the same");
-        Assertions.assertEquals(CLIENT_FULL_NAME, returnedDTO.get().getFullName(), "Client.fullName fields must be the the same");
-        Assertions.assertNotNull(returnedDTO.get().getCompany(), "Client.company can not be null");
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-        verify(repository, times(1)).delete(any());
-    }
-
-    @Test
-    @DisplayName("Client Service: delete client entity not found - Null entity")
-    void deleteWhenClientEntityNotFoundReturnsNullEntity() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedEntity = service.delete(CLIENT_ID);
-
-        Assertions.assertFalse(returnedEntity.isPresent(), "Returned entity must be null");
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-    }
-
-    @Test
-    @DisplayName("Client Service: findById - Success")
-    void findByIdWhenClientExitsReturnsSuccess() {
-        // Set up mock entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedEntity = service.findById(CLIENT_ID);
-
-        // Assert the response
-        Assertions.assertTrue(returnedEntity.isPresent(), "Client entity with id " + CLIENT_ID + " was not found");
-        Assertions.assertEquals(CLIENT_ID, returnedEntity.get().getId(), "Client.id should be the same");
-        Assertions.assertEquals(0, returnedEntity.get().getLeadsSize(), "Client must have no leads");
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-    }
-
-    @Test
     @DisplayName("Client Service: findById - Success")
     void findByIdWhenClientExitsAndContainsLeadsReturnsSuccess() {
         // Set up mock entities
@@ -275,65 +176,6 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Assertions.assertEquals(1, returnedEntity.get().getLeadsSize(), String.format("Client must have %d leads", 1));
 
         verify(repository, times(1)).findById(CLIENT_ID);
-    }
-
-    @Test
-    @DisplayName("Client Service: findById when client does not exists - Failure")
-    void findByIdWhenClientIsNotFoundReturnsResourceNotFoundException() {
-        // Set up mock entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedEntity = service.findById(CLIENT_ID);
-
-        // Asserts
-        Assertions.assertFalse(returnedEntity.isPresent(), "Client entity with id " + CLIENT_ID + " must be null");
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-    }
-
-    @Test
-    @DisplayName("Client Service: findAll empty list - Success")
-    void findAllWhenThereAreNoClientsEntitiesReturnsSuccess() {
-        // Set up mock entities
-        List<Client> clients = Collections.emptyList();
-
-        // Set up the mocked repository
-        doReturn(clients).when(repository).findAll();
-
-        // Execute the service call
-        List<ClientBasicDTO> returnedList = service.findAll();
-
-        Assertions.assertTrue(returnedList.isEmpty(), "Returned list must be empty");
-
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Client Service: findAll - Success")
-    void findAllWhenThereAreThreeLeadsReturnsSuccess() {
-        // Set up mock entities
-        int listSize = 3;
-        List<Client> leadList = IntStream.range(0, listSize)
-                .mapToObj((lead) -> {
-                    Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    String CLIENT_FULL_NAME = FAKER.name().fullName();
-                    String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-                    return getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-                }).collect(Collectors.toList());
-
-        // Set up the mocked repository
-        doReturn(leadList).when(repository).findAll();
-
-        // Execute the service call
-        List<ClientBasicDTO> returnedList = service.findAll();
-
-        Assertions.assertEquals(listSize, returnedList.size(), String.format("Returned list size must be %d", listSize));
-
-        verify(repository, times(1)).findAll();
     }
 
     @Test
@@ -397,39 +239,6 @@ public class ClientServiceTest extends BaseServiceTestOld {
         Assertions.assertEquals(leadListSize, returnedList.get(0).getLeadsSize(), String.format("Returned list size must be [%d]", leadListSize));
 
         verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Client Service: update client name and linkedIn url when client does exist - Success")
-    void updateWhenClientFoundReturnsSuccess() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        mockedDTO.setFullName(CLIENT_FULL_NAME);
-        mockedDTO.setLinkedInUrl(CLIENT_LINKED_IN_URL);
-
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedDTO = service.update(CLIENT_ID, mockedDTO);
-
-        Assertions.assertTrue(returnedDTO.isPresent(), "Client entity is not null");
-        Assertions.assertEquals(
-                CLIENT_FULL_NAME,
-                returnedDTO.get().getFullName(),
-                String.format("Full Name must be '%s'", CLIENT_FULL_NAME));
-        Assertions.assertEquals(
-                CLIENT_LINKED_IN_URL,
-                returnedDTO.get().getLinkedInUrl(),
-                String.format("LinkedIn Url must be '%s'", CLIENT_LINKED_IN_URL));
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-        verify(repository, times(1)).save(any());
     }
 
     @Test
