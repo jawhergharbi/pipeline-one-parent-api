@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
-import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
+import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class UserControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserAuthJwtService service;
+    private UserAuthService service;
 
     @Test
     @DisplayName("POST /api/auth/register: register user - Success")

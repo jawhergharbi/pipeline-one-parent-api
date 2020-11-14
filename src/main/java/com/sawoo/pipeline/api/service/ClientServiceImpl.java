@@ -14,7 +14,7 @@ import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import com.sawoo.pipeline.api.service.company.CompanyService;
-import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
+import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepositoryWrapper repository;
     private final CommonServiceMapper mapper;
     private final CompanyService companyService;
-    private final UserAuthJwtService userService;
+    private final UserAuthService userService;
 
     @Override
     public ClientBasicDTO create(ClientBasicDTO client) throws CommonServiceException {

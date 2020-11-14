@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.user.*;
-import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
+import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,12 +27,12 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO, UserAuthJwtService> implements UserControllerCustomDelegator {
+public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO, UserAuthService> implements UserControllerCustomDelegator {
 
     private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    public UserControllerDelegator(UserAuthJwtService service,  JwtTokenUtil jwtTokenUtil) {
+    public UserControllerDelegator(UserAuthService service, JwtTokenUtil jwtTokenUtil) {
         super(service, ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI);
         this.jwtTokenUtil = jwtTokenUtil;
     }

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 
-public interface UserAuthJwtService extends BaseService<UserAuthDTO> {
+public interface UserAuthService extends BaseService<UserAuthDTO> {
 
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 

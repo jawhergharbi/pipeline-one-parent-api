@@ -438,10 +438,6 @@ public class MockFactory {
         return newUserAuthEntity(id, email, null);
     }
 
-    public User newUserAuthEntity(String email) {
-        return newUserAuthEntity(UUID.randomUUID().toString(), email, null);
-    }
-
     public UserAuthDTO newUserAuthDTO(String email, String role) {
         UserAuthDTO mockUserAuth = new UserAuthDTO();
         LocalDateTime now = LocalDateTime.now();

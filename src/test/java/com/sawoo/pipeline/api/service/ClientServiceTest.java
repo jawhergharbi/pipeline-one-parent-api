@@ -17,7 +17,7 @@ import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import com.sawoo.pipeline.api.service.company.CompanyService;
-import com.sawoo.pipeline.api.service.user.UserAuthJwtService;
+import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ClientServiceTest extends BaseServiceTestOld {
     private CompanyService companyService;
 
     @SpyBean
-    private UserAuthJwtService userService;
+    private UserAuthService userService;
 
     @Test
     @DisplayName("Client Service: create when client does not exist - Success")

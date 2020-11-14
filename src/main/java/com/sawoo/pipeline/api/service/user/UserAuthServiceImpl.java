@@ -36,17 +36,17 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Validated
-public class UserAuthJwtServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepository> implements UserAuthJwtService {
+public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepository> implements UserAuthService {
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAuthJwtServiceImpl(UserRepository repository,
-                                  UserAuthMapper mapper,
-                                  UserAuthServiceEventListener eventListener,
-                                  AuthenticationManager authenticationManager,
-                                  PasswordEncoder passwordEncoder) {
+    public UserAuthServiceImpl(UserRepository repository,
+                               UserAuthMapper mapper,
+                               UserAuthServiceEventListener eventListener,
+                               AuthenticationManager authenticationManager,
+                               PasswordEncoder passwordEncoder) {
         super(repository, mapper, DataStoreConstants.PROSPECT_DOCUMENT, eventListener);
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;

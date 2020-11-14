@@ -9,7 +9,6 @@ import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
-import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

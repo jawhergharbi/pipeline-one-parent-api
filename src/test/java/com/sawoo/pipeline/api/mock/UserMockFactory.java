@@ -22,10 +22,9 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
 
     @Override
     public User newEntity(String id) {
-        String USER_ID = getFAKER().internet().uuid();
         String USER_EMAIL = getFAKER().internet().emailAddress();
         String USER_PASSWORD = getFAKER().internet().password(6, 12);
-        return newEntity(USER_ID, USER_EMAIL, USER_PASSWORD, null);
+        return newEntity(id, USER_EMAIL, USER_PASSWORD, null);
     }
 
     public User newEntity(String email, String password) {
@@ -60,6 +59,33 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
 
     @Override
     public UserAuthDTO newDTO(String id) {
-        return null;
+        return newDTO(
+                id,
+                getFAKER().internet().emailAddress(),
+                getFAKER().internet().password(6, 12),
+                null);
+    }
+
+    public UserAuthDTO newDTO(String id, String email, String password, String[] roles) {
+        return newDTO(id, email, password, password, roles);
+    }
+
+    public UserAuthDTO newDTO(String id, String email, String password, String confirmPassword, String[] roles) {
+        UserAuthDTO entity = new UserAuthDTO();
+        LocalDateTime now = LocalDateTime.now();
+        entity.setId(id);
+        entity.setFullName(getFAKER().name().fullName());
+        entity.setPassword(password);
+        entity.setConfirmPassword(confirmPassword);
+        entity.setEmail(email);
+        entity.setActive(true);
+        if (roles != null) {
+            entity.setRoles(new HashSet<>(Arrays.asList(roles)));
+        } else {
+            entity.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
+        }
+        entity.setCreated(now);
+        entity.setUpdated(now);
+        return entity;
     }
 }

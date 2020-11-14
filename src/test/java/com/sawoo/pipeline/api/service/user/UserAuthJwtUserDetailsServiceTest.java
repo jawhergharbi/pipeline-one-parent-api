@@ -1,9 +1,9 @@
 package com.sawoo.pipeline.api.service.user;
 
+import com.github.javafaker.Faker;
+import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepository;
-import com.sawoo.pipeline.api.service.BaseServiceTestOld;
-import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,16 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTestOld {
+public class UserAuthJwtUserDetailsServiceTest {
+
+    private final Faker FAKER;
+    private final UserMockFactory mockFactory;
+
+    @Autowired
+    public UserAuthJwtUserDetailsServiceTest(UserMockFactory mockFactory) {
+        this.mockFactory = mockFactory;
+        FAKER = Faker.instance();
+    }
 
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;
@@ -32,20 +41,21 @@ public class UserAuthJwtUserDetailsServiceTest extends BaseServiceTestOld {
     @DisplayName("loadUserByUsername: user found - Success")
     void loadUserByUsernameWhenUserFoundReturnsSuccess() {
         // Set up mock entity
-        String AUTH_EMAIL = FAKER.internet().emailAddress();
-        User mockedUserAuth = getMockFactory().newUserAuthEntity(AUTH_EMAIL);
+        String USER_EMAIL = FAKER.internet().emailAddress();
+        String USER_PASSWORD = FAKER.internet().password(6, 12);
+        User mockedUserAuth = mockFactory.newEntity(USER_EMAIL, USER_PASSWORD);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedUserAuth)).when(repository).findByEmail(AUTH_EMAIL);
+        doReturn(Optional.of(mockedUserAuth)).when(repository).findByEmail(USER_EMAIL);
 
         // Execute the service call
-        UserDetails userDetails = service.loadUserByUsername(AUTH_EMAIL);
+        UserDetails userDetails = service.loadUserByUsername(USER_EMAIL);
 
         Assertions.assertNotNull(userDetails, "UserDetails can not be null");
         Assertions.assertEquals(
-                AUTH_EMAIL,
+                USER_EMAIL,
                 userDetails.getUsername(),
-                String.format("Email must be the same: [%s]", AUTH_EMAIL));
+                String.format("Email must be the same: [%s]", USER_EMAIL));
         Assertions.assertEquals(
                 mockedUserAuth.getPassword(),
                 userDetails.getPassword(),

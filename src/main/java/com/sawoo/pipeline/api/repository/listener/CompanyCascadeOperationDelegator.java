@@ -21,7 +21,7 @@ public class CompanyCascadeOperationDelegator implements CascadeOperationDelegat
             if (child.getId() == null) {
                 companyRepository
                         .findByName(child.getName())
-                        .ifPresentOrElse(parentFunction::accept,
+                        .ifPresentOrElse(parentFunction,
                                 () -> {
                                     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                                     child.setCreated(now);
@@ -31,7 +31,7 @@ public class CompanyCascadeOperationDelegator implements CascadeOperationDelegat
             } else {
                 companyRepository
                         .findById(child.getId())
-                        .ifPresentOrElse(parentFunction::accept,
+                        .ifPresentOrElse(parentFunction,
                                 () -> {
                                     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                                     child.setUpdated(now);
