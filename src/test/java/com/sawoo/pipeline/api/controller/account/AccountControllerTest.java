@@ -1,9 +1,10 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -20,15 +21,18 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -114,5 +118,78 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
                 .andExpect(jsonPath("$.position", is(ACCOUNT_POSITION)));
+    }
+
+    @Test
+    @DisplayName("GET /api/accounts/user/{id}: find all accounts by user id return entities found- Success")
+    void findAllByUserIdWhenEntitiesFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        int listSize = 3;
+        List<String> ids = new ArrayList<>();
+        List<AccountDTO> clientList = IntStream.range(0, listSize)
+                .mapToObj((account) -> {
+                    String COMPONENT_ID = getMockFactory().getComponentId();
+                    ids.add(COMPONENT_ID);
+                    return getMockFactory().newDTO(COMPONENT_ID);
+                }).collect(Collectors.toList());
+
+        // setup the mocked service
+        doReturn(clientList).when(service).findAllByUser(USER_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/user/{id}", USER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(listSize)))
+                .andExpect(jsonPath("$[0].id", is(ids.get(0))));
+    }
+
+    @Test
+    @DisplayName("GET /api/accounts/user/{id}: find all accounts by user id returns empty list - Success")
+    void findAllByUserIdWhenNoEntityFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+
+        // setup the mocked service
+        doReturn(Collections.EMPTY_LIST).when(service).findAllByUser(USER_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/user/{id}", USER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{id}/clients: get all clients when user not found - Success")
+    void findAllWhenUserNotFoundReturnsResourceNotFoundException() throws Exception {
+        // Setup the mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{"User", String.valueOf(USER_ID)});
+
+        // setup the mocked service
+        doThrow(exception).when(service).findAllByUser(USER_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/user/{id}", USER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", containsString("GET operation. Component type [User]")));
     }
 }
