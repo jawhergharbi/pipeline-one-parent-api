@@ -13,4 +13,8 @@ public interface AccountControllerCustomDelegator {
 
     ResponseEntity<List<AccountDTO>>  findByUserId(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String userId);
+
+    ResponseEntity<?> updateUser(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String userId);
 }

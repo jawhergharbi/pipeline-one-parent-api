@@ -65,7 +65,12 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
                             .collect(Collectors.toList());
                 }).orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{"User", userId})
+                        new String[]{ "User", userId })
                 );
+    }
+
+    @Override
+    public AccountDTO updateUser(String id, String userId) throws ResourceNotFoundException {
+        return null;
     }
 }

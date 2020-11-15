@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -18,11 +19,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -69,7 +68,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     }
 
     @Test
-    @DisplayName("POST /api/accounts: resource name not informed - Failure")
+    @DisplayName("POST /api/accounts: resource fullName not informed - Failure")
     void createWhenFullNameAndPositionNotInformedReturnsFailure() throws Exception {
         // Setup the mocked entities
         AccountDTO postEntity = getMockFactory().newDTO(null);
@@ -87,6 +86,26 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("POST /api/accounts: resource company not informed - Failure")
+    void createWhenCompanyNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        AccountDTO postEntity = getMockFactory().newDTO(null);
+        postEntity.setCompany(null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
     }
 
     @Test
@@ -118,6 +137,35 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
                 .andExpect(jsonPath("$.position", is(ACCOUNT_POSITION)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/accounts: resource exists and company updated - Success")
+    void updateWhenClientFoundAndUpdatedCompanyFieldReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        AccountDTO postEntity = new AccountDTO();
+        String ACCOUNT_NEW_COMPANY_NAME = getMockFactory().getFAKER().company().name();
+        String ACCOUNT_NEW_COMPANY_URL = getMockFactory().getFAKER().company().url();
+        CompanyDTO company = CompanyDTO
+                .builder()
+                .name(ACCOUNT_NEW_COMPANY_NAME)
+                .url(ACCOUNT_NEW_COMPANY_URL)
+                .build();
+        postEntity.setCompany(company);
+
+        AccountDTO mockedEntity = getMockFactory().newDTO(ACCOUNT_ID);
+        mockedEntity.setCompany(company);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).update(anyString(), any(AccountDTO.class));
+
+        // Execute the PUT request
+        executePutRequest(ACCOUNT_ID, postEntity)
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.company.name", is(ACCOUNT_NEW_COMPANY_NAME)))
+                .andExpect(jsonPath("$.company.url", is(ACCOUNT_NEW_COMPANY_URL)));
     }
 
     @Test
@@ -191,5 +239,22 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", containsString("GET operation. Component type [User]")));
+    }
+
+    private ResultActions executePutRequest(String accountId, AccountDTO postEntity) throws Exception {
+        // Execute the PUT request
+        return mockMvc.perform(put(getResourceURI() + "/{id}", accountId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + accountId))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(accountId)));
     }
 }

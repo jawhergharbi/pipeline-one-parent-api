@@ -9,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,17 +32,6 @@ interface UpdateClientFunction<T, S, R> {
 public class ClientController {
 
     private final ClientService service;
-
-    @RequestMapping(
-            value = "/{id}",
-            method = RequestMethod.PUT,
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> update(
-            @RequestBody ClientBasicDTO client,
-            @NotNull @PathVariable("id") Long id) throws ResourceNotFoundException {
-        return updateResponse(getUpdate(), id, client);
-    }
 
     @RequestMapping(
             value = "/{id}/csm/{userId}",
@@ -71,16 +63,6 @@ public class ClientController {
                         ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION, id));
     }
 
-    private ResponseEntity<?> updateResponse(
-            UpdateClientFunction<Long, ClientBasicDTO, Optional<ClientBasicDTO>> update,
-            Long id,
-            ClientBasicDTO clientDTO) throws ResourceNotFoundException {
-        return update.apply(id, clientDTO)
-                .map(this::buildUpdateResponse)
-                .orElseThrow(() -> newClientResourceNotFoundException(
-                        ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION, id));
-    }
-
     private ResponseEntity<?> buildUpdateResponse(ClientBasicDTO updatedClient) {
         try {
             return ResponseEntity
@@ -104,9 +86,5 @@ public class ClientController {
 
     private UpdateClientFunction<Long, String, Optional<ClientBasicDTO>> getUpdateCSM() {
         return service::updateCSM;
-    }
-
-    private UpdateClientFunction<Long, ClientBasicDTO, Optional<ClientBasicDTO>> getUpdate() {
-        return service::update;
     }
 }

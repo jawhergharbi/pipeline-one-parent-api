@@ -196,14 +196,6 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public CompanyDTO newCompanyDTO(String id, String name, String url) {
-        LocalDateTime created = LocalDateTime.of(2020, 1, 1, 1, 30);
-        LocalDateTime updated = LocalDateTime.of(2020, 12, 1, 1, 30);
-        CompanyDTO company = newCompanyDTO(id, name, url, created);
-        company.setUpdated(updated);
-        return company;
-    }
-
     public CompanyDTO newCompanyDTO(LocalDateTime dateTime) {
         return newCompanyDTO(FAKER.internet().uuid(), FAKER.company().name(), FAKER.company().url(), dateTime);
     }
@@ -225,14 +217,6 @@ public class MockFactory {
                 .url(FAKER.company().url())
                 .updated(dateTime)
                 .created(dateTime)
-                .build();
-    }
-
-    public CompanyOld newCompanyEntity(Long id, String name, String url) {
-        return CompanyOld.builder()
-                .id(id)
-                .name(name)
-                .url(url)
                 .build();
     }
 
@@ -306,32 +290,6 @@ public class MockFactory {
         return mockedDTO;
     }
 
-    public ClientBasicDTO newClientDTO(String fullName, String linkedInUrl, String companyName, String companyUrl) {
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        mockedDTO.setFullName(fullName);
-        mockedDTO.setLinkedInUrl(linkedInUrl);
-        mockedDTO.setCompany(newCompanyDTO(null, companyName, companyUrl));
-        mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedDTO.setEmail(FAKER.internet().emailAddress());
-        mockedDTO.setPosition(FAKER.company().profession());
-        return mockedDTO;
-    }
-
-    public ClientBasicDTO newClientDTO(Long id) {
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
-        mockedDTO.setId(id);
-        mockedDTO.setFullName(FAKER.name().fullName());
-        mockedDTO.setLinkedInUrl(FAKER.internet().url());
-        mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedDTO.setEmail(FAKER.internet().emailAddress());
-        mockedDTO.setPosition(FAKER.company().profession());
-        mockedDTO.setCompany(newCompanyDTO(FAKER.internet().uuid(), FAKER.company().name(), FAKER.company().url(), dateTime));
-        mockedDTO.setUpdated(dateTime);
-        mockedDTO.setCreated(dateTime);
-        return mockedDTO;
-    }
-
     public ClientBasicDTO newClientDTO(Long id, String fullName, String linkedInUrl, String companyName, String companyUrl) {
         ClientBasicDTO mockedDTO = new ClientBasicDTO();
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
@@ -344,23 +302,6 @@ public class MockFactory {
         mockedDTO.setCompany(newCompanyDTO(FAKER.internet().uuid(), companyName, companyUrl, dateTime));
         mockedDTO.setUpdated(dateTime);
         mockedDTO.setCreated(dateTime);
-        return mockedDTO;
-    }
-
-    public ClientBasicDTO newClientMainDTO(Long id, String fullName, String linkedInUrl, boolean addCompany) {
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
-        mockedDTO.setId(id);
-        mockedDTO.setFullName(fullName);
-        mockedDTO.setLinkedInUrl(linkedInUrl);
-        mockedDTO.setEmail(FAKER.internet().emailAddress());
-        mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedDTO.setPosition(FAKER.company().profession());
-        if (addCompany) {
-            mockedDTO.setCompany(newCompanyDTO(dateTime));
-        }
-        mockedDTO.setCreated(dateTime);
-        mockedDTO.setUpdated(dateTime);
         return mockedDTO;
     }
 

@@ -10,4 +10,6 @@ public interface AccountService extends BaseService<AccountDTO> {
 
     List<AccountDTO> findAllByUser(String userId) throws ResourceNotFoundException;
 
+    AccountDTO updateUser(String id, String userId) throws ResourceNotFoundException;
+
 }

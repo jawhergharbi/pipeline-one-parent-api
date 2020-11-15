@@ -69,13 +69,13 @@ public class AccountController {
         return delegator.findByUserId(userId);
     }
 
-    /*@RequestMapping(
-            value = "/{id}/mng/{userId}",
+    @RequestMapping(
+            value = "/{id}/user/{userId}",
             method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> updateCSM(
             @PathVariable("id") String id,
             @PathVariable("userId") String userId) {
-        return updateResponse(getUpdateCSM(), id, userId);
-    }*/
+        return delegator.updateUser(id, userId);
+    }
 }

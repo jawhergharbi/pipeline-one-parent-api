@@ -78,22 +78,6 @@ public class ClientServiceImpl implements ClientService {
         return null;
     }
 
-    private void processCompanyData(ClientBasicDTO client, LocalDateTime datetime) {
-        // Create company entry
-        if (client.getCompany() != null) {
-            companyService
-                    .findByName(client.getCompany().getName())
-                    .ifPresentOrElse(client::setCompany, () -> {
-                        client.getCompany().setUpdated(datetime);
-                        client.getCompany().setCreated(datetime);
-
-                        log.debug("Company found. Client [{}] is going ot be assign to company name [{}]",
-                                client.getFullName(),
-                                client.getCompany().getName());
-                    });
-        }
-    }
-
     private void validateClientUpdate(ClientBasicDTO clientUpdate, Client clientToBeUpdated) throws ClientException {
 
         // Customer Success Manager must have that role
