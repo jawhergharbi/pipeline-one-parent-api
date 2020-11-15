@@ -65,7 +65,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("GET /api/resource/{id}: resource found - Success")
-    void getByIdWhenResourceFoundReturnsSuccess() throws Exception {
+    protected void getByIdWhenResourceFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
         D mockedEntity = getMockFactory().newDTO(COMPONENT_ID);
@@ -98,7 +98,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("GET /api/resource/{id}: resource not found - Failure")
-    void getByIdWhenResourceNotFoundReturnsResourceNoFoundException() throws Exception {
+    protected void getByIdWhenResourceNotFoundReturnsResourceNoFoundException() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
 
@@ -129,7 +129,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("GET /api/resource: no resources found - Success")
-    void findAllWhenNoResourcesFoundReturnsSuccess() throws Exception {
+    protected void findAllWhenNoResourcesFoundReturnsSuccess() throws Exception {
 
         // Setup the mock service
         doReturn(Collections.EMPTY_LIST).when(service).findAll();
@@ -148,7 +148,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("GET /api/resource: resources found - Success")
-    void findAllWhenResourcesFoundReturnsSuccess() throws Exception {
+    protected void findAllWhenResourcesFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         List<String> ids = new ArrayList<>();
         int listSize = 3;
@@ -177,7 +177,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("DELETE /api/resource/{id}: resource not found - Failure")
-    void deleteWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
+    protected void deleteWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
 
@@ -212,7 +212,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("DELETE /api/resource/{id}: delete resource found - Success")
-    void deleteWhenResourceFoundReturnsSuccess() throws Exception {
+    protected void deleteWhenResourceFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
         D mockedEntity = getMockFactory().newDTO(COMPONENT_ID);
@@ -244,10 +244,9 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("POST /api/resource: resource already exists - Failure")
-    void createWhenResourceAlreadyExistsReturnsFailure() throws Exception {
+    protected void createWhenResourceAlreadyExistsReturnsFailure() throws Exception {
         // Setup the mocked entities
-        String COMPONENT_ID = getMockFactory().getComponentId();
-        D postEntity = getMockFactory().newDTO(COMPONENT_ID);
+        D postEntity = getMockFactory().newDTO(null);
 
         CommonServiceException exception = new CommonServiceException(
                 ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
@@ -277,7 +276,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("POST /api/resource: resource create - Success")
-    void createWhenResourceCreateReturnsSuccess() throws Exception {
+    protected void createWhenResourceCreateReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
         D postEntity = getMockFactory().newDTO(null);
@@ -305,7 +304,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     @Test
     @DisplayName("PUT /api/resource/{id}: resource not found - Failure")
-    void updateWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
+    protected void updateWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
         // Setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
         D postEntity = getMockFactory().newDTO(COMPONENT_ID);

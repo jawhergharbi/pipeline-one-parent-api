@@ -46,10 +46,10 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         log.debug("Creating new entity type: [{}]", entityType);
 
         entityExists(dto)
-                .ifPresent((company) -> {
+                .ifPresent((entity) -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                            new String[]{ entityType, dto.toString()});
+                            new String[]{ getEntityType(), dto.toString()});
                 });
         M entity = mapper.getMapperIn().getDestination(dto);
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);

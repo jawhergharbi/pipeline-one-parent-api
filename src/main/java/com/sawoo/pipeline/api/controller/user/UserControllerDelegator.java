@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.user;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
+import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
@@ -47,7 +48,18 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
         if (dto.getPassword().equals(dto.getConfirmPassword())) {
             return Optional
                     .ofNullable( getService().create(dto) )
-                    .map(usr -> ResponseEntity.status(HttpStatus.CREATED).body(usr))
+                    .map(usr -> {
+                        try {
+                            return ResponseEntity
+                                    .ok()
+                                    .location(new URI(ControllerConstants.USER_CONTROLLER_API_BASE_URI + "/" + getComponentId(usr)))
+                                    .body(usr);
+                        } catch (URISyntaxException exc) {
+                            throw new CommonServiceException(
+                                    ExceptionMessageConstants.COMMON_INTERNAL_SERVER_ERROR_EXCEPTION,
+                                    new Object[]{getClass().getSimpleName(), "create", exc.getMessage()});
+                        }
+                    })
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } else {
             throw new AuthException(
@@ -74,7 +86,7 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
         UserAuthDTO updatedUser = getService().update(user);
         try {
             return ResponseEntity
-                    .ok()
+                    .status(HttpStatus.CREATED)
                     .location(new URI(ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI + "/" + updatedUser.getId()))
                     .body(updatedUser);
         } catch (URISyntaxException exc) {
