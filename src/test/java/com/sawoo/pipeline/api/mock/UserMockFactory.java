@@ -76,10 +76,14 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
     }
 
     public UserAuthDTO newDTO(String id, String email, String password, String confirmPassword, String[] roles) {
+        return newDTO(id, email, password, confirmPassword, getFAKER().name().fullName(), roles);
+    }
+
+    public UserAuthDTO newDTO(String id, String email, String password, String confirmPassword, String fullName, String[] roles) {
         UserAuthDTO entity = new UserAuthDTO();
         LocalDateTime now = LocalDateTime.now();
         entity.setId(id);
-        entity.setFullName(getFAKER().name().fullName());
+        entity.setFullName(fullName);
         entity.setPassword(password);
         entity.setConfirmPassword(confirmPassword);
         entity.setEmail(email);

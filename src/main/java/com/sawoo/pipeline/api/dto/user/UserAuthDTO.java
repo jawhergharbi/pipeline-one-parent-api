@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -12,10 +13,16 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+/****
+ * Apparently JsonIgnore does not work at property level with lombok
+ * https://github.com/FasterXML/jackson-databind/issues/1226
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@JsonIgnoreProperties(value = {"password", "confirmPassword"}, allowSetters = true)
 public class UserAuthDTO {
 
     @JMap

@@ -51,7 +51,7 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
                     .map(usr -> {
                         try {
                             return ResponseEntity
-                                    .ok()
+                                    .status(HttpStatus.CREATED)
                                     .location(new URI(ControllerConstants.USER_CONTROLLER_API_BASE_URI + "/" + getComponentId(usr)))
                                     .body(usr);
                         } catch (URISyntaxException exc) {
@@ -86,7 +86,7 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
         UserAuthDTO updatedUser = getService().update(user);
         try {
             return ResponseEntity
-                    .status(HttpStatus.CREATED)
+                    .ok()
                     .location(new URI(ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI + "/" + updatedUser.getId()))
                     .body(updatedUser);
         } catch (URISyntaxException exc) {
