@@ -4,7 +4,10 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.With;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

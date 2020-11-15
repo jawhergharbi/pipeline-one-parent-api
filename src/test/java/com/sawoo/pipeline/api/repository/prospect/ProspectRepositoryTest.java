@@ -1,7 +1,10 @@
-package com.sawoo.pipeline.api.repository;
+package com.sawoo.pipeline.api.repository.prospect;
 
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
+import com.sawoo.pipeline.api.repository.CompanyRepository;
+import com.sawoo.pipeline.api.repository.ProspectRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
@@ -23,15 +23,15 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -44,45 +44,6 @@ public class ClientControllerTest extends BaseControllerTestOld {
 
     @MockBean
     private ClientService service;
-
-    @Test
-    @DisplayName("POST /api/clients: client create - Success")
-    void createWhenClientCreatedReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        String CLIENT_COMPANY_NAME = FAKER.company().name();
-        String CLIENT_COMPANY_URL = FAKER.company().url();
-        ClientBasicDTO postEntity = getMockFactory().newClientDTO(CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, CLIENT_COMPANY_NAME, CLIENT_COMPANY_URL);
-
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        ClientBasicDTO mockedEntity = getMockFactory()
-                .newClientDTO(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, CLIENT_COMPANY_NAME, CLIENT_COMPANY_URL);
-
-        // setup the mocked service
-        doReturn(mockedEntity).when(service).create(postEntity);
-
-        // Execute the POST request
-        mockMvc.perform(post("/api/clients/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
-
-                // Validate the response code and the content type
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/api/clients/" + CLIENT_ID))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(CLIENT_ID.intValue())))
-                .andExpect(jsonPath("$.fullName", is(CLIENT_FULL_NAME)))
-                .andExpect(jsonPath("$.linkedInUrl", is(CLIENT_LINKED_IN_URL)))
-                .andExpect(jsonPath("$.company").exists())
-                .andExpect(jsonPath("$.company.name", is(CLIENT_COMPANY_NAME)))
-                .andExpect(jsonPath("$.created").exists())
-                .andExpect(jsonPath("$.updated").exists());
-    }
 
     @Test
     @DisplayName("POST /api/clients: client create full name not informed - Failure")
@@ -152,221 +113,6 @@ public class ClientControllerTest extends BaseControllerTestOld {
                 .andExpect(jsonPath("$.messages", hasSize(1)))
                 .andExpect(jsonPath("$.messages[0]",
                         containsString("Field or param [company] in component [clientBasicDTO] can not be null")));
-    }
-
-    @Test
-    @DisplayName("GET /api/clients/: three clients found - Success")
-    void findAllWhenThereAreThreeClientsReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        List<Long> clientIds = new ArrayList<>();
-        List<ClientBasicDTO> leadList = IntStream.range(0, 3)
-                .mapToObj((lead) -> {
-                    Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    clientIds.add(CLIENT_ID);
-                    return getMockFactory().newClientDTO(CLIENT_ID);
-                }).collect(Collectors.toList());
-
-        // Setup the mock service
-        doReturn(leadList).when(service).findAll();
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/")
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id", is(clientIds.get(0).intValue())));
-    }
-
-    @Test
-    @DisplayName("GET /api/clients/: no clients found - Success")
-    void findAllWhenNoCompaniesFoundReturnsSuccess() throws Exception {
-        // Setup the mock service
-        doReturn(Collections.EMPTY_LIST).when(service).findAll();
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/")
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(0)));
-    }
-
-    @Test
-    @DisplayName("GET /api/leads/main/{datetime} three clients found - Success")
-    void findAllMainWhenThereAreThreeLeadsReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        int listSize = 3;
-        List<Long> clientIds = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        List<ClientBasicDTO> clientList = IntStream.range(0, listSize)
-                .mapToObj((client) -> {
-                    Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    clientIds.add(CLIENT_ID);
-                    String CLIENT_FULL_NAME = FAKER.name().fullName();
-                    String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-                    return getMockFactory().newClientMainDTO(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-                }).collect(Collectors.toList());
-
-        // Setup the mock service
-        doReturn(clientList).when(service).findAllMain(now);
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/main/{datetime}", now)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(listSize)))
-                .andExpect(jsonPath("$[0].id", is(clientIds.get(0).intValue())))
-                .andExpect(jsonPath("$[1].id", is(clientIds.get(1).intValue())));
-    }
-
-    @Test
-    @DisplayName("GET /api/leads/main/{datetime}: no clients found - Success")
-    void findAllMainWhenNoClientsFoundReturnsSuccess() throws Exception {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        // Setup the mock service
-        doReturn(Collections.EMPTY_LIST).when(service).findAllMain(now);
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/main/{datetime}", now)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(0)));
-    }
-
-    @Test
-    @DisplayName("GET /api/leads/{id}: lead found - Success")
-    void getByIdWhenClientFoundReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        String CLIENT_COMPANY_NAME = FAKER.company().name();
-        String CLIENT_COMPANY_URL = FAKER.company().url();
-        ClientBasicDTO mockedDTOEntity =
-                getMockFactory().newClientDTO(
-                        CLIENT_ID,
-                        CLIENT_FULL_NAME,
-                        CLIENT_LINKED_IN_URL,
-                        CLIENT_COMPANY_NAME,
-                        CLIENT_COMPANY_URL);
-
-        // Setup the mock service
-        doReturn(Optional.of(mockedDTOEntity)).when(service).findById(CLIENT_ID);
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/{id}", CLIENT_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(CLIENT_ID.intValue())))
-                .andExpect(jsonPath("$.fullName", is(CLIENT_FULL_NAME)))
-                .andExpect(jsonPath("$.linkedInUrl", is(CLIENT_LINKED_IN_URL)))
-                .andExpect(jsonPath("$.company").exists())
-                .andExpect(jsonPath("$.company.name", is(CLIENT_COMPANY_NAME)))
-                .andExpect(jsonPath("$.company.url", is(CLIENT_COMPANY_URL)));
-    }
-
-    @Test
-    @DisplayName("GET /api/clients/{id}: client not found - Failure")
-    void getByIdWhenClientNotFoundReturnsResourceNotFoundException() throws Exception {
-        // Setup the mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-
-        ResourceNotFoundException exception = new ResourceNotFoundException(
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{"Client", String.valueOf(CLIENT_ID)});
-
-        // setup the mocked service
-        doThrow(exception)
-                .when(service).findById(CLIENT_ID);
-
-        // Execute the GET request
-        mockMvc.perform(get("/api/clients/{id}", CLIENT_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath(
-                        "$.message",
-                        Matchers.containsString(String.format("GET operation. Component type [Client] and id [%s] was not found", CLIENT_ID))));
-    }
-
-    @Test
-    @DisplayName("DELETE /api/clients/{id}: delete client found - Success")
-    void deleteWhenClientFoundReturnsSuccess() throws Exception {
-        // Setup the mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        ClientBasicDTO mockedDTOEntity = getMockFactory().newClientDTO(
-                CLIENT_ID,
-                CLIENT_FULL_NAME,
-                CLIENT_LINKED_IN_URL, true);
-
-        // Setup the mock service
-        doReturn(Optional.of(mockedDTOEntity)).when(service).delete(CLIENT_ID);
-
-        // Execute the GET request
-        mockMvc.perform(delete("/api/clients/{id}", CLIENT_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(CLIENT_ID.intValue())))
-                .andExpect(jsonPath("$.fullName", is(CLIENT_FULL_NAME)))
-                .andExpect(jsonPath("$.linkedInUrl", is(CLIENT_LINKED_IN_URL)));
-    }
-
-    @Test
-    @DisplayName("DELETE /api/clients/{id}: client not found - Failure")
-    void deleteWhenClientNotFoundReturnsResourceNotFoundException() throws Exception {
-        // Setup the mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-
-        // setup the mocked service
-        doReturn(Optional.empty()).when(service).delete(CLIENT_ID);
-
-        // Execute the DELETE request
-        mockMvc.perform(delete("/api/clients/{id}", CLIENT_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-
-                // Validate the response code and the content type
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath(
-                        "$.message",
-                        Matchers.containsString(String.format("DELETE operation. Component type [Client] and id [%s] was not found", CLIENT_ID))));
     }
 
     @Test

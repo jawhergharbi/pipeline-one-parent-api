@@ -1,29 +1,22 @@
 package com.sawoo.pipeline.api.service;
 
 import com.googlecode.jmapper.api.enums.MappingType;
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
-import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
-import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import com.sawoo.pipeline.api.service.company.CompanyService;
-import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,93 +26,6 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepositoryWrapper repository;
     private final CommonServiceMapper mapper;
     private final CompanyService companyService;
-    private final UserAuthService userService;
-
-    @Override
-    public ClientBasicDTO create(ClientBasicDTO client) throws CommonServiceException {
-        log.debug("Creating new client. Name: [{}]", client.getFullName());
-
-        repository
-                .findByLinkedInUrl(client.getLinkedInUrl())
-                .ifPresent((clientItem) -> {
-                    throw new CommonServiceException(
-                            ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                            new String[]{"Client", clientItem.getLinkedInUrl()});
-                });
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-
-        // Process company info
-        processCompanyData(client, now);
-
-        // Process client status
-        if (client.getStatus() == null) {
-            client.setStatus(StatusDTO
-                    .builder()
-                    .value(DomainConstants.ClientStatus.ON_BOARDING.ordinal())
-                    .updated(now)
-                    .build());
-        }
-
-        Client entity = mapper.getClientDTOToDomainMapper().getDestination(client);
-        entity.setCreated(now);
-        entity.setUpdated(now);
-        entity = repository.save(entity);
-
-        log.debug("Client has been successfully created. Entity: [{}]", entity);
-
-        return mapper.getClientDomainToDTOBasicMapper().getDestination(entity);
-    }
-
-    @Override
-    public Optional<ClientBasicDTO> findById(Long id) throws ResourceNotFoundException {
-        log.debug("Retrieving client by id. Id: [{}]", id);
-
-        return repository
-                .findById(id)
-                .map(mapper.getClientDomainToDTOBasicMapper()::getDestination)
-                .or(() -> {
-                    log.debug("Client id [{}] not found", id);
-                    return Optional.empty();
-                });
-    }
-
-    @Override
-    public List<ClientBasicDTO> findAll() {
-        log.debug("Retrieving all client entities");
-        List<ClientBasicDTO> leads = repository.findAll().stream()
-                .map(mapper.getClientDomainToDTOBasicMapper()::getDestination)
-                .collect(Collectors.toList());
-        log.debug("[{}] client/s has/have been found", leads.size());
-        return leads;
-    }
-
-    @Override
-    public List<ClientBasicDTO> findAllMain(LocalDateTime datetime) {
-        log.debug("Retrieve all client entities together with their next interaction. Date time: [{}]", datetime);
-
-        List<ClientBasicDTO> clients = repository.findAll().stream()
-                .map((client) -> mapper.getClientDomainToDTOBasicMapper().getDestination(client))
-                .collect(Collectors.toList());
-        log.debug("[{}] clients has been found", clients.size());
-        return clients;
-    }
-
-    @Override
-    public Optional<ClientBasicDTO> delete(Long id) {
-        log.debug("Deleting client entity with id: [{}]", id);
-
-        return repository
-                .findById(id)
-                .map((company) -> {
-                    repository.delete(company);
-                    log.debug("Client entity with id: [{}] has been deleted", id);
-                    return Optional.of(mapper.getClientDomainToDTOBasicMapper().getDestination(company));
-                })
-                .orElseGet(() -> {
-                    log.info("Client entity with id: [{}] does not exist", id);
-                    return Optional.empty();
-                });
-    }
 
     @Override
     public Optional<ClientBasicDTO> update(Long id, ClientBasicDTO clientDTO) throws ClientException {

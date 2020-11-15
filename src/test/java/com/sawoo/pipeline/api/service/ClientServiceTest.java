@@ -5,32 +5,20 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
-import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.DataStoreConstants;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
-import com.sawoo.pipeline.api.service.company.CompanyService;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -49,197 +37,7 @@ public class ClientServiceTest extends BaseServiceTestOld {
     private ClientRepository repository;
 
     @SpyBean
-    private CompanyService companyService;
-
-    @SpyBean
     private UserAuthService userService;
-
-    @Test
-    @DisplayName("Client Service: create when client does not exist - Success")
-    void createWhenClientDoesNotExistReturnsSuccess() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        String COMPANY_NAME = FAKER.company().name();
-        String COMPANY_URL = FAKER.company().url();
-
-        ClientBasicDTO mockedDTO = getMockFactory().newClientDTO(null, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedDTO.setCompany(CompanyDTO
-                .builder()
-                .name(COMPANY_NAME)
-                .url(COMPANY_URL).build());
-        ClientBasicDTO spyDTO = spy(mockedDTO);
-
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
-        doReturn(mockedEntity).when(repository).save(any());
-        doReturn(Optional.empty()).when(companyService).findByName(COMPANY_NAME);
-
-        // Execute the service call
-        ClientBasicDTO returnedEntity = service.create(spyDTO);
-
-        // Assert the response
-        Assertions.assertNotNull(returnedEntity, String.format("Client entity with LinkedInUrl [%s] was found already in the system", CLIENT_LINKED_IN_URL));
-        Assertions.assertEquals(CLIENT_FULL_NAME, returnedEntity.getFullName(), "Client.fullName should be the same");
-
-        verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findByLinkedInUrl(any());
-
-        ArgumentCaptor<String> companyNameCaptor = ArgumentCaptor.forClass(String.class);
-        verify(companyService, times(1)).findByName(any());
-        verify(companyService).findByName(companyNameCaptor.capture());
-        Assertions.assertEquals(companyNameCaptor.getValue(), COMPANY_NAME, String.format("Company name to be verified must be: [%s]", COMPANY_NAME));
-
-        verify(spyDTO, times(1)).setStatus(any());
-        verify(spyDTO, never()).setCompany(any());
-    }
-
-    @Test
-    @DisplayName("Client Service: create when client does not exist but company exists - Success")
-    void createWhenClientDoesNotExistAndCompanyDoesExistReturnsSuccess() {
-        // Set up mocked entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        String COMPANY_NAME = FAKER.company().name();
-        String COMPANY_URL = FAKER.company().url();
-
-        ClientBasicDTO mockedDTO = getMockFactory().newClientDTO(null, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedDTO.setCompany(CompanyDTO
-                .builder()
-                .name(COMPANY_NAME)
-                .url(COMPANY_URL).build());
-        ClientBasicDTO spyDTO = spy(mockedDTO);
-
-        String EXISTING_COMPANY_ID = FAKER.internet().uuid();
-        LocalDateTime EXISTING_COMPANY_DATETIME = LocalDateTime.of(2020, 12, 31, 12, 0);
-        CompanyDTO existingCompanyDTO = getMockFactory().newCompanyDTO(EXISTING_COMPANY_ID, COMPANY_NAME, COMPANY_URL, EXISTING_COMPANY_DATETIME);
-
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, false);
-        mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.number().randomNumber(), COMPANY_NAME, COMPANY_URL));
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
-        doReturn(mockedEntity).when(repository).save(any());
-        doReturn(Optional.of(existingCompanyDTO)).when(companyService).findByName(COMPANY_NAME);
-
-
-        // Execute the service call
-        ClientBasicDTO returnedEntity = service.create(spyDTO);
-
-        // Assert the response
-        Assertions.assertNotNull(returnedEntity, String.format("Client entity with LinkedInUrl [%s] was found already in the system", CLIENT_LINKED_IN_URL));
-        Assertions.assertEquals(CLIENT_FULL_NAME, returnedEntity.getFullName(), "Client.fullName should be the same");
-
-        verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findByLinkedInUrl(CLIENT_LINKED_IN_URL);
-
-        ArgumentCaptor<String> companyNameCaptor = ArgumentCaptor.forClass(String.class);
-        verify(companyService, times(1)).findByName(any());
-        verify(companyService).findByName(companyNameCaptor.capture());
-        Assertions.assertEquals(companyNameCaptor.getValue(), COMPANY_NAME, String.format("Company name to be verified must be: [%s]", COMPANY_NAME));
-
-        verify(spyDTO, times(1)).setStatus(any());
-        verify(spyDTO, times(1)).setCompany(any());
-    }
-
-    @Test
-    @DisplayName("Client Service: findById - Success")
-    void findByIdWhenClientExitsAndContainsLeadsReturnsSuccess() {
-        // Set up mock entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String LEAD_FIRST_NAME = FAKER.name().firstName();
-        String LEAD_LAST_NAME = FAKER.name().firstName();
-        String LEAD_LINKED_IN_URL = FAKER.internet().url();
-        String LEAD_LINKED_IN_THREAD_URL = FAKER.internet().url();
-        Lead leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_THREAD_URL, true);
-        mockedEntity.getLeads().add(leadMockedEntity);
-
-        // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findById(CLIENT_ID);
-
-        // Execute the service call
-        Optional<ClientBasicDTO> returnedEntity = service.findById(CLIENT_ID);
-
-        // Assert the response
-        Assertions.assertTrue(returnedEntity.isPresent(), "Client entity with id " + CLIENT_ID + " was not found");
-        Assertions.assertEquals(CLIENT_ID, returnedEntity.get().getId(), "Client.id should be the same");
-        Assertions.assertEquals(1, returnedEntity.get().getLeadsSize(), String.format("Client must have %d leads", 1));
-
-        verify(repository, times(1)).findById(CLIENT_ID);
-    }
-
-    @Test
-    @DisplayName("Client service: findAllMain - Success")
-    void findAllMainWhenThereAreTwoClientsAndNoLeadsReturnsSuccess() {
-        // Set up mock entities
-        int listSize = 2;
-        List<Client> leadList = IntStream.range(0, listSize)
-                .mapToObj((lead) -> {
-                    Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    String CLIENT_FULL_NAME = FAKER.name().fullName();
-                    String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-                    return getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-                }).collect(Collectors.toList());
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-
-        // Set up the mocked repository
-        doReturn(leadList).when(repository).findAll();
-
-        // Execute the service call
-        List<ClientBasicDTO> returnedList = service.findAllMain(now);
-
-        Assertions.assertEquals(listSize, returnedList.size(), String.format("Returned list size must be [%d]", listSize));
-
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Client service: findAllMain when multiple leads and all have future interactions - Success")
-    void findAllMainWhenThereIsOneClientWithMultipleLeadsAndNextFoundReturnsSuccess() {
-        // Set up mock entities
-        Long CLIENT_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        String CLIENT_FULL_NAME = FAKER.name().fullName();
-        String CLIENT_LINKED_IN_URL = FAKER.internet().url();
-        Client clientEntity = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-
-        int leadListSize = 3;
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        List<Lead> leadList = IntStream.range(0, leadListSize)
-                .mapToObj((lead) -> {
-                    Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    Lead leadEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
-                    Long LEAD_INTERACTION_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-                    String LEAD_INTERACTION_INVITE = FAKER.internet().url();
-                    LeadInteraction leadInteraction = newLeadInteractionEntity(LEAD_ID, LEAD_INTERACTION_ID, 0, 0, LEAD_INTERACTION_INVITE);
-                    leadInteraction.setScheduled(now
-                            .plusDays(FAKER.number().numberBetween(1, 30))
-                            .minusHours(FAKER.number().numberBetween(1, 10)));
-                    leadEntity.getInteractions().add(leadInteraction);
-                    return leadEntity;
-                }).collect(Collectors.toList());
-        clientEntity.getLeads().addAll(leadList);
-
-        // Set up the mocked repository
-        doReturn(Collections.singletonList(clientEntity)).when(repository).findAll();
-
-        // Execute the service call
-        List<ClientBasicDTO> returnedList = service.findAllMain(now);
-
-        Assertions.assertEquals(1, returnedList.size(), String.format("Returned list size must be [%d]", 1));
-        Assertions.assertEquals(leadListSize, returnedList.get(0).getLeadsSize(), String.format("Returned list size must be [%d]", leadListSize));
-
-        verify(repository, times(1)).findAll();
-    }
 
     @Test
     @DisplayName("Client Service: update CSM when client does exist - Success")
@@ -359,15 +157,6 @@ public class ClientServiceTest extends BaseServiceTestOld {
 
         verify(repository, times(1)).findById(CLIENT_ID);
         verify(userService, times(1)).findById(USER_ID);
-    }
-
-    private LeadInteraction newLeadInteractionEntity(Long leadId, Long id, int status, int type, String urlInvite) {
-        LeadInteraction mockedEntity = new LeadInteraction();
-        mockedEntity.setKey(createKey(leadId, id));
-        mockedEntity.setStatus(status);
-        mockedEntity.setType(type);
-        mockedEntity.setInvite(UrlTitle.builder().url(urlInvite).build());
-        return mockedEntity;
     }
 
     private Key createKey(Long leadId, Long interactionId) {
