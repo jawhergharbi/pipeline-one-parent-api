@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.mock;
 
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.User;
 import org.springframework.stereotype.Component;
 
@@ -96,5 +97,18 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         entity.setCreated(now);
         entity.setUpdated(now);
         return entity;
+    }
+
+    public UserAuthDetails newUserAuthDetails(String email, String password, String id, String role) {
+        UserAuthDetails mockUserAuth = new UserAuthDetails();
+        LocalDateTime now = LocalDateTime.now();
+        mockUserAuth.setId(id);
+        mockUserAuth.setEmail(email);
+        mockUserAuth.setPassword(password);
+        mockUserAuth.setActive(true);
+        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
+        mockUserAuth.setCreated(now);
+        mockUserAuth.setUpdated(now);
+        return mockUserAuth;
     }
 }

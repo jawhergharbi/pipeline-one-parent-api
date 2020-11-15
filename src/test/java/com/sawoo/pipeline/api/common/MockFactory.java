@@ -9,7 +9,6 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.Company;
 import com.sawoo.pipeline.api.model.CompanyOld;
@@ -366,52 +365,6 @@ public class MockFactory {
         mockedDTO.setCreated(dateTime);
         mockedDTO.setUpdated(dateTime);
         return mockedDTO;
-    }
-
-    public UserAuthDTO newUserAuthRegister(String email, String password, String confirmPassword, String fullName) {
-        UserAuthDTO mockUserAuth = new UserAuthDTO();
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setPassword(password);
-        mockUserAuth.setConfirmPassword(confirmPassword);
-        mockUserAuth.setFullName(fullName);
-        return mockUserAuth;
-    }
-
-    public UserAuthDTO newUserAuthDTO(String email, String role) {
-        UserAuthDTO mockUserAuth = new UserAuthDTO();
-        LocalDateTime now = LocalDateTime.now();
-        mockUserAuth.setId(UUID.randomUUID().toString());
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setActive(true);
-        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
-        mockUserAuth.setCreated(now);
-        mockUserAuth.setUpdated(now);
-        return mockUserAuth;
-    }
-
-    public UserAuthDTO newUserAuthDTO(String id, String email, String role) {
-        UserAuthDTO mockUserAuth = new UserAuthDTO();
-        LocalDateTime now = LocalDateTime.now();
-        mockUserAuth.setId(id);
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setActive(true);
-        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
-        mockUserAuth.setCreated(now);
-        mockUserAuth.setUpdated(now);
-        return mockUserAuth;
-    }
-
-    public UserAuthDetails newUserAuthDetails(String email, String password, String id, String role) {
-        UserAuthDetails mockUserAuth = new UserAuthDetails();
-        LocalDateTime now = LocalDateTime.now();
-        mockUserAuth.setId(id);
-        mockUserAuth.setEmail(email);
-        mockUserAuth.setPassword(password);
-        mockUserAuth.setActive(true);
-        mockUserAuth.setRoles(new HashSet<>(Collections.singletonList(role)));
-        mockUserAuth.setCreated(now);
-        mockUserAuth.setUpdated(now);
-        return mockUserAuth;
     }
 
     public UserOld newUserEntity(String componentId, String fullName, String[] roles) {
