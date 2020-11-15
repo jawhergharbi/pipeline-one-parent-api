@@ -22,6 +22,17 @@ public enum Role {
 
     public static Role getDefaultRole(Set<String> roles) {
         Role defaultRole = USER;
+        if (roles != null) {
+            if (roles.contains(ADMIN.name())) {
+                return ADMIN;
+            } else if (roles.contains(MNG.name())) {
+                return MNG;
+            } else if (roles.contains(AST.name())) {
+                return AST;
+            } else if (roles.contains(CLIENT.name())) {
+                return CLIENT;
+            }
+        }
         return defaultRole;
     }
 }
