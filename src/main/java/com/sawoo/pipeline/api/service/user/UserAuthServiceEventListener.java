@@ -18,7 +18,7 @@ public class UserAuthServiceEventListener implements BaseServiceEventListener<Us
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void onBeforeCreate(UserAuthDTO dto, User entity) {
+    public void onBeforeInsert(UserAuthDTO dto, User entity) {
         if (entity != null) {
             // password
             entity.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -31,6 +31,11 @@ public class UserAuthServiceEventListener implements BaseServiceEventListener<Us
                 entity.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
             }
         }
+    }
+
+    @Override
+    public void onBeforeSave(UserAuthDTO dto, User entity) {
+        // nothing
     }
 
     @Override

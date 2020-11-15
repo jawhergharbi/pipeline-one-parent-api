@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Validated
-public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepository> implements UserAuthService {
+public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, UserRepository, UserAuthMapper> implements UserAuthService {
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;

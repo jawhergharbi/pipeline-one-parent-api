@@ -21,21 +21,21 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 @Getter
-public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRepository<M, String>> implements BaseService<D> {
+public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRepository<M, String>, OM extends BaseMapper<D, M>> implements BaseService<D> {
 
-    private BaseMapper<D, M> mapper;
+    private OM mapper;
     private R repository;
     private String entityType;
     private BaseServiceEventListener<D, M> eventListener;
 
-    public BaseServiceImpl(R repository, BaseMapper<D, M> mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
+    public BaseServiceImpl(R repository, OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
         this.eventListener = eventListener;
     }
 
-    public BaseServiceImpl(R repository, BaseMapper<D, M> mapper, String entityType) {
+    public BaseServiceImpl(R repository,OM mapper, String entityType) {
         this(repository, mapper, entityType, null);
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         entity.setCreated(now);
         entity.setUpdated(now);
         if (eventListener != null) {
-            eventListener.onBeforeCreate(dto, entity);
+            eventListener.onBeforeInsert(dto, entity);
         }
         entity = repository.insert(entity);
 
@@ -116,6 +116,9 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         return getRepository()
                 .findById(id)
                 .map((entity) -> {
+                    if (eventListener != null) {
+                        eventListener.onBeforeUpdate(dto, entity);
+                    }
                     entity = getMapper().getMapperIn()
                             .getDestination(
                                     entity,
@@ -124,7 +127,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                                     MappingType.ONLY_VALUED_FIELDS);
                     entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     if (eventListener != null) {
-                        eventListener.onBeforeUpdate(dto, entity);
+                        eventListener.onBeforeSave(dto, entity);
                     }
                     getRepository().save(entity);
 

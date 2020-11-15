@@ -1,5 +1,7 @@
 package com.sawoo.pipeline.api.common.contants;
 
+import java.util.Set;
+
 public enum Role {
 
     USER(0),
@@ -16,5 +18,10 @@ public enum Role {
 
     public int getRoleValue() {
         return roleValue;
+    }
+
+    public static Role getDefaultRole(Set<String> roles) {
+        Role defaultRole = USER;
+        return defaultRole;
     }
 }

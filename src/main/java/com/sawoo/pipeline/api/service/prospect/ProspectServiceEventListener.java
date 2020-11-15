@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProspectServiceEventListener implements BaseServiceEventListener<ProspectDTO, Prospect> {
+
     @Override
-    public void onBeforeCreate(ProspectDTO dto, Prospect entity) {
+    public void onBeforeInsert(ProspectDTO dto, Prospect entity) {
         if (entity != null) {
             // Prospect salutation
             if (entity.getSalutation() == null) {
@@ -22,7 +23,7 @@ public class ProspectServiceEventListener implements BaseServiceEventListener<Pr
     }
 
     @Override
-    public void onBeforeUpdate(ProspectDTO dto, Prospect entity) {
+    public void onBeforeSave(ProspectDTO dto, Prospect entity) {
         if (entity != null) {
             // Consolidate firstName and lastName
             if (dto.getFirstName() != null || dto.getLastName() != null) {
@@ -31,5 +32,10 @@ public class ProspectServiceEventListener implements BaseServiceEventListener<Pr
                 entity.setFullName(String.join(" ", firstName, lastName));
             }
         }
+    }
+
+    @Override
+    public void onBeforeUpdate(ProspectDTO dto, Prospect entity) {
+        // nothing to do atm
     }
 }

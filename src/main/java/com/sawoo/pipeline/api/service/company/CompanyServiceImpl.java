@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 @Validated
-public class CompanyServiceImpl extends BaseServiceImpl<CompanyDTO, Company, CompanyRepository> implements CompanyService {
+public class CompanyServiceImpl extends BaseServiceImpl<CompanyDTO, Company, CompanyRepository, CompanyMapper> implements CompanyService {
 
     @Autowired
     public CompanyServiceImpl(CompanyRepository repository, CompanyMapper mapper) {

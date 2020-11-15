@@ -16,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Validated
-public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, ProspectRepository> implements ProspectService {
+public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, ProspectRepository, ProspectMapper> implements ProspectService {
 
     @Autowired
     public ProspectServiceImpl(ProspectRepository repository, ProspectMapper mapper, ProspectServiceEventListener eventListener) {

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Validated
-public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, AccountRepository> implements AccountService {
+public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, AccountRepository, AccountMapper> implements AccountService {
 
     private final UserRepository userRepository;
 
@@ -71,6 +71,15 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
 
     @Override
     public AccountDTO updateUser(String id, String userId) throws ResourceNotFoundException {
-        return null;
+        return userRepository
+                .findById(userId)
+                .map((user) -> {
+                    AccountDTO accountToBeUpdated = new AccountDTO();
+                    accountToBeUpdated.getUsers().add(getMapper().getUserMapperOut().getDestination(user));
+                    return update(id, accountToBeUpdated);
+                }).orElseThrow(() -> new ResourceNotFoundException(
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        new String[]{ "User", userId })
+                );
     }
 }
