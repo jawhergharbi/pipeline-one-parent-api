@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -81,7 +81,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
         String COMPANY_URL = FAKER.company().url();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        LeadDTO mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+        LeadDTOOld mockedDTO = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedDTO.setCompany(CompanyDTO
                 .builder()
                 .name(COMPANY_NAME)
@@ -103,7 +103,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
 
 
         // Execute the service call
-        LeadDTO returnedEntity = service.create(mockedDTO, ProspectType.LEAD.getType());
+        LeadDTOOld returnedEntity = service.create(mockedDTO, ProspectType.LEAD.getType());
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -129,7 +129,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
         String LEAD_LAST_NAME = FAKER.name().lastName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_CHAT_URL = FAKER.internet().url();
-        LeadDTO mockedDTO = new LeadDTO();
+        LeadDTOOld mockedDTO = new LeadDTOOld();
         LeadOld mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_CHAT_URL, true);
 
         // Set up the mocked repository

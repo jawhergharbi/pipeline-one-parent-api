@@ -5,7 +5,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.CompanyOld;
@@ -22,8 +22,8 @@ public class MockFactory {
 
     final Faker FAKER = Faker.instance();
 
-    public LeadDTO newLeadDTO(String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    public LeadDTOOld newLeadDTO(String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         mockEntityDTO.setFullName(fullName);
         mockEntityDTO.setLinkedInUrl(linkedInUrl);
         mockEntityDTO.setLinkedInThread(linkedInThread);
@@ -40,8 +40,8 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public LeadDTO newLeadDTO(String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    public LeadDTOOld newLeadDTO(String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         mockEntityDTO.setFirstName(firstName);
         mockEntityDTO.setLastName(lastName);
         mockEntityDTO.setFullName(String.join(" ", firstName, lastName));
@@ -60,8 +60,8 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public LeadDTO newLeadDTO(Long leadId, String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    public LeadDTOOld newLeadDTO(Long leadId, String fullName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         mockEntityDTO.setId(leadId);
         mockEntityDTO.setFullName(fullName);
         mockEntityDTO.setLinkedInUrl(linkedInUrl);
@@ -82,8 +82,8 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public LeadDTO newLeadDTO(Long leadId, boolean addCompany) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    public LeadDTOOld newLeadDTO(Long leadId, boolean addCompany) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         mockEntityDTO.setId(leadId);
         mockEntityDTO.setFullName(FAKER.name().fullName());
         mockEntityDTO.setLinkedInUrl(FAKER.internet().url());
@@ -127,8 +127,8 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public LeadDTO newLeadDTO(Long leadId, String fullName, String linkedInUrl, String linkedInThread, CompanyDTO company) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    public LeadDTOOld newLeadDTO(Long leadId, String fullName, String linkedInUrl, String linkedInThread, CompanyDTO company) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         mockEntityDTO.setId(leadId);
         mockEntityDTO.setFullName(fullName);
         mockEntityDTO.setLinkedInUrl(linkedInUrl);

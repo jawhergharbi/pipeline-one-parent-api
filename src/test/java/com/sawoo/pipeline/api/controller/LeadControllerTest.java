@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.service.LeadServiceOld;
@@ -52,7 +52,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_THREAD_URL = FAKER.internet().url();
-        LeadDTO mockedDTOEntity =
+        LeadDTOOld mockedDTOEntity =
                 newMockedDTO(
                         LEAD_ID,
                         LEAD_FULL_NAME,
@@ -110,7 +110,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     void findAllWhenThereAreThreeLeadsReturnsSuccess() throws Exception {
         // Setup the mocked entities
         List<Long> leadIds = new ArrayList<>();
-        List<LeadDTO> leadList = IntStream.range(0, 3)
+        List<LeadDTOOld> leadList = IntStream.range(0, 3)
                 .mapToObj((lead) -> {
                     Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     leadIds.add(LEAD_ID);
@@ -238,7 +238,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_THREAD_URL = FAKER.internet().url();
-        LeadDTO mockedDTOEntity =
+        LeadDTOOld mockedDTOEntity =
                 newMockedDTO(
                         LEAD_ID,
                         LEAD_FULL_NAME,
@@ -293,10 +293,10 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
-        LeadDTO postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
+        LeadDTOOld postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
 
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
-        LeadDTO mockedEntity = newMockedDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
+        LeadDTOOld mockedEntity = newMockedDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
 
         // setup the mocked service
         doReturn(mockedEntity).when(service).create(postEntity, ProspectType.LEAD.getType());
@@ -330,7 +330,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
-        LeadDTO postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
+        LeadDTOOld postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
 
         CommonServiceException exception = new CommonServiceException(
                 ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
@@ -360,7 +360,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     void createWhenInvalidRequestReturnsFailure() throws Exception {
         // Setup the mocked entities
         String LEAD_FULL_NAME = FAKER.name().fullName();
-        LeadDTO postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, null, null, true);
+        LeadDTOOld postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, null, null, true);
 
         // Execute the POST request
         mockMvc.perform(post("/api/leads/")
@@ -382,7 +382,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
-        LeadDTO postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
+        LeadDTOOld postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, true);
         postEntity.getCompany().setName(null);
 
 
@@ -406,7 +406,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_FULL_NAME = FAKER.name().fullName();
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
-        LeadDTO postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
+        LeadDTOOld postEntity = getMockFactory().newLeadDTO(LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
 
         // Execute the POST request
         mockMvc.perform(post("/api/leads/")
@@ -425,7 +425,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     @DisplayName("PUT /api/leads: update lead - Success")
     void updateWhenLeadFoundAndUpdatedReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        LeadDTO postEntity = new LeadDTO();
+        LeadDTOOld postEntity = new LeadDTOOld();
         String NEW_LEAD_FULL_NAME = FAKER.name().fullName();
         postEntity.setFullName(NEW_LEAD_FULL_NAME);
 
@@ -433,7 +433,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        LeadDTO mockedEntity = newMockedDTO(LEAD_ID, NEW_LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
+        LeadDTOOld mockedEntity = newMockedDTO(LEAD_ID, NEW_LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
         mockedEntity.setUpdated(now);
 
         // setup the mocked service
@@ -461,7 +461,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     @DisplayName("PUT /api/leads/{id}: lead not found - Failure")
     void updateWhenLeadNotFoundReturnsFailure() throws Exception {
         // Setup the mocked entities
-        LeadDTO postEntity = new LeadDTO();
+        LeadDTOOld postEntity = new LeadDTOOld();
         String NEW_LEAD_FULL_NAME = FAKER.name().fullName();
         postEntity.setFullName(NEW_LEAD_FULL_NAME);
         Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
@@ -489,7 +489,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     @DisplayName("PUT /api/leads: update lead (company fields) - Success")
     void updateWhenLeadFoundAndUpdatedCompanyFieldReturnsSuccess() throws Exception {
         // Setup the mocked entities
-        LeadDTO postEntity = new LeadDTO();
+        LeadDTOOld postEntity = new LeadDTOOld();
         String NEW_COMPANY_NAME = FAKER.company().name();
         String NEW_COMPANY_URL = FAKER.company().url();
         postEntity.setCompany(CompanyDTO
@@ -503,7 +503,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_THREAD_URL = FAKER.company().url();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        LeadDTO mockedEntity = newMockedDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
+        LeadDTOOld mockedEntity = newMockedDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL);
         mockedEntity.getCompany().setUrl(NEW_COMPANY_URL);
         mockedEntity.getCompany().setName(NEW_COMPANY_NAME);
         mockedEntity.setUpdated(now);
@@ -529,8 +529,8 @@ public class LeadControllerTest extends BaseControllerTestOld {
                 .andExpect(jsonPath("$.company.url", is(NEW_COMPANY_URL)));
     }
 
-    private LeadDTO newMockedDTO(Long id, String fullName, String linkedInUrl, String linkedInThread) {
-        LeadDTO mockEntityDTO = new LeadDTO();
+    private LeadDTOOld newMockedDTO(Long id, String fullName, String linkedInUrl, String linkedInThread) {
+        LeadDTOOld mockEntityDTO = new LeadDTOOld();
         initMockedDTO(id, fullName, linkedInUrl, linkedInThread, mockEntityDTO);
         return mockEntityDTO;
     }
@@ -541,7 +541,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
         return mockEntityDTO;
     }
 
-    private <M extends LeadDTO> void initMockedDTO(Long id, String fullName, String linkedInUrl, String linkedInThread, M mock) {
+    private <M extends LeadDTOOld> void initMockedDTO(Long id, String fullName, String linkedInUrl, String linkedInThread, M mock) {
         LocalDateTime dateTime = LocalDateTime.of(2020, 12, 1, 1, 30);
         mock.setId(id);
         mock.setFullName(fullName);

@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.service.ClientLeadService;
@@ -36,8 +36,8 @@ public class ClientLeadController {
     public ResponseEntity<?> create(
             @PathVariable(value = "id") Long clientId,
             @PathVariable(value = "type", required = false) ProspectType type,
-            @Valid @RequestBody LeadDTO lead) {
-        LeadDTO newEntity = service.create(clientId, lead, type != null ? type.getType() : ProspectType.PROSPECT.getType());
+            @Valid @RequestBody LeadDTOOld lead) {
+        LeadDTOOld newEntity = service.create(clientId, lead, type != null ? type.getType() : ProspectType.PROSPECT.getType());
         try {
             return ResponseEntity
                     .created(new URI("/api/clients/" + clientId + "/leads/" + newEntity.getId()))
@@ -54,7 +54,7 @@ public class ClientLeadController {
     public ResponseEntity<?> add(
             @NotNull @PathVariable("id") Long clientId,
             @NotNull @PathVariable("leadId") Long leadId) {
-        LeadDTO newEntity = service.add(clientId, leadId);
+        LeadDTOOld newEntity = service.add(clientId, leadId);
         try {
             return ResponseEntity
                     .created(new URI("/api/clients/" + clientId + "/leads/" + newEntity.getId()))
@@ -68,7 +68,7 @@ public class ClientLeadController {
             value = "/{id}/leads/{leadId}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadDTO> delete(
+    public ResponseEntity<LeadDTOOld> delete(
             @NotNull @PathVariable("id") Long clientId,
             @NotNull @PathVariable("leadId") Long leadId) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.remove(clientId, leadId));
@@ -78,7 +78,7 @@ public class ClientLeadController {
             value = "/{id}/leads",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadDTO>> getClientAll(
+    public ResponseEntity<List<LeadDTOOld>> getClientAll(
             @NotNull @PathVariable("id") Long clientId) {
         return ResponseEntity.ok().body(service.findAll(clientId));
     }

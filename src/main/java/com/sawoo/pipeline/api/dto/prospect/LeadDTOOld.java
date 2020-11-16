@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LeadDTO extends LeadBaseDTO {
+public class LeadDTOOld extends LeadBaseDTO {
 
     @JMap
     private Integer salutation;

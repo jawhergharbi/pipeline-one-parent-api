@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.lead.LeadStatusList;
@@ -25,7 +25,7 @@ public class LeadServiceUtils {
     private final LeadRepositoryOld repository;
     private final CompanyService companyService;
 
-    public void preProcessLead(LeadDTO lead, LocalDateTime datetime, int type) throws CommonServiceException {
+    public void preProcessLead(LeadDTOOld lead, LocalDateTime datetime, int type) throws CommonServiceException {
         repository
                 .findByLinkedInUrl(lead.getLinkedInUrl())
                 .ifPresent((leadItem) -> {
@@ -62,7 +62,7 @@ public class LeadServiceUtils {
         return repository.findById(leadId);
     }
 
-    private void processCompanyData(LeadDTO lead, LocalDateTime datetime) {
+    private void processCompanyData(LeadDTOOld lead, LocalDateTime datetime) {
         // Create company entry
         if (lead.getCompany() != null) {
             companyService

@@ -19,12 +19,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonServiceMapper {
 
-    private final JMapper<LeadDTO, LeadOld> leadDomainToDTOMapper = new JMapper<>(LeadDTO.class, LeadOld.class);
+    private final JMapper<LeadDTOOld, LeadOld> leadDomainToDTOMapper = new JMapper<>(LeadDTOOld.class, LeadOld.class);
     private final JMapper<LeadBaseDTO, LeadOld> leadDomainToDTOBaseMapper = new JMapper<>(LeadBaseDTO.class, LeadOld.class);
     private final JMapper<LeadMainDTO, LeadOld> leadDomainToDTOMainMapper = new JMapper<>(LeadMainDTO.class, LeadOld.class);
     private final JMapper<LeadReportDataDTO, LeadOld> leadDomainToReportDTOMapper = new JMapper<>(LeadReportDataDTO.class, LeadOld.class);
 
-    private final JMapper<LeadOld, LeadDTO> leadDTOToDomainMapper = new JMapper<>(LeadOld.class, LeadDTO.class);
+    private final JMapper<LeadOld, LeadDTOOld> leadDTOToDomainMapper = new JMapper<>(LeadOld.class, LeadDTOOld.class);
     private final JMapper<LeadInteractionDTO, LeadInteraction> leadInteractionDomainToDTOMapper = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
     private final JMapper<InteractionDTO, LeadInteraction> interactionDomainToDTOMapper = new JMapper<>(InteractionDTO.class, LeadInteraction.class);
 

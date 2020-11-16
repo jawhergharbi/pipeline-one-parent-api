@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
@@ -32,7 +32,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     private final CommonServiceMapper mapper;
 
     @Override
-    public LeadDTO create(Long clientId, LeadDTO lead, int type) throws ResourceNotFoundException, CommonServiceException {
+    public LeadDTOOld create(Long clientId, LeadDTOOld lead, int type) throws ResourceNotFoundException, CommonServiceException {
         log.debug("Creating new prospect for client id: [{}]. Prospect: [{}]", clientId, lead);
 
         Client client = findClientById(clientId);
@@ -68,7 +68,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadDTO add(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTOOld add(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Add lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -99,7 +99,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public LeadDTO remove(Long clientId, Long leadId) throws ResourceNotFoundException {
+    public LeadDTOOld remove(Long clientId, Long leadId) throws ResourceNotFoundException {
         log.debug("Remove lead id [{}] to client id[{}]", leadId, clientId);
 
         Client client = findClientById(clientId);
@@ -126,7 +126,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadDTO> findAll(Long clientId) throws ResourceNotFoundException {
+    public List<LeadDTOOld> findAll(Long clientId) throws ResourceNotFoundException {
         log.debug("Retrieving leads for client id [{}]", clientId);
 
         return findClientById(clientId)
