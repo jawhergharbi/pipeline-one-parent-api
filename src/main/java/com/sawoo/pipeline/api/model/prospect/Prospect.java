@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.model.prospect;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = DataStoreConstants.PROSPECT_DOCUMENT)
+@Document(collection = DBConstants.PROSPECT_DOCUMENT)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 public class Prospect extends BaseEntity {

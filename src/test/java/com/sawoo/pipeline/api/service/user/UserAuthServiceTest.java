@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
@@ -42,7 +42,7 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
 
     @Autowired
     public UserAuthServiceTest(UserMockFactory mockFactory, UserAuthService service) {
-        super(mockFactory, DataStoreConstants.USER_DOCUMENT, service);
+        super(mockFactory, DBConstants.USER_DOCUMENT, service);
     }
 
     @Override

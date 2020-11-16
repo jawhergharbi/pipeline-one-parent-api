@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
@@ -32,7 +32,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
             AccountMapper mapper,
             AccountServiceEventListener eventListener,
             UserRepository userRepository) {
-        super(repository, mapper, DataStoreConstants.ACCOUNT_DOCUMENT, eventListener);
+        super(repository, mapper, DBConstants.ACCOUNT_DOCUMENT, eventListener);
         this.userRepository = userRepository;
     }
 
@@ -40,7 +40,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
     public Optional<Account> entityExists(AccountDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, linkedIn: {}]",
-                DataStoreConstants.ACCOUNT_DOCUMENT,
+                DBConstants.ACCOUNT_DOCUMENT,
                 entityToCreate.getLinkedInUrl());
         return getRepository().findByLinkedInUrl(entityToCreate.getLinkedInUrl());
     }
@@ -65,7 +65,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
                             .collect(Collectors.toList());
                 }).orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{ "User", userId })
+                        new String[]{ DBConstants.USER_DOCUMENT, userId })
                 );
     }
 
@@ -79,7 +79,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
                     return update(id, accountToBeUpdated);
                 }).orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{ "User", userId })
+                        new String[]{ DBConstants.USER_DOCUMENT, userId })
                 );
     }
 }

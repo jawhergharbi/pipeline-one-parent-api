@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.prospect;
 
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.repository.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
@@ -34,7 +34,7 @@ public class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, 
 
     @Autowired
     public ProspectServiceTest(ProspectMockFactory mockFactory, ProspectService service) {
-        super(mockFactory, DataStoreConstants.PROSPECT_DOCUMENT, service);
+        super(mockFactory, DBConstants.PROSPECT_DOCUMENT, service);
     }
 
     @Override

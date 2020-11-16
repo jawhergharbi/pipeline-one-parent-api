@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
@@ -51,7 +51,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     public UserControllerTest(UserMockFactory mockFactory, UserAuthService service, MockMvc mockMvc) {
         super(mockFactory,
                 ControllerConstants.USER_CONTROLLER_API_BASE_URI,
-                DataStoreConstants.USER_DOCUMENT,
+                DBConstants.USER_DOCUMENT,
                 service,
                 mockMvc);
     }

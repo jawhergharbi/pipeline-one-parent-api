@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.interaction;
 
 import com.google.cloud.datastore.Key;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,11 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     public LeadInteraction save(Long leadId, LeadInteraction interaction) {
         log.debug("Save interaction for lead id [{}]. Interaction: [{}]", leadId, interaction);
 
-        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
+        Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
         Key leadKey = Key.newBuilder(
                 parentKey,
-                DataStoreConstants.LEAD_ACTION_DOCUMENT,
-                datastoreKeyFactory.allocatedId(DataStoreConstants.LEAD_ACTION_DOCUMENT).getId()).build();
+                DBConstants.LEAD_ACTION_DOCUMENT,
+                datastoreKeyFactory.allocatedId(DBConstants.LEAD_ACTION_DOCUMENT).getId()).build();
         interaction.setKey(leadKey);
 
         log.debug("Key object created [{}]", leadKey.toString());
@@ -44,8 +44,8 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     public Optional<LeadInteraction> findById(Long leadId, Long interactionId) {
         log.debug("Retrieve interaction for lead id [{}] and lead interaction id[{}]", leadId, interactionId);
 
-        Key parentKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
-        Key leadKey = Key.newBuilder(parentKey,  DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
+        Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
+        Key leadKey = Key.newBuilder(parentKey,  DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
 
         return repository.findById(leadKey);
     }

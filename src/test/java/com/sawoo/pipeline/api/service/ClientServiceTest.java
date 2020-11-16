@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ClientException;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
@@ -160,7 +160,7 @@ public class ClientServiceTest extends BaseServiceTestOld {
     }
 
     private Key createKey(Long leadId, Long interactionId) {
-        Key parentKey = dataStoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
-        return Key.newBuilder(parentKey, DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
+        Key parentKey = dataStoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
+        return Key.newBuilder(parentKey, DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
     }
 }

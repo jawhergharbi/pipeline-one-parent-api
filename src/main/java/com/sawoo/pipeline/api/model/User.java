@@ -18,7 +18,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = DataStoreConstants.USER_DOCUMENT)
+@Document(collection = DBConstants.USER_DOCUMENT)
 public class User extends BaseEntity {
 
     @JMap

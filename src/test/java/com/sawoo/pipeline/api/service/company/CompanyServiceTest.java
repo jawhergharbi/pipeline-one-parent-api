@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.mock.CompanyMockFactory;
 import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.repository.CompanyRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
@@ -36,7 +36,7 @@ public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, Com
 
     @Autowired
     public CompanyServiceTest(CompanyMockFactory mockFactory, CompanyService service) {
-        super(mockFactory, DataStoreConstants.COMPANY_DOCUMENT, service);
+        super(mockFactory, DBConstants.COMPANY_DOCUMENT, service);
     }
 
     @Override

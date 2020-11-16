@@ -43,7 +43,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
     @Override
     public D create(@Valid D dto) throws CommonServiceException {
-        log.debug("Creating new entity type: [{}]", entityType);
+        log.debug("Creating new entity type: [{}]", getEntityType());
 
         entityExists(dto)
                 .ifPresent((entity) -> {
@@ -60,7 +60,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         }
         entity = repository.insert(entity);
 
-        log.debug("Entity type [{}] has been successfully created. Entity: [{}]", entityType, entity);
+        log.debug("Entity type [{}] has been successfully created. Entity: [{}]", getEntityType(), entity);
 
         return mapper.getMapperOut().getDestination(entity);
     }
@@ -76,7 +76,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{entityType, id}));
+                                new String[]{ getEntityType(), id }));
     }
 
     @Override
@@ -104,7 +104,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                        new String[]{entityType, id}));
+                        new String[]{ getEntityType(), id }));
     }
 
     @Override
@@ -141,6 +141,6 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{entityType, id}));
+                                new String[]{ getEntityType(), id }));
     }
 }

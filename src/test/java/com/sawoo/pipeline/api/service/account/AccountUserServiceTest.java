@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.UserRepository;
@@ -43,7 +43,7 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
 
     @Autowired
     public AccountUserServiceTest(AccountMockFactory mockFactory, AccountService service) {
-        super(mockFactory, DataStoreConstants.ACCOUNT_DOCUMENT, service);
+        super(mockFactory, DBConstants.ACCOUNT_DOCUMENT, service);
     }
 
     @BeforeAll

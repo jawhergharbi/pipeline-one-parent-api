@@ -1,13 +1,15 @@
 package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import org.junit.jupiter.api.*;
@@ -19,15 +21,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -52,7 +52,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     public AccountControllerTest(AccountMockFactory mockFactory, AccountService service, MockMvc mockMvc) {
         super(mockFactory,
                 ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI,
-                DataStoreConstants.ACCOUNT_DOCUMENT,
+                DBConstants.ACCOUNT_DOCUMENT,
                 service,
                 mockMvc);
     }
@@ -161,11 +161,110 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
         doReturn(mockedEntity).when(service).update(anyString(), any(AccountDTO.class));
 
         // Execute the PUT request
-        executePutRequest(ACCOUNT_ID, postEntity)
+        mockMvc.perform(put(getResourceURI() + "/{id}", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
 
-                // Validate the returned fields
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + ACCOUNT_ID))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
                 .andExpect(jsonPath("$.company.name", is(ACCOUNT_NEW_COMPANY_NAME)))
                 .andExpect(jsonPath("$.company.url", is(ACCOUNT_NEW_COMPANY_URL)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/accounts/user/{id}: update user role manager - Success")
+    void updateUserWhenUserRoleManagerAndEntityFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        AccountDTO postEntity = new AccountDTO();
+        UserAuthDTO user = getMockFactory()
+                .getUserMockFactory()
+                .newDTO(USER_ID);
+        user.setRoles(Set.of(new String[]{Role.MNG.name(), Role.USER.name()}));
+        postEntity.getUsers().add(user);
+
+        AccountDTO mockedEntity = getMockFactory().newDTO(ACCOUNT_ID);
+        mockedEntity.getUsers().add(user);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).updateUser(anyString(), anyString());
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/user/{userId}", ACCOUNT_ID, USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + ACCOUNT_ID))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
+                .andExpect(jsonPath("$.users").exists())
+                .andExpect(jsonPath("$.users", hasSize(1)))
+                .andExpect(jsonPath("$.users[0].roles", containsInAnyOrder(Role.MNG.name(), Role.USER.name())));
+    }
+
+    @Test
+    @DisplayName("PUT /api/accounts/{id}/user/{userId}: user not found - Failure")
+    void updateUserWhenUserNotFoundReturnsResourceNotFoundException() throws Exception {
+        // Setup the mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ DBConstants.USER_DOCUMENT, USER_ID });
+
+        // setup the mocked service
+        doThrow(exception).when(service).updateUser(anyString(), anyString());
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/user/{userId}", ACCOUNT_ID, USER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(
+                        "$.message", stringContainsInOrder(
+                                String.format("GET operation. Component type [%s]", DBConstants.USER_DOCUMENT),
+                                USER_ID)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/accounts/{id}/user/{userId}: user not found - Failure")
+    void updateUserWhenAccountNotFoundReturnsResourceNotFoundException() throws Exception {
+        // Setup the mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ DBConstants.ACCOUNT_DOCUMENT, ACCOUNT_ID });
+
+        // setup the mocked service
+        doThrow(exception).when(service).updateUser(anyString(), anyString());
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/user/{userId}", ACCOUNT_ID, USER_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", DBConstants.ACCOUNT_DOCUMENT),
+                        ACCOUNT_ID)));
     }
 
     @Test
@@ -227,7 +326,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{"User", String.valueOf(USER_ID)});
+                new String[]{ DBConstants.USER_DOCUMENT, String.valueOf(USER_ID)});
 
         // setup the mocked service
         doThrow(exception).when(service).findAllByUser(USER_ID);
@@ -238,23 +337,8 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", containsString("GET operation. Component type [User]")));
-    }
-
-    private ResultActions executePutRequest(String accountId, AccountDTO postEntity) throws Exception {
-        // Execute the PUT request
-        return mockMvc.perform(put(getResourceURI() + "/{id}", accountId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + accountId))
-
-                // Validate common returned fields
-                .andExpect(jsonPath("$.id", is(accountId)));
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", DBConstants.USER_DOCUMENT),
+                        USER_ID)));
     }
 }

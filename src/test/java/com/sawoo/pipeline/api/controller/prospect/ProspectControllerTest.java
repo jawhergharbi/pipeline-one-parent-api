@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import org.junit.jupiter.api.*;
@@ -46,7 +46,7 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
     public ProspectControllerTest(ProspectMockFactory mockFactory, ProspectService service, MockMvc mockMvc) {
         super(mockFactory,
                 ControllerConstants.PROSPECT_CONTROLLER_API_BASE_URI,
-                DataStoreConstants.PROSPECT_DOCUMENT,
+                DBConstants.PROSPECT_DOCUMENT,
                 service,
                 mockMvc);
     }

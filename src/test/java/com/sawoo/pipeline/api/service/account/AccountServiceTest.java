@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.account;
 
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
@@ -34,7 +34,7 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
 
     @Autowired
     public AccountServiceTest(AccountMockFactory mockFactory, AccountService service) {
-        super(mockFactory, DataStoreConstants.ACCOUNT_DOCUMENT, service);
+        super(mockFactory, DBConstants.ACCOUNT_DOCUMENT, service);
     }
 
     @Override

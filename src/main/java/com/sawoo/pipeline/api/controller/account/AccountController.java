@@ -73,7 +73,7 @@ public class AccountController {
             value = "/{id}/user/{userId}",
             method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> updateCSM(
+    public ResponseEntity<?> updateUser(
             @PathVariable("id") String id,
             @PathVariable("userId") String userId) {
         return delegator.updateUser(id, userId);

@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.client.datastore;
 
 import com.google.cloud.datastore.Key;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
@@ -47,11 +47,11 @@ public class ClientRepositoryWrapperImpl implements ClientRepositoryWrapper {
     public List<Client> findByUserId(String id) {
         Comparator<Client> comparator = Comparator.comparing(Client::getId);
         // CSMs
-        Key csmKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_DOCUMENT).newKey(id);
+        Key csmKey = datastoreKeyFactory.getKeyFactory(DBConstants.USER_DOCUMENT).newKey(id);
         List<Client> csmClients = repository.findByCSMIs(csmKey);
 
         // SAa
-        Key saKey = datastoreKeyFactory.getKeyFactory(DataStoreConstants.USER_DOCUMENT).newKey(id);
+        Key saKey = datastoreKeyFactory.getKeyFactory(DBConstants.USER_DOCUMENT).newKey(id);
         List<Client> saClients = repository.findBySAIs(saKey);
         return Stream
                 .concat(csmClients.stream(), saClients.stream())

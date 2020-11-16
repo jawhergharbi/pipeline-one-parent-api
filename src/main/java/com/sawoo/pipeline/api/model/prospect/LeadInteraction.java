@@ -4,7 +4,7 @@ package com.sawoo.pipeline.api.model.prospect;
 import com.google.cloud.datastore.Key;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.LEAD_ACTION_DOCUMENT)
+@Entity(name = DBConstants.LEAD_ACTION_DOCUMENT)
 public class LeadInteraction {
 
     @Id

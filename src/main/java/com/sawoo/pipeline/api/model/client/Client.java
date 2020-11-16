@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.model.client;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.CompanyOld;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.Status;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.common.Note;
@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DataStoreConstants.CLIENT_DOCUMENT)
+@Entity(name = DBConstants.CLIENT_DOCUMENT)
 public class Client {
 
     @JMap

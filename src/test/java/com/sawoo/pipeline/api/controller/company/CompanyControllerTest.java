@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.mock.CompanyMockFactory;
 import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
@@ -46,7 +46,7 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
     public CompanyControllerTest(CompanyMockFactory mockFactory, CompanyService service, MockMvc mockMvc) {
         super(mockFactory,
                 ControllerConstants.COMPANY_CONTROLLER_API_BASE_URI,
-                DataStoreConstants.COMPANY_DOCUMENT,
+                DBConstants.COMPANY_DOCUMENT,
                 service,
                 mockMvc);
     }

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Document(collection = DataStoreConstants.COMPANY_DOCUMENT)
+@Document(collection = DBConstants.COMPANY_DOCUMENT)
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 public class Company extends BaseEntity {

@@ -17,7 +17,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = DataStoreConstants.ACCOUNT_DOCUMENT)
+@Document(collection = DBConstants.ACCOUNT_DOCUMENT)
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 public class Account extends BaseEntity {

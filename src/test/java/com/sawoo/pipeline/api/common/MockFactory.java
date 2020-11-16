@@ -4,7 +4,6 @@ package com.sawoo.pipeline.api.common;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
@@ -271,38 +270,6 @@ public class MockFactory {
         mockedEntity.setCreated(now);
         mockedEntity.setUpdated(now);
         return mockedEntity;
-    }
-
-    public ClientBasicDTO newClientDTO(Long id, String fullName, String linkedInUrl, boolean addCompany) {
-        LocalDateTime dateTime = LocalDateTime.of(2020, 12, 1, 1, 30);
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        mockedDTO.setId(id);
-        mockedDTO.setFullName(fullName);
-        mockedDTO.setLinkedInUrl(linkedInUrl);
-        mockedDTO.setEmail(FAKER.internet().emailAddress());
-        mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedDTO.setPosition(FAKER.company().profession());
-        if (addCompany) {
-            mockedDTO.setCompany(newCompanyDTO(dateTime));
-        }
-        mockedDTO.setCreated(dateTime);
-        mockedDTO.setUpdated(dateTime);
-        return mockedDTO;
-    }
-
-    public ClientBasicDTO newClientDTO(Long id, String fullName, String linkedInUrl, String companyName, String companyUrl) {
-        ClientBasicDTO mockedDTO = new ClientBasicDTO();
-        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
-        mockedDTO.setId(id);
-        mockedDTO.setFullName(fullName);
-        mockedDTO.setLinkedInUrl(linkedInUrl);
-        mockedDTO.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
-        mockedDTO.setEmail(FAKER.internet().emailAddress());
-        mockedDTO.setPosition(FAKER.company().profession());
-        mockedDTO.setCompany(newCompanyDTO(FAKER.internet().uuid(), companyName, companyUrl, dateTime));
-        mockedDTO.setUpdated(dateTime);
-        mockedDTO.setCreated(dateTime);
-        return mockedDTO;
     }
 
     public UserOld newUserEntity(String componentId, String fullName, String[] roles) {

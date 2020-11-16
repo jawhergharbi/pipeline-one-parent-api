@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.model.account.Account;
 import org.junit.jupiter.api.*;
@@ -78,7 +78,7 @@ public class AccountUserRepositoryTest {
         String USER_EMAIL = mockFactory.getFAKER().internet().emailAddress();
         User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{Role.MNG.name()});
         mongoTemplate.save(user);
-        long userDocSize = mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT);
+        long userDocSize = mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT);
 
         repository
                 .findById(ACCOUNT_ID_NO_USERS)
@@ -91,7 +91,7 @@ public class AccountUserRepositoryTest {
 
         Assertions.assertEquals(
                 userDocSize,
-                mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT),
+                mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT),
                 String.format("User repository size has to be equal to [%d]", userDocSize));
 
         Assertions.assertTrue(account.isPresent(), "Account must be present");
@@ -137,7 +137,7 @@ public class AccountUserRepositoryTest {
     @DisplayName("save: remove user - Success")
     void saveWhenRemoveUserReturnsSuccess() {
         Optional<Account> account = repository.findById(ACCOUNT_ID);
-        long userDocSize = mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT);
+        long userDocSize = mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT);
         int accountUsers = 1;
 
         account.ifPresentOrElse( (acc) -> {
@@ -155,7 +155,7 @@ public class AccountUserRepositoryTest {
 
         Assertions.assertEquals(
                 userDocSize,
-                mongoTemplate.count(new Query(), DataStoreConstants.USER_DOCUMENT),
+                mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT),
                 String.format("User repository size has to be equal to [%d]", userDocSize));
 
         Assertions.assertTrue(accountSaved.isPresent(), "Account must be present");

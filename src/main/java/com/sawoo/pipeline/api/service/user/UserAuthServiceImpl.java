@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.User;
 import com.sawoo.pipeline.api.repository.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
@@ -47,7 +47,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                                UserAuthServiceEventListener eventListener,
                                AuthenticationManager authenticationManager,
                                PasswordEncoder passwordEncoder) {
-        super(repository, mapper, DataStoreConstants.PROSPECT_DOCUMENT, eventListener);
+        super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, eventListener);
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
     }
@@ -56,7 +56,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     public Optional<User> entityExists(UserAuthDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, email: {}]",
-                DataStoreConstants.USER_DOCUMENT,
+                DBConstants.USER_DOCUMENT,
                 entityToCreate.getEmail());
         return getRepository().findByEmail(entityToCreate.getEmail());
     }

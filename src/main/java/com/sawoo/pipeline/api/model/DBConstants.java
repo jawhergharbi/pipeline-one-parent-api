@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.model;
 
-public interface DataStoreConstants {
+public interface DBConstants {
 
     String LEAD_DOCUMENT = "lead";
     String PROSPECT_DOCUMENT = "prospect";

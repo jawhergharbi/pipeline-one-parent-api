@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.Lead;
@@ -423,8 +423,8 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
     }
 
     private Key createInteractionKey(Long leadId, Long interactionId) {
-        Key parentKey = dataStoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
-        return Key.newBuilder(parentKey, DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
+        Key parentKey = dataStoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
+        return Key.newBuilder(parentKey, DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
     }
 
     private List<Lead> getMockedLeadList(int listSize) {

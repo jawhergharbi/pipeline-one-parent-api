@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service;
 
 import com.google.cloud.datastore.Key;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
-import com.sawoo.pipeline.api.model.DataStoreConstants;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
@@ -71,8 +71,8 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
     }
 
     private Key createKey(Long leadId, Long interactionId) {
-        Key parentKey = dataStoreKeyFactory.getKeyFactory(DataStoreConstants.LEAD_DOCUMENT).newKey(leadId);
-        return Key.newBuilder(parentKey, DataStoreConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
+        Key parentKey = dataStoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
+        return Key.newBuilder(parentKey, DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
     }
 
 }
