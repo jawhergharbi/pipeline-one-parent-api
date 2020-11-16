@@ -7,12 +7,14 @@ import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

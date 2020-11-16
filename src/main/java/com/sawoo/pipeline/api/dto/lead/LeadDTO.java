@@ -1,20 +1,20 @@
 package com.sawoo.pipeline.api.dto.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
 @Builder(toBuilder = true)
-public class LeadDTO {
+public class LeadDTO extends BaseEntityDTO {
 
     @JMap
     private String id;

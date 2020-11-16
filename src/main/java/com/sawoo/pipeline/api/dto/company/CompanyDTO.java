@@ -2,19 +2,18 @@ package com.sawoo.pipeline.api.dto.company;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
 @Builder(toBuilder = true)
-public class CompanyDTO {
+public class CompanyDTO extends BaseEntityDTO {
 
     @JMap
     private String id;
@@ -29,10 +28,4 @@ public class CompanyDTO {
 
     @JMap
     private Integer headcount;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 }

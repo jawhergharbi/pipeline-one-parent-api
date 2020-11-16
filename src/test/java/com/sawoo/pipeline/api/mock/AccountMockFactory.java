@@ -4,9 +4,9 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.company.Company;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -68,14 +68,15 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
         entity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         entity.setEmail(FAKER.internet().emailAddress());
         entity.setPosition(FAKER.company().profession());
-        entity.setCompany(CompanyDTO
+        CompanyDTO company = CompanyDTO
                 .builder()
                 .id(FAKER.internet().uuid())
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())
-                .created(LocalDateTime.of(2019, 12, 1, 10, 0))
-                .updated(LocalDateTime.of(2020, 1, 2, 9, 50))
-                .build());
+                .build();
+        company.setCreated(LocalDateTime.of(2019, 12, 1, 10, 0));
+        company.setUpdated(LocalDateTime.of(2020, 1, 2, 9, 50));
+        entity.setCompany(company);
         entity.setStatus(
                 Status
                         .builder()

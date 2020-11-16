@@ -555,8 +555,6 @@ public class LeadControllerTest extends BaseControllerTestOld {
                         .id(FAKER.internet().uuid())
                         .name(FAKER.company().name())
                         .url(FAKER.company().url())
-                        .created(dateTime)
-                        .updated(dateTime)
                         .build());
         mock.setUpdated(dateTime);
         mock.setCreated(dateTime);

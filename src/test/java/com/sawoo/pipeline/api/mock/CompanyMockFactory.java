@@ -38,13 +38,14 @@ public class CompanyMockFactory extends BaseMockFactory<CompanyDTO, Company> {
     @Override
     public CompanyDTO newDTO(String id) {
         Faker FAKER = getFAKER();
-        return CompanyDTO.builder()
+        CompanyDTO dto = CompanyDTO.builder()
                 .id(id)
                 .name(FAKER.company().name())
                 .url(FAKER.company().url())
-                .created(LocalDateTime.now())
-                .updated(LocalDateTime.now())
                 .build();
+        dto.setUpdated(LocalDateTime.now());
+        dto.setCreated(LocalDateTime.now());
+        return dto;
     }
 
     @Override
@@ -53,13 +54,13 @@ public class CompanyMockFactory extends BaseMockFactory<CompanyDTO, Company> {
     }
 
     public CompanyDTO newDTO(String id, String name, String url) {
-        Faker FAKER = getFAKER();
-        return CompanyDTO.builder()
+        CompanyDTO dto = CompanyDTO.builder()
                 .id(id)
                 .name(name)
                 .url(url)
-                .created(LocalDateTime.now())
-                .updated(LocalDateTime.now())
                 .build();
+        dto.setUpdated(LocalDateTime.now());
+        dto.setCreated(LocalDateTime.now());
+        return dto;
     }
 }
