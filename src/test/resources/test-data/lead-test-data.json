@@ -1,0 +1,93 @@
+[
+  {
+    "id": "5fa3c963da6ra335fa2s323d45b",
+    "linkedInThread": "http://linkedin.com/thread/withlead1",
+    "prospect": {
+      "id": "5fa3ce63rt4ef23d963da45b",
+      "firstName": "Miguel",
+      "lastName": "Miguelín",
+      "fullName": "Miguel Miguelín",
+      "salutation": 0,
+      "linkedInUrl": "http://linkedin.com/miguel.miguelin",
+      "position": "Managing Director",
+      "email": "miguel@gmail.com",
+      "phoneNumber": "+34 242430948",
+      "profilePicture": "http://linkedin.com/picture/miguel.miguelin",
+      "company": {
+        "id": "5fa2fe63gt43d963da45b",
+        "name": "knomwad",
+        "url": "http://knowmad-edu.com",
+        "created": "2020-06-02T12:59:49.494472",
+        "updated": "2020-06-02T05:59:49.494472"
+      },
+      "personality": {
+        "type": 1
+      },
+      "created": "2020-06-02T12:59:49.494472",
+      "updated": "2020-06-02T05:59:49.494472"
+    },
+    "leadNotes": {
+      "text": "here some other comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "companyNotes": {
+      "text": "here some other comments from the lead company",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "status": {
+      "value": 1,
+      "notes": {
+        "text": "here some other comments with regards to the lead 1 status",
+        "updated": "2020-06-02T11:59:49.494472"
+      },
+      "updated": "2020-06-02T12:59:49.494472"
+    },
+    "created": "2020-06-02T12:59:49.494472",
+    "updated": "2020-06-02T05:59:49.494472"
+  },
+  {
+    "id": "a335f5236ra2fda33s323c96d45b",
+    "linkedInThread": "http://linkedin.com/thread/withlead2",
+    "prospect": {
+      "id": "5fa2fe63gt4ed34d965da46y",
+      "firstName": "Miguel",
+      "lastName": "Miguelito",
+      "fullName": "Miguel Miguelito",
+      "salutation": 1,
+      "linkedInUrl": "http://linkedin.com/miguel.miguelito",
+      "position": "Managing Director",
+      "email": "miguelito@gmail.com",
+      "phoneNumber": "+34 543456345",
+      "company": {
+        "id": "5fa243d9fe63gtda4",
+        "name": "sawoo",
+        "url": "http://sawoo.io",
+        "created": "2020-06-02T12:59:49.494472",
+        "updated": "2020-06-04T05:59:49.494472"
+      },
+      "personality": {
+        "type": 2
+      },
+      "created": "2020-06-02T11:59:49.494472",
+      "updated": "2020-06-03T05:59:49.494472"
+    },
+    "leadNotes": {
+      "text": "here some other comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "companyNotes": {
+      "text": "here some other comments from the lead company",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "status": {
+      "value": 1,
+      "notes": {
+        "text": "here some other comments with regards to the lead 2 status",
+        "updated": "2020-06-02T11:59:49.494472"
+      },
+      "updated": "2020-06-02T12:59:49.494472"
+    },
+    "created": "2020-06-02T12:59:49.494472",
+    "updated": "2020-06-02T05:59:49.494472"
+  }
+]

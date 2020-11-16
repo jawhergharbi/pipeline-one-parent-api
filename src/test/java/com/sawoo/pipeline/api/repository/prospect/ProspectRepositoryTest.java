@@ -56,7 +56,7 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
 
     @Test
     @DisplayName("findAll: return all the entities defined in the test file and check company has been stored - Success")
-    void findAllAndReferenceEntityStoresReturnsSuccess() {
+    void findAllWhenReferenceIsAlsoStoredReturnsSuccess() {
         List<Prospect> prospects = getRepository().findAll();
 
         Assertions.assertEquals(
@@ -87,8 +87,8 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     }
 
     @Test
-    @DisplayName("save: company cascade saving - Success")
-    void saveWhenCompanyProfileDoesNotExistReturnsSuccess() {
+    @DisplayName("insert: company cascade saving - Success")
+    void insertWhenCompanyProfileDoesNotExistReturnsSuccess() {
         Prospect entity = getMockFactory().newEntity(null);
         entity.getCompany().setId(null);
 
