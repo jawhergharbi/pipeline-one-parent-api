@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

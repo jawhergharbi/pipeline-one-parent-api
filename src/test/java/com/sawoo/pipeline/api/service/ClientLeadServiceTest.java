@@ -11,7 +11,7 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectType;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
@@ -170,7 +170,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
     @DisplayName("ClientLead Service: findAll when client found and there are three leads - Success")
     void findAllWhenClientFoundAndThereAreLeadsReturnsSuccess() {
         int listSize = 3;
-        List<Lead> leadList = getMockedLeadList(listSize);
+        List<LeadOld> leadList = getMockedLeadList(listSize);
         Long CLIENT_ID = FAKER.number().randomNumber();
         Client mockedEntity = getMockFactory().newClientEntity(CLIENT_ID);
         mockedEntity.setLeads(leadList);
@@ -211,7 +211,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
                     String CLIENT_FULL_NAME = FAKER.name().fullName();
                     String CLIENT_LINKED_IN_URL = FAKER.internet().url();
                     Client newClient = getMockFactory().newClientEntity(CLIENT_ID, CLIENT_FULL_NAME, CLIENT_LINKED_IN_URL, true);
-                    List<Lead> leads = getMockedLeadList(FAKER.random().nextInt(3));
+                    List<LeadOld> leads = getMockedLeadList(FAKER.random().nextInt(3));
                     newClient.setLeads(leads);
                     return newClient;
 
@@ -258,7 +258,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         int clientListSize = 3;
         List<Client> clientList = getMockedClientList(clientListSize);
         clientList.forEach( (client) -> {
-            List<Lead> leadList = getMockedLeadList(FAKER.random().nextInt(1, 4));
+            List<LeadOld> leadList = getMockedLeadList(FAKER.random().nextInt(1, 4));
             client.getLeads().addAll(leadList);
         });
         long leadNumber = clientList.stream().mapToLong(client -> client.getLeads().size()).sum();
@@ -312,7 +312,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         Long CLIENT_ID = FAKER.number().randomNumber();
         Long LEAD_ID = FAKER.number().randomNumber();
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID));
-        Lead leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
+        LeadOld leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
 
 
         // Set up the mocked repository
@@ -365,7 +365,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
     void removeWhenClientFoundAndLeadFoundReturnsSuccess() {
         Long CLIENT_ID = FAKER.number().randomNumber();
         Long LEAD_ID = FAKER.number().randomNumber();
-        Lead leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
+        LeadOld leadMockedEntity = getMockFactory().newLeadEntity(LEAD_ID, true);
         Client spyClientEntity = spy(getMockFactory().newClientEntity(CLIENT_ID));
         spyClientEntity.getLeads().add(leadMockedEntity);
 
@@ -427,7 +427,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         return Key.newBuilder(parentKey, DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
     }
 
-    private List<Lead> getMockedLeadList(int listSize) {
+    private List<LeadOld> getMockedLeadList(int listSize) {
         return IntStream.range(0, listSize)
                 .mapToObj((lead) -> {
                     Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);

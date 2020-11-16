@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
-import com.sawoo.pipeline.api.service.LeadService;
+import com.sawoo.pipeline.api.service.LeadServiceOld;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,7 +42,7 @@ public class LeadControllerTest extends BaseControllerTestOld {
     private MockMvc mockMvc;
 
     @MockBean
-    private LeadService service;
+    private LeadServiceOld service;
 
     @Test
     @DisplayName("GET /api/leads/{id}: lead found - Success")

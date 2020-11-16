@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

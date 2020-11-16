@@ -12,8 +12,8 @@ import com.sawoo.pipeline.api.dto.ReportDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadReportDataDTO;
-import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
+import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LeadServiceImpl implements LeadService {
+public class LeadServiceImplOld implements LeadServiceOld {
 
     @Value("${app.report-api}")
     private String reportAPI;
@@ -48,7 +48,7 @@ public class LeadServiceImpl implements LeadService {
     private final CommonDiscAnalysisData discAnalysisData;
     private final CommonServiceMapper mapper;
     private final LeadServiceUtils utils;
-    private final LeadRepository repository;
+    private final LeadRepositoryOld repository;
 
     @Override
     public LeadDTO create(LeadDTO lead, int type) throws CommonServiceException {
@@ -58,7 +58,7 @@ public class LeadServiceImpl implements LeadService {
 
         utils.preProcessLead(lead, now, type);
 
-        Lead entity = mapper.getLeadDTOToDomainMapper().getDestination(lead);
+        LeadOld entity = mapper.getLeadDTOToDomainMapper().getDestination(lead);
         entity = repository.save(entity);
 
         log.debug("Prospect has been successfully created. Entity: [{}]", entity);

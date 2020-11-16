@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.mock;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import org.springframework.stereotype.Component;
 

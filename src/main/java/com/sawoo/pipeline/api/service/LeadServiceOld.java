@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface LeadService {
+public interface LeadServiceOld {
 
     LeadDTO create(LeadDTO lead, int type) throws CommonServiceException;
 

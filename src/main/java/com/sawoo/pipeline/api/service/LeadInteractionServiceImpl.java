@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
-import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class LeadInteractionServiceImpl implements LeadInteractionService {
     private final JMapper<LeadInteractionDTO, LeadInteraction> mapperDomainToDTO = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
     private final JMapper<LeadInteraction, LeadInteractionRequestDTO> mapperDTOToDomain = new JMapper<>(LeadInteraction.class, LeadInteractionRequestDTO.class);
 
-    private final LeadRepository leadRepository;
+    private final LeadRepositoryOld leadRepository;
     private final LeadInteractionRepositoryWrapper repository;
 
     @Override

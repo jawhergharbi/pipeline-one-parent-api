@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -170,13 +170,13 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     private List<LeadMainDTO> getLeadsFromClients(List<Client> clients, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
-        List<Predicate<Lead>> predicates = new ArrayList<>();
+        List<Predicate<LeadOld>> predicates = new ArrayList<>();
         if (statusMin != null) {
-            Predicate<Lead> filter = l -> l.getStatus().getValue() >= statusMin;
+            Predicate<LeadOld> filter = l -> l.getStatus().getValue() >= statusMin;
             predicates.add(filter);
         }
         if (statusMax != null) {
-            Predicate<Lead> filter = l -> l.getStatus().getValue() <= statusMax;
+            Predicate<LeadOld> filter = l -> l.getStatus().getValue() <= statusMax;
             predicates.add(filter);
         }
         List<LeadMainDTO> leadsList = clients
@@ -198,7 +198,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
         return leadsList;
     }
 
-    private LeadMainDTO mapLead(Lead lead, ClientBaseDTO client) {
+    private LeadMainDTO mapLead(LeadOld lead, ClientBaseDTO client) {
         LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
         leadDTO.setClient(client);
         return leadDTO;

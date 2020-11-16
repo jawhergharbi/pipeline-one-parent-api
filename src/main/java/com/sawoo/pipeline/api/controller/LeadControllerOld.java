@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
-import com.sawoo.pipeline.api.service.LeadService;
+import com.sawoo.pipeline.api.service.LeadServiceOld;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -25,10 +25,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/leads")
-public class LeadController {
+@RequestMapping("/api/leads2")
+public class LeadControllerOld {
 
-    private final LeadService service;
+    private final LeadServiceOld service;
 
     @RequestMapping(
             value = {"/", "/{type}",},

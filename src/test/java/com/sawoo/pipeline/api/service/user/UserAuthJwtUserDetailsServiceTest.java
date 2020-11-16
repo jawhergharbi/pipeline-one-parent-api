@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
-import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.repository.user.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

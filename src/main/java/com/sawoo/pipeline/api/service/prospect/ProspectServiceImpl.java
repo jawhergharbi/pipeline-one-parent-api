@@ -4,7 +4,7 @@ package com.sawoo.pipeline.api.service.prospect;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.repository.ProspectRepository;
+import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package com.sawoo.pipeline.api.repository;
+package com.sawoo.pipeline.api.repository.user;
 
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

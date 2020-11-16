@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;

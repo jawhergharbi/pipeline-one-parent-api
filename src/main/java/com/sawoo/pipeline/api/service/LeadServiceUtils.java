@@ -6,9 +6,9 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
-import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
-import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
+import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.service.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Component
 public class LeadServiceUtils {
 
-    private final LeadRepository repository;
+    private final LeadRepositoryOld repository;
     private final CompanyService companyService;
 
     public void preProcessLead(LeadDTO lead, LocalDateTime datetime, int type) throws CommonServiceException {
@@ -42,8 +42,8 @@ public class LeadServiceUtils {
             lead.setStatus(StatusDTO
                     .builder()
                     .value( ProspectType.PROSPECT.getType() == type ?
-                            ProspectStatusList.FUNNEL_ON_GOING.getStatus() :
-                            ProspectStatusList.HOT.getStatus() )
+                            LeadStatusList.FUNNEL_ON_GOING.getStatus() :
+                            LeadStatusList.HOT.getStatus() )
                     .updated(datetime)
                     .build());
         }
@@ -58,7 +58,7 @@ public class LeadServiceUtils {
         lead.setCreated(datetime);
     }
 
-    public Optional<Lead> findById(Long leadId) {
+    public Optional<LeadOld> findById(Long leadId) {
         return repository.findById(leadId);
     }
 

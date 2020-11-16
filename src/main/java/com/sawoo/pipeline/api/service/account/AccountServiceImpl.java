@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;

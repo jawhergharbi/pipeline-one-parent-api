@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

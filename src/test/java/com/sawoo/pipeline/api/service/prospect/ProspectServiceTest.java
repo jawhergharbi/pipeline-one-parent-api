@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.repository.ProspectRepository;
+import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;

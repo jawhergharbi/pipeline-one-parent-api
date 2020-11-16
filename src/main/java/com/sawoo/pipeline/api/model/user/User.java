@@ -1,7 +1,9 @@
-package com.sawoo.pipeline.api.model;
+package com.sawoo.pipeline.api.model.user;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
+import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.model.DBConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

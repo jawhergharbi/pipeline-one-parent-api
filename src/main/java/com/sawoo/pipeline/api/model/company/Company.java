@@ -1,6 +1,8 @@
-package com.sawoo.pipeline.api.model;
+package com.sawoo.pipeline.api.model.company;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.model.DBConstants;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;

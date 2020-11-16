@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.account;
 
 import com.sawoo.pipeline.api.common.contants.Role;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
 import lombok.RequiredArgsConstructor;

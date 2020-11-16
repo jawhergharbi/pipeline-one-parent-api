@@ -1,9 +1,8 @@
 package com.sawoo.pipeline.api.repository.company;
 
 import com.sawoo.pipeline.api.mock.CompanyMockFactory;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
-import com.sawoo.pipeline.api.repository.CompanyRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

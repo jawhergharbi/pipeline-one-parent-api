@@ -4,10 +4,10 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.CompanyOld;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.Status;
+import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.common.Note;
-import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,7 +58,7 @@ public class Client {
     private Status status;
 
     @Reference
-    private List<Lead> leads;
+    private List<LeadOld> leads;
 
     @JMap
     @Reference
@@ -75,11 +75,11 @@ public class Client {
     private LocalDateTime updated;
 
     @JMapConversion(from = {"leads"}, to = {"leadsSize"})
-    public int conversion(List<Lead> leads) {
+    public int conversion(List<LeadOld> leads) {
         return leads == null ? 0 : leads.size();
     }
 
-    public List<Lead> getLeads() {
+    public List<LeadOld> getLeads() {
         if (leads == null) {
             leads = new ArrayList<>();
         }

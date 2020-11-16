@@ -7,19 +7,15 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.user.UserDTOOld;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.CompanyOld;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.UserOld;
+import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.HashSet;
 
 @Component
 public class MockFactory {
@@ -147,9 +143,9 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public Lead newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
+    public LeadOld newLeadEntity(Long id, String firstName, String lastName, String linkedInUrl, String linkedInThread, boolean addCompany) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Lead mockedEntity = new Lead();
+        LeadOld mockedEntity = new LeadOld();
         mockedEntity.setId(id);
         mockedEntity.setFirstName(firstName);
         mockedEntity.setLastName(lastName);
@@ -171,9 +167,9 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public Lead newLeadEntity(Long id, boolean addCompany) {
+    public LeadOld newLeadEntity(Long id, boolean addCompany) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Lead mockedEntity = new Lead();
+        LeadOld mockedEntity = new LeadOld();
         mockedEntity.setId(id);
         mockedEntity.setFirstName(FAKER.name().firstName());
         mockedEntity.setFirstName(FAKER.name().lastName());

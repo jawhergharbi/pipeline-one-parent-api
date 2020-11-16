@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
-import com.sawoo.pipeline.api.model.User;
-import com.sawoo.pipeline.api.repository.UserRepository;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

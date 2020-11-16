@@ -6,10 +6,10 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectType;
-import com.sawoo.pipeline.api.model.Status;
-import com.sawoo.pipeline.api.model.prospect.Lead;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
-import com.sawoo.pipeline.api.repository.LeadRepository;
+import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
+import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.service.company.CompanyService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -35,10 +35,10 @@ import static org.mockito.Mockito.*;
 public class LeadServiceTest extends BaseServiceTestOld {
 
     @Autowired
-    private LeadService service;
+    private LeadServiceOld service;
 
     @MockBean
-    private LeadRepository repository;
+    private LeadRepositoryOld repository;
 
     @SpyBean
     private CompanyService companyService;
@@ -49,7 +49,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
         // Set up mock entities
         int listSize = 3;
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        List<Lead> leadList = IntStream.range(0, listSize)
+        List<LeadOld> leadList = IntStream.range(0, listSize)
                 .mapToObj((lead) -> {
                     Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     return getMockFactory().newLeadEntity(LEAD_ID, true);
@@ -87,12 +87,12 @@ public class LeadServiceTest extends BaseServiceTestOld {
                 .name(COMPANY_NAME)
                 .url(COMPANY_URL).build());
 
-        Lead mockedEntity = getMockFactory()
+        LeadOld mockedEntity = getMockFactory()
                 .newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD_URL, false);
         mockedEntity.setCompany(getMockFactory().newCompanyEntity(FAKER.internet().uuid(), COMPANY_NAME, COMPANY_URL, now));
         mockedEntity.setStatus(
                 Status.builder()
-                        .value(ProspectStatusList.HOT.getStatus())
+                        .value(LeadStatusList.HOT.getStatus())
                         .updated(now)
                         .build());
 
@@ -130,7 +130,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
         String LEAD_LINKED_IN_URL = FAKER.internet().url();
         String LEAD_LINKED_IN_CHAT_URL = FAKER.internet().url();
         LeadDTO mockedDTO = new LeadDTO();
-        Lead mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_CHAT_URL, true);
+        LeadOld mockedEntity = getMockFactory().newLeadEntity(LEAD_ID, LEAD_FIRST_NAME, LEAD_LAST_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_IN_CHAT_URL, true);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findByLinkedInUrl(anyString());

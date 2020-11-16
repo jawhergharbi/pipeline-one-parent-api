@@ -2,9 +2,10 @@ package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.Company;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.Status;
+import com.sawoo.pipeline.api.model.common.Personality;
+import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.common.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = DBConstants.LEAD_DOCUMENT)
-public class Lead {
+public class LeadOld {
 
     @JMap
     @Id
@@ -97,11 +98,6 @@ public class Lead {
     public String conversion(String firstName, String lastName) {
         // TODO: jmapper hack given that it's not possible to map from two source fields in to one destination field
         return String.join(" ", this.firstName, this.lastName);
-    }
-
-    @JMapConversion(from = {"salutation"}, to = {"salutation"})
-    public Integer salutationConversion(Integer salutation) {
-        return salutation == null ? 0 : salutation;
     }
 
     @JMapConversion(from = {"companyComments"}, to = {"companyNotes"})

@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.prospect.*;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.prospect.Lead;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonServiceMapper {
 
-    private final JMapper<LeadDTO, Lead> leadDomainToDTOMapper = new JMapper<>(LeadDTO.class, Lead.class);
-    private final JMapper<LeadBaseDTO, Lead> leadDomainToDTOBaseMapper = new JMapper<>(LeadBaseDTO.class, Lead.class);
-    private final JMapper<LeadMainDTO, Lead> leadDomainToDTOMainMapper = new JMapper<>(LeadMainDTO.class, Lead.class);
-    private final JMapper<LeadReportDataDTO, Lead> leadDomainToReportDTOMapper = new JMapper<>(LeadReportDataDTO.class, Lead.class);
+    private final JMapper<LeadDTO, LeadOld> leadDomainToDTOMapper = new JMapper<>(LeadDTO.class, LeadOld.class);
+    private final JMapper<LeadBaseDTO, LeadOld> leadDomainToDTOBaseMapper = new JMapper<>(LeadBaseDTO.class, LeadOld.class);
+    private final JMapper<LeadMainDTO, LeadOld> leadDomainToDTOMainMapper = new JMapper<>(LeadMainDTO.class, LeadOld.class);
+    private final JMapper<LeadReportDataDTO, LeadOld> leadDomainToReportDTOMapper = new JMapper<>(LeadReportDataDTO.class, LeadOld.class);
 
-    private final JMapper<Lead, LeadDTO> leadDTOToDomainMapper = new JMapper<>(Lead.class, LeadDTO.class);
+    private final JMapper<LeadOld, LeadDTO> leadDTOToDomainMapper = new JMapper<>(LeadOld.class, LeadDTO.class);
     private final JMapper<LeadInteractionDTO, LeadInteraction> leadInteractionDomainToDTOMapper = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
     private final JMapper<InteractionDTO, LeadInteraction> interactionDomainToDTOMapper = new JMapper<>(InteractionDTO.class, LeadInteraction.class);
 

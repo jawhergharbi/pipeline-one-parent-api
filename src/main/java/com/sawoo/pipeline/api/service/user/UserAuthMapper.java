@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.user;
 
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.model.User;
+import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.service.base.BaseMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

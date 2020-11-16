@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.listener;
 
-import com.sawoo.pipeline.api.model.Company;
-import com.sawoo.pipeline.api.repository.CompanyRepository;
+import com.sawoo.pipeline.api.model.company.Company;
+import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
