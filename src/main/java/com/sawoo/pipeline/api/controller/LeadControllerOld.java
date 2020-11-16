@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.service.LeadServiceOld;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +36,9 @@ public class LeadControllerOld {
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTOOld> save(
-            @PathVariable(required = false) ProspectType type,
+            @PathVariable(required = false) LeadTypeRequestParam type,
             @Valid @RequestBody LeadDTOOld lead) {
-        LeadDTOOld newEntity = service.create(lead, type != null ? type.getType(): ProspectType.PROSPECT.getType());
+        LeadDTOOld newEntity = service.create(lead, type != null ? type.getType(): LeadTypeRequestParam.PROSPECT.getType());
         try {
             return ResponseEntity
                     .created(new URI("/api/leads/" + newEntity.getId()))

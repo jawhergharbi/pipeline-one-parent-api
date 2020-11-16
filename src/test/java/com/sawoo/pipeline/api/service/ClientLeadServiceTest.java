@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
@@ -78,7 +78,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         doReturn(mockedClientEntity).when(clientRepository).save(any());
 
         // Execute the service call
-        LeadDTOOld returnedEntity = service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType());
+        LeadDTOOld returnedEntity = service.create(CLIENT_ID, mockedLeadDTO, LeadTypeRequestParam.LEAD.getType());
 
         // Assert the response
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with LinkedInUrl [%s] was found already in the system", LEAD_LINKED_IN_URL));
@@ -112,7 +112,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         // Asserts
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType()),
+                () -> service.create(CLIENT_ID, mockedLeadDTO, LeadTypeRequestParam.LEAD.getType()),
                 "create must throw a ResourceNotFoundException");
 
         Assertions.assertEquals(
@@ -153,7 +153,7 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         // Asserts
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.create(CLIENT_ID, mockedLeadDTO, ProspectType.LEAD.getType()),
+                () -> service.create(CLIENT_ID, mockedLeadDTO, LeadTypeRequestParam.LEAD.getType()),
                 "create must throw a CommonServiceException");
 
         Assertions.assertEquals(

@@ -2,27 +2,26 @@ package com.sawoo.pipeline.api.dto.account;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
-import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.common.Note;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.sawoo.pipeline.api.model.common.Status;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
 @Builder(toBuilder = true)
-public class AccountDTO {
+public class AccountDTO extends BaseEntityDTO {
 
     @JMap
     private String id;
@@ -60,12 +59,6 @@ public class AccountDTO {
 
     @JMap
     private Set<UserAuthDTO> users;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 
     public Set<UserAuthDTO> getUsers() {
         if (users == null) {

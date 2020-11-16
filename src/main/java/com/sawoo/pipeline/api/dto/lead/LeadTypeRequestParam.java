@@ -1,12 +1,12 @@
-package com.sawoo.pipeline.api.dto.prospect;
+package com.sawoo.pipeline.api.dto.lead;
 
-public enum ProspectType {
+public enum LeadTypeRequestParam {
     PROSPECT(0),
     LEAD(1);
 
     private final int type;
 
-    private ProspectType(int type) {
+    private LeadTypeRequestParam(int type) {
         this.type = type;
     }
 

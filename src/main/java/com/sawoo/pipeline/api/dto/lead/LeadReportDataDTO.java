@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.prospect;
+package com.sawoo.pipeline.api.dto.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.dto.DiscTypeDTO;

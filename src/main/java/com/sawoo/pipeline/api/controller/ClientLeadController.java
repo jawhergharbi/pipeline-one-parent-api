@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.service.ClientLeadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +35,9 @@ public class ClientLeadController {
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
             @PathVariable(value = "id") Long clientId,
-            @PathVariable(value = "type", required = false) ProspectType type,
+            @PathVariable(value = "type", required = false) LeadTypeRequestParam type,
             @Valid @RequestBody LeadDTOOld lead) {
-        LeadDTOOld newEntity = service.create(clientId, lead, type != null ? type.getType() : ProspectType.PROSPECT.getType());
+        LeadDTOOld newEntity = service.create(clientId, lead, type != null ? type.getType() : LeadTypeRequestParam.PROSPECT.getType());
         try {
             return ResponseEntity
                     .created(new URI("/api/clients/" + clientId + "/leads/" + newEntity.getId()))

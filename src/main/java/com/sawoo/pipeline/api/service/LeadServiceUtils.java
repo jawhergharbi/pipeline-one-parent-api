@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.StatusDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
@@ -41,7 +41,7 @@ public class LeadServiceUtils {
         if (lead.getStatus() == null) {
             lead.setStatus(StatusDTO
                     .builder()
-                    .value( ProspectType.PROSPECT.getType() == type ?
+                    .value( LeadTypeRequestParam.PROSPECT.getType() == type ?
                             LeadStatusList.FUNNEL_ON_GOING.getStatus() :
                             LeadStatusList.HOT.getStatus() )
                     .updated(datetime)

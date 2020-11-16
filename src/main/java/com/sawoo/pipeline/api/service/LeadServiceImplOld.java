@@ -11,7 +11,7 @@ import com.sawoo.pipeline.api.dto.DiscTypeDTO;
 import com.sawoo.pipeline.api.dto.ReportDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadReportDataDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;

@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.service.ClientLeadService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class ClientLeadControllerTest extends BaseControllerTestOld {
                 .newLeadDTO(LEAD_ID, LEAD_FULL_NAME, LEAD_LINKED_IN_URL, LEAD_LINKED_THREAD, postEntity.getCompany());
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).create(CLIENT_ID, postEntity, ProspectType.LEAD.getType());
+        doReturn(mockedEntity).when(service).create(CLIENT_ID, postEntity, LeadTypeRequestParam.LEAD.getType());
 
         // Execute the POST request
         mockMvc.perform(post("/api/clients/{id}/leads", CLIENT_ID)
@@ -174,7 +174,7 @@ public class ClientLeadControllerTest extends BaseControllerTestOld {
 
         // setup the mocked service
         doThrow(exception)
-                .when(service).create(CLIENT_ID, postEntity, ProspectType.LEAD.getType());
+                .when(service).create(CLIENT_ID, postEntity, LeadTypeRequestParam.LEAD.getType());
 
         // Execute the POST request
         mockMvc.perform(post("/api/clients/{id}/leads", CLIENT_ID)
@@ -200,7 +200,7 @@ public class ClientLeadControllerTest extends BaseControllerTestOld {
 
         // setup the mocked service
         doThrow(exception)
-                .when(service).create(CLIENT_ID, postEntity, ProspectType.LEAD.getType());
+                .when(service).create(CLIENT_ID, postEntity, LeadTypeRequestParam.LEAD.getType());
 
         // Execute the POST request
         mockMvc.perform(post("/api/clients/{id}/leads", CLIENT_ID)

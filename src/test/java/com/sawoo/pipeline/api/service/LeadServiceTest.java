@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectType;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.lead.LeadStatusList;
@@ -103,7 +103,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
 
 
         // Execute the service call
-        LeadDTOOld returnedEntity = service.create(mockedDTO, ProspectType.LEAD.getType());
+        LeadDTOOld returnedEntity = service.create(mockedDTO, LeadTypeRequestParam.LEAD.getType());
 
         // Assertions
         Assertions.assertNotNull(returnedEntity, String.format("Lead entity with name [%s] was found already in the system", LEAD_FULL_NAME));
@@ -138,7 +138,7 @@ public class LeadServiceTest extends BaseServiceTestOld {
         // Execute the service call
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.create(mockedDTO, ProspectType.LEAD.getType()),
+                () -> service.create(mockedDTO, LeadTypeRequestParam.LEAD.getType()),
                 "create must throw a CommonServiceException");
 
         // Assertions

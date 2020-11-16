@@ -4,6 +4,7 @@ import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
 import com.sawoo.pipeline.api.dto.prospect.*;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.UserOld;
