@@ -195,20 +195,6 @@ public class MockFactory {
         return mockedEntity;
     }
 
-    public CompanyDTO newCompanyDTO(LocalDateTime dateTime) {
-        return newCompanyDTO(FAKER.internet().uuid(), FAKER.company().name(), FAKER.company().url(), dateTime);
-    }
-
-    public CompanyDTO newCompanyDTO(String id, String name, String url, LocalDateTime dateTime) {
-        return CompanyDTO.builder()
-                .id(id)
-                .name(name)
-                .url(url)
-                .updated(dateTime)
-                .created(dateTime)
-                .build();
-    }
-
     public CompanyOld newCompanyEntity(LocalDateTime dateTime) {
         return CompanyOld.builder()
                 .id(FAKER.number().randomNumber())
@@ -270,23 +256,5 @@ public class MockFactory {
         mockedEntity.setCreated(now);
         mockedEntity.setUpdated(now);
         return mockedEntity;
-    }
-
-    public UserOld newUserEntity(String componentId, String fullName, String[] roles) {
-        UserOld userOld = new UserOld();
-        userOld.setId(componentId);
-        userOld.setFullName(fullName);
-        userOld.setRoles(new HashSet<>(Arrays.asList(roles)));
-        userOld.setActive(true);
-        return userOld;
-    }
-
-    public UserDTOOld newUserDTO(String componentId, String fullName, String[] roles) {
-        UserDTOOld user = new UserDTOOld();
-        user.setId(componentId);
-        user.setFullName(fullName);
-        user.setActive(true);
-        user.setRoles(new HashSet<>(Arrays.asList(roles)));
-        return user;
     }
 }

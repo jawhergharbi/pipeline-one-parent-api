@@ -14,10 +14,12 @@ public abstract class BaseLightServiceTest<D, M extends BaseEntity, R extends Mo
     @Setter
     private R repository;
     private F mockFactory;
+    private String entityType;
     private S service;
 
     public BaseLightServiceTest(F mockFactory, String entityType, S service) {
         this.mockFactory = mockFactory;
+        this.entityType = entityType;
         this.service = service;
     }
 }

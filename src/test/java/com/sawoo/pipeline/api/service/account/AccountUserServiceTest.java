@@ -19,9 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -178,5 +176,58 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         verify(userRepository, Mockito.times(2)).findById(any());
         verify(getRepository(), Mockito.atMostOnce()).findAll();
         verify(getRepository(), Mockito.atMostOnce()).findByUserId(anyString());
+    }
+
+    @Test
+    @DisplayName("updateUser: user and account found - Success")
+    void updateUserWhenEntitiesFoundReturnsSuccess() {
+        // Set up mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account mockedEntity = getMockFactory().newEntity(ACCOUNT_ID);
+        User mockedUser = getMockFactory().getUserMockFactory().newEntity(USER_ID);
+        mockedUser.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        mockedEntity.getUsers().add(mockedUser);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(mockedUser)).when(userRepository).findById(anyString());
+        doReturn(Optional.of(mockedEntity)).when(getRepository()).findById(anyString());
+
+        // Execute the service call
+        AccountDTO returnedDTO = getService().updateUser(ACCOUNT_ID, USER_ID);
+
+        Assertions.assertFalse(returnedDTO.getUsers().isEmpty(), "Account list of user can not be empty");
+        Assertions.assertEquals(1, returnedDTO.getUsers().size(), String.format("Size of the list of users must be [%d]", 1));
+        Assertions.assertEquals(
+                USER_ID,
+                returnedDTO.getUsers().iterator().next().getId(),
+                String.format("User assigned id must be [%s]", USER_ID));
+
+        verify(userRepository, times(1)).findById(anyString());
+        verify(getRepository(), times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("updateUser: user not found - Failure")
+    void updateUserWhenUserNotFoundReturnsResourceNotFoundException() {
+        // Set up mocked entities
+        String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(userRepository).findById(anyString());
+
+        // Execute and assert
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().updateUser(ACCOUNT_ID, USER_ID),
+                "update must throw an ResourceNotFoundException");
+
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(userRepository, times(1)).findById(USER_ID);
     }
 }
