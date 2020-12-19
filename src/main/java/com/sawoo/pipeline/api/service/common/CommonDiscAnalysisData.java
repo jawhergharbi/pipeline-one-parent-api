@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
-import com.sawoo.pipeline.api.dto.DiscTypeDTO;
+import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -19,9 +19,9 @@ public class CommonDiscAnalysisData {
 
     private final ResourceLoader resourceLoader;
 
-    private List<DiscTypeDTO> discTypes;
+    private List<PersonalityDTO> discTypes;
 
-    public DiscTypeDTO getDiscType(int id) {
+    public PersonalityDTO getDiscType(int id) {
         if (discTypes == null) {
             initDiscTypeList();
         }
@@ -37,9 +37,9 @@ public class CommonDiscAnalysisData {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Resource resource = resourceLoader.getResource("classpath:" + discAnalysisResourcePath);
-            DiscTypeDTO[] discAnalysisTypes =
+            PersonalityDTO[] discAnalysisTypes =
                     objectMapper
-                            .readValue(resource.getInputStream(), DiscTypeDTO[].class);
+                            .readValue(resource.getInputStream(), PersonalityDTO[].class);
             discTypes = Arrays.asList(discAnalysisTypes);
         } catch (IOException exc) {
             throw new CommonServiceException(

@@ -14,4 +14,6 @@ public class PersonalityDTO {
 
     @JMap
     private Integer type;
+    private String color;
+    private String[] tips;
 }

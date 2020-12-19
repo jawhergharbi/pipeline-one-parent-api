@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
@@ -44,4 +45,14 @@ public class Lead extends BaseEntity {
 
     @JMap
     private Status status;
+
+    @JMapConversion(from = {"companyNotes"}, to = {"reportCompanyNotes"})
+    public String companyNotesConversion(Note companyNotes) {
+        return companyNotes == null ? "" : companyNotes.getText();
+    }
+
+    @JMapConversion(from = {"leadNotes"}, to = {"notes"})
+    public String leadNotesConversion(Note leadNotes) {
+        return leadNotes == null ? "" : leadNotes.getText();
+    }
 }

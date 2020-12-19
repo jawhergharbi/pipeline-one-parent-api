@@ -4,13 +4,15 @@ import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.client.ClientBasicDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadReportDataDTO;
-import com.sawoo.pipeline.api.dto.prospect.*;
+import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
 import com.sawoo.pipeline.api.dto.user.UserDTOOld;
 import com.sawoo.pipeline.api.model.UserOld;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,6 @@ public class CommonServiceMapper {
     private final JMapper<LeadDTOOld, LeadOld> leadDomainToDTOMapper = new JMapper<>(LeadDTOOld.class, LeadOld.class);
     private final JMapper<LeadBaseDTO, LeadOld> leadDomainToDTOBaseMapper = new JMapper<>(LeadBaseDTO.class, LeadOld.class);
     private final JMapper<LeadMainDTO, LeadOld> leadDomainToDTOMainMapper = new JMapper<>(LeadMainDTO.class, LeadOld.class);
-    private final JMapper<LeadReportDataDTO, LeadOld> leadDomainToReportDTOMapper = new JMapper<>(LeadReportDataDTO.class, LeadOld.class);
 
     private final JMapper<LeadOld, LeadDTOOld> leadDTOToDomainMapper = new JMapper<>(LeadOld.class, LeadDTOOld.class);
     private final JMapper<LeadInteractionDTO, LeadInteraction> leadInteractionDomainToDTOMapper = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
