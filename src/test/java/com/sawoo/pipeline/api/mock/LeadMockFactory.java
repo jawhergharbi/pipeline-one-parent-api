@@ -72,31 +72,34 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
 
     @Override
     public LeadDTO newDTO(String id) {
+        LocalDateTime now = LocalDateTime.now();
         LeadDTO dto = new LeadDTO();
         dto.setId(id);
         dto.setLinkedInThread(getFAKER().internet().url());
         dto.setCompanyNotes(
                 Note.builder()
                         .text(getFAKER().lorem().sentence(10))
-                        .updated(LocalDateTime.now())
+                        .updated(now)
                         .build());
         dto.setLeadNotes(
                 Note.builder()
                         .text(getFAKER().lorem().sentence(15))
-                        .updated(LocalDateTime.now()).
+                        .updated(now).
                         build());
         dto.setStatus(Status.builder()
                 .notes(Note.builder()
                         .text(getFAKER().lorem().sentence(20))
-                        .updated(LocalDateTime.now())
+                        .updated(now)
                         .build())
                 .value(1)
-                .updated(LocalDateTime.now())
+                .updated(now)
                 .build());
         dto.setProspect(ProspectDTO.builder()
                 .email(getFAKER().internet().emailAddress())
                 .phoneNumber(getFAKER().phoneNumber().phoneNumber())
                 .build());
+        dto.setCreated(now);
+        dto.setUpdated(now);
         return dto;
     }
 

@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class LeadControllerTest extends BaseControllerTestOld {
+public class LeadControllerTestOld extends BaseControllerTestOld {
 
     @Autowired
     private MockMvc mockMvc;

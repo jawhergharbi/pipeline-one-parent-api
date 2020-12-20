@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -42,6 +43,13 @@ public class LeadController {
             }
         }
         return delegator.create(lead);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<LeadDTO>> getAll() {
+        return delegator.findAll();
     }
 
     @RequestMapping(

@@ -5,9 +5,9 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
+import com.sawoo.pipeline.api.dto.company.CompanyValid;
 import lombok.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -47,7 +47,7 @@ public class ProspectDTO extends BaseEntityDTO {
     private String profilePicture;
 
     @JMap
-    @Valid
+    @CompanyValid(message = ExceptionMessageConstants.COMPANY_CROSS_FIELD_VALIDATION_ERROR)
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private CompanyDTO company;
 

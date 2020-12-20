@@ -16,10 +16,6 @@ public interface ExceptionMessageConstants {
     String CLIENT_UPDATE_SA_MUST_HAVE_ROLE_SA_EXCEPTION = "client.update-sa.must-have-role-sa.exception";
     String CLIENT_UPDATE_CSM_MUST_HAVE_ROLE_CSM_EXCEPTION = "client.update-csm.must-have-role-csm.exception";
 
-    String USER_CLIENT_ADD_CLIENT_DUPLICATED_ROLE_EXCEPTION = "user-client.add-client-duplicated-role.exception";
-    String USER_CLIENT_ADD_CLIENT_USER_ALREADY_ADDED_EXCEPTION = "user-client.add-client-user-already-added.exception";
-    String USER_CLIENT_ADD_CLIENT_USER_NO_OPS_ROLE_EXCEPTION = "user-client.add-client-user-no-ops-role.exception";
-
     String COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION = "common.create.entity-already-exists.exception";
 
     String COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION = "common.get-component.not-found.exception";
@@ -38,5 +34,7 @@ public interface ExceptionMessageConstants {
 
     String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
     String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
+
+    String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
 
 }
