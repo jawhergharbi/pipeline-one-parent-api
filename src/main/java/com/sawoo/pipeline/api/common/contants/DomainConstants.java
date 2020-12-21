@@ -2,9 +2,6 @@ package com.sawoo.pipeline.api.common.contants;
 
 public interface DomainConstants {
 
-    Integer AUTHORIZATION_PROVIDER_TYPE_EMAIL = 0;
-    Integer AUTHORIZATION_PROVIDER_TYPE_ID = 1;
-
     Integer SALUTATION_EMPTY = 0;
     Integer SALUTATION_MISTER = 1;
     Integer SALUTATION_MISS = 2;
