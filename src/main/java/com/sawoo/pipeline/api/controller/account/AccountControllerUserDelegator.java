@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Validated
-public interface AccountControllerCustomDelegator {
+public interface AccountControllerUserDelegator {
 
     ResponseEntity<List<AccountDTO>>  findByUserId(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String userId);

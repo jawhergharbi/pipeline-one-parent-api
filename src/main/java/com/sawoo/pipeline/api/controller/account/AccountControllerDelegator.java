@@ -16,7 +16,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @Component
-public class AccountControllerDelegator extends BaseControllerDelegator<AccountDTO, AccountService> implements AccountControllerCustomDelegator {
+public class AccountControllerDelegator extends BaseControllerDelegator<AccountDTO, AccountService>
+        implements AccountControllerUserDelegator, AccountControllerLeadDelegator {
 
     @Autowired
     public AccountControllerDelegator(AccountService service) {
