@@ -105,7 +105,7 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(1)))
                 .andExpect(jsonPath("$.messages[0]",
-                        containsString("Field company must include either the [id] field or both [name and url] fields")));
+                        containsString("Field [company] must include either the [id] field or both [name and url] fields")));
     }
 
     @Test
