@@ -66,6 +66,11 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
         return Arrays.asList("email", "fullName", "created");
     }
 
+    @Override
+    protected Class<AccountDTO> getDTOClass() {
+        return AccountDTO.class;
+    }
+
     @Test
     @DisplayName("POST /api/accounts: resource fullName not informed - Failure")
     void createWhenFullNameAndPositionNotInformedReturnsFailure() throws Exception {

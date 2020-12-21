@@ -67,6 +67,11 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     }
 
     @Override
+    protected Class<UserAuthDTO> getDTOClass() {
+        return UserAuthDTO.class;
+    }
+
+    @Override
     protected void updateWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
         // update method can not be called
         Assertions.assertTrue(true, "Override to avoid super class call");

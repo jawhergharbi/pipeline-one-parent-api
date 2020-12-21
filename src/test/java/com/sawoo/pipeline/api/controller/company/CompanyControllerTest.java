@@ -61,6 +61,11 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
         return Arrays.asList("name", "url", "created");
     }
 
+    @Override
+    protected Class<CompanyDTO> getDTOClass() {
+        return CompanyDTO.class;
+    }
+
     @Test
     @DisplayName("POST /api/companies: resource name not informed - Failure")
     void createWhenNameAndSiteNotInformedReturnsFailure() throws Exception {

@@ -61,8 +61,13 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
         return Arrays.asList("linkedInUrl", "firstName", "lastName", "created");
     }
 
+    @Override
+    protected Class<ProspectDTO> getDTOClass() {
+        return ProspectDTO.class;
+    }
+
     @Test
-    @DisplayName("POST /api/prospect: firstName not informed - Failure")
+    @DisplayName("POST /api/prospects: firstName not informed - Failure")
     void createWhenFirstNameNotInformedReturnsFailure() throws Exception {
         String PROSPECT_LAST_NAME = getMockFactory().getFAKER().name().lastName();
         ProspectDTO postEntity = getMockFactory().newDTO(null, null, PROSPECT_LAST_NAME);
@@ -81,7 +86,7 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
     }
 
     @Test
-    @DisplayName("POST /api/prospect: company id and company name not informed - Failure")
+    @DisplayName("POST /api/prospects: company id and company name not informed - Failure")
     void createWhenCompanyIdAndCompanyNameNotInformedReturnsFailure() throws Exception {
         String PROSPECT_LAST_NAME = getMockFactory().getFAKER().name().lastName();
         String PROSPECT_FIRST_NAME = getMockFactory().getFAKER().name().firstName();
@@ -104,7 +109,7 @@ public class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Pros
     }
 
     @Test
-    @DisplayName("POST /api/prospect: company id informed but company name and url not informed - Success")
+    @DisplayName("POST /api/prospects: company id informed but company name and url not informed - Success")
     void createWhenCompanyIdInformedAndCompanyNameAndCompanyUrlNotInformedReturnsSuccess() throws Exception {
         String PROSPECT_LAST_NAME = getMockFactory().getFAKER().name().lastName();
         String PROSPECT_FIRST_NAME = getMockFactory().getFAKER().name().firstName();

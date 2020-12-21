@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,6 +53,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
     protected abstract String getExistCheckProperty();
     protected abstract List<String> getResourceFieldsToBeChecked();
+    protected abstract Class<D> getDTOClass();
 
     protected static String asJsonString(final Object obj) {
         try {
@@ -256,7 +258,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
 
         // setup the mocked service
         doThrow(exception)
-                .when(service).create(postEntity);
+                .when(service).create(ArgumentMatchers.any(getDTOClass()));
 
         // Execute the POST request
         mockMvc.perform(post(resourceURI)
@@ -285,7 +287,7 @@ public abstract class BaseControllerTest<D, M extends BaseEntity, S extends Base
         D mockedEntity = getMockFactory().newDTO(COMPONENT_ID, postEntity);
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).create(postEntity);
+        doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI())

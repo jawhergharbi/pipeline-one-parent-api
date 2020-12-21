@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,25 +23,25 @@ public class LeadController {
 
     private final LeadControllerDelegator delegator;
 
-    @RequestMapping(
-            value = {"/", "/{type}",},
+   @RequestMapping(
+            value = { "", "/{type}"},
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> save(
             @PathVariable(required = false) LeadTypeRequestParam type,
-            @RequestBody LeadDTO lead) {
-        if (lead != null) {
-            if (type != null && type.equals(LeadTypeRequestParam.LEAD)) {
-                lead.setStatus(Status.builder()
-                        .value(LeadStatusList.HOT.getStatus())
-                        .updated(LocalDateTime.now()).build());
-            } else {
-                lead.setStatus(Status.builder()
-                        .value(LeadStatusList.FUNNEL_ON_GOING.getStatus())
-                        .updated(LocalDateTime.now())
-                        .build());
-            }
+            @NotNull @RequestBody LeadDTO lead) {
+        if (type != null && type.equals(LeadTypeRequestParam.LEAD)) {
+            lead.setStatus(Status
+                    .builder()
+                    .value(LeadStatusList.HOT.getStatus())
+                    .updated(LocalDateTime.now()).build());
+        } else {
+            lead.setStatus(Status
+                    .builder()
+                    .value(LeadStatusList.FUNNEL_ON_GOING.getStatus())
+                    .updated(LocalDateTime.now())
+                    .build());
         }
         return delegator.create(lead);
     }

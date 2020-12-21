@@ -1,5 +1,7 @@
 package com.sawoo.pipeline.api.mock;
 
+import com.sawoo.pipeline.api.dto.PersonalityDTO;
+import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.common.Note;
@@ -94,9 +96,23 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
                 .value(1)
                 .updated(now)
                 .build());
-        dto.setProspect(ProspectDTO.builder()
+        dto.setProspect(ProspectDTO
+                .builder()
                 .email(getFAKER().internet().emailAddress())
+                .firstName(getFAKER().name().firstName())
+                .lastName(getFAKER().name().lastName())
+                .linkedInUrl(getFAKER().internet().url())
+                .position(getFAKER().company().profession())
+                .salutation(1)
                 .phoneNumber(getFAKER().phoneNumber().phoneNumber())
+                .profilePicture(getFAKER().internet().url())
+                .personality(PersonalityDTO.builder().type(1).build())
+                .company(CompanyDTO
+                        .builder()
+                        .name(getFAKER().company().name())
+                        .headcount(1000)
+                        .url(getFAKER().company().url())
+                        .build())
                 .build());
         dto.setCreated(now);
         dto.setUpdated(now);
@@ -106,6 +122,12 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
     @Override
     public LeadDTO newDTO(String id, LeadDTO dto) {
         LeadDTO newDTO = dto.toBuilder().build();
+        newDTO.setId(id);
+        newDTO.setProspect(dto.getProspect());
+        newDTO.setLeadNotes(dto.getLeadNotes());
+        newDTO.setCompanyNotes(dto.getCompanyNotes());
+        newDTO.setLinkedInThread(dto.getLinkedInThread());
+        newDTO.setStatus(dto.getStatus());
         return newDTO;
     }
 }

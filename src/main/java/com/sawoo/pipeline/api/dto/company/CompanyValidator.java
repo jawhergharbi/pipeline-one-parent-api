@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class CompanyValidator implements ConstraintValidator<CompanyValid, CompanyDTO> {
     @Override
-    public boolean isValid(CompanyDTO companyDTO, ConstraintValidatorContext constraintValidatorContext) {
-        return companyDTO.getId() != null || (StringUtils.hasText(companyDTO.getName()) && StringUtils.hasText(companyDTO.getUrl()));
+    public boolean isValid(CompanyDTO company, ConstraintValidatorContext constraintValidatorContext) {
+        return company.getId() != null || (StringUtils.hasText(company.getName()) && StringUtils.hasText(company.getUrl()));
     }
 }
