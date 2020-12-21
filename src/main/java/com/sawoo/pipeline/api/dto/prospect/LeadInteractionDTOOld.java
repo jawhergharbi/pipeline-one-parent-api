@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LeadInteractionDTO extends LeadInteractionBaseDTO {
+public class LeadInteractionDTOOld extends LeadInteractionBaseDTO {
 
     @JMap("key")
     private Long id;

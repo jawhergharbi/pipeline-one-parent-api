@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = DBConstants.LEAD_ACTION_DOCUMENT)
-public class LeadInteraction {
+public class LeadInteractionOld {
 
     @Id
     private Key key;

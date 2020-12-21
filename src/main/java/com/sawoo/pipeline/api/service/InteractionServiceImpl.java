@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
 import com.sawoo.pipeline.api.model.client.Client;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
 import com.sawoo.pipeline.api.service.common.CommonServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +44,8 @@ public class InteractionServiceImpl implements InteractionService {
             ClientBaseDTO clientDTO = mapper.getClientDomainToDTOBaseMapper().getDestination(client);
             return client.getLeads().stream().flatMap( (lead) -> {
                 LeadBaseDTO leadDTO = mapper.getLeadDomainToDTOBaseMapper().getDestination(lead);
-                List<LeadInteraction> interactions = lead.getInteractions();
-                List<Predicate<LeadInteraction>> predicates = getFilters(types, status);
+                List<LeadInteractionOld> interactions = lead.getInteractions();
+                List<Predicate<LeadInteractionOld>> predicates = getFilters(types, status);
                 if (predicates.size() > 0) {
                     return interactions.stream()
                             .filter(predicates.stream().reduce(x -> true, Predicate::and))
@@ -58,20 +58,20 @@ public class InteractionServiceImpl implements InteractionService {
         }).collect(Collectors.toList());
     }
 
-    private List<Predicate<LeadInteraction>> getFilters(Integer[] types, Integer[] statusList) {
-        List<Predicate<LeadInteraction>> filters = new ArrayList<>();
+    private List<Predicate<LeadInteractionOld>> getFilters(Integer[] types, Integer[] statusList) {
+        List<Predicate<LeadInteractionOld>> filters = new ArrayList<>();
         if (types != null && types.length > 0) {
-            Predicate<LeadInteraction> typeFilter = i -> Arrays.asList(types).contains(i.getType());
+            Predicate<LeadInteractionOld> typeFilter = i -> Arrays.asList(types).contains(i.getType());
             filters.add(typeFilter);
         }
         if (statusList != null && statusList.length > 0) {
-            Predicate<LeadInteraction> statusFilter = i -> Arrays.asList(statusList).contains(i.getStatus());
+            Predicate<LeadInteractionOld> statusFilter = i -> Arrays.asList(statusList).contains(i.getStatus());
             filters.add(statusFilter);
         }
         return filters;
     }
 
-    private InteractionDTO mapInteraction(LeadInteraction interaction, ClientBaseDTO client, LeadBaseDTO lead) {
+    private InteractionDTO mapInteraction(LeadInteractionOld interaction, ClientBaseDTO client, LeadBaseDTO lead) {
         InteractionDTO interactionDTO = mapper.getInteractionDomainToDTOMapper().getDestination(interaction);
         interactionDTO.setClient(client);
         interactionDTO.setLead(lead);

@@ -4,9 +4,9 @@ import com.googlecode.jmapper.JMapper;
 import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +23,20 @@ import java.util.stream.Collectors;
 @Service
 public class LeadInteractionServiceImpl implements LeadInteractionService {
 
-    private final JMapper<LeadInteractionDTO, LeadInteraction> mapperDomainToDTO = new JMapper<>(LeadInteractionDTO.class, LeadInteraction.class);
-    private final JMapper<LeadInteraction, LeadInteractionRequestDTO> mapperDTOToDomain = new JMapper<>(LeadInteraction.class, LeadInteractionRequestDTO.class);
+    private final JMapper<LeadInteractionDTOOld, LeadInteractionOld> mapperDomainToDTO = new JMapper<>(LeadInteractionDTOOld.class, LeadInteractionOld.class);
+    private final JMapper<LeadInteractionOld, LeadInteractionRequestDTO> mapperDTOToDomain = new JMapper<>(LeadInteractionOld.class, LeadInteractionRequestDTO.class);
 
     private final LeadRepositoryOld leadRepository;
     private final LeadInteractionRepositoryWrapper repository;
 
     @Override
-    public LeadInteractionDTO create(Long leadId, LeadInteractionRequestDTO interaction) throws ResourceNotFoundException {
+    public LeadInteractionDTOOld create(Long leadId, LeadInteractionRequestDTO interaction) throws ResourceNotFoundException {
         log.debug("Creating new lead interaction. Lead id: [{}]. Interaction: [{}]", leadId, interaction);
 
         return leadRepository
                 .findById(leadId)
                 .map((lead) -> {
-                    LeadInteraction entity = mapperDTOToDomain.getDestination(interaction, MappingType.ONLY_VALUED_FIELDS);
+                    LeadInteractionOld entity = mapperDTOToDomain.getDestination(interaction, MappingType.ONLY_VALUED_FIELDS);
                     entity.setCreated(interaction.getDateTime());
                     entity.setUpdated(interaction.getDateTime());
 
@@ -53,7 +53,7 @@ public class LeadInteractionServiceImpl implements LeadInteractionService {
     }
 
     @Override
-    public LeadInteractionDTO findById(Long leadId, Long id) throws ResourceNotFoundException {
+    public LeadInteractionDTOOld findById(Long leadId, Long id) throws ResourceNotFoundException {
         log.debug("Retrieve lead interaction by id. Lead id: [{}]. Interaction id: [{}]", leadId, id);
 
         return repository
@@ -72,13 +72,13 @@ public class LeadInteractionServiceImpl implements LeadInteractionService {
     }
 
     @Override
-    public List<LeadInteractionDTO> findAll(Long leadId) {
+    public List<LeadInteractionDTOOld> findAll(Long leadId) {
         log.debug("Retrieve lead interactions for lead id [{}]", leadId);
 
         return leadRepository
                 .findById(leadId)
                 .map((lead) -> {
-                    List<LeadInteraction> interactions = lead.getInteractions();
+                    List<LeadInteractionOld> interactions = lead.getInteractions();
                     log.debug(
                             "[{}] interactions has/have been found for lead id [{}]",
                             interactions.size(),
@@ -92,7 +92,7 @@ public class LeadInteractionServiceImpl implements LeadInteractionService {
     }
 
     @Override
-    public Optional<LeadInteractionDTO> delete(Long leadId, Long id) {
+    public Optional<LeadInteractionDTOOld> delete(Long leadId, Long id) {
         log.debug("Delete lead interaction id[{}] for lead id [{}]", id, leadId);
 
         return repository
@@ -101,7 +101,7 @@ public class LeadInteractionServiceImpl implements LeadInteractionService {
     }
 
     @Override
-    public Optional<LeadInteractionDTO> update(Long leadId, Long id, LeadInteractionRequestDTO interactionRequest) {
+    public Optional<LeadInteractionDTOOld> update(Long leadId, Long id, LeadInteractionRequestDTO interactionRequest) {
         log.debug("Update lead interaction id[{}] for lead id [{}]. Interaction: [{}]", id, leadId, interactionRequest);
 
         return repository

@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.dto.interaction;
 
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class InteractionDTO extends LeadInteractionDTO {
+public class InteractionDTO extends LeadInteractionDTOOld {
 
     private ClientBaseDTO client;
 

@@ -1,10 +1,10 @@
 package com.sawoo.pipeline.api.service;
 
 import com.google.cloud.datastore.Key;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
 import org.junit.jupiter.api.*;
@@ -41,7 +41,7 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
         int INTERACTION_STATUS = FAKER.number().numberBetween(0, 4);
         int INTERACTION_CHANNEL = FAKER.number().numberBetween(0, 3);
         String INTERACTION_INVITE_URL = FAKER.internet().url();
-        LeadInteraction mockedEntity = newMockedEntity(
+        LeadInteractionOld mockedEntity = newMockedEntity(
                 LEAD_ID,
                 LEAD_INTERACTION_ID,
                 INTERACTION_STATUS,
@@ -52,7 +52,7 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
         doReturn(Optional.of(mockedEntity)).when(repository).findById(LEAD_ID, LEAD_INTERACTION_ID);
 
         // Execute the service call
-        LeadInteractionDTO returnedEntity = service.findById(LEAD_ID, LEAD_INTERACTION_ID);
+        LeadInteractionDTOOld returnedEntity = service.findById(LEAD_ID, LEAD_INTERACTION_ID);
 
         // Assert the response
         Assertions.assertNotNull(returnedEntity, "LeadInteraction entity with id " + LEAD_ID + " was not found");
@@ -61,8 +61,8 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
         verify(repository, Mockito.times(1)).findById(any(), any());
     }
 
-    private LeadInteraction newMockedEntity(Long leadId, Long id, int status, int type, String urlInvite) {
-        LeadInteraction mockedEntity = new LeadInteraction();
+    private LeadInteractionOld newMockedEntity(Long leadId, Long id, int status, int type, String urlInvite) {
+        LeadInteractionOld mockedEntity = new LeadInteractionOld();
         mockedEntity.setKey(createKey(leadId, id));
         mockedEntity.setStatus(status);
         mockedEntity.setType(type);

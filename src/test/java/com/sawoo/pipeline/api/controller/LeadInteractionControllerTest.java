@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import com.sawoo.pipeline.api.service.LeadInteractionService;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +51,7 @@ public class LeadInteractionControllerTest extends BaseControllerTestOld {
         postDTO.setScheduled(now);
         postDTO.setDateTime(now);
 
-        LeadInteractionDTO mockedDTO = newMockedDTOEntity(LEAD_INTERACTION_ID, INTERACTION_STATUS, INTERACTION_CHANNEL, URL_INVITE);
+        LeadInteractionDTOOld mockedDTO = newMockedDTOEntity(LEAD_INTERACTION_ID, INTERACTION_STATUS, INTERACTION_CHANNEL, URL_INVITE);
         mockedDTO.setCreated(now);
         mockedDTO.setUpdated(now);
 
@@ -111,8 +111,8 @@ public class LeadInteractionControllerTest extends BaseControllerTestOld {
         return mockedDTO;
     }
 
-    private LeadInteractionDTO newMockedDTOEntity(Long id, int status, int type, String urlInvite) {
-        LeadInteractionDTO mockedDTO = new LeadInteractionDTO();
+    private LeadInteractionDTOOld newMockedDTOEntity(Long id, int status, int type, String urlInvite) {
+        LeadInteractionDTOOld mockedDTO = new LeadInteractionDTOOld();
         mockedDTO.setId(id);
         mockedDTO.setStatus(status);
         mockedDTO.setType(type);

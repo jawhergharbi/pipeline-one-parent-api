@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.repository.interaction;
 
 import com.google.cloud.datastore.Key;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,11 @@ import java.util.Optional;
 public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepositoryWrapper {
 
     private final DataStoreKeyFactory datastoreKeyFactory;
-    private final LeadInteractionRepository repository;
+    private final LeadInteractionRepositoryOld repository;
 
 
     @Override
-    public LeadInteraction save(Long leadId, LeadInteraction interaction) {
+    public LeadInteractionOld save(Long leadId, LeadInteractionOld interaction) {
         log.debug("Save interaction for lead id [{}]. Interaction: [{}]", leadId, interaction);
 
         Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
@@ -35,13 +35,13 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     }
 
     @Override
-    public LeadInteraction save(LeadInteraction interaction) {
+    public LeadInteractionOld save(LeadInteractionOld interaction) {
         log.debug("Save interaction: [{}]", interaction);
         return repository.save(interaction);
     }
 
     @Override
-    public Optional<LeadInteraction> findById(Long leadId, Long interactionId) {
+    public Optional<LeadInteractionOld> findById(Long leadId, Long interactionId) {
         log.debug("Retrieve interaction for lead id [{}] and lead interaction id[{}]", leadId, interactionId);
 
         Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
@@ -51,7 +51,7 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
     }
 
     @Override
-    public Optional<LeadInteraction> deleteById(Long leadId, Long interactionId) {
+    public Optional<LeadInteractionOld> deleteById(Long leadId, Long interactionId) {
         log.debug("Delete interaction for lead id [{}] and interaction id[{}]", leadId, interactionId);
 
         return findById(leadId, interactionId)

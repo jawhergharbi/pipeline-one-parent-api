@@ -12,7 +12,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import org.junit.jupiter.api.*;
@@ -413,8 +413,8 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
                 "Number of arguments in the exception must be 2");
     }
 
-    private LeadInteraction newLeadInteractionEntity(Key key, int status, int type, String urlInvite) {
-        LeadInteraction mockedEntity = new LeadInteraction();
+    private LeadInteractionOld newLeadInteractionEntity(Key key, int status, int type, String urlInvite) {
+        LeadInteractionOld mockedEntity = new LeadInteractionOld();
         mockedEntity.setKey(key);
         mockedEntity.setStatus(status);
         mockedEntity.setType(type);

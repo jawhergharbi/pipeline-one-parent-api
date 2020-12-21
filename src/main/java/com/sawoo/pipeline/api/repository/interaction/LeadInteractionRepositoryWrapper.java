@@ -1,16 +1,16 @@
 package com.sawoo.pipeline.api.repository.interaction;
 
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 
 import java.util.Optional;
 
 public interface LeadInteractionRepositoryWrapper {
 
-    LeadInteraction save(Long leadId, LeadInteraction interaction);
+    LeadInteractionOld save(Long leadId, LeadInteractionOld interaction);
 
-    LeadInteraction save(LeadInteraction interaction);
+    LeadInteractionOld save(LeadInteractionOld interaction);
 
-    Optional<LeadInteraction> findById(Long leadId, Long interactionId);
+    Optional<LeadInteractionOld> findById(Long leadId, Long interactionId);
 
-    Optional<LeadInteraction> deleteById(Long leadId, Long interactionId);
+    Optional<LeadInteractionOld> deleteById(Long leadId, Long interactionId);
 }

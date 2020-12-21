@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.model.*;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
+import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.user.User;
 import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
@@ -14,7 +15,9 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -67,5 +70,15 @@ public class Account extends BaseEntity {
             users = new HashSet<>();
         }
         return users;
+    }
+
+    @DBRef(lazy = true)
+    private List<Lead> leads;
+
+    public List<Lead> getLeads() {
+        if (leads == null) {
+            leads = new ArrayList<>();
+        }
+        return leads;
     }
 }

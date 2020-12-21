@@ -3,8 +3,8 @@ package com.sawoo.pipeline.api.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sawoo.pipeline.api.model.prospect.LeadInteraction;
-import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepository;
+import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
+import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryOld;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -30,7 +30,7 @@ public class LeadInteractionRepositoryTest {
     private DatastoreTemplate datastoreTemplate;
 
     @Autowired
-    private LeadInteractionRepository repository;
+    private LeadInteractionRepositoryOld repository;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -39,7 +39,7 @@ public class LeadInteractionRepositoryTest {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         // Deserialize our JSON file to an array of reviews
-        LeadInteraction[] interactionList = mapper.readValue(INTERACTION_JSON_DATA, LeadInteraction[].class);
+        LeadInteractionOld[] interactionList = mapper.readValue(INTERACTION_JSON_DATA, LeadInteractionOld[].class);
 
         // Load each entity into the dataStore
         Arrays.stream(interactionList).forEach((item) -> {
@@ -51,7 +51,7 @@ public class LeadInteractionRepositoryTest {
     @AfterEach
     void afterEach() {
         // Drop the entity collection so we can start fresh
-        datastoreTemplate.deleteAllById(interactionIdList, LeadInteraction.class);
+        datastoreTemplate.deleteAllById(interactionIdList, LeadInteractionOld.class);
         interactionIdList.clear();
     }
 }

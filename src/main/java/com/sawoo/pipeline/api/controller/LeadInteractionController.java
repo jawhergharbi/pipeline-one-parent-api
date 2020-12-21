@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import com.sawoo.pipeline.api.service.LeadInteractionService;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +31,10 @@ public class LeadInteractionController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadInteractionDTO> create(
+    public ResponseEntity<LeadInteractionDTOOld> create(
             @NotNull @PathVariable("leadId") Long leadId,
             @Valid @RequestBody LeadInteractionRequestDTO interaction) {
-        LeadInteractionDTO newEntity = service.create(leadId, interaction);
+        LeadInteractionDTOOld newEntity = service.create(leadId, interaction);
         try {
             return ResponseEntity
                     .created(new URI("/api/leads/" + leadId + "/interactions/" + newEntity.getId()))
@@ -48,7 +48,7 @@ public class LeadInteractionController {
             value = "/{leadId}/interactions",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadInteractionDTO>> getAll(
+    public ResponseEntity<List<LeadInteractionDTOOld>> getAll(
             @NotNull @PathVariable("leadId") Long leadId) {
         return ResponseEntity.ok().body(service.findAll(leadId));
     }
@@ -57,7 +57,7 @@ public class LeadInteractionController {
             value = "/{leadId}/interactions/{id}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadInteractionDTO> get(
+    public ResponseEntity<LeadInteractionDTOOld> get(
             @NotNull @PathVariable("leadId") Long leadId,
             @NotNull @PathVariable("id") Long id) {
         return ResponseEntity.ok().body(service.findById(leadId, id));
@@ -67,7 +67,7 @@ public class LeadInteractionController {
             value = "/{leadId}/interactions/{id}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadInteractionDTO> delete(
+    public ResponseEntity<LeadInteractionDTOOld> delete(
             @NotNull @PathVariable("leadId") Long leadId,
             @NotNull @PathVariable("id") Long id) throws ResourceNotFoundException {
         return service

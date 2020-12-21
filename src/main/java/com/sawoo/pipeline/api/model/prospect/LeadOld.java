@@ -80,8 +80,8 @@ public class LeadOld {
     private Personality personality;
 
     @Descendants
-    private List<LeadInteraction> interactions;
-    public List<LeadInteraction> getInteractions() {
+    private List<LeadInteractionOld> interactions;
+    public List<LeadInteractionOld> getInteractions() {
         if (interactions == null) {
             interactions = new ArrayList<>();
         }

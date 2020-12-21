@@ -10,7 +10,6 @@ import com.sawoo.pipeline.api.model.common.Status;
 import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Data
