@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
@@ -60,7 +60,7 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                         USER_ID,
                         USER_EMAIL,
                         null,
-                        new String[] {Role.MNG.name()});
+                        new String[] {UserRole.MNG.name()});
         int listSize = 3;
         List<Account> entityList = IntStream.range(0, listSize)
                 .mapToObj((entity) -> {
@@ -141,11 +141,11 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         String USER_MGN_ID = getMockFactory().getFAKER().internet().uuid();
         User userMNG = getMockFactory()
                 .getUserMockFactory()
-                .newEntity(USER_MGN_ID, new String[]{Role.MNG.name(), Role.USER.name()});
+                .newEntity(USER_MGN_ID, new String[]{UserRole.MNG.name(), UserRole.USER.name()});
         String USER_ADM_ID = getMockFactory().getFAKER().internet().uuid();
         User userADM = getMockFactory()
                 .getUserMockFactory()
-                .newEntity(USER_MGN_ID, new String[]{Role.ADMIN.name(), Role.USER.name()});
+                .newEntity(USER_MGN_ID, new String[]{UserRole.ADMIN.name(), UserRole.USER.name()});
         int listSize = 3;
         List<Account> entityList = IntStream.range(0, listSize)
                 .mapToObj((entity) -> {
@@ -186,7 +186,7 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account mockedEntity = getMockFactory().newEntity(ACCOUNT_ID);
         User mockedUser = getMockFactory().getUserMockFactory().newEntity(USER_ID);
-        mockedUser.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        mockedUser.setRoles(new HashSet<>(Arrays.asList(UserRole.MNG.name(), UserRole.USER.name())));
         mockedEntity.getUsers().add(mockedUser);
 
         // Set up the mocked repository

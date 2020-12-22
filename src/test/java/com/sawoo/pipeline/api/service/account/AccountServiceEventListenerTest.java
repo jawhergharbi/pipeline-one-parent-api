@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
@@ -34,7 +34,7 @@ public class AccountServiceEventListenerTest {
         Account entity = mockFactory.newEntity(ACCOUNT_ID);
         String USER_ID = mockFactory.getUserMockFactory().getComponentId();
         UserAuthDTO user = mockFactory.getUserMockFactory().newDTO(USER_ID);
-        user.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        user.setRoles(new HashSet<>(Arrays.asList(UserRole.MNG.name(), UserRole.USER.name())));
         AccountDTO postDTO = new AccountDTO();
         postDTO.setId(ACCOUNT_ID);
         postDTO.getUsers().add(user);
@@ -44,15 +44,15 @@ public class AccountServiceEventListenerTest {
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
-                        1, Role.MNG.name()),
+                        1, UserRole.MNG.name()),
                 () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
                 () -> Assertions.assertEquals(1, entity.getUsers().size(), String.format("User list size must be [%s]", 1)),
                 () -> {
                     User u = entity.getUsers().iterator().next();
                     Assertions.assertEquals(
-                            Role.MNG,
-                            Role.getDefaultRole(u.getRoles()),
-                            String.format("User id: [%s] default role have to be [%s]" , Role.MNG.name(), u.getId()));
+                            UserRole.MNG,
+                            UserRole.getDefaultRole(u.getRoles()),
+                            String.format("User id: [%s] default role have to be [%s]" , UserRole.MNG.name(), u.getId()));
                 });
     }
 
@@ -76,7 +76,7 @@ public class AccountServiceEventListenerTest {
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
-                        1, Role.MNG.name()),
+                        1, UserRole.MNG.name()),
                 () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
                 () -> Assertions.assertEquals(1, entity.getUsers().size(), String.format("User list size must be [%s]", 1)),
                 () -> {
@@ -96,11 +96,11 @@ public class AccountServiceEventListenerTest {
         Account entity = mockFactory.newEntity(ACCOUNT_ID);
         String USER_ID = mockFactory.getUserMockFactory().getComponentId();
         User user = mockFactory.getUserMockFactory().newEntity(USER_ID);
-        user.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        user.setRoles(new HashSet<>(Arrays.asList(UserRole.MNG.name(), UserRole.USER.name())));
         entity.getUsers().add(user);
 
         UserAuthDTO newUser = mockFactory.getUserMockFactory().newDTO(mockFactory.getFAKER().internet().uuid());
-        newUser.setRoles(new HashSet<>(Arrays.asList(Role.AST.name(), Role.USER.name())));
+        newUser.setRoles(new HashSet<>(Arrays.asList(UserRole.AST.name(), UserRole.USER.name())));
         AccountDTO postDTO = new AccountDTO();
         postDTO.setId(ACCOUNT_ID);
         postDTO.getUsers().add(newUser);
@@ -110,7 +110,7 @@ public class AccountServiceEventListenerTest {
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
-                        1, Role.MNG.name()),
+                        1, UserRole.MNG.name()),
                 () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
                 () -> Assertions.assertEquals(2, entity.getUsers().size(), String.format("User list size must be [%s]", 2))
         );
@@ -124,12 +124,12 @@ public class AccountServiceEventListenerTest {
         Account entity = mockFactory.newEntity(ACCOUNT_ID);
         String USER_ID = mockFactory.getUserMockFactory().getComponentId();
         User user = mockFactory.getUserMockFactory().newEntity(USER_ID);
-        user.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        user.setRoles(new HashSet<>(Arrays.asList(UserRole.MNG.name(), UserRole.USER.name())));
         entity.getUsers().add(user);
 
         String NEW_USER_ID = mockFactory.getFAKER().internet().uuid();
         UserAuthDTO newUser = mockFactory.getUserMockFactory().newDTO(NEW_USER_ID);
-        newUser.setRoles(new HashSet<>(Arrays.asList(Role.MNG.name(), Role.USER.name())));
+        newUser.setRoles(new HashSet<>(Arrays.asList(UserRole.MNG.name(), UserRole.USER.name())));
         AccountDTO postDTO = new AccountDTO();
         postDTO.setId(ACCOUNT_ID);
         postDTO.getUsers().add(newUser);
@@ -139,7 +139,7 @@ public class AccountServiceEventListenerTest {
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
-                        1, Role.MNG.name()),
+                        1, UserRole.MNG.name()),
                 () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
                 () -> Assertions.assertEquals(1, entity.getUsers().size(), String.format("User list size must be [%s]", 1)),
                 () -> {

@@ -1,7 +1,6 @@
 package com.sawoo.pipeline.api.model.common;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.model.common.Note;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

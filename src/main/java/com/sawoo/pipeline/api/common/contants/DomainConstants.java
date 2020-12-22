@@ -13,13 +13,6 @@ public interface DomainConstants {
     String PROSPECT_REPORT_TEMPLATE_REPORT = "report";
     String PROSPECT_REPORT_TEMPLATE_FULL_REPORT = "report-full";
 
-    enum ClientStatus {
-        ON_BOARDING,
-        RUNNING,
-        PAUSED,
-        ENDED
-    }
-
     enum InteractionStatus {
         SCHEDULED,
         CANCELLED,

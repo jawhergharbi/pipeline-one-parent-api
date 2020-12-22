@@ -1,7 +1,10 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.model.account.AccountStatus;
+import com.sawoo.pipeline.api.model.common.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -23,6 +26,9 @@ public class AccountController {
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> create(@RequestBody AccountDTO dto) {
+        if (dto.getStatus() == null) {
+            dto.setStatus(Status.builder().value(AccountStatus.ON_BOARDING.getValue()).build());
+        }
         return delegator.create(dto);
     }
 

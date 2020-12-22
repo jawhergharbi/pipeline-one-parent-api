@@ -29,7 +29,7 @@ public class CompanyCascadeOperationDelegator implements CascadeOperationDelegat
                                     companyRepository.insert(child);
                                 });
             } else {
-                companyRepository
+                    companyRepository
                         .findById(child.getId())
                         .ifPresentOrElse(parentFunction,
                                 () -> {

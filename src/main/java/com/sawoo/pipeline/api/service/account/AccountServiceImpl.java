@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.service.account;
 
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -53,7 +53,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
                 .findById(userId)
                 .map((user) -> {
                     List<Account> accounts;
-                    if (user.getRoles().contains(Role.ADMIN.name())) {
+                    if (user.getRoles().contains(UserRole.ADMIN.name())) {
                         accounts = getRepository().findAll();
                     } else {
                         accounts = getRepository().findByUserId(userId);

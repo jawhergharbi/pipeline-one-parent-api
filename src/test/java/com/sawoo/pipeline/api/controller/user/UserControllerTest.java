@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -90,7 +90,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 USER_AUTH_PASSWORD,
                 USER_AUTH_PASSWORD,
                 USER_AUTH_FULL_NAME,
-                new String[]{Role.ADMIN.name()});
+                new String[]{UserRole.ADMIN.name()});
         String USER_AUTH_ID = getMockFactory().getComponentId();
         UserAuthDTO mockedEntity = getMockFactory().newDTO(USER_AUTH_ID, postEntity);
         mockedEntity.setPassword(null);
@@ -348,7 +348,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         String USER_AUTH_ID = getMockFactory().getComponentId();
         UserAuthLogin loginRequest = new UserAuthLogin(USER_AUTH_EMAIL, USER_AUTH_PASSWORD);
         UserAuthDetails mockUserDetails = getMockFactory()
-                .newUserAuthDetails(USER_AUTH_EMAIL, USER_AUTH_PASSWORD, USER_AUTH_ID, Role.USER.name());
+                .newUserAuthDetails(USER_AUTH_EMAIL, USER_AUTH_PASSWORD, USER_AUTH_ID, UserRole.USER.name());
 
         // setup the mocked controllerHelper
         doReturn(mockUserDetails).when(service).authenticate(USER_AUTH_EMAIL, USER_AUTH_PASSWORD);
@@ -487,7 +487,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                     String USER_AUTH_PASSWORD = getMockFactory().getFAKER().internet().password(6, 12);
                     String USER_AUTH_ID = getMockFactory().getComponentId();
                     return getMockFactory()
-                            .newDTO(USER_AUTH_ID, USER_AUTH_EMAIL, USER_AUTH_PASSWORD, new String[]{Role.AST.name()});
+                            .newDTO(USER_AUTH_ID, USER_AUTH_EMAIL, USER_AUTH_PASSWORD, new String[]{UserRole.AST.name()});
                 }).collect(Collectors.toList());
 
         // setup the mocked service
@@ -496,7 +496,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("roles", Role.USER.name()))
+                .param("roles", UserRole.USER.name()))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -504,7 +504,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(listSize)))
-                .andExpect(jsonPath("$[0].roles", containsInAnyOrder(Role.AST.name())))
+                .andExpect(jsonPath("$[0].roles", containsInAnyOrder(UserRole.AST.name())))
                 .andExpect(jsonPath("$[0].active", is(true)));
     }
 

@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -263,14 +263,14 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
                 .mapToObj((user) -> {
                     String USER_AUTH_ID = getMockFactory().getFAKER().internet().uuid();
                     String USER_AUTH_EMAIL = getMockFactory().getFAKER().internet().emailAddress();
-                    return getMockFactory().newEntity(USER_AUTH_ID, USER_AUTH_EMAIL, null, new String[] {Role.AST.name()});
+                    return getMockFactory().newEntity(USER_AUTH_ID, USER_AUTH_EMAIL, null, new String[] {UserRole.AST.name()});
                 }).collect(Collectors.toList());
 
         // Set up the mocked repository
         doReturn(userAuthList).when(repository).findByActiveTrueAndRolesIn(anyList());
 
         // Execute the service
-        List<UserAuthDTO> returnedUserList = getService().findAllByRole(Collections.singletonList(Role.AST.name()));
+        List<UserAuthDTO> returnedUserList = getService().findAllByRole(Collections.singletonList(UserRole.AST.name()));
 
         Assertions.assertFalse(
                 returnedUserList.isEmpty(),

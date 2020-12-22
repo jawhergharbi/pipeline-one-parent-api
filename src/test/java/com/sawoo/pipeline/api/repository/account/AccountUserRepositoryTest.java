@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.repository.account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -76,7 +76,7 @@ public class AccountUserRepositoryTest {
     void saveWhenAddUserReturnsSuccess() {
         String USER_PASSWORD = mockFactory.getFAKER().internet().password(6, 12);
         String USER_EMAIL = mockFactory.getFAKER().internet().emailAddress();
-        User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{Role.MNG.name()});
+        User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{UserRole.MNG.name()});
         mongoTemplate.save(user);
         long userDocSize = mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT);
 
@@ -110,7 +110,7 @@ public class AccountUserRepositoryTest {
     void saveWhenAddTwiceSameUserReturnsSuccess() {
         String USER_PASSWORD = mockFactory.getFAKER().internet().password(6, 12);
         String USER_EMAIL = mockFactory.getFAKER().internet().emailAddress();
-        User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{Role.MNG.name()});
+        User user = mockFactory.getUserMockFactory().newEntity(null, USER_EMAIL, USER_PASSWORD, new String[]{UserRole.MNG.name()});
         mongoTemplate.save(user);
 
         repository

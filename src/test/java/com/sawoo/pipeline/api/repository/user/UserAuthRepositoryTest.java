@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.repository.user;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
@@ -76,11 +76,11 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserReposit
     @Test
     @DisplayName("findAllByRole: entity found Success")
     void findAllByRolesIdWhenRoleAdminReturnsSuccess() {
-        List<User> users = getRepository().findByActiveTrueAndRolesIn(Collections.singletonList(Role.ADMIN.name()));
+        List<User> users = getRepository().findByActiveTrueAndRolesIn(Collections.singletonList(UserRole.ADMIN.name()));
 
         Assertions.assertFalse(
                 users.isEmpty(),
-                String.format("User list for role [%s] can not ne empty", Role.ADMIN.name()));
+                String.format("User list for role [%s] can not ne empty", UserRole.ADMIN.name()));
         Assertions.assertEquals(ADMIN_USERS, users.size());
     }
 }

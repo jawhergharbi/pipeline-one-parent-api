@@ -1,8 +1,8 @@
-package com.sawoo.pipeline.api.common.contants;
+package com.sawoo.pipeline.api.model.user;
 
 import java.util.Set;
 
-public enum Role {
+public enum UserRole {
 
     USER(0),
     ADMIN(1),
@@ -12,7 +12,7 @@ public enum Role {
 
     private int roleValue;
 
-    Role(int roleValue) {
+    UserRole(int roleValue) {
         this.roleValue = roleValue;
     }
 
@@ -20,8 +20,8 @@ public enum Role {
         return roleValue;
     }
 
-    public static Role getDefaultRole(Set<String> roles) {
-        Role defaultRole = USER;
+    public static UserRole getDefaultRole(Set<String> roles) {
+        UserRole defaultRole = USER;
         if (roles != null) {
             if (roles.contains(ADMIN.name())) {
                 return ADMIN;

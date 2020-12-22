@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.service.user;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
@@ -28,7 +28,7 @@ public class UserAuthServiceEventListener implements BaseServiceEventListener<Us
 
             // roles
             if (dto.getRoles() == null || dto.getRoles().size() == 0) {
-                entity.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
+                entity.setRoles(new HashSet<>(Collections.singletonList(UserRole.USER.name())));
             }
         }
     }

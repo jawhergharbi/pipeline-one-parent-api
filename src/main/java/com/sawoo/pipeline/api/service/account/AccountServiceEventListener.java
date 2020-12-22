@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -40,7 +40,7 @@ public class AccountServiceEventListener implements BaseServiceEventListener<Acc
                             entity.getId(),
                             entity.getFullName());
                 } else {
-                    Role userRole = Role.getDefaultRole(user.getRoles());
+                    UserRole userRole = UserRole.getDefaultRole(user.getRoles());
                     users.removeIf(u -> u.getRoles().contains(userRole.name()));
                     users.add(mapper.getUserMapperIn().getDestination(user));
                 }

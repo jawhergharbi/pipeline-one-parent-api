@@ -1,12 +1,12 @@
 package com.sawoo.pipeline.api.service;
 
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.repository.client.ClientRepositoryWrapper;
@@ -78,8 +78,8 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                     client.getLeads().add(lead);
                     client.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
 
-                    if (client.getStatus().getValue() == DomainConstants.ClientStatus.ON_BOARDING.ordinal()) {
-                        client.getStatus().setValue(DomainConstants.ClientStatus.RUNNING.ordinal());
+                    if (client.getStatus().getValue() == AccountStatus.ON_BOARDING.getValue()) {
+                        client.getStatus().setValue(AccountStatus.RUNNING.getValue());
                     }
 
                     clientRepository.save(client);

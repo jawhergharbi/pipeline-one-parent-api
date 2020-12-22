@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
@@ -192,7 +192,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
         UserAuthDTO user = getMockFactory()
                 .getUserMockFactory()
                 .newDTO(USER_ID);
-        user.setRoles(Set.of(new String[]{Role.MNG.name(), Role.USER.name()}));
+        user.setRoles(Set.of(new String[]{UserRole.MNG.name(), UserRole.USER.name()}));
         postEntity.getUsers().add(user);
 
         AccountDTO mockedEntity = getMockFactory().newDTO(ACCOUNT_ID);
@@ -217,7 +217,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
                 .andExpect(jsonPath("$.users").exists())
                 .andExpect(jsonPath("$.users", hasSize(1)))
-                .andExpect(jsonPath("$.users[0].roles", containsInAnyOrder(Role.MNG.name(), Role.USER.name())));
+                .andExpect(jsonPath("$.users[0].roles", containsInAnyOrder(UserRole.MNG.name(), UserRole.USER.name())));
     }
 
     @Test

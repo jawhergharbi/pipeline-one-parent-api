@@ -2,15 +2,15 @@ package com.sawoo.pipeline.api.common;
 
 
 import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.CompanyOld;
-import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.client.Client;
+import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import org.springframework.stereotype.Component;
 
@@ -230,7 +230,7 @@ public class MockFactory {
         client.setStatus(
                 Status
                         .builder()
-                        .value(DomainConstants.ClientStatus.ON_BOARDING.ordinal()).build());
+                        .value(AccountStatus.ON_BOARDING.getValue()).build());
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         client.setUpdated(now);
         client.setCreated(now);

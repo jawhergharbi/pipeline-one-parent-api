@@ -1,10 +1,10 @@
 package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
 import lombok.Getter;
@@ -48,7 +48,7 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
         entity.setStatus(
                 Status
                         .builder()
-                        .value(DomainConstants.ClientStatus.ON_BOARDING.ordinal()).build());
+                        .value(AccountStatus.ON_BOARDING.getValue()).build());
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         entity.setUpdated(now);
         entity.setCreated(now);
@@ -80,7 +80,7 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
         entity.setStatus(
                 Status
                         .builder()
-                        .value(DomainConstants.ClientStatus.ON_BOARDING.ordinal()).build());
+                        .value(AccountStatus.ON_BOARDING.getValue()).build());
         entity.setUpdated(dateTime);
         entity.setCreated(dateTime);
         return entity;

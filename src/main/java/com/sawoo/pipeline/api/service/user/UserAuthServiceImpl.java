@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service.user;
 import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -85,7 +85,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                     // Roles
                     if (userToUpdate.getRoles() != null) {
                         user.getRoles().clear();
-                        user.getRoles().add(Role.USER.name());
+                        user.getRoles().add(UserRole.USER.name());
                     }
                     user = getMapper().getMapperIn()
                             .getDestination(

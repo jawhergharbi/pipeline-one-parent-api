@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.mock;
 
-import com.sawoo.pipeline.api.common.contants.Role;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.user.User;
@@ -51,7 +51,7 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         if (roles != null) {
             entity.setRoles(new HashSet<>(Arrays.asList(roles)));
         } else {
-            entity.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
+            entity.setRoles(new HashSet<>(Collections.singletonList(UserRole.USER.name())));
         }
         entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
 
@@ -92,7 +92,7 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         if (roles != null) {
             entity.setRoles(new HashSet<>(Arrays.asList(roles)));
         } else {
-            entity.setRoles(new HashSet<>(Collections.singletonList(Role.USER.name())));
+            entity.setRoles(new HashSet<>(Collections.singletonList(UserRole.USER.name())));
         }
         entity.setCreated(now);
         entity.setUpdated(now);

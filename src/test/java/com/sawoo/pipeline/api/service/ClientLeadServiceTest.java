@@ -1,18 +1,18 @@
 package com.sawoo.pipeline.api.service;
 
 import com.google.cloud.datastore.Key;
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
+import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
 import com.sawoo.pipeline.api.repository.client.datastore.ClientRepository;
 import org.junit.jupiter.api.*;
@@ -325,7 +325,8 @@ public class ClientLeadServiceTest extends BaseServiceTestOld {
         // Assertions
         Assertions.assertNotNull(returnedEntity, "Lead entity can not be null");
         Assertions.assertEquals(1, spyClientEntity.getLeads().size(), String.format("Client lead size must be %d", 1));
-        Assertions.assertNotEquals(DomainConstants.ClientStatus.ON_BOARDING, spyClientEntity.getStatus().getValue(), String.format("Client status can not %s", DomainConstants.ClientStatus.ON_BOARDING));
+        Assertions.assertNotEquals(AccountStatus.ON_BOARDING.getValue(), spyClientEntity.getStatus().getValue(),
+                String.format("Client status can not %d", AccountStatus.ON_BOARDING.getValue()));
 
         verify(spyClientEntity, Mockito.times(1)).setUpdated(any());
     }
