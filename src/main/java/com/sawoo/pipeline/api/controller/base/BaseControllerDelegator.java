@@ -42,7 +42,7 @@ public abstract class BaseControllerDelegator<D, S extends BaseService<D>> imple
     }
 
     @Override
-    public ResponseEntity<D> findById(String id) {
+    public ResponseEntity<D> findById(@NotBlank String id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 

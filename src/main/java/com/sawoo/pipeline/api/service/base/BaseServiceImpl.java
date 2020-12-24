@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 @Getter
-public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRepository<M, String>, OM extends BaseMapper<D, M>> implements BaseService<D> {
+public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRepository<M, String>, OM extends BaseMapper<D, M>> implements BaseService<D>, BaseProxyService<R, OM> {
 
     private OM mapper;
     private R repository;

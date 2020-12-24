@@ -33,7 +33,7 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     public Optional<Lead> entityExists(LeadDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, id: {}]",
-                DBConstants.PROSPECT_DOCUMENT,
+                DBConstants.LEAD_DOCUMENT,
                 entityToCreate.getId());
         return getRepository().findById(entityToCreate.getId());
     }

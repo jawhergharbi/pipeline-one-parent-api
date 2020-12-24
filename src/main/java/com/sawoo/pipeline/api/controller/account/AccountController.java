@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.controller.account;
 
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
