@@ -4,7 +4,6 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

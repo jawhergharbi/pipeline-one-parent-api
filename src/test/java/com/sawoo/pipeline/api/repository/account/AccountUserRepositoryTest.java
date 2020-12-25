@@ -3,14 +3,12 @@ package com.sawoo.pipeline.api.repository.account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.company.Company;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -140,13 +138,13 @@ public class AccountUserRepositoryTest {
     void saveWhenRemoveUserReturnsSuccess() {
         Optional<Account> account = repository.findById(ACCOUNT_ID);
         long userDocSize = mongoTemplate.count(new Query(), DBConstants.USER_DOCUMENT);
-        int accountUsers = 1;
+        int ACCOUNT_USERS_SIZE = 1;
 
         account.ifPresentOrElse( (acc) -> {
             Assertions.assertEquals(
-                    accountUsers,
+                    ACCOUNT_USERS_SIZE,
                     acc.getUsers().size(),
-                    String.format("User list size must be [%d]", accountUsers));
+                    String.format("User list size must be [%d]", ACCOUNT_USERS_SIZE));
 
             User user = acc.getUsers().iterator().next();
             acc.getUsers().remove(user);
@@ -164,9 +162,9 @@ public class AccountUserRepositoryTest {
         Assertions.assertAll("Saved user account validation",
                 () -> Assertions.assertNotNull(accountSaved.get().getUsers(), "User list can not be null"),
                 () -> Assertions.assertEquals(
-                        accountUsers - 1,
+                        ACCOUNT_USERS_SIZE - 1,
                         accountSaved.get().getUsers().size(),
-                        String.format("User list size must be [%d]", accountUsers - 1)));
+                        String.format("User list size must be [%d]", ACCOUNT_USERS_SIZE - 1)));
     }
 
     @Test
