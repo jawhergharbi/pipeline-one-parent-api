@@ -1,10 +1,11 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.googlecode.jmapper.JMapper;
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -223,10 +225,96 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         LeadDTO returnedDTO = getService().createLead(ACCOUNT_ID, mockedLeadToCreate);
 
         // Assertions
-        Assertions.assertNotNull(returnedDTO, "Lead can not be null");
-        Assertions.assertEquals(LEAD_ID, returnedDTO.getId(), String.format("Lead id must be [%s]", LEAD_ID));
-        Assertions.assertNotNull(returnedDTO.getCompanyNotes(), "Prospect can not be null");
-        Assertions.assertFalse(spyAccount.getLeads().isEmpty(), String.format("Lead list of the account id [%s] can not be empty", ACCOUNT_ID));
+        assertCreatedLead(spyAccount, returnedDTO, ACCOUNT_ID, LEAD_ID);
+    }
+
+    @Test
+    void createLeadWhenAccountEntityFoundLeadNotValidProspectNullReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account mockedAccount = getMockFactory().newEntity(ACCOUNT_ID);
+        LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
+        mockedLeadToCreate.setProspect(null);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
+
+        // Assertions
+        Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                "Must throw ConstraintViolationException");
+    }
+
+    @Test
+    void createLeadWhenAccountEntityFoundLeadNotValidProspectNotValidReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account mockedAccount = getMockFactory().newEntity(ACCOUNT_ID);
+        LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
+        mockedLeadToCreate.getProspect().setFirstName(null);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
+
+        // Assertions
+        Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                "Must throw ConstraintViolationException");
+    }
+
+    @Test
+    void createLeadWhenAccountEntityFoundLeadValidProspectIdInformedReturnsSuccess() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account spyAccount = spy(getMockFactory().newEntity(ACCOUNT_ID));
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
+        LeadDTO mockedLead = getMockFactory().getLeadMockFactory().newDTO(LEAD_ID, mockedLeadToCreate);
+        mockedLeadToCreate.setProspect(ProspectDTO.builder().id(LEAD_ID).build());
+
+        // Set up the mocked repository
+        doReturn(Optional.of(spyAccount)).when(repository).findById(anyString());
+        doReturn(mockedLead).when(leadService).create(any(LeadDTO.class));
+        doReturn(new LeadMapper()).when(leadService).getMapper();
+
+        // Execute the service call
+        LeadDTO returnedDTO = getService().createLead(ACCOUNT_ID, mockedLeadToCreate);
+
+        // Assertions
+        assertCreatedLead(spyAccount, returnedDTO, ACCOUNT_ID, LEAD_ID);
+    }
+
+    @Test
+    void createLeadWhenAccountEntityFoundLeadAlreadyAddedLeadReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account spyAccount = spy(getMockFactory().newEntity(ACCOUNT_ID));
+        LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(spyAccount)).when(repository).findById(anyString());
+        doThrow(new CommonServiceException(
+                ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
+                new String[]{ DBConstants.LEAD_DOCUMENT, mockedLeadToCreate.toString()})).when(leadService).create(any(LeadDTO.class));
+
+        // Assertions
+        // Assertions
+        Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                "Must throw CommonServiceException");
+    }
+
+    private void assertCreatedLead(Account spyAccount, LeadDTO returnedLead, String accountId, String leadId) {
+        Assertions.assertAll(String.format("Lead add to account id [%s]", accountId),
+                () -> Assertions.assertNotNull(returnedLead, "Lead can not be null"),
+                () -> Assertions.assertEquals(leadId, returnedLead.getId(), String.format("Lead id must be [%s]", leadId)),
+                () -> Assertions.assertNotNull(returnedLead.getCompanyNotes(), "Prospect can not be null"));
+        Assertions.assertFalse(spyAccount.getLeads().isEmpty(), String.format("Lead list of the account id [%s] can not be empty", accountId));
+
+        Assertions.assertFalse(spyAccount.getLeads().isEmpty(), String.format("Lead list of the account id [%s] can not be empty", accountId));
 
         verify(spyAccount, times(1)).setUpdated(any(LocalDateTime.class));
         verify(repository, times(1)).save(any(Account.class));
