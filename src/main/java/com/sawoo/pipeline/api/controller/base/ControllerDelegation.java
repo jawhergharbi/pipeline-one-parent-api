@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.base;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
@@ -12,11 +13,15 @@ public interface ControllerDelegation<D> {
 
     ResponseEntity<List<D>> findAll();
 
-    ResponseEntity<D> findById(String id);
+    ResponseEntity<D> findById(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id);
 
-    ResponseEntity<D> deleteById(@NotBlank String id);
+    ResponseEntity<D> deleteById(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id);
 
-    ResponseEntity<?> update(String id, D dto);
+    ResponseEntity<?> update(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,
+            D dto);
 
     String getComponentId(D dto);
 }

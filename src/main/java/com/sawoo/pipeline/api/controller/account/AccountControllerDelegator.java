@@ -1,8 +1,11 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,5 +48,21 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
             String id,
             String userId) {
         return userDelegator.updateUser(id, userId);
+    }
+
+    @Override
+    public ResponseEntity<LeadDTO> createLead(String accountId, LeadDTO lead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadDelegator.createLead(accountId, lead);
+    }
+
+    @Override
+    public ResponseEntity<List<LeadDTO>> findAllLeads(String accountId) throws ResourceNotFoundException {
+        return leadDelegator.findAllLeads(accountId);
+    }
+
+    @Override
+    public ResponseEntity<LeadDTO> removeLead(String accountId, String leadId) throws ResourceNotFoundException {
+        return leadDelegator.removeLead(accountId, leadId);
     }
 }

@@ -69,7 +69,9 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     }
 
     @Override
-    public ResponseEntity<?> update(String id, UserAuthDTO dto) {
+    public ResponseEntity<?> update(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,
+            UserAuthDTO dto) {
         throw new RestException(
                 ExceptionMessageConstants.COMMON_METHOD_NOT_ALLOWED_EXCEPTION,
                 new String[]{

@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.base;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.service.base.BaseService;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -42,17 +43,21 @@ public abstract class BaseControllerDelegator<D, S extends BaseService<D>> imple
     }
 
     @Override
-    public ResponseEntity<D> findById(@NotBlank String id) {
+    public ResponseEntity<D> findById(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
     @Override
-    public ResponseEntity<D> deleteById(@NotBlank String id) {
+    public ResponseEntity<D> deleteById(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id) {
         return ResponseEntity.ok().body(service.delete(id));
     }
 
     @Override
-    public ResponseEntity<?> update(String id, D dto) {
+    public ResponseEntity<?> update(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,
+            D dto) {
         D entityUpdated = service.update(id, dto);
         try {
             return ResponseEntity

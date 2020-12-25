@@ -25,6 +25,7 @@ public class AccountControllerUserDelegatorImpl implements AccountControllerUser
     public AccountControllerUserDelegatorImpl(AccountService service) {
         this.service = service;
     }
+
     @Override
     public ResponseEntity<List<AccountDTO>> findByUserId(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String userId) {

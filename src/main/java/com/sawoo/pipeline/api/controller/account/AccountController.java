@@ -2,14 +2,19 @@ package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -82,5 +87,48 @@ public class AccountController {
             @PathVariable("id") String id,
             @PathVariable("userId") String userId) {
         return delegator.updateUser(id, userId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leads/{leadId}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadDTO> removeLead(
+            @PathVariable("id") String accountId,
+            @PathVariable("leadId") String leadId) {
+        return delegator.removeLead(accountId, leadId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leads",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<LeadDTO>> findLeadsAll(
+            @PathVariable("id") String accountId) {
+        return delegator.findAllLeads(accountId);
+    }
+
+    @RequestMapping(
+            value = {"/{id}/leads", "/{id}/leads/{type}"},
+            method = RequestMethod.POST,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> create(
+            @PathVariable(value = "id") String accountId,
+            @PathVariable(value = "type", required = false) LeadTypeRequestParam type,
+            @NotNull @RequestBody LeadDTO lead) {
+        if (type != null && type.equals(LeadTypeRequestParam.LEAD)) {
+            lead.setStatus(Status
+                    .builder()
+                    .value(LeadStatusList.HOT.getStatus())
+                    .updated(LocalDateTime.now()).build());
+        } else {
+            lead.setStatus(Status
+                    .builder()
+                    .value(LeadStatusList.FUNNEL_ON_GOING.getStatus())
+                    .updated(LocalDateTime.now())
+                    .build());
+        }
+        return delegator.createLead(accountId, lead);
     }
 }
