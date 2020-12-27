@@ -1,18 +1,23 @@
 package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +34,7 @@ import java.util.stream.IntStream;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -145,7 +149,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
     @Test
     @DisplayName("PUT /api/accounts: resource exists and company updated - Success")
-    void updateWhenClientFoundAndUpdatedCompanyFieldReturnsSuccess() throws Exception {
+    void updateWhenAccountFoundAndUpdatedCompanyFieldReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         AccountDTO postEntity = new AccountDTO();
@@ -272,13 +276,13 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     }
 
     @Test
-    @DisplayName("GET /api/accounts/user/{id}: find all accounts by user id return entities found- Success")
-    void findAllByUserIdWhenEntitiesFoundReturnsSuccess() throws Exception {
+    @DisplayName("GET /api/accounts/user/{id}: get accounts by user returns entities found- Success")
+    void findAllByUserWhenEntitiesFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
-        int listSize = 3;
+        int ID_LIST_SIZE = 3;
         List<String> ids = new ArrayList<>();
-        List<AccountDTO> clientList = IntStream.range(0, listSize)
+        List<AccountDTO> accountList = IntStream.range(0, ID_LIST_SIZE)
                 .mapToObj((account) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
                     ids.add(COMPONENT_ID);
@@ -286,7 +290,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 }).collect(Collectors.toList());
 
         // setup the mocked service
-        doReturn(clientList).when(service).findAllByUser(USER_ID);
+        doReturn(accountList).when(service).findAllByUser(USER_ID);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/user/{id}", USER_ID)
@@ -297,13 +301,13 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(listSize)))
+                .andExpect(jsonPath("$", hasSize(ID_LIST_SIZE)))
                 .andExpect(jsonPath("$[0].id", is(ids.get(0))));
     }
 
     @Test
-    @DisplayName("GET /api/accounts/user/{id}: find all accounts by user id returns empty list - Success")
-    void findAllByUserIdWhenNoEntityFoundReturnsSuccess() throws Exception {
+    @DisplayName("GET /api/accounts/user/{id}: get accounts by user returns empty list - Success")
+    void findAllByUserWhenNoUserFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
 
@@ -323,8 +327,8 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     }
 
     @Test
-    @DisplayName("GET /api/users/{id}/clients: get all clients when user not found - Success")
-    void findAllWhenUserNotFoundReturnsResourceNotFoundException() throws Exception {
+    @DisplayName("GET /api/accounts/user/{id}: get accounts by user when user not found - Success")
+    void findAllByUserWhenUserNotFoundReturnsResourceNotFoundException() throws Exception {
         // Setup the mocked entities
         String USER_ID = getMockFactory().getUserMockFactory().getComponentId();
 
@@ -344,5 +348,246 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 .andExpect(jsonPath("$.message", stringContainsInOrder(
                         String.format("GET operation. Component type [%s]", DBConstants.USER_DOCUMENT),
                         USER_ID)));
+    }
+
+    @Test
+    @DisplayName("GET /api/accounts/{id}/leads: get lead for account id returns list of leads - Success")
+    void findLeadAllWhenAccountFoundAndLeadsFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        int ID_LIST_SIZE = 3;
+        List<String> ids = new ArrayList<>();
+        List<LeadDTO> leadList = IntStream.range(0, ID_LIST_SIZE)
+                .mapToObj((account) -> {
+                    String COMPONENT_ID = getMockFactory().getComponentId();
+                    ids.add(COMPONENT_ID);
+                    return getMockFactory().getLeadMockFactory().newDTO(COMPONENT_ID);
+                }).collect(Collectors.toList());
+
+        // setup the mocked service
+        doReturn(leadList).when(service).findAllLeads(ACCOUNT_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(ID_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("GET /api/accounts/{id}/leads: get lead for account id returns an empty list - Success")
+    void findLeadAllWhenAccountFoundAndEmptyLeadListReturnsSuccess() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        // setup the mocked service
+        doReturn(Collections.EMPTY_LIST).when(service).findAllLeads(ACCOUNT_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @DisplayName("GET /api/accounts/{id}/leads: account not found - Failure")
+    void findLeadAllWhenAccountNotFoundReturnsFailure() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ getEntityType(), String.valueOf(ACCOUNT_ID)});
+
+        // setup the mocked service
+        doThrow(exception).when(service).findAllLeads(ACCOUNT_ID);
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        ACCOUNT_ID)));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/leads: lead found - Success")
+    void removeLeadWhenAccountFoundAndLeadFoundReturnsSuccess() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
+        LeadDTO mockedLead = getMockFactory().getLeadMockFactory().newDTO(LEAD_ID);
+
+        // setup the mocked service
+        doReturn(mockedLead).when(service).removeLead(anyString(), anyString());
+
+        // Execute the GET request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.prospect").exists());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/leads: lead not found - Failure")
+    void removeLeadWhenLeadNotFoundReturnsFailure() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
+
+        // setup the mocked service
+        CommonServiceException exception = new  CommonServiceException(
+                ExceptionMessageConstants.ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION,
+                new String[] {ACCOUNT_ID, LEAD_ID});
+        doThrow(exception).when(service).removeLead(anyString(), anyString());
+
+        // Execute the GET request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message", stringContainsInOrder("Lead not found in the account lead list")));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/leads: account not found - Failure")
+    void removeLeadWhenAccountNotFoundReturnsFailure() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ getEntityType(), String.valueOf(ACCOUNT_ID)});
+        doThrow(exception).when(service).removeLead(anyString(), anyString());
+
+        // Execute the GET request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        ACCOUNT_ID)));
+    }
+
+    @Test
+    @DisplayName("POST /api/accounts/{id}/leads: account found and lead added - Success")
+    void createLeadWhenAccountFoundLeadTypeProspectReturnSuccess() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
+        LeadDTO postEntity = getMockFactory().getLeadMockFactory().newDTO(null);
+        LeadDTO mockedEntity = getMockFactory().getLeadMockFactory().newDTO(LEAD_ID, postEntity);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).createLead(anyString(), any(LeadDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.prospect").exists());
+    }
+
+    @Test
+    @DisplayName("POST /api/accounts/{id}/leads: account found and lead added - Success")
+    void createLeadWhenAccountFoundLeadTypeLeadReturnSuccess() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
+        LeadDTO postEntity = getMockFactory().getLeadMockFactory().newDTO(null);
+        LeadDTO mockedEntity = getMockFactory().getLeadMockFactory().newDTO(LEAD_ID, postEntity);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).createLead(anyString(), any(LeadDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{type}", ACCOUNT_ID, LeadTypeRequestParam.LEAD)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate common returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.prospect").exists());
+
+        ArgumentCaptor<LeadDTO> leadArgumentCaptor = ArgumentCaptor.forClass(LeadDTO.class);
+        verify(service, times(1)).createLead(anyString(), leadArgumentCaptor.capture());
+        Assertions.assertEquals(
+                LeadStatusList.HOT.getStatus(),
+                leadArgumentCaptor.getValue().getStatus().getValue(),
+                String.format("Status must be [%s]", LeadStatusList.HOT));
+    }
+
+    @Test
+    @DisplayName("POST /api/accounts/{id}/leads: account not found - Failure")
+    void createLeadWhenAccountNotFoundReturnsFailure() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        LeadDTO postEntity = getMockFactory().getLeadMockFactory().newDTO(null);
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ getEntityType(), String.valueOf(ACCOUNT_ID)});
+        doThrow(exception).when(service).createLead(anyString(), any(LeadDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        ACCOUNT_ID)));
+    }
+
+    @Test
+    @DisplayName("POST /api/accounts/{id}/leads: account not found - Failure")
+    void createLeadWhenAccountFoundAndLeadInvalidReturnsFailure() throws Exception {
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        LeadDTO postEntity = getMockFactory().getLeadMockFactory().newDTO(null);
+        postEntity.getProspect().setLastName(null);
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
     }
 }

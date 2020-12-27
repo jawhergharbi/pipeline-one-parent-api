@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.lead.LeadService;
@@ -97,6 +98,6 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{ "Account", accountId }));
+                                new String[]{ DBConstants.ACCOUNT_DOCUMENT, accountId }));
     }
 }
