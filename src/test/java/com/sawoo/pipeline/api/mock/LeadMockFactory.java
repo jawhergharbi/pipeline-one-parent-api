@@ -48,7 +48,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
                         .text(getFAKER().lorem().sentence(20))
                         .updated(LocalDateTime.now())
                         .build())
-                .value(1)
+                .value(getFAKER().number().numberBetween(0, 3))
                 .updated(LocalDateTime.now())
                 .build());
         entity.setProspect(Prospect.builder()
@@ -93,7 +93,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
                         .text(getFAKER().lorem().sentence(20))
                         .updated(now)
                         .build())
-                .value(1)
+                .value(getFAKER().number().numberBetween(0, 3))
                 .updated(now)
                 .build());
         dto.setProspect(ProspectDTO

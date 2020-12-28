@@ -1,11 +1,14 @@
 package com.sawoo.pipeline.api.service.account;
 
+import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Component
@@ -73,8 +78,35 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
             Integer[] leadStatus) throws ResourceNotFoundException {
-        log.debug("Retrieving leads for a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
-        return null;
+        log.debug("Retrieving leads from a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
+
+        List<Account> accounts = StreamSupport
+                .stream(repository
+                        .findAllById(Arrays.stream(accountIds).collect(Collectors.toList()))
+                        .spliterator(), false)
+                .collect(Collectors.toList());
+        if (accounts.size() < accountIds.length) {
+            log.warn(
+                    "[{}] account/s found for the following account ids [{}]. Number of account found does not match the accounts requested",
+                    accounts.size(),
+                    accountIds);
+        }
+        JMapper<AccountLeadDTO, Account> accountMapper = new JMapper<>(AccountLeadDTO.class, Account.class);
+        Predicate<Lead> statusFilter = (leadStatus != null && leadStatus.length > 0) ?
+                l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
+                l -> true;
+        return accounts
+                .stream().flatMap( (account) -> {
+                    AccountLeadDTO leadAccount = accountMapper.getDestination(account);
+                    return account.getLeads()
+                            .stream()
+                            .filter(statusFilter)
+                            .map(l -> {
+                                LeadDTO lead = leadService.getMapper().getMapperOut().getDestination(l);
+                                lead.setAccount(leadAccount);
+                                return lead;
+                            });
+                }).collect(Collectors.toList());
     }
 
     @Override

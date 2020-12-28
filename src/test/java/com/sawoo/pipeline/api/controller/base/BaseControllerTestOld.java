@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
-import com.sawoo.pipeline.api.common.MockFactory;
 
 public abstract class BaseControllerTestOld {
 
     protected final static String FAKER_USER_ID_REGEX = "[a-z1-9]{10}";
     protected final Faker FAKER = Faker.instance();
-    private MockFactory mockFactory;
 
     protected static String asJsonString(final Object obj) {
         try {
@@ -21,12 +19,5 @@ public abstract class BaseControllerTestOld {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected MockFactory getMockFactory() {
-        if (mockFactory == null) {
-            mockFactory = new MockFactory();
-        }
-        return mockFactory;
     }
 }

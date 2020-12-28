@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import com.sawoo.pipeline.api.service.lead.LeadMapper;
@@ -25,6 +26,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -106,7 +108,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     }
 
     @Test
-    void findAllLeadsWhenAccountEntityFoundAndLeadListEmptyFoundReturnsSuccess() {
+    void findAllLeadsWhenAccountEntityFoundAndLeadListEmptyReturnsSuccess() {
         // Set up mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account mockedAccount = getMockFactory().newEntity(ACCOUNT_ID);
@@ -120,9 +122,92 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
 
         // Assertions
         Assertions.assertAll(String.format("Account id [%s] must have no leads", ACCOUNT_ID),
-                () -> Assertions.assertTrue(returnedList.isEmpty(), "Lead list must be be empty"));
+                () -> Assertions.assertTrue(returnedList.isEmpty(), "Lead list must be empty"));
 
         verify(repository, Mockito.times(1)).findById(anyString());
+    }
+
+    @Test
+    void findAllLeadsWhenAccountEntitiesFoundAndLeadListFoundReturnsSuccess() {
+        // Set up mocked entities
+        int ACCOUNT_LIST_SIZE = 3;
+        AtomicInteger leadCount = new AtomicInteger();
+        List<Account> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+                .mapToObj( (obj) -> {
+                    String COMPONENT_ID = getMockFactory().getComponentId();
+                    Account account = getMockFactory().newEntity(COMPONENT_ID);
+                    account.setLeads(
+                            IntStream.range(0, getMockFactory().getFAKER().number().numberBetween(1, 3))
+                                    .mapToObj( (lead) -> {
+                                        String LEAD_ID = getMockFactory().getComponentId();
+                                        leadCount.getAndIncrement();
+                                        return getMockFactory().getLeadMockFactory().newEntity(LEAD_ID);
+                                    }).collect(Collectors.toList()) );
+                    return account;
+                })
+                .collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(Account::getId).collect(Collectors.toList());
+
+        // Set up the mocked repository
+        doReturn(ACCOUNT_LIST).when(repository).findAllById(ACCOUNT_IDS);
+        doReturn(new LeadMapper()).when(leadService).getMapper();
+
+        // Execute the service call
+        List<LeadDTO> returnedList = getService().findAllLeads(ACCOUNT_IDS.toArray(String[]::new), null);
+
+        // Assertions
+        Assertions.assertAll(String.format("Account ids [%s] list must have leads", ACCOUNT_IDS),
+                () -> Assertions.assertFalse(returnedList.isEmpty(), "Lead list can not be empty"),
+                () -> Assertions.assertEquals(
+                        leadCount.get(),
+                        returnedList.size(),
+                        String.format("Lead list size must be [%d]", leadCount.get())));
+
+        verify(repository, Mockito.times(1)).findAllById(ACCOUNT_IDS);
+    }
+
+    @Test
+    void findAllLeadsWhenAccountEntitiesFoundAndLeadListFilterByStatusFoundReturnsSuccess() {
+        // Set up mocked entities
+        int ACCOUNT_LIST_SIZE = 3;
+        AtomicInteger deadLeadCount = new AtomicInteger();
+        List<Account> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+                .mapToObj( (obj) -> {
+                    String COMPONENT_ID = getMockFactory().getComponentId();
+                    Account account = getMockFactory().newEntity(COMPONENT_ID);
+                    account.setLeads(
+                            IntStream.range(0, getMockFactory().getFAKER().number().numberBetween(1, 3))
+                                    .mapToObj( (l) -> {
+                                        String LEAD_ID = getMockFactory().getComponentId();
+                                        Lead lead = getMockFactory().getLeadMockFactory().newEntity(LEAD_ID);
+                                        if (lead.getStatus().getValue() == LeadStatusList.INDIVIDUALLY_APPROACHED.getStatus()) {
+                                            deadLeadCount.getAndIncrement();
+                                        }
+                                        return lead;
+                                    }).collect(Collectors.toList()) );
+                    return account;
+                })
+                .collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(Account::getId).collect(Collectors.toList());
+
+        // Set up the mocked repository
+        doReturn(ACCOUNT_LIST).when(repository).findAllById(ACCOUNT_IDS);
+        doReturn(new LeadMapper()).when(leadService).getMapper();
+
+        // Execute the service call
+        List<LeadDTO> returnedList = getService().findAllLeads(
+                ACCOUNT_IDS.toArray(String[]::new),
+                new Integer[]{LeadStatusList.INDIVIDUALLY_APPROACHED.getStatus()});
+
+        // Assertions
+        Assertions.assertAll(String.format("Account ids [%s] list must have leads", ACCOUNT_IDS),
+                () -> Assertions.assertFalse(returnedList.isEmpty(), "Lead list can not be empty"),
+                () -> Assertions.assertEquals(
+                        deadLeadCount.get(),
+                        returnedList.size(),
+                        String.format("Lead list size must be [%d]", deadLeadCount.get())));
+
+        verify(repository, Mockito.times(1)).findAllById(ACCOUNT_IDS);
     }
 
     @Test
