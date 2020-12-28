@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.service.ClientLeadService;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +87,7 @@ public class ClientLeadController {
             value = "/all/leads/main/{datetime}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadMainDTO>> getAll(
+    public ResponseEntity<List<LeadMainDTOOld>> getAll(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @NotBlank @PathVariable("datetime") LocalDateTime datetime) {
         return ResponseEntity.ok().body(service.findAllLeadsMain(datetime));
@@ -97,7 +97,7 @@ public class ClientLeadController {
             value = "/{ids}/leads/main/{datetime}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadMainDTO>> findLeadsByClient(
+    public ResponseEntity<List<LeadMainDTOOld>> findLeadsByClient(
             @NotNull
             @PathVariable("ids") List<Long> ids,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

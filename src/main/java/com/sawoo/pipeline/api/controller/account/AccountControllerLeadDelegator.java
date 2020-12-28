@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Validated
@@ -20,6 +21,11 @@ public interface AccountControllerLeadDelegator {
 
     ResponseEntity<List<LeadDTO>> findAllLeads(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
+            throws ResourceNotFoundException;
+
+    ResponseEntity<List<LeadDTO>> findAllLeads(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
+            Integer[] leadStatus)
             throws ResourceNotFoundException;
 
     ResponseEntity<LeadDTO> removeLead(

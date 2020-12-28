@@ -7,6 +7,8 @@ import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface AccountLeadService {
@@ -18,6 +20,14 @@ public interface AccountLeadService {
     List<LeadDTO> findAllLeads(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
             throws ResourceNotFoundException;
+
+    List<LeadDTO> findAllLeads(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+                    String[] accountIds,
+            Integer[] leadStatus)
+            throws ResourceNotFoundException;
+
 
     LeadDTO removeLead(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId,

@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
@@ -137,19 +137,19 @@ public class ClientLeadServiceImpl implements ClientLeadService {
     }
 
     @Override
-    public List<LeadMainDTO> findAllLeadsMain(LocalDateTime datetime) {
+    public List<LeadMainDTOOld> findAllLeadsMain(LocalDateTime datetime) {
         log.debug("Retrieving leads for all the clients");
 
         List<Client> clients = clientRepository.findAll();
 
-        List<LeadMainDTO> leadsList = getLeadsFromClients(clients, null, null, datetime);
+        List<LeadMainDTOOld> leadsList = getLeadsFromClients(clients, null, null, datetime);
         log.debug("[{}] lead/s found", leadsList.size());
 
         return leadsList;
     }
 
     @Override
-    public List<LeadMainDTO> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
+    public List<LeadMainDTOOld> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
         log.debug("Retrieve leads for client ids [{}]. Datetime: [{}]", clientIds, datetime);
         List<Client> clientList = clientRepository.findAllById(clientIds);
         if (clientList.size() < clientIds.size()) {
@@ -169,7 +169,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
                         new String[]{"Client", String.valueOf(id)}));
     }
 
-    private List<LeadMainDTO> getLeadsFromClients(List<Client> clients, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
+    private List<LeadMainDTOOld> getLeadsFromClients(List<Client> clients, Integer statusMin, Integer statusMax, LocalDateTime datetime) {
         List<Predicate<LeadOld>> predicates = new ArrayList<>();
         if (statusMin != null) {
             Predicate<LeadOld> filter = l -> l.getStatus().getValue() >= statusMin;
@@ -179,7 +179,7 @@ public class ClientLeadServiceImpl implements ClientLeadService {
             Predicate<LeadOld> filter = l -> l.getStatus().getValue() <= statusMax;
             predicates.add(filter);
         }
-        List<LeadMainDTO> leadsList = clients
+        List<LeadMainDTOOld> leadsList = clients
                 .stream()
                 .flatMap((client) -> {
                     ClientBaseDTO clientBase = mapper.getClientDomainToDTOBaseMapper().getDestination(client);
@@ -198,8 +198,8 @@ public class ClientLeadServiceImpl implements ClientLeadService {
         return leadsList;
     }
 
-    private LeadMainDTO mapLead(LeadOld lead, ClientBaseDTO client) {
-        LeadMainDTO leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
+    private LeadMainDTOOld mapLead(LeadOld lead, ClientBaseDTO client) {
+        LeadMainDTOOld leadDTO = mapper.getLeadDomainToDTOMainMapper().getDestination(lead);
         leadDTO.setClient(client);
         return leadDTO;
     }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -49,6 +50,15 @@ public class AccountControllerLeadDelegatorImpl implements AccountControllerLead
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.findAllLeads(accountId));
+    }
+
+    @Override
+    public ResponseEntity<List<LeadDTO>> findAllLeads(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
+            Integer[] leadStatus)
+            throws ResourceNotFoundException {
+        List<LeadDTO> leads = service.findAllLeads(accountIds, leadStatus);
+        return ResponseEntity.ok().body(leads);
     }
 
     @Override

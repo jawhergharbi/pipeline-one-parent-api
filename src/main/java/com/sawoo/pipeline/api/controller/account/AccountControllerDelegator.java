@@ -62,6 +62,12 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
+    public ResponseEntity<List<LeadDTO>> findAllLeads(
+            String[] accountIds, Integer[] leadStatus) throws ResourceNotFoundException {
+        return leadDelegator.findAllLeads(accountIds, leadStatus);
+    }
+
+    @Override
     public ResponseEntity<LeadDTO> removeLead(String accountId, String leadId) throws ResourceNotFoundException {
         return leadDelegator.removeLead(accountId, leadId);
     }

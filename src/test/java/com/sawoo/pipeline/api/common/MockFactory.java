@@ -5,7 +5,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 import com.sawoo.pipeline.api.model.CompanyOld;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.client.Client;
@@ -104,8 +104,8 @@ public class MockFactory {
         return mockEntityDTO;
     }
 
-    public LeadMainDTO newLeadMainDTO(Long leadId, boolean addCompany, ClientBaseDTO client) {
-        LeadMainDTO mockEntityDTO = new LeadMainDTO();
+    public LeadMainDTOOld newLeadMainDTO(Long leadId, boolean addCompany, ClientBaseDTO client) {
+        LeadMainDTOOld mockEntityDTO = new LeadMainDTOOld();
         mockEntityDTO.setId(leadId);
         mockEntityDTO.setFullName(FAKER.name().fullName());
         mockEntityDTO.setLinkedInUrl(FAKER.internet().url());

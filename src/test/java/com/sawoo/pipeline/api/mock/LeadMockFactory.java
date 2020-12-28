@@ -121,7 +121,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
 
     @Override
     public LeadDTO newDTO(String id, LeadDTO dto) {
-        LeadDTO newDTO = dto.toBuilder().build();
+        LeadDTO newDTO = new LeadDTO();
         newDTO.setId(id);
         newDTO.setProspect(dto.getProspect());
         newDTO.setLeadNotes(dto.getLeadNotes());

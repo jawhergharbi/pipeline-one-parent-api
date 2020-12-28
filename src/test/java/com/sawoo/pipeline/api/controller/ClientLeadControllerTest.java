@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.service.ClientLeadService;
 import org.junit.jupiter.api.*;
@@ -384,11 +384,11 @@ public class ClientLeadControllerTest extends BaseControllerTestOld {
         client.setId(CLIENT_ID);
         List<Long> leadIds = new ArrayList<>();
         int leadListSize = 3;
-        List<LeadMainDTO> leadList = IntStream.range(0, leadListSize)
+        List<LeadMainDTOOld> leadList = IntStream.range(0, leadListSize)
                 .mapToObj((lead) -> {
                     Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     leadIds.add(LEAD_ID);
-                    LeadMainDTO leadMain = getMockFactory().newLeadMainDTO(LEAD_ID, true, client);
+                    LeadMainDTOOld leadMain = getMockFactory().newLeadMainDTO(LEAD_ID, true, client);
                     leadMain.setClient(client);
                     return leadMain;
                 }).collect(Collectors.toList());
@@ -452,7 +452,7 @@ public class ClientLeadControllerTest extends BaseControllerTestOld {
         client.setId(CLIENT_ID);
         List<Long> leadIds = new ArrayList<>();
         int leadSize = 3;
-        List<LeadMainDTO> leadList = IntStream.range(0, leadSize)
+        List<LeadMainDTOOld> leadList = IntStream.range(0, leadSize)
                 .mapToObj((lead) -> {
                     Long LEAD_ID = FAKER.number().numberBetween(1, (long) Integer.MAX_VALUE);
                     leadIds.add(LEAD_ID);

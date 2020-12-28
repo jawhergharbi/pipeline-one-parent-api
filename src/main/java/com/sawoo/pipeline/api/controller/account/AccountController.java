@@ -103,9 +103,20 @@ public class AccountController {
             value = "/{id}/leads",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadDTO>> findLeadsAll(
+    public ResponseEntity<List<LeadDTO>> findAllLeads(
             @PathVariable("id") String accountId) {
         return delegator.findAllLeads(accountId);
+    }
+
+    @RequestMapping(
+            value = "/{ids}/leads/main",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<LeadDTO>> findAllLeads(
+            @NotNull
+            @PathVariable("ids") String[] ids,
+            @RequestParam(value = "status", required = false) Integer leadStatus[]) {
+        return delegator.findAllLeads(ids, leadStatus);
     }
 
     @RequestMapping(

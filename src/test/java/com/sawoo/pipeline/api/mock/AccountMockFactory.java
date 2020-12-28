@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
@@ -90,6 +91,32 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
 
     @Override
     public AccountDTO newDTO(String id, AccountDTO dto) {
+        AccountDTO newDTO = new AccountDTO();
+        newDTO.setId(id);
+
         return dto.toBuilder().id(id).build();
+    }
+
+
+    public AccountLeadDTO newLeadDTO(String id) {
+        Faker FAKER = getFAKER();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        AccountLeadDTO dto = AccountLeadDTO.
+                builder()
+                .id(id)
+                .linkedInUrl(FAKER.internet().url())
+                .fullName(FAKER.name().fullName())
+                .position(FAKER.company().profession())
+                .company(CompanyDTO
+                        .builder()
+                        .name(FAKER.company().name())
+                        .url(FAKER.company().url())
+                        .id(FAKER.internet().uuid())
+                        .headcount(FAKER.number().numberBetween(10, 1000))
+                        .build())
+                .build();
+        dto.setUpdated(now);
+        dto.setCreated(now);
+        return dto;
     }
 }

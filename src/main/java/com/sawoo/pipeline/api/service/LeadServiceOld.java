@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +17,7 @@ public interface LeadServiceOld {
 
     List<LeadDTOOld> findAll();
 
-    List<LeadMainDTO> findAllMain(LocalDateTime datetime);
+    List<LeadMainDTOOld> findAllMain(LocalDateTime datetime);
 
     Optional<LeadDTOOld> delete(Long id);
 

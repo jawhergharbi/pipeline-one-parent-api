@@ -15,8 +15,11 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +66,15 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                 .stream()
                 .map(leadService.getMapper().getMapperOut()::getDestination)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LeadDTO> findAllLeads(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
+            Integer[] leadStatus) throws ResourceNotFoundException {
+        log.debug("Retrieving leads for a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
+        return null;
     }
 
     @Override

@@ -24,6 +24,7 @@ public interface ExceptionMessageConstants {
     String COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION = "common.delete-component.not-found.exception";
     String COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION = "common.update-component.not-found.exception";
     String COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR = "common.field.can-not-be-empty-error";
+    String COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR = "common.list-field.can-not-be-empty-error";
     String COMMON_FIELD_CAN_NOT_BE_NULL_ERROR = "common.field.can-not-be-null-error";
     String COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR = "common.field.can-not-be-empty-or-null-error";
     String COMMON_FIELD_CAN_NOT_EXCEED_MAX_SIZE_ERROR = "common.field.size-exceed-max-size";

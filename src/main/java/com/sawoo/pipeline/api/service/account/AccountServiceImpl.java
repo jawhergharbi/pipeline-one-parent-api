@@ -71,6 +71,12 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
     }
 
     @Override
+    public List<LeadDTO> findAllLeads(String[] accountIds, Integer[] leadStatus)
+            throws ResourceNotFoundException {
+        return leadService.findAllLeads(accountIds, leadStatus);
+    }
+
+    @Override
     public LeadDTO removeLead(String accountId, String leadId) throws ResourceNotFoundException {
         return leadService.removeLead(accountId, leadId);
     }

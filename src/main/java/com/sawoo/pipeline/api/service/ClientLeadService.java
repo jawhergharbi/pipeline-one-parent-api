@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.service;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface ClientLeadService {
 
     List<LeadDTOOld> findAll(Long clientId) throws ResourceNotFoundException;
 
-    List<LeadMainDTO> findAllLeadsMain(LocalDateTime datetime);
+    List<LeadMainDTOOld> findAllLeadsMain(LocalDateTime datetime);
 
-    List<LeadMainDTO> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime);
+    List<LeadMainDTOOld> findLeadsMain(List<Long> clientIds, Integer statusMin, Integer statusMax, LocalDateTime datetime);
 }

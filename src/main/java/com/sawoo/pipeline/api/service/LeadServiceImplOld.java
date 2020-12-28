@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadReportDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadDTOOld;
-import com.sawoo.pipeline.api.dto.prospect.LeadMainDTO;
+import com.sawoo.pipeline.api.dto.prospect.LeadMainDTOOld;
 import com.sawoo.pipeline.api.model.prospect.LeadOld;
 import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
 import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
@@ -77,10 +77,10 @@ public class LeadServiceImplOld implements LeadServiceOld {
     }
 
     @Override
-    public List<LeadMainDTO> findAllMain(LocalDateTime datetime) {
+    public List<LeadMainDTOOld> findAllMain(LocalDateTime datetime) {
         log.debug("Retrieve all lead entities together with their next and previous interactions. Date time: [{}]", datetime);
 
-        List<LeadMainDTO> leads = StreamSupport
+        List<LeadMainDTOOld> leads = StreamSupport
                 .stream(repository.findAll().spliterator(), false)
                 .map((lead) -> mapper.getLeadDomainToDTOMainMapper().getDestination(lead))
                 .collect(Collectors.toList());
