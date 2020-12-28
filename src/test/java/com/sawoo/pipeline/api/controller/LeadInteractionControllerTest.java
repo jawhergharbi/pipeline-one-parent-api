@@ -1,6 +1,9 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.controller.base.BaseControllerTestOld;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
@@ -29,13 +32,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class LeadInteractionControllerTest extends BaseControllerTestOld {
+public class LeadInteractionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private LeadInteractionService service;
+
+    protected final Faker FAKER = Faker.instance();
+
+    protected static String asJsonString(final Object obj) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            return mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     @DisplayName("POST /api/leads/{leadId}/interactions: leadInteraction create - Success")
