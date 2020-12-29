@@ -115,7 +115,7 @@ public class AccountController {
     public ResponseEntity<List<LeadDTO>> findAllLeads(
             @NotNull
             @PathVariable("ids") String[] ids,
-            @RequestParam(value = "status", required = false) Integer leadStatus[]) {
+            @RequestParam(value = "status", required = false) Integer[] leadStatus) {
         return delegator.findAllLeads(ids, leadStatus);
     }
 

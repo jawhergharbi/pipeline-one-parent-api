@@ -85,7 +85,8 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                         LEAD_LIST_SIZE,
                         leadList.size(),
                         String.format("Lead list size must be equal to [%d]", LEAD_LIST_SIZE)),
-                () -> Assertions.assertNotNull(returnedList.get(0).getProspect(), "Prospect must be informed"));
+                () -> Assertions.assertNotNull(returnedList.get(0).getProspect(), "Prospect must be informed"),
+                () -> Assertions.assertNotNull(returnedList.get(0).getAccount(), "Account must be informed"));
 
         verify(repository, Mockito.times(1)).findById(anyString());
     }

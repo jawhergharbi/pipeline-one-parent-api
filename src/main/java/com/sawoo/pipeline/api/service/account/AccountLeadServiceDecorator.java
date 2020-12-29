@@ -67,9 +67,15 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
 
         log.debug("[{}] lead/s has/have been found for account id [{}]", account.getLeads().size(), accountId);
 
+        JMapper<AccountLeadDTO, Account> accountMapper = new JMapper<>(AccountLeadDTO.class, Account.class);
+        AccountLeadDTO accountLead = accountMapper.getDestination(account);
         return account.getLeads()
                 .stream()
-                .map(leadService.getMapper().getMapperOut()::getDestination)
+                .map( (l) -> {
+                    LeadDTO lead = leadService.getMapper().getMapperOut().getDestination(l);
+                    lead.setAccount(accountLead);
+                    return lead;
+                })
                 .collect(Collectors.toList());
     }
 

@@ -11,15 +11,7 @@ public class ProspectServiceEventListener implements BaseServiceEventListener<Pr
 
     @Override
     public void onBeforeInsert(ProspectDTO dto, Prospect entity) {
-        if (entity != null) {
-            // Prospect salutation
-            if (entity.getSalutation() == null) {
-                entity.setSalutation(DomainConstants.SALUTATION_EMPTY);
-            }
-
-            // Consolidate fullName
-            entity.setFullName(String.join(" ", dto.getFirstName(), dto.getLastName()));
-        }
+        // nothing to do atm
     }
 
     @Override
