@@ -5,13 +5,19 @@ import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
+@RequiredArgsConstructor
 public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> {
+
+    @Getter
+    private final CompanyMockFactory companyMockFactory;
 
     @Override
     public String getComponentId() {

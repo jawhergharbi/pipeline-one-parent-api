@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.listener;
 
-import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.repository.company.CompanyRepository;
+import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,27 +11,27 @@ import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-public class CompanyCascadeOperationDelegator implements CascadeOperationDelegation<Company> {
+public class ProspectCascadeOperationDelegator implements CascadeOperationDelegation<Prospect> {
 
-    private final CompanyRepository companyRepository;
+    private final ProspectRepository prospectRepository;
 
     @Override
-    public void onSave(Company child, Consumer<Company> parentFunction) {
+    public void onSave(Prospect child, Consumer<Prospect> parentFunction) {
         if (child != null) {
             if (child.getId() == null) {
-                companyRepository
-                        .findByName(child.getName())
+                prospectRepository
+                        .findByLinkedInUrl(child.getLinkedInUrl())
                         .ifPresentOrElse(parentFunction,
                                 () -> {
                                     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                                     child.setCreated(now);
                                     child.setUpdated(now);
-                                    companyRepository.insert(child);
+                                    prospectRepository.insert(child);
                                 });
             } else {
                 LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                 child.setUpdated(now);
-                companyRepository.save(child);
+                prospectRepository.save(child);
             }
         }
     }

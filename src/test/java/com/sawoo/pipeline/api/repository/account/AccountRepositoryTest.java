@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository.account;
 
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import org.junit.jupiter.api.*;
@@ -154,6 +155,34 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
                         ids.size(),
                         accountsFound.spliterator().getExactSizeIfKnown(),
                         String.format("List size must be [%d]", ids.size())));
+    }
+
+    @Test
+    @DisplayName("insert: company cascade updating - Success")
+    void insertWhenCompanyDoesExistAndCompanyIsUpdatedReturnsSuccess() {
+        // Arrange
+        Company company = getMockFactory().getCompanyMockFactory().newEntity(null);
+        company = companyRepository.insert(company);
+        String COMPANY_ID = company.getId();
+        Account entity = getMockFactory().newEntity(null);
+        String COMPANY_URL_UPDATED = getMockFactory().getFAKER().company().url();
+        company.setUrl(COMPANY_URL_UPDATED);
+        entity.setCompany(company);
+
+        // execute repository action
+        Account savedEntity =  getRepository().insert(entity);
+        Optional<Company> updatedCompany = companyRepository.findById(COMPANY_ID);
+
+
+        // assertions
+        Assertions.assertAll("Company entity must be properly updated",
+                () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
+                () -> Assertions.assertNotNull(savedEntity.getCompany().getId(), "Company id can not be null"),
+                () -> Assertions.assertTrue(updatedCompany.isPresent(), "Company updated entity can not be null"),
+                () -> Assertions.assertEquals(
+                        COMPANY_URL_UPDATED,
+                        updatedCompany.get().getUrl(),
+                        String.format("Company url must be [%s]", COMPANY_URL_UPDATED)));
     }
 
     @Test

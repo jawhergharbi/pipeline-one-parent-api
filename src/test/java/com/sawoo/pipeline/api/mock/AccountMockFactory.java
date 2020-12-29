@@ -23,6 +23,8 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
     private final UserMockFactory userMockFactory;
     @Getter
     private final LeadMockFactory leadMockFactory;
+    @Getter
+    private final CompanyMockFactory companyMockFactory;
 
     @Override
     public String getComponentId() {
