@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.lead.LeadStatusList;
@@ -89,5 +90,16 @@ public class LeadController {
             @RequestParam(value = "template", required = false) String template,
             @RequestParam(value = "lan", required = false) String lan) {
         return delegator.getReport(id, template, lan);
+    }
+
+    @RequestMapping(
+            value = "/{id}/interactions",
+            method = RequestMethod.POST,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadInteractionDTO> createInteraction(
+            @PathVariable("id") String leadId,
+            @NotNull @RequestBody LeadInteractionDTO interaction) {
+        return delegator.createInteraction(leadId, interaction);
     }
 }

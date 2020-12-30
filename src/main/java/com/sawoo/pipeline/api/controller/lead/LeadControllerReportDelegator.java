@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 
 @Validated
-public interface LeadControllerCustomDelegator {
+public interface LeadControllerReportDelegator {
 
     ResponseEntity<InputStreamResource> getReport(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,

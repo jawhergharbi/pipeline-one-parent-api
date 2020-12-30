@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.repository.interaction;
+package com.sawoo.pipeline.api.repository.leadinteraction;
 
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 

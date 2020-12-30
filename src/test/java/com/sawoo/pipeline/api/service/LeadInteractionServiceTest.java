@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.DataStoreKeyFactory;
-import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
+import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepositoryWrapper;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
 
     private Key createKey(Long leadId, Long interactionId) {
         Key parentKey = dataStoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
-        return Key.newBuilder(parentKey, DBConstants.LEAD_ACTION_DOCUMENT, interactionId).build();
+        return Key.newBuilder(parentKey, DBConstants.LEAD_INTERACTION_DOCUMENT, interactionId).build();
     }
 
 }

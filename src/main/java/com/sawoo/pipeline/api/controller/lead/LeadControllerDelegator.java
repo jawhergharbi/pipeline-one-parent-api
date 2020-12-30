@@ -1,27 +1,38 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.io.ByteArrayInputStream;
 
 @Component
-public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements LeadControllerCustomDelegator {
+@Primary
+public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements LeadControllerReportDelegator, LeadControllerInteractionDelegator {
+
+    private final LeadControllerReportDelegator reportDelegator;
+    private final LeadControllerInteractionDelegator leadInteractionDelegator;
 
     @Autowired
-    public LeadControllerDelegator(LeadService service) {
+    public LeadControllerDelegator(
+            LeadService service,
+            @Qualifier("leadControllerReport") LeadControllerReportDelegator reportDelegator,
+            @Qualifier("leadControllerInteraction") LeadControllerInteractionDelegator leadInteractionDelegator) {
         super(service, ControllerConstants.LEAD_CONTROLLER_API_BASE_URI);
+        this.reportDelegator = reportDelegator;
+        this.leadInteractionDelegator = leadInteractionDelegator;
     }
 
     @Override
@@ -30,18 +41,15 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<InputStreamResource> getReport(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id,
-            String template,
-            String lan) {
-        byte[] pdfBytes = getService().getReport(id, template, lan);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder("attachment; filename=" + template + "." + id + ".pdf").build());
-        return ResponseEntity
-                .ok()
-                .contentLength(pdfBytes.length)
-                .headers(headers)
-                .body( new InputStreamResource(new ByteArrayInputStream(pdfBytes)) );
+    public ResponseEntity<InputStreamResource> getReport(String id, String template, String lan) {
+        return reportDelegator.getReport(id, template, lan);
+    }
+
+    @Override
+    public ResponseEntity<LeadInteractionDTO> createInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @Valid LeadInteractionDTO interaction)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadInteractionDelegator.createInteraction(id, interaction);
     }
 }

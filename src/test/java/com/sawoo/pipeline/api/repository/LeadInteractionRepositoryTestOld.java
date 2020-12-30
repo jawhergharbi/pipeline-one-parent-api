@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
-import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryOld;
+import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepositoryOld;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -21,9 +21,9 @@ import java.util.List;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class LeadInteractionRepositoryTest {
+public class LeadInteractionRepositoryTestOld {
 
-    private static final File INTERACTION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "interaction-test-data.json").toFile();
+    private static final File INTERACTION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "lead-interaction-test-data.json").toFile();
     private static final List<Long> interactionIdList = new ArrayList<>();
 
     @Autowired

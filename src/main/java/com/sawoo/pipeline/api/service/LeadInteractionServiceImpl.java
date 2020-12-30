@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
 import com.sawoo.pipeline.api.repository.LeadRepositoryOld;
-import com.sawoo.pipeline.api.repository.interaction.LeadInteractionRepositoryWrapper;
+import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepositoryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

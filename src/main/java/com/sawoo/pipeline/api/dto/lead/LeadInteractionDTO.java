@@ -3,13 +3,9 @@ package com.sawoo.pipeline.api.dto.lead;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
-import com.sawoo.pipeline.api.dto.UrlTitleDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionBaseDTO;
 import com.sawoo.pipeline.api.model.common.Note;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.sawoo.pipeline.api.model.common.UrlTitle;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@Builder(toBuilder = true)
 public class LeadInteractionDTO extends BaseEntityDTO {
 
     @JMap
@@ -32,7 +30,7 @@ public class LeadInteractionDTO extends BaseEntityDTO {
     private Integer status;
 
     @JMap
-    private UrlTitleDTO invite;
+    private UrlTitle invite;
 
     @JMap
     private Note note;

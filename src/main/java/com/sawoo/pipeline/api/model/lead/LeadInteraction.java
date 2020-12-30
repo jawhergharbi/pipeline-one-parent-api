@@ -9,12 +9,9 @@ import com.sawoo.pipeline.api.model.common.UrlTitle;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @SuperBuilder
@@ -44,12 +41,5 @@ public class LeadInteraction extends BaseEntity {
     @JMap
     private LocalDateTime scheduled;
 
-    @DBRef(lazy = true)
-    private Set<LeadInteraction> interactions;
-    public Set<LeadInteraction> getInteractions() {
-        if (interactions == null) {
-            interactions = new HashSet<>();
-        }
-        return interactions;
-    }
+    private String leadId;
 }

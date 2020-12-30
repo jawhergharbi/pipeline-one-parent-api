@@ -60,11 +60,11 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
     @Test
     @DisplayName("findAll: return all the entities defined in the test file - Success")
     void findAllReturnsSuccess() {
-        List<M> prospects = getRepository().findAll();
+        List<M> entities = getRepository().findAll();
 
         Assertions.assertEquals(
                 getDocumentSize(),
-                prospects.size(),
+                entities.size(),
                 String.format("Should be %d entities in the database", getDocumentSize()));
     }
 

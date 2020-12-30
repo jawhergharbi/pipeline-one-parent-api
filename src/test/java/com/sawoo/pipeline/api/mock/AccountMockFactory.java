@@ -93,9 +93,6 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
 
     @Override
     public AccountDTO newDTO(String id, AccountDTO dto) {
-        AccountDTO newDTO = new AccountDTO();
-        newDTO.setId(id);
-
         return dto.toBuilder().id(id).build();
     }
 
