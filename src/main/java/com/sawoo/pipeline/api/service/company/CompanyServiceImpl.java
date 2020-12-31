@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.service.company;
 
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.RequiredArgsConstructor;

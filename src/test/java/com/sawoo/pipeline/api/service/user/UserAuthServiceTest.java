@@ -1,7 +1,6 @@
 package com.sawoo.pipeline.api.service.user;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -9,6 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;

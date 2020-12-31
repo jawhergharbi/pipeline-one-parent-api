@@ -1,11 +1,11 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
-import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

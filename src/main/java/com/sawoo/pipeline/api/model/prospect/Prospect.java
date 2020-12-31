@@ -1,11 +1,10 @@
 package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
-import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Personality;
+import com.sawoo.pipeline.api.model.company.Company;
 import lombok.*;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;

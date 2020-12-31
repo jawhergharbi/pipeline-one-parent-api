@@ -7,7 +7,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.UrlTitleDTO;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
-import com.sawoo.pipeline.api.service.LeadInteractionService;
+import com.sawoo.pipeline.api.service.LeadInteractionServiceOld;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class LeadInteractionControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private LeadInteractionService service;
+    private LeadInteractionServiceOld service;
 
     protected final Faker FAKER = Faker.instance();
 

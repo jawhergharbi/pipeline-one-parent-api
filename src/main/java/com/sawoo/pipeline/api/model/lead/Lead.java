@@ -14,6 +14,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -45,6 +48,15 @@ public class Lead extends BaseEntity {
 
     @JMap
     private Status status;
+
+    @DBRef
+    private List<LeadInteraction> interactions;
+    public List<LeadInteraction> getInteractions() {
+        if (interactions == null) {
+            interactions = new ArrayList<>();
+        }
+        return interactions;
+    }
 
     @JMapConversion(from = {"companyNotes"}, to = {"reportCompanyNotes"})
     public String companyNotesConversion(Note companyNotes) {

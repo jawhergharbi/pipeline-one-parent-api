@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
-import com.sawoo.pipeline.api.service.LeadInteractionService;
+import com.sawoo.pipeline.api.service.LeadInteractionServiceOld;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/api/leads")
 public class LeadInteractionController {
 
-    private final LeadInteractionService service;
+    private final LeadInteractionServiceOld service;
 
     @RequestMapping(
             value = "/{leadId}/interactions",

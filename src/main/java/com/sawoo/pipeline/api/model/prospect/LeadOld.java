@@ -2,11 +2,11 @@ package com.sawoo.pipeline.api.model.prospect;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.common.Note;
+import com.sawoo.pipeline.api.model.company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

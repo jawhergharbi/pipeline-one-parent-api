@@ -5,6 +5,6 @@ import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.base.BaseProxyService;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
-public interface LeadService extends BaseService<LeadDTO>, BaseProxyService<LeadRepository, LeadMapper>, LeadReportService  {
+public interface LeadService extends BaseService<LeadDTO>, BaseProxyService<LeadRepository, LeadMapper>, LeadReportService, LeadInteractionService {
 
 }

@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.service.prospect;
 
-import com.sawoo.pipeline.api.common.contants.DomainConstants;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;

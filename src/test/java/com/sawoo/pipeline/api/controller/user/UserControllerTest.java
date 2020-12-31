@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -10,6 +9,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;

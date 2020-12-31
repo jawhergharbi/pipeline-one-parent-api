@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.dto.prospect.LeadInteractionRequestDTO;
 import java.util.List;
 import java.util.Optional;
 
-public interface LeadInteractionService {
+public interface LeadInteractionServiceOld {
 
     LeadInteractionDTOOld create(Long leadId, LeadInteractionRequestDTO interaction) throws ResourceNotFoundException;
 

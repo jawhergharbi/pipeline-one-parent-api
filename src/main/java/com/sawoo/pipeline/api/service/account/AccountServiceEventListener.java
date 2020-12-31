@@ -1,9 +1,9 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

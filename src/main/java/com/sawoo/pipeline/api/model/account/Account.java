@@ -1,7 +1,8 @@
 package com.sawoo.pipeline.api.model.account;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.model.*;
+import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;

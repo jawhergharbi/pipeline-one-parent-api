@@ -1,7 +1,5 @@
 package com.sawoo.pipeline.api.dto.prospect;
 
-import com.sawoo.pipeline.api.dto.company.CompanyValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;

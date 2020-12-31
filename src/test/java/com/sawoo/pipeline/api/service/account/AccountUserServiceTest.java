@@ -1,15 +1,15 @@
 package com.sawoo.pipeline.api.service.account;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.account.Account;
-import com.sawoo.pipeline.api.repository.user.UserRepository;
+import com.sawoo.pipeline.api.model.user.User;
+import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
+import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;

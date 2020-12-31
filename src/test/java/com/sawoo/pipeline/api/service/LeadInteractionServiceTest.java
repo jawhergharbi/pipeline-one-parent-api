@@ -27,7 +27,7 @@ public class LeadInteractionServiceTest extends BaseServiceTestOld {
     private DataStoreKeyFactory dataStoreKeyFactory;
 
     @Autowired
-    private LeadInteractionService service;
+    private LeadInteractionServiceOld service;
 
     @MockBean
     private LeadInteractionRepositoryWrapper repository;
