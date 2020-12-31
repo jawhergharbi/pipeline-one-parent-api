@@ -37,6 +37,7 @@ public interface ExceptionMessageConstants {
 
     String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
     String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
+    String LEAD_INTERACTION_UPDATE_LEAD_WITH_INTERACTION_EXCEPTION = "lead.interaction-update-lead-with-interaction.exception";
 
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
     String PROSPECT_CROSS_FIELD_VALIDATION_ERROR = "prospect.validation.cross-field.error";

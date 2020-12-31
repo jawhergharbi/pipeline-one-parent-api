@@ -21,9 +21,9 @@ public class AccountUserServiceDecorator implements AccountUserService {
     private final UserRepository userRepository;
     private final AccountService service;
 
-    public AccountUserServiceDecorator(AccountService service, UserRepository userRepository) {
-        this.service = service;
+    public AccountUserServiceDecorator(UserRepository userRepository, AccountService service) {
         this.userRepository = userRepository;
+        this.service = service;
     }
 
     @Override

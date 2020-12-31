@@ -12,7 +12,6 @@ import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,11 +33,11 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
             AccountRepository repository,
             AccountMapper mapper,
             AccountServiceEventListener eventListener,
-            @Qualifier(value = "accountLeadService") AccountLeadService leadService,
+            AccountLeadService leadService,
             UserRepository userRepository) {
         super(repository, mapper, DBConstants.ACCOUNT_DOCUMENT, eventListener);
+        this.userService = new AccountUserServiceDecorator(userRepository, this);
         this.leadService = leadService;
-        this.userService = new AccountUserServiceDecorator(this, userRepository);
     }
 
     @Override

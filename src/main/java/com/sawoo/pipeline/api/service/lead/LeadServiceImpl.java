@@ -8,11 +8,10 @@ import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
+import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
-import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -30,11 +29,11 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
 
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
-                           CommonDiscAnalysisData discAnalysisData,
-                           @Qualifier(value = "leadInteractionService") LeadInteractionService interactionService) {
+                           LeadReportService reportService,
+                           LeadInteractionRepository leadInteractionRepository) {
         super(repository, mapper, DBConstants.LEAD_DOCUMENT);
-        this.reportService = new LeadReportServiceDecorator(getRepository(), discAnalysisData);
-        this.interactionService = interactionService;
+        this.reportService = reportService;
+        this.interactionService = new LeadInteractionServiceDecorator(leadInteractionRepository, this);
     }
 
     @Override
@@ -55,5 +54,10 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Override
     public LeadInteractionDTO createInteraction(String leadId, LeadInteractionDTO interaction) throws ResourceNotFoundException {
         return interactionService.createInteraction(leadId, interaction);
+    }
+
+    @Override
+    public LeadInteractionDTO updateInteraction(String leadId, LeadInteractionDTO interaction) {
+        return null;
     }
 }

@@ -23,6 +23,9 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
     @Getter
     private final ProspectMockFactory prospectMockFactory;
 
+    @Getter
+    private final LeadInteractionMockFactory leadInteractionMockFactory;
+
     @Override
     public String getComponentId() {
         return getFAKER().internet().uuid();

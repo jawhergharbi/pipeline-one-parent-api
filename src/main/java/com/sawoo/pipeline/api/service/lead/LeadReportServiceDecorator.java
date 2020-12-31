@@ -14,6 +14,7 @@ import com.sawoo.pipeline.api.dto.lead.LeadReportDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.common.CommonDiscAnalysisData;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -30,19 +31,16 @@ import java.util.Collections;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class LeadReportServiceDecorator implements LeadReportService {
 
     @Value("${app.report-api}")
     private String reportAPI;
 
     private final JMapper<LeadReportDTO, Lead> mapperOut = new JMapper<>(LeadReportDTO.class, Lead.class);
+
     private final CommonDiscAnalysisData discAnalysisData;
     private final LeadRepository repository;
-
-    public LeadReportServiceDecorator(LeadRepository repository, CommonDiscAnalysisData discAnalysisData) {
-        this.repository = repository;
-        this.discAnalysisData = discAnalysisData;
-    }
 
     @Override
     public byte[] getReport(String id, String type, String lan) throws CommonServiceException, ResourceNotFoundException {

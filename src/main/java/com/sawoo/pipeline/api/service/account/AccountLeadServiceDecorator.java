@@ -13,7 +13,6 @@ import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -30,7 +29,6 @@ import java.util.stream.StreamSupport;
 
 @Slf4j
 @Component
-@Qualifier(value = "accountLeadService")
 @RequiredArgsConstructor
 public class AccountLeadServiceDecorator implements AccountLeadService {
 
@@ -41,7 +39,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
     public LeadDTO createLead(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId,
             @Valid LeadDTO lead)
-            throws ResourceNotFoundException, CommonServiceException {
+            throws ResourceNotFoundException {
         log.debug("Creating new lead for account id: [{}]. Prospect id: [{}]", accountId, lead.getProspect().getId());
 
         Account account = findAccountById(accountId);
