@@ -34,21 +34,21 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
             throws ResourceNotFoundException, CommonServiceException {
         log.debug("Creating new interaction for lead id: [{}].", leadId);
 
-        interaction.setComponentId(leadId);
-        final InteractionDTO savedInteraction = service.create(interaction);
-
-        log.debug("Lead interaction has been created for lead id: [{}]. Interaction id [{}]", leadId, interaction.getId());
-
         Lead lead = findLeadById(leadId);
         List<Interaction> interactions = lead.getInteractions();
         interactions.stream()
-                .filter(i -> i.getScheduled().equals(savedInteraction.getScheduled()))
+                .filter(i -> i.getScheduled().equals(interaction.getScheduled()))
                 .findAny()
                 .ifPresent( (i) -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION,
                             new String[]{leadId, interaction.getScheduled().toString()});
                 });
+
+        interaction.setComponentId(leadId);
+        final InteractionDTO savedInteraction = service.create(interaction);
+
+        log.debug("Lead interaction has been created for lead id: [{}]. Interaction id [{}]", leadId, interaction.getId());
 
         interactions.add(service.getMapper().getMapperIn().getDestination(savedInteraction));
         lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));

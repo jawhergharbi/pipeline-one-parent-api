@@ -118,17 +118,4 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).save(any());
     }
-
-    @Test
-    @DisplayName("updateInteraction: lead does exist and lead interaction is valid - Success")
-    void updateInteractionWhenLeadIdExistsAndLeadInteractionValidSuccess() {
-        // Set up mocked entities
-        String LEAD_ID = getMockFactory().getComponentId();
-        InteractionDTO interactionDTOMock = getMockFactory().getInteractionMockFactory().newDTO(null);
-
-        // Execute the service call
-        InteractionDTO returnedDTO = getService().addInteraction(LEAD_ID, interactionDTOMock);
-
-        Assertions.assertAll(String.format("Lead id [%s] must be updated with a new interaction", LEAD_ID));
-    }
 }
