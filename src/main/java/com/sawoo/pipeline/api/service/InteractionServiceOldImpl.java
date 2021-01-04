@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class InteractionServiceImpl implements InteractionService {
+public class InteractionServiceOldImpl implements InteractionServiceOld {
 
     private final ClientRepositoryWrapper clientRepository;
     private final CommonServiceMapper mapper;

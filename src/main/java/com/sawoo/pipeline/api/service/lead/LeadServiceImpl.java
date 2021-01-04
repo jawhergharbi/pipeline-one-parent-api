@@ -3,13 +3,12 @@ package com.sawoo.pipeline.api.service.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
-import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,10 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
                            LeadReportService reportService,
-                           LeadInteractionRepository leadInteractionRepository) {
+                           InteractionRepository interactionRepository) {
         super(repository, mapper, DBConstants.LEAD_DOCUMENT);
         this.reportService = reportService;
-        this.interactionService = new LeadInteractionServiceDecorator(leadInteractionRepository, this);
+        this.interactionService = new LeadInteractionServiceDecorator(interactionRepository, this);
     }
 
     @Override

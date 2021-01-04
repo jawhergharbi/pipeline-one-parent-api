@@ -24,7 +24,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
     private final ProspectMockFactory prospectMockFactory;
 
     @Getter
-    private final LeadInteractionMockFactory leadInteractionMockFactory;
+    private final InteractionMockFactory leadInteractionMockFactory;
 
     @Override
     public String getComponentId() {

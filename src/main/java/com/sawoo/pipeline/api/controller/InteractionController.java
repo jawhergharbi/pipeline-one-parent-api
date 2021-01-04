@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.controller;
 
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
-import com.sawoo.pipeline.api.service.InteractionService;
+import com.sawoo.pipeline.api.service.InteractionServiceOld;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/interactions")
 public class InteractionController {
 
-    private final InteractionService service;
+    private final InteractionServiceOld service;
 
     @RequestMapping(
             value = "",

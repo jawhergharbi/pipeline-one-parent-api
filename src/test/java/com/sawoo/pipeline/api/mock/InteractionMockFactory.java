@@ -3,8 +3,8 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.model.lead.LeadInteractionStatusList;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.time.ZoneOffset;
 
 @Component
 @RequiredArgsConstructor
-public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionDTO, LeadInteraction> {
+public class InteractionMockFactory extends BaseMockFactory<LeadInteractionDTO, Interaction> {
 
     @Getter
     private final ProspectMockFactory prospectMockFactory;
@@ -25,9 +25,9 @@ public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionD
     }
 
     @Override
-    public LeadInteraction newEntity(String id) {
+    public Interaction newEntity(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return LeadInteraction
+        return Interaction
                 .builder()
                 .id(id)
                 .invite(UrlTitle
@@ -37,7 +37,7 @@ public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionD
                         .build())
                 .status(0)
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(LeadInteractionStatusList.DONE.getStatus())
+                .type(InteractionStatusList.DONE.getStatus())
                 .note(Note
                         .builder()
                         .text(getFAKER().lorem().sentence(25))
@@ -61,7 +61,7 @@ public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionD
                         .build())
                 .status(0)
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(LeadInteractionStatusList.DONE.getStatus())
+                .type(InteractionStatusList.DONE.getStatus())
                 .note(Note
                         .builder()
                         .text(getFAKER().lorem().sentence(25))

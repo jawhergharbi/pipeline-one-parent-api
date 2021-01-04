@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.repository;
+package com.sawoo.pipeline.api.repository.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

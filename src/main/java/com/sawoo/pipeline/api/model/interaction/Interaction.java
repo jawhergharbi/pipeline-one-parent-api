@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.model.lead;
+package com.sawoo.pipeline.api.model.interaction;
 
 
 import com.googlecode.jmapper.annotations.JMap;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 @Document(collection = DBConstants.LEAD_INTERACTION_DOCUMENT)
-public class LeadInteraction extends BaseEntity {
+public class Interaction extends BaseEntity {
 
     @JMap
     @Id

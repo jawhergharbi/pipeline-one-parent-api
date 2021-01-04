@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.repository.account;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
+import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

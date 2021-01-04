@@ -4,8 +4,8 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepository;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +18,10 @@ import java.time.ZoneOffset;
 @Component
 public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
-    private final LeadInteractionRepository repository;
+    private final InteractionRepository repository;
     private final LeadService leadService;
 
-    public LeadInteractionServiceDecorator(LeadInteractionRepository repository, LeadService leadService) {
+    public LeadInteractionServiceDecorator(InteractionRepository repository, LeadService leadService) {
         this.repository = repository;
         this.leadService = leadService;
     }
@@ -34,7 +34,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
         log.debug("Creating new interaction for lead id: [{}].", leadId);
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        LeadInteraction leadInteraction = leadService.getMapper().getInteractionMapperIn().getDestination(interaction);
+        Interaction leadInteraction = leadService.getMapper().getInteractionMapperIn().getDestination(interaction);
         leadInteraction.setLeadId(leadId);
         leadInteraction.setCreated(now);
         leadInteraction.setUpdated(now);

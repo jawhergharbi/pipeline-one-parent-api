@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.repository.user;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
-import com.sawoo.pipeline.api.repository.BaseRepositoryTest;
+import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

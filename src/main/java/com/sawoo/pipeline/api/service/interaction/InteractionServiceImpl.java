@@ -1,10 +1,10 @@
-package com.sawoo.pipeline.api.service.leadinteraction;
+package com.sawoo.pipeline.api.service.interaction;
 
 
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepository;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +16,15 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Validated
-public class LeadInteractionServiceImpl extends BaseServiceImpl<LeadInteractionDTO, LeadInteraction, LeadInteractionRepository, LeadInteractionMapper> implements LeadInteractionService {
+public class InteractionServiceImpl extends BaseServiceImpl<LeadInteractionDTO, Interaction, InteractionRepository, InteractionMapper> implements InteractionService {
 
     @Autowired
-    public LeadInteractionServiceImpl(LeadInteractionRepository repository, LeadInteractionMapper mapper) {
+    public InteractionServiceImpl(InteractionRepository repository, InteractionMapper mapper) {
         super(repository, mapper, DBConstants.LEAD_INTERACTION_DOCUMENT);
     }
 
     @Override
-    public Optional<LeadInteraction> entityExists(LeadInteractionDTO entityToCreate) {
+    public Optional<Interaction> entityExists(LeadInteractionDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, linkedIn: {}]",
                 DBConstants.LEAD_INTERACTION_DOCUMENT,

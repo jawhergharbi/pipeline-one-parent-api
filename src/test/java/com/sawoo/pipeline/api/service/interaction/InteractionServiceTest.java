@@ -1,10 +1,10 @@
-package com.sawoo.pipeline.api.service.leadinteraction;
+package com.sawoo.pipeline.api.service.interaction;
 
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
-import com.sawoo.pipeline.api.mock.LeadInteractionMockFactory;
+import com.sawoo.pipeline.api.mock.InteractionMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.lead.LeadInteraction;
-import com.sawoo.pipeline.api.repository.leadinteraction.LeadInteractionRepository;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +25,18 @@ import static org.mockito.Mockito.*;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class LeadInteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, LeadInteraction, LeadInteractionRepository, LeadInteractionService, LeadInteractionMockFactory> {
+public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, Interaction, InteractionRepository, InteractionService, InteractionMockFactory> {
 
     @MockBean
-    private LeadInteractionRepository repository;
+    private InteractionRepository repository;
 
     @Autowired
-    public LeadInteractionServiceTest(LeadInteractionMockFactory mockFactory, LeadInteractionService service) {
+    public InteractionServiceTest(InteractionMockFactory mockFactory, InteractionService service) {
         super(mockFactory, DBConstants.LEAD_INTERACTION_DOCUMENT, service);
     }
 
     @Override
-    protected String getEntityId(LeadInteraction component) {
+    protected String getEntityId(Interaction component) {
         return component.getId();
     }
 
@@ -46,7 +46,7 @@ public class LeadInteractionServiceTest extends BaseServiceTest<LeadInteractionD
     }
 
     @Override
-    protected void mockedEntityExists(LeadInteraction entity) {
+    protected void mockedEntityExists(Interaction entity) {
         doReturn(Optional.of(entity)).when(repository).findById(anyString());
     }
 
@@ -61,10 +61,10 @@ public class LeadInteractionServiceTest extends BaseServiceTest<LeadInteractionD
         // Set up mocked entities
         String LEAD_INTERACTION_ID = getMockFactory().getComponentId();
         LeadInteractionDTO mockedDTO = getMockFactory().newDTO(null);
-        LeadInteraction leadInteraction = getMockFactory().newEntity(LEAD_INTERACTION_ID);
+        Interaction interaction = getMockFactory().newEntity(LEAD_INTERACTION_ID);
 
         // Set up the mocked repository
-        doReturn(leadInteraction).when(repository).insert(any(LeadInteraction.class));
+        doReturn(interaction).when(repository).insert(any(Interaction.class));
 
         // Execute the service call
         LeadInteractionDTO returnedEntity = getService().create(mockedDTO);
@@ -78,7 +78,7 @@ public class LeadInteractionServiceTest extends BaseServiceTest<LeadInteractionD
                         String.format("Lead interaction id must be [%s]", LEAD_INTERACTION_ID)));
 
         verify(repository, never()).findById(anyString());
-        verify(repository, times(1)).insert(any(LeadInteraction.class));
+        verify(repository, times(1)).insert(any(Interaction.class));
     }
 
     @Test
@@ -88,10 +88,10 @@ public class LeadInteractionServiceTest extends BaseServiceTest<LeadInteractionD
         String LEAD_INTERACTION_ID = getMockFactory().getComponentId();
         LeadInteractionDTO mockedDTOTOUpdate = new LeadInteractionDTO();
         mockedDTOTOUpdate.setScheduled(LocalDateTime.now(ZoneOffset.UTC));
-        LeadInteraction leadInteractionEntity = getMockFactory().newEntity(LEAD_INTERACTION_ID);
+        Interaction interactionEntity = getMockFactory().newEntity(LEAD_INTERACTION_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.of(leadInteractionEntity)).when(repository).findById(LEAD_INTERACTION_ID);
+        doReturn(Optional.of(interactionEntity)).when(repository).findById(LEAD_INTERACTION_ID);
 
         // Execute the service call
         LeadInteractionDTO returnedDTO = getService().update(LEAD_INTERACTION_ID, mockedDTOTOUpdate);

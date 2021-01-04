@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -50,8 +51,8 @@ public class Lead extends BaseEntity {
     private Status status;
 
     @DBRef
-    private List<LeadInteraction> interactions;
-    public List<LeadInteraction> getInteractions() {
+    private List<Interaction> interactions;
+    public List<Interaction> getInteractions() {
         if (interactions == null) {
             interactions = new ArrayList<>();
         }

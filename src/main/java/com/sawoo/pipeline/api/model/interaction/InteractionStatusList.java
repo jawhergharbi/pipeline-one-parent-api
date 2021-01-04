@@ -1,6 +1,6 @@
-package com.sawoo.pipeline.api.model.lead;
+package com.sawoo.pipeline.api.model.interaction;
 
-public enum LeadInteractionStatusList {
+public enum InteractionStatusList {
 
     SCHEDULED(0),
     CANCELLED(1),
@@ -9,7 +9,7 @@ public enum LeadInteractionStatusList {
 
     private final int status;
 
-    private LeadInteractionStatusList(int status) {
+    private InteractionStatusList(int status) {
         this.status = status;
     }
 
