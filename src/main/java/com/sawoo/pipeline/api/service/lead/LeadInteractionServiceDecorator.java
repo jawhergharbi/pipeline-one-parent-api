@@ -32,7 +32,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @Valid InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Creating new interaction for lead id: [{}].", leadId);
+        log.debug("Adding new interaction for lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         List<Interaction> interactions = lead.getInteractions();
@@ -58,11 +58,27 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     @Override
-    public InteractionDTO deleteInteraction(
+    public InteractionDTO removeInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException {
-        return null;
+        log.debug("Removing interaction from lead id: [{}].", leadId);
+
+        Lead lead = findLeadById(leadId);
+        return lead.getInteractions()
+                .stream()
+                .filter(i -> i.getId().equals(interactionId))
+                .findAny()
+                .map( i -> {
+                    lead.getInteractions().remove(i);
+                    lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+                    repository.save(lead);
+                    return service.getMapper().getMapperOut().getDestination(i);
+                })
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{ DBConstants.INTERACTION_DOCUMENT, interactionId }));
     }
 
 

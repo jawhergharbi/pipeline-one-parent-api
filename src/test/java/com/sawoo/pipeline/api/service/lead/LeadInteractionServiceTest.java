@@ -50,7 +50,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
     }
 
     @Test
-    @DisplayName("updateInteraction: lead does exist and lead interaction is valid - Success")
+    @DisplayName("addInteraction: lead does exist and lead interaction is valid - Success")
     void addInteractionWhenLeadExistsAndLeadInteractionValidSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
@@ -71,7 +71,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
                 () -> Assertions.assertNotNull(returnedDTO, "Lead interaction can not be null"),
                 () -> Assertions.assertEquals(
                         INTERACTION_ID,
-                        interactionCreated.getId(),
+                        returnedDTO.getId(),
                         String.format("Interaction id must be [%s]", INTERACTION_ID)));
 
         Assertions.assertFalse(
@@ -107,7 +107,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
     }
 
     @Test
-    @DisplayName("updateInteraction: lead does exist and interaction not valid - Failure")
+    @DisplayName("addInteraction: lead does exist and interaction not valid - Failure")
     void addInteractionWhenLeadDoesExistAndInteractionNotValidFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
@@ -128,7 +128,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
     }
 
     @Test
-    @DisplayName("updateInteraction: lead does exist and interaction is valid - Failure")
+    @DisplayName("addInteraction: lead does exist and interaction is valid - Failure")
     void addInteractionWhenLeadDoesExistAndInteractionAlreadyScheduledFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
@@ -153,5 +153,81 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
         verify(repository, times(1)).findById(anyString());
         verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("removeInteraction: lead does exist and lead interaction found - Success")
+    void removeInteractionWhenLeadExistsAndLeadInteractionFoundSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
+        Lead spyLeadEntity = spy(getMockFactory().newEntity(LEAD_ID));
+        Interaction interaction = getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
+        spyLeadEntity.getInteractions().add(interaction);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(spyLeadEntity)).when(repository).findById(anyString());
+        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+
+        // Execute the service call
+        InteractionDTO returnedDTO = getService().removeInteraction(LEAD_ID, INTERACTION_ID);
+
+        Assertions.assertAll(String.format("Lead id [%s] must be updated with a new interaction", LEAD_ID),
+                () -> Assertions.assertNotNull(returnedDTO, "Lead interaction can not be null"),
+                () -> Assertions.assertEquals(
+                        INTERACTION_ID,
+                        returnedDTO.getId(),
+                        String.format("Interaction id must be [%s]", INTERACTION_ID)));
+
+        Assertions.assertTrue(
+                spyLeadEntity.getInteractions().isEmpty(),
+                String.format("Interaction list must be empty for lead id [%s]", LEAD_ID));
+
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("removeInteraction: lead does not exist - Failure")
+    void removeInteractionWhenLeadDoesNotExistFailure() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Asserts
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().removeInteraction(LEAD_ID, INTERACTION_ID),
+                "removeInteraction must throw a ResourceNotFoundException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("removeInteraction: interaction id is null - Failure")
+    void removeInteractionWhenInteractionIdNullFailure() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+
+        // Asserts
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().removeInteraction(LEAD_ID, null),
+                "removeInteraction must throw a ConstraintViolationException");
+
+        String exceptionMessage = exception.getMessage();
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+                        .matches(exceptionMessage));
+        Assertions.assertEquals(1, exception.getConstraintViolations().size());
+
+        verify(repository, never()).findById(anyString());
     }
 }

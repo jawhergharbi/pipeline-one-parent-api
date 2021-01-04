@@ -13,6 +13,6 @@ public interface LeadInteractionService {
     InteractionDTO addInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
                                   @Valid InteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException;
 
-    InteractionDTO deleteInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+    InteractionDTO removeInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
                                      @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) throws ResourceNotFoundException;
 }

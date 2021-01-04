@@ -56,7 +56,7 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public InteractionDTO deleteInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        return interactionService.deleteInteraction(leadId, interactionId);
+    public InteractionDTO removeInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+        return interactionService.removeInteraction(leadId, interactionId);
     }
 }
