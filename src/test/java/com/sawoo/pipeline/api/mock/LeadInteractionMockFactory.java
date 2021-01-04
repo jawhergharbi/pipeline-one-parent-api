@@ -36,6 +36,7 @@ public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionD
                         .description(getFAKER().lebowski().quote())
                         .build())
                 .status(0)
+                .scheduled(now.plusDays(10).plusHours(10))
                 .type(LeadInteractionStatusList.DONE.getStatus())
                 .note(Note
                         .builder()
@@ -59,6 +60,7 @@ public class LeadInteractionMockFactory extends BaseMockFactory<LeadInteractionD
                         .description(getFAKER().lebowski().quote())
                         .build())
                 .status(0)
+                .scheduled(now.plusDays(10).plusHours(10))
                 .type(LeadInteractionStatusList.DONE.getStatus())
                 .note(Note
                         .builder()

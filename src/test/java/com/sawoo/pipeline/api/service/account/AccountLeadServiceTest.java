@@ -15,6 +15,7 @@ import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import com.sawoo.pipeline.api.service.lead.LeadMapper;
 import com.sawoo.pipeline.api.service.lead.LeadService;
+import com.sawoo.pipeline.api.service.lead.LeadServiceImpl;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     @MockBean
     private AccountRepository repository;
 
-    @MockBean
+    @MockBean(value = LeadServiceImpl.class)
     private LeadService leadService;
 
     @Autowired

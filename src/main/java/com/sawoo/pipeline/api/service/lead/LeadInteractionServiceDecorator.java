@@ -30,7 +30,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     public LeadInteractionDTO createInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @Valid LeadInteractionDTO interaction)
-            throws ResourceNotFoundException, CommonServiceException {
+            throws CommonServiceException {
         log.debug("Creating new interaction for lead id: [{}].", leadId);
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
@@ -44,8 +44,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
         log.debug("Lead interaction has been created for lead id: [{}]. Interaction id [{}]", leadId, leadInteraction.getId());
 
         try {
-            leadService.updateInteraction(leadId, interaction);
-            return interaction;
+            return leadService.addInteraction(leadId, interaction);
         } catch (ResourceNotFoundException exc) {
             repository.deleteById(interaction.getId());
             throw new CommonServiceException(
@@ -54,13 +53,11 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
         }
     }
 
-    /*private Lead findLeadById(String leadId) throws ResourceNotFoundException {
-        return leadService
-                .getRepository()
-                .findById(leadId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
-    }*/
+    @Override
+    public LeadInteractionDTO deleteInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException {
+        return null;
+    }
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LeadInteractionServiceImpl implements LeadInteractionServiceOld {
+public class LeadInteractionServiceImplOld implements LeadInteractionServiceOld {
 
     private final JMapper<LeadInteractionDTOOld, LeadInteractionOld> mapperDomainToDTO = new JMapper<>(LeadInteractionDTOOld.class, LeadInteractionOld.class);
     private final JMapper<LeadInteractionOld, LeadInteractionRequestDTO> mapperDTOToDomain = new JMapper<>(LeadInteractionOld.class, LeadInteractionRequestDTO.class);

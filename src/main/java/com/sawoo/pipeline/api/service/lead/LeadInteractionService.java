@@ -11,5 +11,8 @@ import javax.validation.constraints.NotBlank;
 public interface LeadInteractionService {
 
     LeadInteractionDTO createInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-                                         @Valid LeadInteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException;
+                                         @Valid LeadInteractionDTO interaction) throws CommonServiceException;
+
+    LeadInteractionDTO deleteInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+                                         @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) throws ResourceNotFoundException;
 }

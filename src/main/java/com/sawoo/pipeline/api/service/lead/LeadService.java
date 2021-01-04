@@ -8,6 +8,8 @@ import com.sawoo.pipeline.api.service.base.BaseService;
 
 public interface LeadService extends BaseService<LeadDTO>, BaseProxyService<LeadRepository, LeadMapper>, LeadReportService, LeadInteractionService {
 
-    LeadInteractionDTO updateInteraction(String leadId, LeadInteractionDTO interaction);
+    LeadInteractionDTO addInteraction(String leadId, LeadInteractionDTO interaction);
+
+    LeadInteractionDTO removeInteraction(String leadId, String interactionId);
 
 }

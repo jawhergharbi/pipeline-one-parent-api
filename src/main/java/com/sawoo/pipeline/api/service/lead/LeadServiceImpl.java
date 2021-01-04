@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -53,11 +54,21 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
 
     @Override
     public LeadInteractionDTO createInteraction(String leadId, LeadInteractionDTO interaction) throws ResourceNotFoundException {
-        return interactionService.createInteraction(leadId, interaction);
+        return null;
     }
 
     @Override
-    public LeadInteractionDTO updateInteraction(String leadId, LeadInteractionDTO interaction) {
+    public LeadInteractionDTO deleteInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+        return interactionService.deleteInteraction(leadId, interactionId);
+    }
+
+    @Override
+    public LeadInteractionDTO addInteraction(String leadId, LeadInteractionDTO interaction) {
+        return null;
+    }
+
+    @Override
+    public LeadInteractionDTO removeInteraction(String leadId, String interactionId) {
         return null;
     }
 }
