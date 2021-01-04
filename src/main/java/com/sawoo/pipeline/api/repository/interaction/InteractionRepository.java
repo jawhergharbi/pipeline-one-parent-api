@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface InteractionRepository extends MongoRepository<Interaction, String>, InteractionRepositoryCustom {
 
-    List<Interaction> findByLeadId(String leadId);
+    List<Interaction> findByComponentId(String componentId);
 
-    List<Interaction> findByLeadIdIn(List<String> leadId);
+    List<Interaction> findByComponentIdIn(List<String> componentId);
 }

@@ -4,9 +4,8 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
-import com.sawoo.pipeline.api.service.lead.LeadServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -25,16 +24,16 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
     private final LeadService service;
 
     @Autowired
-    public LeadControllerInteractionDelegatorImpl(LeadServiceImpl service) {
+    public LeadControllerInteractionDelegatorImpl(LeadService service) {
         this.service = service;
     }
 
     @Override
-    public ResponseEntity<LeadInteractionDTO> createInteraction(
+    public ResponseEntity<InteractionDTO> addInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @Valid LeadInteractionDTO interaction)
+            @Valid InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
-        LeadInteractionDTO newEntity = service.createInteraction(leadId, interaction);
+        InteractionDTO newEntity = service.addInteraction(leadId, interaction);
         try {
             return ResponseEntity
                     .created(new URI(ControllerConstants.LEAD_CONTROLLER_API_BASE_URI + "/" + leadId + "/interactions/" + newEntity.getId()))

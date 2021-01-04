@@ -17,7 +17,7 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<Interaction> findBy(Integer status, Integer type, List<String> leadIds) {
+    public List<Interaction> findBy(Integer status, Integer type, List<String> componentIds) {
         Criteria criteria = new Criteria();
         List<Criteria> andCriteria = new ArrayList<>();
         if (status != null) {
@@ -26,15 +26,14 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
         if (type != null) {
             andCriteria.add(Criteria.where("type").is(type));
         }
-        if (leadIds != null && leadIds.size() > 0) {
-            andCriteria.add(Criteria.where("leadId").in(leadIds));
+        if (componentIds != null && componentIds.size() > 0) {
+            andCriteria.add(Criteria.where("componentId").in(componentIds));
         }
         criteria.andOperator(andCriteria.toArray(new Criteria[0]));
         return mongoTemplate.find(new Query(criteria), Interaction.class);
     }
 
-    @Override
-    public List<Interaction> findByStatusTypeLeads(List<Integer> status, List<Integer> type, List<String> leadIds) {
+    public List<Interaction> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> componentIds) {
         Criteria criteria = new Criteria();
         List<Criteria> andCriteria = new ArrayList<>();
         if (status != null && status.size() > 0) {
@@ -43,8 +42,8 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
         if (type != null && type.size() > 0) {
             andCriteria.add(Criteria.where("type").is(type));
         }
-        if (leadIds != null && leadIds.size() > 0) {
-            andCriteria.add(Criteria.where("leadId").in(leadIds));
+        if (componentIds != null && componentIds.size() > 0) {
+            andCriteria.add(Criteria.where("componentId").in(componentIds));
         }
         criteria.andOperator(andCriteria.toArray(new Criteria[0]));
         return mongoTemplate.find(new Query(criteria), Interaction.class);

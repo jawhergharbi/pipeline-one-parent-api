@@ -8,5 +8,5 @@ public interface InteractionRepositoryCustom {
 
     List<Interaction> findBy(Integer status, Integer type, List<String> leadIds);
 
-    List<Interaction> findByStatusTypeLeads(List<Integer> status, List<Integer> type, List<String> leadIds);
+    List<Interaction> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> leadIds);
 }

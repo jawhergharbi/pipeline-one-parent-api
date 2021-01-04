@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service;
 
 import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTOOld;
 import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
 import com.sawoo.pipeline.api.model.client.Client;
 import com.sawoo.pipeline.api.model.prospect.LeadInteractionOld;
@@ -26,7 +26,7 @@ public class InteractionServiceOldImpl implements InteractionServiceOld {
     private final CommonServiceMapper mapper;
 
     @Override
-    public List<InteractionDTO> findBy(Integer[] types, Integer[] status, Long[] clients) {
+    public List<InteractionDTOOld> findBy(Integer[] types, Integer[] status, Long[] clients) {
         log.debug("Retrieve interactions for client ids [{}] with type [{}] and status [{}]", clients, types, status);
 
         List<Client> clientList = (clients != null && clients.length > 0) ?
@@ -71,8 +71,8 @@ public class InteractionServiceOldImpl implements InteractionServiceOld {
         return filters;
     }
 
-    private InteractionDTO mapInteraction(LeadInteractionOld interaction, ClientBaseDTO client, LeadBaseDTO lead) {
-        InteractionDTO interactionDTO = mapper.getInteractionDomainToDTOMapper().getDestination(interaction);
+    private InteractionDTOOld mapInteraction(LeadInteractionOld interaction, ClientBaseDTO client, LeadBaseDTO lead) {
+        InteractionDTOOld interactionDTO = mapper.getInteractionDomainToDTOMapper().getDestination(interaction);
         interactionDTO.setClient(client);
         interactionDTO.setLead(lead);
         return  interactionDTO;

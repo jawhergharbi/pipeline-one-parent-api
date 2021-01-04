@@ -26,8 +26,8 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
         Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
         Key leadKey = Key.newBuilder(
                 parentKey,
-                DBConstants.LEAD_INTERACTION_DOCUMENT,
-                datastoreKeyFactory.allocatedId(DBConstants.LEAD_INTERACTION_DOCUMENT).getId()).build();
+                DBConstants.INTERACTION_DOCUMENT,
+                datastoreKeyFactory.allocatedId(DBConstants.INTERACTION_DOCUMENT).getId()).build();
         interaction.setKey(leadKey);
 
         log.debug("Key object created [{}]", leadKey.toString());
@@ -45,7 +45,7 @@ public class LeadInteractionRepositoryWrapperImpl implements LeadInteractionRepo
         log.debug("Retrieve interaction for lead id [{}] and lead interaction id[{}]", leadId, interactionId);
 
         Key parentKey = datastoreKeyFactory.getKeyFactory(DBConstants.LEAD_DOCUMENT).newKey(leadId);
-        Key leadKey = Key.newBuilder(parentKey,  DBConstants.LEAD_INTERACTION_DOCUMENT, interactionId).build();
+        Key leadKey = Key.newBuilder(parentKey,  DBConstants.INTERACTION_DOCUMENT, interactionId).build();
 
         return repository.findById(leadKey);
     }

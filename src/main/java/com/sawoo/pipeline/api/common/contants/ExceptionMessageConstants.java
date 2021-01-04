@@ -11,11 +11,6 @@ public interface ExceptionMessageConstants {
     String AUTH_LOGIN_USER_IDENTIFIER_NOT_FOUND_ERROR_EXCEPTION = "auth.login.user-identifier-not-found-error.exception";
     String AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION = "auth.login.user-details-class-error.exception";
 
-    String CLIENT_UPDATE_CSM_MATCH_SA_EXCEPTION = "client.update-csm.match-sa.exception";
-    String CLIENT_UPDATE_SA_MATCH_CSM_EXCEPTION = "client.update-sa.match-csm.exception";
-    String CLIENT_UPDATE_SA_MUST_HAVE_ROLE_SA_EXCEPTION = "client.update-sa.must-have-role-sa.exception";
-    String CLIENT_UPDATE_CSM_MUST_HAVE_ROLE_CSM_EXCEPTION = "client.update-csm.must-have-role-csm.exception";
-
     String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
 
     String COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION = "common.create.entity-already-exists.exception";
@@ -37,7 +32,7 @@ public interface ExceptionMessageConstants {
 
     String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
     String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
-    String LEAD_INTERACTION_UPDATE_LEAD_WITH_INTERACTION_EXCEPTION = "lead.interaction-update-lead-with-interaction.exception";
+    String LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION = "lead.interaction-add-interaction-already-scheduled.exception";
 
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
     String PROSPECT_CROSS_FIELD_VALIDATION_ERROR = "prospect.validation.cross-field.error";

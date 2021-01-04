@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.mock;
 
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.interaction.Interaction;
@@ -14,7 +14,7 @@ import java.time.ZoneOffset;
 
 @Component
 @RequiredArgsConstructor
-public class InteractionMockFactory extends BaseMockFactory<LeadInteractionDTO, Interaction> {
+public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Interaction> {
 
     @Getter
     private final ProspectMockFactory prospectMockFactory;
@@ -49,9 +49,9 @@ public class InteractionMockFactory extends BaseMockFactory<LeadInteractionDTO, 
     }
 
     @Override
-    public LeadInteractionDTO newDTO(String id) {
+    public InteractionDTO newDTO(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        LeadInteractionDTO interaction = LeadInteractionDTO
+        InteractionDTO interaction = InteractionDTO
                 .builder()
                 .id(id)
                 .invite(UrlTitle
@@ -74,7 +74,7 @@ public class InteractionMockFactory extends BaseMockFactory<LeadInteractionDTO, 
     }
 
     @Override
-    public LeadInteractionDTO newDTO(String id, LeadInteractionDTO dto) {
+    public InteractionDTO newDTO(String id, InteractionDTO dto) {
         return dto.toBuilder().id(id).build();
     }
 }

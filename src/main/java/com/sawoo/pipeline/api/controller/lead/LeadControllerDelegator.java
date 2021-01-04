@@ -5,8 +5,8 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,10 +46,10 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<LeadInteractionDTO> createInteraction(
+    public ResponseEntity<InteractionDTO> addInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
-            @Valid LeadInteractionDTO interaction)
+            @Valid InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadInteractionDelegator.createInteraction(id, interaction);
+        return leadInteractionDelegator.addInteraction(id, interaction);
     }
 }

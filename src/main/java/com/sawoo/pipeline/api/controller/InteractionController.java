@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.controller;
 
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTOOld;
 import com.sawoo.pipeline.api.service.InteractionServiceOld;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,11 @@ public class InteractionController {
             value = "",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionDTO>> findBy(
+    public ResponseEntity<List<InteractionDTOOld>> findBy(
             @RequestParam(value = "types", required = false) Integer[] types,
             @RequestParam(value = "status", required = false) Integer[] status,
             @RequestParam(value = "clients", required = false) Long[] clients) {
-        List<InteractionDTO> lst = service.findBy(types, status, clients);
+        List<InteractionDTOOld> lst = service.findBy(types, status, clients);
         return ResponseEntity.ok().body(lst);
     }
 }

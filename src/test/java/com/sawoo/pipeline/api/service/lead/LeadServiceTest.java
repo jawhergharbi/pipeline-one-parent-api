@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.service.lead;
 
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -124,10 +124,10 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
     void updateInteractionWhenLeadIdExistsAndLeadInteractionValidSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        LeadInteractionDTO interactionDTOMock = getMockFactory().getLeadInteractionMockFactory().newDTO(null);
+        InteractionDTO interactionDTOMock = getMockFactory().getInteractionMockFactory().newDTO(null);
 
         // Execute the service call
-        LeadInteractionDTO returnedDTO = getService().addInteraction(LEAD_ID, interactionDTOMock);
+        InteractionDTO returnedDTO = getService().addInteraction(LEAD_ID, interactionDTOMock);
 
         Assertions.assertAll(String.format("Lead id [%s] must be updated with a new interaction", LEAD_ID));
     }

@@ -56,7 +56,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
         int INTERACTIONS_SIZE = 3;
 
         // Execute query
-        List<Interaction> interactions = getRepository().findByLeadId(COMPONENT_ID_1);
+        List<Interaction> interactions = getRepository().findByComponentId(COMPONENT_ID_1);
 
         // Assertions
         Assertions.assertAll(String.format("Interactions for lead with [%s]", COMPONENT_ID_1),
@@ -67,7 +67,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
                         String.format("Interactions with lead id [%s] must be [%d]", COMPONENT_ID_1, INTERACTIONS_SIZE)),
                 () -> Assertions.assertEquals(
                         COMPONENT_ID_1,
-                        interactions.get(0).getLeadId(),
+                        interactions.get(0).getComponentId(),
                         String.format("Lead id must be [%s]", COMPONENT_ID_1)));
     }
 
@@ -79,7 +79,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
         List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Interaction> interactions = getRepository().findByLeadIdIn(LEAD_IDS);
+        List<Interaction> interactions = getRepository().findByComponentIdIn(LEAD_IDS);
 
         // Assertions
         Assertions.assertAll(String.format("Interactions for lead with ids [%s]", LEAD_IDS.toArray()),
@@ -154,10 +154,10 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     void findByStatusTypeLeadsWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int INTERACTIONS_SIZE = 4;
-        List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Interaction> interactions = getRepository().findByStatusTypeLeads(null, null, LEAD_IDS);
+        List<Interaction> interactions = getRepository().findByStatusAndType(null, null, COMPONENT_IDS);
 
         Assertions.assertFalse(interactions.isEmpty(), "Interactions can not be empty");
         Assertions.assertEquals(INTERACTIONS_SIZE, interactions.size(), String.format("Interactions size must be [%d]", INTERACTIONS_SIZE));

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
-@Document(collection = DBConstants.LEAD_INTERACTION_DOCUMENT)
+@Document(collection = DBConstants.INTERACTION_DOCUMENT)
 public class Interaction extends BaseEntity {
 
     @JMap
@@ -41,5 +41,5 @@ public class Interaction extends BaseEntity {
     @JMap
     private LocalDateTime scheduled;
 
-    private String leadId;
+    private String componentId;
 }

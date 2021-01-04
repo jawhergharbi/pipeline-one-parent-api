@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = DBConstants.LEAD_INTERACTION_DOCUMENT)
+@Entity(name = DBConstants.INTERACTION_DOCUMENT)
 public class LeadInteractionOld {
 
     @Id

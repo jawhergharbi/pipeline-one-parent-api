@@ -3,11 +3,10 @@ package com.sawoo.pipeline.api.service.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +29,10 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
                            LeadReportService reportService,
-                           InteractionRepository interactionRepository) {
+                           LeadInteractionService interactionService) {
         super(repository, mapper, DBConstants.LEAD_DOCUMENT);
         this.reportService = reportService;
-        this.interactionService = new LeadInteractionServiceDecorator(interactionRepository, this);
+        this.interactionService = interactionService;
     }
 
     @Override
@@ -52,22 +51,12 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public LeadInteractionDTO createInteraction(String leadId, LeadInteractionDTO interaction) throws ResourceNotFoundException {
-        return null;
+    public InteractionDTO addInteraction(String leadId, InteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException {
+        return interactionService.addInteraction(leadId, interaction);
     }
 
     @Override
-    public LeadInteractionDTO deleteInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public InteractionDTO deleteInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return interactionService.deleteInteraction(leadId, interactionId);
-    }
-
-    @Override
-    public LeadInteractionDTO addInteraction(String leadId, LeadInteractionDTO interaction) {
-        return null;
-    }
-
-    @Override
-    public LeadInteractionDTO removeInteraction(String leadId, String interactionId) {
-        return null;
     }
 }

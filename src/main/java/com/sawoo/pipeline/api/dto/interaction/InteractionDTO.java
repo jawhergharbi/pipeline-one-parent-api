@@ -1,20 +1,44 @@
 package com.sawoo.pipeline.api.dto.interaction;
 
-import com.sawoo.pipeline.api.dto.client.ClientBaseDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadBaseDTO;
-import com.sawoo.pipeline.api.dto.prospect.LeadInteractionDTOOld;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.googlecode.jmapper.annotations.JMap;
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.model.common.Note;
+import com.sawoo.pipeline.api.model.common.UrlTitle;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class InteractionDTO extends LeadInteractionDTOOld {
+@ToString(callSuper = true)
+@Builder(toBuilder = true)
+public class InteractionDTO extends BaseEntityDTO {
 
-    private ClientBaseDTO client;
+    @JMap
+    private String id;
 
-    private LeadBaseDTO lead;
+    @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    private Integer type;
+
+    @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    private Integer status;
+
+    @JMap
+    private UrlTitle invite;
+
+    @JMap
+    private Note note;
+
+    @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    private LocalDateTime scheduled;
+
+    @JMap
+    private String componentId;
 }

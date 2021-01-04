@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.service.interaction;
 
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.mock.InteractionMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.interaction.Interaction;
@@ -25,14 +25,14 @@ import static org.mockito.Mockito.*;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, Interaction, InteractionRepository, InteractionService, InteractionMockFactory> {
+public class InteractionServiceTest extends BaseServiceTest<InteractionDTO, Interaction, InteractionRepository, InteractionService, InteractionMockFactory> {
 
     @MockBean
     private InteractionRepository repository;
 
     @Autowired
     public InteractionServiceTest(InteractionMockFactory mockFactory, InteractionService service) {
-        super(mockFactory, DBConstants.LEAD_INTERACTION_DOCUMENT, service);
+        super(mockFactory, DBConstants.INTERACTION_DOCUMENT, service);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, 
     }
 
     @Override
-    protected String getDTOId(LeadInteractionDTO component) {
+    protected String getDTOId(InteractionDTO component) {
         return component.getId();
     }
 
@@ -60,14 +60,14 @@ public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, 
     void createWhenEntityDoesNotExistReturnsSuccess() {
         // Set up mocked entities
         String LEAD_INTERACTION_ID = getMockFactory().getComponentId();
-        LeadInteractionDTO mockedDTO = getMockFactory().newDTO(null);
+        InteractionDTO mockedDTO = getMockFactory().newDTO(null);
         Interaction interaction = getMockFactory().newEntity(LEAD_INTERACTION_ID);
 
         // Set up the mocked repository
         doReturn(interaction).when(repository).insert(any(Interaction.class));
 
         // Execute the service call
-        LeadInteractionDTO returnedEntity = getService().create(mockedDTO);
+        InteractionDTO returnedEntity = getService().create(mockedDTO);
 
         // Assert the response
         Assertions.assertAll(String.format("Creating lead interaction with id [[%s] must return the proper entity", LEAD_INTERACTION_ID),
@@ -86,7 +86,7 @@ public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, 
     void updateWhenEntityFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_INTERACTION_ID = getMockFactory().getComponentId();
-        LeadInteractionDTO mockedDTOTOUpdate = new LeadInteractionDTO();
+        InteractionDTO mockedDTOTOUpdate = new InteractionDTO();
         mockedDTOTOUpdate.setScheduled(LocalDateTime.now(ZoneOffset.UTC));
         Interaction interactionEntity = getMockFactory().newEntity(LEAD_INTERACTION_ID);
 
@@ -94,7 +94,7 @@ public class InteractionServiceTest extends BaseServiceTest<LeadInteractionDTO, 
         doReturn(Optional.of(interactionEntity)).when(repository).findById(LEAD_INTERACTION_ID);
 
         // Execute the service call
-        LeadInteractionDTO returnedDTO = getService().update(LEAD_INTERACTION_ID, mockedDTOTOUpdate);
+        InteractionDTO returnedDTO = getService().update(LEAD_INTERACTION_ID, mockedDTOTOUpdate);
 
         Assertions.assertAll(String.format("Lead interaction entity with id [%s] must be properly updated", LEAD_INTERACTION_ID),
                 () -> Assertions.assertNotNull(returnedDTO, "Lead interaction entity can not be null"),
