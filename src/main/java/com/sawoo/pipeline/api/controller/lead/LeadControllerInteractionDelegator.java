@@ -15,5 +15,11 @@ public interface LeadControllerInteractionDelegator {
 
     ResponseEntity<InteractionDTO> addInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
-            @Valid InteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException;
+            @Valid InteractionDTO interaction)
+            throws ResourceNotFoundException, CommonServiceException;
+
+    ResponseEntity<InteractionDTO> removeInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException;
 }

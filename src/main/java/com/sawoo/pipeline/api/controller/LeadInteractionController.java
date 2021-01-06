@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/leads")
+@RequestMapping("/api/leads/old")
 public class LeadInteractionController {
 
     private final LeadInteractionServiceOld service;

@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.lead;
 
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
@@ -101,5 +102,15 @@ public class LeadController {
             @PathVariable("id") String leadId,
             @NotNull @RequestBody InteractionDTO interaction) {
         return delegator.addInteraction(leadId, interaction);
+    }
+
+    @RequestMapping(
+            value = "/{id}/interactions/{interactionId}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<InteractionDTO> removeInteraction(
+            @PathVariable("id") String id,
+            @PathVariable("interactionId") String interactionId) throws ResourceNotFoundException {
+        return delegator.removeInteraction(id, interactionId);
     }
 }

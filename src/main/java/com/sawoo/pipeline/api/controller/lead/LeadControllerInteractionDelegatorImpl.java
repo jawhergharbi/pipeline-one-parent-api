@@ -42,4 +42,12 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @Override
+    public ResponseEntity<InteractionDTO> removeInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(service.removeInteraction(id, interactionId));
+    }
 }

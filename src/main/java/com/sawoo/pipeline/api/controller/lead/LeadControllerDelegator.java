@@ -52,4 +52,11 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
             throws ResourceNotFoundException, CommonServiceException {
         return leadInteractionDelegator.addInteraction(id, interaction);
     }
+
+    @Override
+    public ResponseEntity<InteractionDTO> removeInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) {
+        return leadInteractionDelegator.removeInteraction(id, interactionId);
+    }
 }
