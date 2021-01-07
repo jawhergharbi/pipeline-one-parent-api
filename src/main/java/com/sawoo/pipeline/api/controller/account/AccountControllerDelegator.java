@@ -5,8 +5,8 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,15 +23,18 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
 
     private final AccountControllerUserDelegator userDelegator;
     private final AccountControllerLeadDelegator leadDelegator;
+    private final AccountControllerInteractionDelegator interactionDelegator;
 
     @Autowired
     public AccountControllerDelegator(
             AccountService service,
             @Qualifier("accountControllerUser") AccountControllerUserDelegator userDelegator,
-            @Qualifier("accountControllerLead") AccountControllerLeadDelegator leadDelegator) {
+            @Qualifier("accountControllerLead") AccountControllerLeadDelegator leadDelegator,
+            @Qualifier("accountControllerInteraction") AccountControllerInteractionDelegator interactionDelegator) {
         super(service, ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI);
         this.userDelegator = userDelegator;
         this.leadDelegator = leadDelegator;
+        this.interactionDelegator = interactionDelegator;
     }
 
     @Override
@@ -74,7 +77,9 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
-    public ResponseEntity<List<InteractionDTO>> findAllInteractions(String[] accountIds, Integer[] status, Integer[] types) throws CommonServiceException {
-        return null;
+    public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
+            List<String> accountIds, List<Integer> status, List<Integer> types)
+            throws CommonServiceException {
+        return interactionDelegator.findAllInteractions(accountIds, status, types);
     }
 }

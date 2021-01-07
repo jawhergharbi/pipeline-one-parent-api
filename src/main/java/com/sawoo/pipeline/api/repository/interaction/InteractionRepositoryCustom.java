@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface InteractionRepositoryCustom {
 
-    List<Interaction> findBy(Integer status, Integer type, List<String> leadIds);
+    List<Interaction> findBy(Integer status, Integer type, List<String> componentIds);
 
-    List<Interaction> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> leadIds);
+    List<Interaction> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> componentIds);
 }

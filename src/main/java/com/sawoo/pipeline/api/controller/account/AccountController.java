@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -148,11 +148,11 @@ public class AccountController {
             value = "/{ids}/interactions/main",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
             @NotNull
-            @PathVariable("ids") String[] ids,
-            @RequestParam(value = "status", required = false) Integer[] status,
-            @RequestParam(value = "status", required = false) Integer[] types) {
+            @PathVariable("ids") List<String> ids,
+            @RequestParam(value = "status", required = false) List<Integer> status,
+            @RequestParam(value = "status", required = false) List<Integer> types) {
         return delegator.findAllInteractions(ids, status, types);
     }
 }

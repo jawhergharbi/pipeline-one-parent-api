@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,5 +36,21 @@ public class InteractionServiceImpl extends BaseServiceImpl<InteractionDTO, Inte
         } else {
             return  getRepository().findById(entityToCreate.getId());
         }
+    }
+
+    @Override
+    public List<InteractionDTO> findBy(List<String> componentIds, List<Integer> status, List<Integer> types) {
+        log.debug("Getting interactions from components with ids [{}] and status [{}] and types[{}]", componentIds, status, types);
+        List<InteractionDTO> interactions = getRepository()
+                .findByStatusAndType(status, types, componentIds)
+                .stream()
+                .map(getMapper().getMapperOut()::getDestination)
+                .collect(Collectors.toList());
+        log.debug("[{}] interaction/s has/have been found from components with ids [{}] and status [{}] and types [{}]",
+                interactions.size(),
+                componentIds,
+                status,
+                types);
+        return interactions;
     }
 }

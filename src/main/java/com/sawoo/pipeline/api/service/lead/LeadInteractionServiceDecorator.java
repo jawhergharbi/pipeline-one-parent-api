@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.lead.Lead;
@@ -17,7 +18,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,6 +30,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     private final InteractionService service;
     private final LeadRepository repository;
+    private final LeadMapper mapper;
 
     @Override
     public InteractionDTO addInteraction(
@@ -114,6 +118,28 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                                 new String[]{ DBConstants.LEAD_DOCUMENT, interactionId }) );
     }
 
+    @Override
+    public List<LeadInteractionDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
+        log.debug("Getting interactions from leads [{}] with status [{}] and types[{}]", leadIds, status, types);
+
+        List<InteractionDTO> interactions = service.findBy(leadIds, status, types);
+        if (interactions.size() > 0) {
+            List<Lead> leads = leadIds.size() > 0 ? repository.findAllByIdIn(leadIds) : Collections.emptyList();
+
+            // throw exception if leads.size < leadIds.size
+
+            return interactions
+                    .stream()
+                    .map((i) -> {
+                        LeadInteractionDTO interaction = mapper.getInteractionMapperOut().getDestination(i);
+                        Optional<Lead> lead = leads.stream().filter(l -> l.getId().equals(interaction.getComponentId())).findAny();
+                        lead.ifPresent(value -> interaction.setFullName(value.getProspect().getFullName()));
+                        return interaction;
+                    }).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
     private Lead findLeadById(String leadId) throws ResourceNotFoundException {
         return repository
