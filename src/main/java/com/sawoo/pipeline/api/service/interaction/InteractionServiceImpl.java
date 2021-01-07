@@ -26,7 +26,7 @@ public class InteractionServiceImpl extends BaseServiceImpl<InteractionDTO, Inte
     @Override
     public Optional<Interaction> entityExists(InteractionDTO entityToCreate) {
         log.debug(
-                "Checking entity existence. [type: {}, linkedIn: {}]",
+                "Checking entity existence. [type: {}, id: {}]",
                 DBConstants.INTERACTION_DOCUMENT,
                 entityToCreate.getId());
         if (entityToCreate.getId() == null || entityToCreate.getId().length() == 0) {

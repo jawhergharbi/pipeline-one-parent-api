@@ -75,7 +75,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                     lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(lead);
                     log.debug("Interaction with id [{}] for lead id [{}] has been deleted.", interactionId, leadId);
-                    return service.getMapper().getMapperOut().getDestination(i);
+                    return service.delete(i.getId());
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException(

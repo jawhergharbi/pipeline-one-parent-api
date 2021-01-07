@@ -41,5 +41,6 @@ public class Interaction extends BaseEntity {
     @JMap
     private LocalDateTime scheduled;
 
+    @JMap
     private String componentId;
 }

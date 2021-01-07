@@ -169,10 +169,11 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         Lead spyLeadEntity = spy(getMockFactory().newEntity(LEAD_ID));
         Interaction interaction = getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
         spyLeadEntity.getInteractions().add(interaction);
+        InteractionDTO interactionDTO = (new InteractionMapper()).getMapperOut().getDestination(interaction);
 
         // Set up the mocked repository
         doReturn(Optional.of(spyLeadEntity)).when(repository).findById(anyString());
-        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+        doReturn(interactionDTO).when(interactionService).delete(anyString());
 
         // Execute the service call
         InteractionDTO returnedDTO = getService().removeInteraction(LEAD_ID, INTERACTION_ID);
