@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
@@ -141,5 +142,17 @@ public class AccountController {
                     .build());
         }
         return delegator.createLead(accountId, lead);
+    }
+
+    @RequestMapping(
+            value = "/{ids}/interactions/main",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<InteractionDTO>> findAllInteractions(
+            @NotNull
+            @PathVariable("ids") String[] ids,
+            @RequestParam(value = "status", required = false) Integer[] status,
+            @RequestParam(value = "status", required = false) Integer[] types) {
+        return delegator.findAllInteractions(ids, status, types);
     }
 }
