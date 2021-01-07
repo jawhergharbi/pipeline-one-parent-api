@@ -109,8 +109,17 @@ public class LeadController {
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<InteractionDTO> removeInteraction(
-            @PathVariable("id") String id,
+            @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) throws ResourceNotFoundException {
-        return delegator.removeInteraction(id, interactionId);
+        return delegator.removeInteraction(leadId, interactionId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/interactions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<InteractionDTO>> getInteractions(
+            @PathVariable("id") String leadId) {
+        return delegator.getInteractions(leadId);
     }
 }

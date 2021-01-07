@@ -21,11 +21,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -50,7 +54,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("POST /api/leads/{i}/{interactions}: lead id and interaction valid - Success")
+    @DisplayName("POST /api/leads/{id}/interactions: lead id and interaction valid - Success")
     void addInteractionWhenLeadIdAndInteractionValidReturnsSuccess() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -78,7 +82,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("POST /api/leads/{i}/{interactions}: lead id null and interaction valid - Success")
+    @DisplayName("POST /api/leads/{id}/interactions: lead id null and interaction valid - Success")
     void addInteractionWhenLeadIdAndInteractionNotValidReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -101,7 +105,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("POST /api/leads/{i}/{interactions}: lead not found and interaction valid - Success")
+    @DisplayName("POST /api/leads/{id}/interactions: lead not found and interaction valid - Success")
     void addInteractionWhenLeadNotFoundAndInteractionValidReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -126,7 +130,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("POST /api/leads/{i}/{interactions}: lead not found and interaction valid - Success")
+    @DisplayName("POST /api/leads/{id}/interactions: lead not found and interaction valid - Success")
     void addInteractionWhenLeadFoundAndInteractionAlreadyScheduledReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -151,7 +155,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{i}/{interactions}: lead and interaction found - Success")
+    @DisplayName("DELETE /api/leads/{id}/interactions/{interactionId}: lead and interaction found - Success")
     void removeInteractionWhenLeadFoundAndInteractionFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -174,7 +178,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{i}/{interactions}: lead not found and interaction found - Success")
+    @DisplayName("DELETE /api/leads/{id}/interactions/{interactionId}: lead not found and interaction found - Success")
     void removeInteractionWhenLeadNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -197,7 +201,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{i}/{interactions}: lead not found and interaction found - Success")
+    @DisplayName("DELETE /api/leads/{id}/interactions/{interactionId}: lead not found and interaction found - Success")
     void removeInteractionWhenInteractionNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -217,5 +221,77 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
                 .andExpect(jsonPath("$.message", stringContainsInOrder(
                         String.format("GET operation. Component type [%s]", DBConstants.INTERACTION_DOCUMENT),
                         INTERACTION_ID)));
+    }
+
+    @Test
+    @DisplayName("GET /api/leads/{id}/interactions: lead found and interaction list - Success")
+    void getInteractionsWhenLeadFoundAndInteractionListFoundReturnsSuccess() throws Exception {
+        // Set up mocks
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 3;
+        List<InteractionDTO> interactionList = IntStream
+                .range(0, INTERACTION_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getInteractionMockFactory().newDTO(INTERACTION_ID);
+                }).collect(Collectors.toList());
+
+        // setup the mocked service
+        doReturn(interactionList).when(service).getInteractions(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/interactions", LEAD_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(INTERACTION_LIST_SIZE)))
+                .andExpect(jsonPath("$.[0].scheduled").exists())
+                .andExpect(jsonPath("$.[0].id", is(interactionList.get(0).getId())));;
+    }
+
+    @Test
+    @DisplayName("GET /api/leads/{id}/interactions: lead found and interaction list is empty- Success")
+    void getInteractionsWhenLeadFoundAndInteractionListEmptyReturnsSuccess() throws Exception {
+        // Set up mocks
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 0;
+
+        // setup the mocked service
+        doReturn(Collections.emptyList()).when(service).getInteractions(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/interactions", LEAD_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(INTERACTION_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("GET /api/leads/{id}/interactions: lead not found - Success")
+    void getInteractionsWhenLeadNotFoundReturnsSuccess() throws Exception {
+        // Set up mocks
+        String LEAD_ID = getMockFactory().getComponentId();
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ getEntityType(), String.valueOf(LEAD_ID) });
+
+        // setup the mocked service
+        doThrow(exception).when(service).getInteractions(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/interactions", LEAD_ID))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        LEAD_ID)));
     }
 }

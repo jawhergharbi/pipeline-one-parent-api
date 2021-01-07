@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -58,5 +59,15 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Override
     public InteractionDTO removeInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return interactionService.removeInteraction(leadId, interactionId);
+    }
+
+    @Override
+    public List<InteractionDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+        return interactionService.getInteractions(leadId);
+    }
+
+    @Override
+    public InteractionDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+        return interactionService.getInteraction(leadId, interactionId);
     }
 }

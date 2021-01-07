@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @Component
 @Qualifier("leadControllerInteraction")
@@ -45,9 +46,16 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
 
     @Override
     public ResponseEntity<InteractionDTO> removeInteraction(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.removeInteraction(id, interactionId));
+        return ResponseEntity.ok().body(service.removeInteraction(leadId, interactionId));
+    }
+
+    @Override
+    public ResponseEntity<List<InteractionDTO>> getInteractions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(service.getInteractions(leadId));
     }
 }

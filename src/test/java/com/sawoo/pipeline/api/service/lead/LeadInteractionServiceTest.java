@@ -21,7 +21,11 @@ import org.springframework.context.annotation.Profile;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.containsString;
@@ -42,6 +46,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
     @Autowired
     public LeadInteractionServiceTest(LeadMockFactory mockFactory, LeadService service) {
         super(mockFactory, DBConstants.LEAD_DOCUMENT, service);
+
     }
 
     @BeforeAll
@@ -51,7 +56,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("addInteraction: lead does exist and lead interaction is valid - Success")
-    void addInteractionWhenLeadExistsAndLeadInteractionValidSuccess() {
+    void addInteractionWhenLeadExistsAndLeadInteractionValidReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
@@ -85,7 +90,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("addInteraction: lead does not exist and interaction on is valid - Failure")
-    void addInteractionWhenLeadDoesNotExistAndInteractionValidFailure() {
+    void addInteractionWhenLeadDoesNotExistAndInteractionValidReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         InteractionDTO interactionToBeCreated = getMockFactory().getInteractionMockFactory().newDTO(null);
@@ -108,7 +113,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("addInteraction: lead does exist and interaction not valid - Failure")
-    void addInteractionWhenLeadDoesExistAndInteractionNotValidFailure() {
+    void addInteractionWhenLeadDoesExistAndInteractionNotValidReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         InteractionDTO interactionToBeCreated = getMockFactory().getInteractionMockFactory().newDTO(null);
@@ -129,7 +134,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("addInteraction: lead does exist and interaction is valid - Failure")
-    void addInteractionWhenLeadDoesExistAndInteractionAlreadyScheduledFailure() {
+    void addInteractionWhenLeadDoesExistAndInteractionAlreadyScheduledReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         String LEAD_INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
@@ -157,7 +162,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("removeInteraction: lead does exist and lead interaction found - Success")
-    void removeInteractionWhenLeadExistsAndLeadInteractionFoundSuccess() {
+    void removeInteractionWhenLeadExistsAndLeadInteractionFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
@@ -189,7 +194,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("removeInteraction: lead does not exist - Failure")
-    void removeInteractionWhenLeadDoesNotExistFailure() {
+    void removeInteractionWhenLeadDoesNotExistReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
         String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
@@ -212,7 +217,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @Test
     @DisplayName("removeInteraction: interaction id is null - Failure")
-    void removeInteractionWhenInteractionIdNullFailure() {
+    void removeInteractionWhenInteractionIdNullReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
 
@@ -229,5 +234,147 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         Assertions.assertEquals(1, exception.getConstraintViolations().size());
 
         verify(repository, never()).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("getInteractions: lead found - Success")
+    void getInteractionsWhenLeadFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 3;
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+        List<Interaction> interactionList = IntStream
+                .range(0, INTERACTION_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
+                }).collect(Collectors.toList());
+        leadEntity.setInteractions(interactionList);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+
+        // Execute the service call
+        List<InteractionDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+
+        // Assertions
+        Assertions.assertAll(String.format("Lead with id [%s] has a list of interactions", LEAD_ID),
+                () -> Assertions.assertFalse(returnedListDTO.isEmpty(), "Interaction list can not be empty"),
+                () -> Assertions.assertEquals(
+                        INTERACTION_LIST_SIZE,
+                        returnedListDTO.size(),
+                        String.format("Interaction list size must be [%d]", INTERACTION_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("getInteractions: lead found - Failure")
+    void getInteractionsWhenLeadNotFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Asserts
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().getInteractions(LEAD_ID),
+                "getInteractions must throw a ResourceNotFoundException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("getInteractions: lead and interaction found - Success")
+    void getInteractionWhenLeadAndInteractionFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 3;
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+        List<Interaction> interactionList = IntStream
+                .range(0, INTERACTION_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
+                }).collect(Collectors.toList());
+        leadEntity.setInteractions(interactionList);
+        int INTERACTION_IDX = new Random().nextInt(3);
+        String TARGET_INTERACTION_ID = interactionList.get(INTERACTION_IDX).getId();
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+
+        // Execute the service call
+        InteractionDTO returnedDTO = getService().getInteraction(LEAD_ID, TARGET_INTERACTION_ID);
+
+        // Assertions
+        Assertions.assertAll(String.format("Lead with id [%s] contains the searched interaction", LEAD_ID),
+                () -> Assertions.assertNotNull(returnedDTO, "Interaction can not be null"),
+                () -> Assertions.assertEquals(
+                        TARGET_INTERACTION_ID,
+                        returnedDTO.getId(),
+                        String.format("Interaction id must be [%s]", TARGET_INTERACTION_ID)));
+    }
+
+    @Test
+    @DisplayName("getInteraction: lead not found - Success")
+    void getInteractionWhenLeadNotFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Asserts
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().getInteraction(LEAD_ID, INTERACTION_ID),
+                "getInteraction must throw a ResourceNotFoundException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("getInteraction: lead found and interaction not found - Success")
+    void getInteractionWhenLeadFoundAndInteractionNotFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 3;
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+        List<Interaction> interactionList = IntStream
+                .range(0, INTERACTION_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
+                }).collect(Collectors.toList());
+        leadEntity.setInteractions(interactionList);
+        String TARGET_INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+
+        // Asserts
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().getInteraction(LEAD_ID, TARGET_INTERACTION_ID),
+                "getInteraction must throw a ResourceNotFoundException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, times(1)).findById(anyString());
     }
 }

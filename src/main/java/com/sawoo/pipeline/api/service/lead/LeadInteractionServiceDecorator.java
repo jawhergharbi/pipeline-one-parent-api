@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -73,12 +74,44 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                     lead.getInteractions().remove(i);
                     lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(lead);
+                    log.debug("Interaction with id [{}] for lead id [{}] has been deleted.", interactionId, leadId);
                     return service.getMapper().getMapperOut().getDestination(i);
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ DBConstants.INTERACTION_DOCUMENT, interactionId }));
+    }
+
+    @Override
+    public List<InteractionDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+        log.debug("Getting interactions from lead id: [{}].", leadId);
+        List<InteractionDTO> interactions = findLeadById(leadId)
+                .getInteractions()
+                .stream()
+                .map(service.getMapper().getMapperOut()::getDestination)
+                .collect(Collectors.toList());
+        log.debug("[{}] interactions has been found for lead id [{}]", leadId, interactions.size());
+        return interactions;
+    }
+
+    @Override
+    public InteractionDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+        log.debug("Getting interaction id [{}] from lead id: [{}].", interactionId, leadId);
+        Lead lead = findLeadById(leadId);
+        return lead
+                .getInteractions()
+                .stream()
+                .filter(i -> interactionId.equals(i.getId()))
+                .findAny()
+                .map(i -> {
+                    log.debug("Interaction id [{}] for lead id [{}] has been found. \nInteraction: [{}]", interactionId, leadId, i);
+                    return service.getMapper().getMapperOut().getDestination(i);
+                })
+                .orElseThrow( () ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{ DBConstants.LEAD_DOCUMENT, interactionId }) );
     }
 
 

@@ -7,12 +7,24 @@ import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public interface LeadInteractionService {
 
     InteractionDTO addInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-                                  @Valid InteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException;
+                                  @Valid InteractionDTO interaction)
+            throws ResourceNotFoundException, CommonServiceException;
 
     InteractionDTO removeInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-                                     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) throws ResourceNotFoundException;
+                                     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException;
+
+    List<InteractionDTO> getInteractions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+            throws ResourceNotFoundException;
+
+    InteractionDTO getInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException;
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Component
 @Primary
@@ -47,16 +48,23 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
 
     @Override
     public ResponseEntity<InteractionDTO> addInteraction(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @Valid InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadInteractionDelegator.addInteraction(id, interaction);
+        return leadInteractionDelegator.addInteraction(leadId, interaction);
     }
 
     @Override
     public ResponseEntity<InteractionDTO> removeInteraction(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) {
-        return leadInteractionDelegator.removeInteraction(id, interactionId);
+        return leadInteractionDelegator.removeInteraction(leadId, interactionId);
+    }
+
+    @Override
+    public ResponseEntity<List<InteractionDTO>> getInteractions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        return leadInteractionDelegator.getInteractions(leadId);
     }
 }
