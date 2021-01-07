@@ -16,8 +16,8 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/interactions")
-public class InteractionController {
+@RequestMapping("/api/interactionsold")
+public class InteractionControllerOld {
 
     private final InteractionServiceOld service;
 
