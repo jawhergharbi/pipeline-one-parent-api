@@ -122,4 +122,14 @@ public class LeadController {
             @PathVariable("id") String leadId) {
         return delegator.getInteractions(leadId);
     }
+
+    @RequestMapping(
+            value = "/{id}/interactions/{interactionId}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<InteractionDTO> getInteraction(
+            @PathVariable("id") String leadId,
+            @PathVariable("interactionId") String interactionId) {
+        return delegator.getInteraction(leadId, interactionId);
+    }
 }

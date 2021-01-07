@@ -47,24 +47,23 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> addInteraction(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @Valid InteractionDTO interaction)
+    public ResponseEntity<InteractionDTO> addInteraction(String leadId, InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
         return leadInteractionDelegator.addInteraction(leadId, interaction);
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> removeInteraction(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId) {
+    public ResponseEntity<InteractionDTO> removeInteraction(String leadId, String interactionId) {
         return leadInteractionDelegator.removeInteraction(leadId, interactionId);
     }
 
     @Override
-    public ResponseEntity<List<InteractionDTO>> getInteractions(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
-            throws ResourceNotFoundException {
+    public ResponseEntity<List<InteractionDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteractions(leadId);
+    }
+
+    @Override
+    public ResponseEntity<InteractionDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+        return leadInteractionDelegator.getInteraction(leadId, interactionId);
     }
 }

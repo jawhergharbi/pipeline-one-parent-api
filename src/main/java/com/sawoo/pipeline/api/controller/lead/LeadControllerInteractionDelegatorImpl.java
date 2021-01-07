@@ -58,4 +58,12 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.getInteractions(leadId));
     }
+
+    @Override
+    public ResponseEntity<InteractionDTO> getInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(service.getInteraction(leadId, interactionId));
+    }
 }
