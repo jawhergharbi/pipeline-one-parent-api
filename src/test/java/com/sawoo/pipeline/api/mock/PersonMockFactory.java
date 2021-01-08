@@ -2,9 +2,9 @@ package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.time.ZoneOffset;
 
 @Component
 @RequiredArgsConstructor
-public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> {
+public class PersonMockFactory extends BaseMockFactory<PersonDTO, Person> {
 
     @Getter
     private final CompanyMockFactory companyMockFactory;
@@ -25,14 +25,14 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
     }
 
     @Override
-    public Prospect newEntity(String id) {
+    public Person newEntity(String id) {
         return newEntity(id, true);
     }
 
-    public Prospect newEntity(String id, boolean addCompany) {
+    public Person newEntity(String id, boolean addCompany) {
         Faker FAKER = getFAKER();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        Prospect entity = new Prospect();
+        Person entity = new Person();
         entity.setId(id);
         entity.setFirstName(FAKER.name().firstName());
         entity.setLastName(FAKER.name().lastName());
@@ -52,12 +52,12 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
     }
 
     @Override
-    public ProspectDTO newDTO(String id) {
+    public PersonDTO newDTO(String id) {
         return newDTO(id, getFAKER().name().firstName(), getFAKER().name().lastName());
     }
 
-    public ProspectDTO newDTO(String id, String firstName, String lastName) {
-        ProspectDTO dto = new ProspectDTO();
+    public PersonDTO newDTO(String id, String firstName, String lastName) {
+        PersonDTO dto = new PersonDTO();
         Faker FAKER = getFAKER();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         dto.setId(id);
@@ -79,8 +79,8 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
     }
 
     @Override
-    public ProspectDTO newDTO(String id, ProspectDTO dto) {
-        ProspectDTO newDTO = dto.toBuilder().build();
+    public PersonDTO newDTO(String id, PersonDTO dto) {
+        PersonDTO newDTO = dto.toBuilder().build();
         newDTO.setId(id);
         newDTO.setFirstName(dto.getFirstName());
         newDTO.setLastName(dto.getLastName());

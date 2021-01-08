@@ -2,7 +2,7 @@
   {
     "id": "5fa3c963da6ra335fa2s323d45b",
     "linkedInThread": "http://linkedin.com/thread/withlead1",
-    "prospect": {
+    "person": {
       "id": "5fa3ce63rt4ef23d963da45b",
       "firstName": "Miguel",
       "lastName": "Miguelín",
@@ -101,7 +101,7 @@
   {
     "id": "a335f5236ra2fda33s323c96d45b",
     "linkedInThread": "http://linkedin.com/thread/withlead2",
-    "prospect": {
+    "person": {
       "id": "5fa2fe63gt4ed34d965da46y",
       "firstName": "Miguel",
       "lastName": "Miguelito",

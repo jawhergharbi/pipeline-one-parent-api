@@ -17,7 +17,7 @@ import java.time.ZoneOffset;
 public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Interaction> {
 
     @Getter
-    private final ProspectMockFactory prospectMockFactory;
+    private final PersonMockFactory personMockFactory;
 
     @Override
     public String getComponentId() {

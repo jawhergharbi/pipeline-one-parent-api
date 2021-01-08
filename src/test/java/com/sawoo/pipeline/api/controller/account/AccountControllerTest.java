@@ -558,7 +558,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
                 // Validate common returned fields
                 .andExpect(jsonPath("$.id", is(LEAD_ID)))
-                .andExpect(jsonPath("$.prospect").exists());
+                .andExpect(jsonPath("$.person").exists());
     }
 
     @Test
@@ -609,7 +609,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
     @Test
     @DisplayName("POST /api/accounts/{id}/leads: account found and lead added - Success")
-    void createLeadWhenAccountFoundLeadTypeProspectReturnSuccess() throws Exception {
+    void createLeadWhenAccountFoundLeadTypePersonReturnSuccess() throws Exception {
         // Setup the mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         String LEAD_ID = getMockFactory().getLeadMockFactory().getComponentId();
@@ -630,7 +630,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
                 // Validate common returned fields
                 .andExpect(jsonPath("$.id", is(LEAD_ID)))
-                .andExpect(jsonPath("$.prospect").exists());
+                .andExpect(jsonPath("$.person").exists());
     }
 
     @Test
@@ -656,7 +656,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
 
                 // Validate common returned fields
                 .andExpect(jsonPath("$.id", is(LEAD_ID)))
-                .andExpect(jsonPath("$.prospect").exists());
+                .andExpect(jsonPath("$.person").exists());
 
         ArgumentCaptor<LeadDTO> leadArgumentCaptor = ArgumentCaptor.forClass(LeadDTO.class);
         verify(service, times(1)).createLead(anyString(), leadArgumentCaptor.capture());
@@ -697,7 +697,7 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
         // Setup the mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         LeadDTO postEntity = getMockFactory().getLeadMockFactory().newDTO(null);
-        postEntity.getProspect().setLastName(null);
+        postEntity.getPerson().setLastName(null);
 
         // Execute the GET request
         mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)

@@ -2,10 +2,10 @@ package com.sawoo.pipeline.api.repository.lead;
 
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
-import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
+import com.sawoo.pipeline.api.repository.person.PersonRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +23,7 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
     private static final File LEAD_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "lead-test-data.json").toFile();
     private static final String LEAD_ID = "5fa3c963da6ra335fa2s323d45b";
 
-    private final ProspectRepository prospectRepository;
+    private final PersonRepository personRepository;
     private final CompanyRepository companyRepository;
 
 
@@ -31,10 +31,10 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
     public LeadRepositoryTest(
             LeadRepository repository,
             LeadMockFactory mockFactory,
-            ProspectRepository prospectRepository,
+            PersonRepository personRepository,
             CompanyRepository companyRepository) {
         super(repository, LEAD_JSON_DATA, LEAD_ID, Lead.class.getSimpleName(), mockFactory);
-        this.prospectRepository = prospectRepository;
+        this.personRepository = personRepository;
         this.companyRepository = companyRepository;
     }
 
@@ -57,72 +57,72 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
     @AfterEach
     protected void afterEach() {
         super.afterEach();
-        prospectRepository.deleteAll();
+        personRepository.deleteAll();
         companyRepository.deleteAll();
     }
 
     @Test
     @DisplayName("save: lead cascade saving - Success")
-    void insertWhenProspectDoesNotExistReturnsSuccess() {
+    void insertWhenPersonDoesNotExistReturnsSuccess() {
         Lead entity = getMockFactory().newEntity(null);
 
         Lead savedEntity =  getRepository().insert(entity);
 
-        Assertions.assertAll("Prospect reference entity must be properly stored",
+        Assertions.assertAll("Person reference entity must be properly stored",
                 () -> Assertions.assertNotNull(
                         savedEntity.getId(),
                         "Lead id can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect(),
-                        "Prospect entity can not be null"),
+                        savedEntity.getPerson(),
+                        "Person entity can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getId(),
-                        "Prospect id can not be null"),
+                        savedEntity.getPerson().getId(),
+                        "Person id can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getCompany(),
-                        "Prospect company can not be null"),
+                        savedEntity.getPerson().getCompany(),
+                        "Person company can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getCompany().getId(),
-                        "Prospect company id can not be null"));
+                        savedEntity.getPerson().getCompany().getId(),
+                        "Person company id can not be null"));
     }
 
     @Test
-    @DisplayName("insert: lead save - Success")
-    void insertWhenProspectDoesExistReturnsSuccess() {
+    @DisplayName("insert: lead save when person exists - Success")
+    void insertWhenPersonDoesExistReturnsSuccess() {
         // Arrange
         Lead entity = getMockFactory().newEntity(null);
-        Prospect prospectEntity = getMockFactory().getProspectMockFactory().newEntity(null);
-        prospectRepository.insert(prospectEntity);
-        entity.setProspect(prospectEntity);
+        Person personEntity = getMockFactory().getPersonMockFactory().newEntity(null);
+        personRepository.insert(personEntity);
+        entity.setPerson(personEntity);
 
         // Act
         Lead savedEntity =  getRepository().insert(entity);
 
         // Assert
-        Assertions.assertAll("Prospect reference entity must be properly stored",
+        Assertions.assertAll("Person reference entity must be properly stored",
                 () -> Assertions.assertNotNull(
                         savedEntity.getId(),
                         "Lead id can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect(),
-                        "Prospect entity can not be null"),
+                        savedEntity.getPerson(),
+                        "Person entity can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getId(),
-                        "Prospect id can not be null"),
+                        savedEntity.getPerson().getId(),
+                        "Person id can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getCompany(),
-                        "Prospect company can not be null"),
+                        savedEntity.getPerson().getCompany(),
+                        "Person company can not be null"),
                 () -> Assertions.assertNotNull(
-                        savedEntity.getProspect().getCompany().getId(),
-                        "Prospect company id can not be null"));
+                        savedEntity.getPerson().getCompany().getId(),
+                        "Person company id can not be null"));
     }
 
     @Test
-    @DisplayName("insert: prospect reference null - Success")
-    void insertWhenProspectReferenceNullReturnsSuccess() {
+    @DisplayName("insert: person reference null - Success")
+    void insertWhenPersonReferenceNullReturnsSuccess() {
         // Arrange
         Lead entity = getMockFactory().newEntity(null);
-        entity.setProspect(null);
+        entity.setPerson(null);
 
         // Act
         Lead savedEntity =  getRepository().insert(entity);

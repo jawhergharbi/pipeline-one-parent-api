@@ -4,8 +4,8 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectValid;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.dto.person.PersonValid;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import lombok.*;
@@ -25,9 +25,9 @@ public class LeadDTO extends BaseEntityDTO {
     private String id;
 
     @JMap
-    @ProspectValid(message = ExceptionMessageConstants.PROSPECT_CROSS_FIELD_VALIDATION_ERROR)
+    @PersonValid(message = ExceptionMessageConstants.PERSON_CROSS_FIELD_VALIDATION_ERROR)
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
-    private ProspectDTO prospect;
+    private PersonDTO person;
 
     @JMap
     @Field(name = "linked_in_thread")

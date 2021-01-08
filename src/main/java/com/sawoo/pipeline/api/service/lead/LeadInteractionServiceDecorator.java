@@ -133,7 +133,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                     .map((i) -> {
                         LeadInteractionDTO interaction = mapper.getInteractionMapperOut().getDestination(i);
                         Optional<Lead> lead = leads.stream().filter(l -> l.getId().equals(interaction.getComponentId())).findAny();
-                        lead.ifPresent(value -> interaction.setFullName(value.getProspect().getFullName()));
+                        lead.ifPresent(value -> interaction.setFullName(value.getPerson().getFullName()));
                         return interaction;
                     }).collect(Collectors.toList());
         } else {

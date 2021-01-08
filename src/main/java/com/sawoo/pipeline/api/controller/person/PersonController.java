@@ -1,7 +1,7 @@
-package com.sawoo.pipeline.api.controller.prospect;
+package com.sawoo.pipeline.api.controller.person;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -13,23 +13,23 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ControllerConstants.PROSPECT_CONTROLLER_API_BASE_URI)
-public class ProspectController {
+@RequestMapping(ControllerConstants.PERSON_CONTROLLER_API_BASE_URI)
+public class PersonController {
 
-    private final ProspectControllerDelegator delegator;
+    private final PersonControllerDelegator delegator;
 
     @RequestMapping(
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ProspectDTO> create(@RequestBody ProspectDTO dto) {
+    public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO dto) {
         return delegator.create(dto);
     }
 
     @RequestMapping(
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<ProspectDTO>> getAll() {
+    public ResponseEntity<List<PersonDTO>> getAll() {
         return delegator.findAll();
     }
 
@@ -37,7 +37,7 @@ public class ProspectController {
             value = "/{id}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ProspectDTO> get(@PathVariable String id) {
+    public ResponseEntity<PersonDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
@@ -45,7 +45,7 @@ public class ProspectController {
             value = "/{id}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ProspectDTO> delete(@PathVariable String id) {
+    public ResponseEntity<PersonDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
@@ -55,7 +55,7 @@ public class ProspectController {
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
-            @RequestBody ProspectDTO dto,
+            @RequestBody PersonDTO dto,
             @PathVariable("id") String id) {
         return delegator.update(id, dto);
     }

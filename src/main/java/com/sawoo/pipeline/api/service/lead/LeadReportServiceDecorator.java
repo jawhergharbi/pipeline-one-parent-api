@@ -46,7 +46,7 @@ public class LeadReportServiceDecorator implements LeadReportService {
     public byte[] getReport(String id, String type, String lan) throws CommonServiceException, ResourceNotFoundException {
         log.debug("Generating lead report. [Lead id: {}, report template type: {}, Language: {}]", id, type, lan);
         if (type == null) {
-            type = DomainConstants.PROSPECT_REPORT_TEMPLATE_REPORT;
+            type = DomainConstants.LEAD_REPORT_TEMPLATE_REPORT;
         }
 
         LeadReportDTO leadReport = repository

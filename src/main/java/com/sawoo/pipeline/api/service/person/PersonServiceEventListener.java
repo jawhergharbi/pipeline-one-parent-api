@@ -1,20 +1,20 @@
-package com.sawoo.pipeline.api.service.prospect;
+package com.sawoo.pipeline.api.service.person;
 
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.model.person.Person;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProspectServiceEventListener implements BaseServiceEventListener<ProspectDTO, Prospect> {
+public class PersonServiceEventListener implements BaseServiceEventListener<PersonDTO, Person> {
 
     @Override
-    public void onBeforeInsert(ProspectDTO dto, Prospect entity) {
+    public void onBeforeInsert(PersonDTO dto, Person entity) {
         // nothing to do atm
     }
 
     @Override
-    public void onBeforeSave(ProspectDTO dto, Prospect entity) {
+    public void onBeforeSave(PersonDTO dto, Person entity) {
         if (entity != null) {
             // Consolidate firstName and lastName
             if (dto.getFirstName() != null || dto.getLastName() != null) {
@@ -26,7 +26,7 @@ public class ProspectServiceEventListener implements BaseServiceEventListener<Pr
     }
 
     @Override
-    public void onBeforeUpdate(ProspectDTO dto, Prospect entity) {
+    public void onBeforeUpdate(PersonDTO dto, Person entity) {
         // nothing to do atm
     }
 }

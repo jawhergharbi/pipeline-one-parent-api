@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.model.prospect;
+package com.sawoo.pipeline.api.model.person;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.BaseEntity;
@@ -16,10 +16,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = DBConstants.PROSPECT_DOCUMENT)
+@Document(collection = DBConstants.PERSON_DOCUMENT)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-public class Prospect extends BaseEntity {
+public class Person extends BaseEntity {
 
     @JMap
     @Id

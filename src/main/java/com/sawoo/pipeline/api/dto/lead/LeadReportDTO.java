@@ -12,39 +12,39 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LeadReportDTO {
 
-    @JMap("${prospect.firstName}")
+    @JMap("${person.firstName}")
     private String firstName;
 
-    @JMap("${prospect.lastName}")
+    @JMap("${person.lastName}")
     private String lastName;
 
-    @JMap("${prospect.position}")
+    @JMap("${person.position}")
     private String position;
 
-    @JMap("${prospect.linkedInUrl}")
+    @JMap("${person.linkedInUrl}")
     private String linkedInUrl;
 
-    @JMap("${prospect.email}")
+    @JMap("${person.email}")
     private String email;
 
-    @JMap("${prospect.phoneNumber}")
+    @JMap("${person.phoneNumber}")
     private String phoneNumber;
 
     @JMap
     private String linkedInThread;
 
-    @JMap("${prospect.profilePicture}")
+    @JMap("${person.profilePicture}")
     private String profilePicture;
 
     @JMap("leadNotes")
     private String notes;
 
-    @JMap("${prospect.company}")
+    @JMap("${person.company}")
     private CompanyDTO company;
 
     @JMap("companyNotes")
     private String reportCompanyNotes;
 
-    @JMap("${prospect.personality}")
+    @JMap("${person.personality}")
     private PersonalityDTO personality;
 }

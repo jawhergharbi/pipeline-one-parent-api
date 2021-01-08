@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.dto.prospect;
+package com.sawoo.pipeline.api.dto.person;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Builder(toBuilder = true)
-public class ProspectDTO extends BaseEntityDTO {
+public class PersonDTO extends BaseEntityDTO {
 
     @JMap
     @With

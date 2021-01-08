@@ -35,6 +35,6 @@ public interface ExceptionMessageConstants {
     String LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION = "lead.interaction-add-interaction-already-scheduled.exception";
 
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
-    String PROSPECT_CROSS_FIELD_VALIDATION_ERROR = "prospect.validation.cross-field.error";
+    String PERSON_CROSS_FIELD_VALIDATION_ERROR = "person.validation.cross-field.error";
 
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import com.sawoo.pipeline.api.model.user.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class AccountLeadRepositoryTest {
         repository.deleteAll();
         mongoTemplate.dropCollection(User.class);
         mongoTemplate.dropCollection(Company.class);
-        mongoTemplate.dropCollection(Prospect.class);
+        mongoTemplate.dropCollection(Person.class);
         mongoTemplate.dropCollection(Lead.class);
     }
 

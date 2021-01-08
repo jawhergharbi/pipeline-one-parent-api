@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.service.lead;
 
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -63,8 +62,8 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         String LEAD_ID = getMockFactory().getComponentId();
         LeadDTO mockedDTO = getMockFactory().newDTO(LEAD_ID);
         Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
-        String PROSPECT_ID = getMockFactory().getProspectMockFactory().getComponentId();
-        leadEntity.getProspect().setId(PROSPECT_ID);
+        String PERSON_ID = getMockFactory().getPersonMockFactory().getComponentId();
+        leadEntity.getPerson().setId(PERSON_ID);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findById(LEAD_ID);
@@ -81,9 +80,9 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
                         returnedEntity.getId(),
                         String.format("Lead id must be [%s]", LEAD_ID)),
                 () -> Assertions.assertEquals(
-                        PROSPECT_ID,
-                        returnedEntity.getProspect().getId(),
-                        String.format("Prospect id must be [%s]", PROSPECT_ID)));
+                        PERSON_ID,
+                        returnedEntity.getPerson().getId(),
+                        String.format("Person id must be [%s]", PERSON_ID)));
 
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).insert(any(Lead.class));

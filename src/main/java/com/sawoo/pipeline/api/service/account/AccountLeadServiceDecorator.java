@@ -40,7 +40,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId,
             @Valid LeadDTO lead)
             throws ResourceNotFoundException {
-        log.debug("Creating new lead for account id: [{}]. Prospect id: [{}]", accountId, lead.getProspect().getId());
+        log.debug("Creating new lead for account id: [{}]. Person id: [{}]", accountId, lead.getPerson().getId());
 
         Account account = findAccountById(accountId);
 

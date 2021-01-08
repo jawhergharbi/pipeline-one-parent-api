@@ -1,10 +1,10 @@
-package com.sawoo.pipeline.api.service.prospect;
+package com.sawoo.pipeline.api.service.person;
 
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.mock.ProspectMockFactory;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.mock.PersonMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
+import com.sawoo.pipeline.api.model.person.Person;
+import com.sawoo.pipeline.api.repository.person.PersonRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -27,28 +27,28 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, ProspectRepository, ProspectService, ProspectMockFactory> {
+public class PersonServiceTest extends BaseServiceTest<PersonDTO, Person, PersonRepository, PersonService, PersonMockFactory> {
 
     @MockBean
-    private ProspectRepository repository;
+    private PersonRepository repository;
 
     @Autowired
-    public ProspectServiceTest(ProspectMockFactory mockFactory, ProspectService service) {
-        super(mockFactory, DBConstants.PROSPECT_DOCUMENT, service);
+    public PersonServiceTest(PersonMockFactory mockFactory, PersonService service) {
+        super(mockFactory, DBConstants.PERSON_DOCUMENT, service);
     }
 
     @Override
-    protected String getEntityId(Prospect component) {
+    protected String getEntityId(Person component) {
         return component.getId();
     }
 
     @Override
-    protected String getDTOId(ProspectDTO component) {
+    protected String getDTOId(PersonDTO component) {
         return component.getId();
     }
 
     @Override
-    protected void mockedEntityExists(Prospect entity) {
+    protected void mockedEntityExists(Person entity) {
         doReturn(Optional.of(entity)).when(repository).findByLinkedInUrl(anyString());
     }
 
@@ -61,52 +61,52 @@ public class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, 
     @DisplayName("create: when entity does not exist - Success")
     void createWhenEntityDoesNotExistReturnsSuccess() {
         // Set up mocked entities
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        String PROSPECT_LINKED_IN_URL = getMockFactory().getFAKER().internet().url();
-        ProspectDTO mockedDTO = getMockFactory().newDTO(PROSPECT_ID);
-        mockedDTO.setLinkedInUrl(PROSPECT_LINKED_IN_URL);
-        Prospect mockedEntity = getMockFactory().newEntity(PROSPECT_ID);
-        mockedEntity.setLinkedInUrl(PROSPECT_LINKED_IN_URL);
+        String PERSON_ID = getMockFactory().getComponentId();
+        String PERSON_LINKED_IN_URL = getMockFactory().getFAKER().internet().url();
+        PersonDTO mockedDTO = getMockFactory().newDTO(PERSON_ID);
+        mockedDTO.setLinkedInUrl(PERSON_LINKED_IN_URL);
+        Person mockedEntity = getMockFactory().newEntity(PERSON_ID);
+        mockedEntity.setLinkedInUrl(PERSON_LINKED_IN_URL);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findByLinkedInUrl(anyString());
-        doReturn(mockedEntity).when(repository).insert(any(Prospect.class));
+        doReturn(mockedEntity).when(repository).insert(any(Person.class));
 
         // Execute the service call
-        ProspectDTO returnedEntity = getService().create(mockedDTO);
+        PersonDTO returnedEntity = getService().create(mockedDTO);
 
         // Assert the response
         Assertions.assertNotNull(returnedEntity, "Entity can not be null");
-        Assertions.assertEquals(PROSPECT_LINKED_IN_URL, returnedEntity.getLinkedInUrl(), "Prospect.linkedInUrl should be the same");
+        Assertions.assertEquals(PERSON_LINKED_IN_URL, returnedEntity.getLinkedInUrl(), "Person.linkedInUrl should be the same");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getCreated().toLocalDate(), "Creation time must be today");
         Assertions.assertEquals(LocalDate.now(ZoneOffset.UTC), returnedEntity.getUpdated().toLocalDate(), "Update time must be today");
 
         verify(repository, Mockito.times(1)).findByLinkedInUrl(anyString());
-        verify(repository, Mockito.times(1)).insert(any(Prospect.class));
+        verify(repository, Mockito.times(1)).insert(any(Person.class));
     }
 
     @Test
     @DisplayName("update: entity does exist - Success")
     void updateWhenEntityFoundReturnsSuccess() {
         // Set up mocked entities
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        ProspectDTO mockedDTO = new ProspectDTO();
-        String PROSPECT_NEW_LAST_NAME = getMockFactory().getFAKER().name().lastName();
-        mockedDTO.setLastName(PROSPECT_NEW_LAST_NAME);
-        mockedDTO.setId(PROSPECT_ID);
-        Prospect mockedEntity = getMockFactory().newEntity(PROSPECT_ID);
+        String PERSON_ID = getMockFactory().getComponentId();
+        PersonDTO mockedDTO = new PersonDTO();
+        String PERSON_NEW_LAST_NAME = getMockFactory().getFAKER().name().lastName();
+        mockedDTO.setLastName(PERSON_NEW_LAST_NAME);
+        mockedDTO.setId(PERSON_ID);
+        Person mockedEntity = getMockFactory().newEntity(PERSON_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.of(mockedEntity)).when(repository).findById(PROSPECT_ID);
+        doReturn(Optional.of(mockedEntity)).when(repository).findById(PERSON_ID);
 
         // Execute the service call
-        ProspectDTO returnedDTO = getService().update(PROSPECT_ID, mockedDTO);
+        PersonDTO returnedDTO = getService().update(PERSON_ID, mockedDTO);
 
-        Assertions.assertNotNull(returnedDTO, "Prospect entity can not be null");
+        Assertions.assertNotNull(returnedDTO, "Person entity can not be null");
         Assertions.assertEquals(
-                PROSPECT_NEW_LAST_NAME,
+                PERSON_NEW_LAST_NAME,
                 returnedDTO.getLastName(),
-                String.format("LastName must be '%s'", PROSPECT_NEW_LAST_NAME));
+                String.format("LastName must be '%s'", PERSON_NEW_LAST_NAME));
 
         verify(repository, Mockito.times(1)).findById(anyString());
         verify(repository, Mockito.times(1)).save(any());

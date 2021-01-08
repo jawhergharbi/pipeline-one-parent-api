@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -86,7 +86,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                         LEAD_LIST_SIZE,
                         leadList.size(),
                         String.format("Lead list size must be equal to [%d]", LEAD_LIST_SIZE)),
-                () -> Assertions.assertNotNull(returnedList.get(0).getProspect(), "Prospect must be informed"),
+                () -> Assertions.assertNotNull(returnedList.get(0).getPerson(), "Person must be informed"),
                 () -> Assertions.assertNotNull(returnedList.get(0).getAccount(), "Account must be informed"));
 
         verify(repository, Mockito.times(1)).findById(anyString());
@@ -316,12 +316,12 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     }
 
     @Test
-    void createLeadWhenAccountEntityFoundLeadNotValidProspectNullReturnsFailure() {
+    void createLeadWhenAccountEntityFoundLeadNotValidPersonNullReturnsFailure() {
         // Set up mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account mockedAccount = getMockFactory().newEntity(ACCOUNT_ID);
         LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
-        mockedLeadToCreate.setProspect(null);
+        mockedLeadToCreate.setPerson(null);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
@@ -334,12 +334,12 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     }
 
     @Test
-    void createLeadWhenAccountEntityFoundLeadNotValidProspectNotValidReturnsFailure() {
+    void createLeadWhenAccountEntityFoundLeadNotValidPersonNotValidReturnsFailure() {
         // Set up mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account mockedAccount = getMockFactory().newEntity(ACCOUNT_ID);
         LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
-        mockedLeadToCreate.getProspect().setFirstName(null);
+        mockedLeadToCreate.getPerson().setFirstName(null);
 
         // Set up the mocked repository
         doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
@@ -352,14 +352,14 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     }
 
     @Test
-    void createLeadWhenAccountEntityFoundLeadValidProspectIdInformedReturnsSuccess() {
+    void createLeadWhenAccountEntityFoundLeadValidPersonIdInformedReturnsSuccess() {
         // Set up mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account spyAccount = spy(getMockFactory().newEntity(ACCOUNT_ID));
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
         LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
         LeadDTO mockedLead = getMockFactory().getLeadMockFactory().newDTO(LEAD_ID, mockedLeadToCreate);
-        mockedLeadToCreate.setProspect(ProspectDTO.builder().id(LEAD_ID).build());
+        mockedLeadToCreate.setPerson(PersonDTO.builder().id(LEAD_ID).build());
 
         // Set up the mocked repository
         doReturn(Optional.of(spyAccount)).when(repository).findById(anyString());
@@ -398,7 +398,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         Assertions.assertAll(String.format("Lead add to account id [%s]", accountId),
                 () -> Assertions.assertNotNull(returnedLead, "Lead can not be null"),
                 () -> Assertions.assertEquals(leadId, returnedLead.getId(), String.format("Lead id must be [%s]", leadId)),
-                () -> Assertions.assertNotNull(returnedLead.getCompanyNotes(), "Prospect can not be null"));
+                () -> Assertions.assertNotNull(returnedLead.getCompanyNotes(), "Person can not be null"));
         Assertions.assertFalse(spyAccount.getLeads().isEmpty(), String.format("Lead list of the account id [%s] can not be empty", accountId));
 
         Assertions.assertFalse(spyAccount.getLeads().isEmpty(), String.format("Lead list of the account id [%s] can not be empty", accountId));

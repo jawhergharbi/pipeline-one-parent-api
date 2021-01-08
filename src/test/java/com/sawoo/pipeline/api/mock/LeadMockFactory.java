@@ -3,13 +3,13 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
 
     @Getter
-    private final ProspectMockFactory prospectMockFactory;
+    private final PersonMockFactory personMockFactory;
 
     @Getter
     private final InteractionMockFactory interactionMockFactory;
@@ -54,7 +54,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
                 .value(getFAKER().number().numberBetween(0, 3))
                 .updated(LocalDateTime.now())
                 .build());
-        entity.setProspect(Prospect.builder()
+        entity.setPerson(Person.builder()
                 .email(getFAKER().internet().emailAddress())
                 .firstName(getFAKER().name().firstName())
                 .lastName(getFAKER().name().lastName())
@@ -99,7 +99,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
                 .value(getFAKER().number().numberBetween(0, 3))
                 .updated(now)
                 .build());
-        dto.setProspect(ProspectDTO
+        dto.setPerson(PersonDTO
                 .builder()
                 .email(getFAKER().internet().emailAddress())
                 .firstName(getFAKER().name().firstName())
@@ -126,7 +126,7 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
     public LeadDTO newDTO(String id, LeadDTO dto) {
         LeadDTO newDTO = new LeadDTO();
         newDTO.setId(id);
-        newDTO.setProspect(dto.getProspect());
+        newDTO.setPerson(dto.getPerson());
         newDTO.setLeadNotes(dto.getLeadNotes());
         newDTO.setCompanyNotes(dto.getCompanyNotes());
         newDTO.setLinkedInThread(dto.getLinkedInThread());

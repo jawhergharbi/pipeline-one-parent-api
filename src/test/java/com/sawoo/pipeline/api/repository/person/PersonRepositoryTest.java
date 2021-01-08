@@ -1,8 +1,8 @@
-package com.sawoo.pipeline.api.repository.prospect;
+package com.sawoo.pipeline.api.repository.person;
 
-import com.sawoo.pipeline.api.mock.ProspectMockFactory;
+import com.sawoo.pipeline.api.mock.PersonMockFactory;
 import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import org.junit.jupiter.api.*;
@@ -19,34 +19,34 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, ProspectRepository, ProspectMockFactory> {
+public class PersonRepositoryTest extends BaseRepositoryTest<Person, PersonRepository, PersonMockFactory> {
 
-    private static final File PROSPECT_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "prospect-test-data.json").toFile();
-    private static final String PROSPECT_ID = "5fa3ce63rt4ef23d963da45b";
-    private static final String PROSPECT_LINKED_IN_URL = "http://linkedin.com/miguel.miguelin";
+    private static final File PERSON_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "person-test-data.json").toFile();
+    private static final String PERSON_ID = "5fa3ce63rt4ef23d963da45b";
+    private static final String PERSON_LINKED_IN_URL = "http://linkedin.com/miguel.miguelin";
 
     private final CompanyRepository companyRepository;
 
     @Autowired
-    public ProspectRepositoryTest(ProspectRepository repository, ProspectMockFactory mockFactory, CompanyRepository companyRepository) {
-        super(repository, PROSPECT_JSON_DATA, PROSPECT_ID, Prospect.class.getSimpleName(), mockFactory);
+    public PersonRepositoryTest(PersonRepository repository, PersonMockFactory mockFactory, CompanyRepository companyRepository) {
+        super(repository, PERSON_JSON_DATA, PERSON_ID, Person.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
 
     @Override
-    protected Class<Prospect[]> getClazz() {
-        return Prospect[].class;
+    protected Class<Person[]> getClazz() {
+        return Person[].class;
     }
 
     @Override
-    protected String getComponentId(Prospect component) {
+    protected String getComponentId(Person component) {
         return component.getId();
     }
 
     @Override
-    protected Prospect getNewEntity() {
-        String PROSPECT_ID = getMockFactory().getFAKER().internet().uuid();
-        return getMockFactory().newEntity(PROSPECT_ID, false);
+    protected Person getNewEntity() {
+        String PERSON_ID = getMockFactory().getFAKER().internet().uuid();
+        return getMockFactory().newEntity(PERSON_ID, false);
     }
 
     @AfterEach
@@ -59,41 +59,41 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     @Test
     @DisplayName("findAll: return all the entities defined in the test file and check company has been stored - Success")
     void findAllWhenReferenceIsAlsoStoredReturnsSuccess() {
-        List<Prospect> prospects = getRepository().findAll();
+        List<Person> people = getRepository().findAll();
 
         Assertions.assertEquals(
                 getDocumentSize(),
-                prospects.size(),
-                String.format("Should be %d Prospect entities in the database", getDocumentSize()));
+                people.size(),
+                String.format("Should be %d Person entities in the database", getDocumentSize()));
         Assertions.assertNotNull(
-                prospects.get(0).getCompany(),
-                "Prospect's company can not be null");
+                people.get(0).getCompany(),
+                "Person's company can not be null");
         Assertions.assertNotNull(
-                prospects.get(0).getCompany().getId(),
-                "Prospect's company id can not be null");
+                people.get(0).getCompany().getId(),
+                "Person's company id can not be null");
     }
 
     @Test
     @DisplayName("findByLinkedInUrl: entities found - Success")
     void findByLinkedInUrlWhenEntityIdFoundReturnsSuccess() {
-        Optional<Prospect> entity = getRepository().findByLinkedInUrl(PROSPECT_LINKED_IN_URL);
+        Optional<Person> entity = getRepository().findByLinkedInUrl(PERSON_LINKED_IN_URL);
 
         Assertions.assertTrue(
                 entity.isPresent(),
-                String.format("Prospect with [linkedInUrl]: %s can not be null", PROSPECT_LINKED_IN_URL));
+                String.format("Person with [linkedInUrl]: %s can not be null", PERSON_LINKED_IN_URL));
         Assertions.assertEquals(
-                PROSPECT_LINKED_IN_URL,
+                PERSON_LINKED_IN_URL,
                 entity.get().getLinkedInUrl(),
-                String.format("Prospect [linkedInUrl] must be %s", PROSPECT_LINKED_IN_URL));
+                String.format("Person [linkedInUrl] must be %s", PERSON_LINKED_IN_URL));
     }
 
     @Test
     @DisplayName("insert: company cascade saving - Success")
     void insertWhenCompanyDoesNotExistReturnsSuccess() {
-        Prospect entity = getMockFactory().newEntity(null);
+        Person entity = getMockFactory().newEntity(null);
         entity.getCompany().setId(null);
 
-        Prospect savedEntity =  getRepository().insert(entity);
+        Person savedEntity =  getRepository().insert(entity);
 
         Assertions.assertAll("Company entity must be properly stored",
                 () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
@@ -107,13 +107,13 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
         Company company = getMockFactory().getCompanyMockFactory().newEntity(null);
         company = companyRepository.insert(company);
         String COMPANY_ID = company.getId();
-        Prospect entity = getMockFactory().newEntity(null);
+        Person entity = getMockFactory().newEntity(null);
         String COMPANY_URL_UPDATED = getMockFactory().getFAKER().company().url();
         company.setUrl(COMPANY_URL_UPDATED);
         entity.setCompany(company);
 
         // execute repository action
-        Prospect savedEntity =  getRepository().insert(entity);
+        Person savedEntity =  getRepository().insert(entity);
         Optional<Company> updatedCompany = companyRepository.findById(COMPANY_ID);
 
 
@@ -136,18 +136,18 @@ public class ProspectRepositoryTest extends BaseRepositoryTest<Prospect, Prospec
     @DisplayName("save: company cascade updating - Success")
     void saveWhenCompanyDoesExistAndCompanyIsUpdatedReturnsSuccess() {
         // Arrange
-        Optional<Prospect> prospect = getRepository().findById(PROSPECT_ID);
-        if (prospect.isEmpty()) {
-            Assertions.fail(String.format("Prospect with id [%s] was not found", PROSPECT_ID));
+        Optional<Person> person = getRepository().findById(PERSON_ID);
+        if (person.isEmpty()) {
+            Assertions.fail(String.format("Person with id [%s] was not found", PERSON_ID));
         }
         int COMPANY_HEADCOUNT = getMockFactory().getFAKER().number().numberBetween(50, 500);
-        Prospect entity = prospect.get();
+        Person entity = person.get();
         Company company = entity.getCompany();
         String COMPANY_ID = company.getId();
         company.setHeadcount(COMPANY_HEADCOUNT);
 
         // execute repository action
-        Prospect savedEntity =  getRepository().save(entity);
+        Person savedEntity =  getRepository().save(entity);
         Optional<Company> updatedCompany = companyRepository.findById(COMPANY_ID);
 
 

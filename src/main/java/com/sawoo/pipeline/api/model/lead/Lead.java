@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.interaction.Interaction;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.person.Person;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
@@ -33,7 +33,7 @@ public class Lead extends BaseEntity {
 
     @JMap
     @DBRef
-    private Prospect prospect;
+    private Person person;
 
     @JMap
     @Field(name = "linked_in_thread")

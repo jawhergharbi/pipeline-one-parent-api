@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -70,10 +70,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     }
 
     @Test
-    @DisplayName("POST /api/leads: prospect not informed - Failure")
-    void createWhenProspectNotInformedReturnsFailure() throws Exception {
+    @DisplayName("POST /api/leads: person not informed - Failure")
+    void createWhenPersonNotInformedReturnsFailure() throws Exception {
         LeadDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.setProspect(null);
+        postEntity.setPerson(null);
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI())
@@ -87,14 +87,14 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(2)))
                 .andExpect(jsonPath("$.messages",
-                        hasItem(containsString("Field [prospect] must include either the [id] field or all the other fields to create a new prospect"))));
+                        hasItem(containsString("Field [person] must include either the [id] field or all the other fields to create a new person"))));
     }
 
     @Test
-    @DisplayName("POST /api/leads: prospect informed but only prospectId - Failure")
-    void createWhenProspectNotProperlyInformedReturnsFailure() throws Exception {
+    @DisplayName("POST /api/leads: person informed but only person id - Failure")
+    void createWhenPersonNotProperlyInformedReturnsFailure() throws Exception {
         LeadDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.getProspect().setFirstName(null);
+        postEntity.getPerson().setFirstName(null);
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI())
@@ -108,16 +108,16 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(1)))
                 .andExpect(jsonPath("$.messages",
-                        hasItem(containsString("Field [prospect] must include either the [id] field or all the other fields to create a new prospect"))));
+                        hasItem(containsString("Field [person] must include either the [id] field or all the other fields to create a new person"))));
     }
 
     @Test
-    @DisplayName("POST /api/leads: only prospect id informed for prospect entity - Success")
-    void createWhenProspectIdInformedReturnsSuccess() throws Exception {
+    @DisplayName("POST /api/leads: only person id informed for person entity - Success")
+    void createWhenPersonIdInformedReturnsSuccess() throws Exception {
         LeadDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.setProspect(ProspectDTO.builder().id(getMockFactory().getComponentId()).build());
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        LeadDTO mockedEntity = getMockFactory().newDTO(PROSPECT_ID, postEntity);
+        postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
+        String PERSON_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
         // setup the mocked service
         doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
@@ -132,10 +132,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PERSON_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
+                .andExpect(jsonPath("$.id", is(PERSON_ID)))
                 .andExpect(jsonPath("$." + getExistCheckProperty()).exists());
     }
 
@@ -143,10 +143,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     @DisplayName("POST /api/leads/{type}: type Lead - Success")
     void createWhenLeadTypeLeadReturnsSuccess() throws Exception {
         LeadDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.setProspect(ProspectDTO.builder().id(getMockFactory().getComponentId()).build());
+        postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
         postEntity.setStatus(Status.builder().value(LeadStatusList.HOT.getStatus()).build());
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        LeadDTO mockedEntity = getMockFactory().newDTO(PROSPECT_ID, postEntity);
+        String PERSON_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
         // setup the mocked service
         doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
@@ -161,10 +161,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PERSON_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
+                .andExpect(jsonPath("$.id", is(PERSON_ID)))
                 .andExpect(jsonPath("$.status").exists())
                 .andExpect(jsonPath("$.status.value").exists())
                 .andExpect(jsonPath("$.status.value", is(LeadStatusList.HOT.getStatus())));
@@ -174,10 +174,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     @DisplayName("POST /api/leads/{type}: lead type null - Success")
     void createWhenLeadTypeNotInformedReturnsSuccess() throws Exception {
         LeadDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.setProspect(ProspectDTO.builder().id(getMockFactory().getComponentId()).build());
+        postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
         postEntity.setStatus(Status.builder().value(LeadStatusList.FUNNEL_ON_GOING.getStatus()).build());
-        String PROSPECT_ID = getMockFactory().getComponentId();
-        LeadDTO mockedEntity = getMockFactory().newDTO(PROSPECT_ID, postEntity);
+        String PERSON_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
         // setup the mocked service
         doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
@@ -192,10 +192,10 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PERSON_ID))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
+                .andExpect(jsonPath("$.id", is(PERSON_ID)))
                 .andExpect(jsonPath("$.status").exists())
                 .andExpect(jsonPath("$.status.value").exists())
                 .andExpect(jsonPath("$.status.value", is(LeadStatusList.FUNNEL_ON_GOING.getStatus())));
