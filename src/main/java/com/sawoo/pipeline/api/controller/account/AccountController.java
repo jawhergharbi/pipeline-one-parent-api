@@ -152,7 +152,7 @@ public class AccountController {
             @NotNull
             @PathVariable("ids") List<String> ids,
             @RequestParam(value = "status", required = false) List<Integer> status,
-            @RequestParam(value = "status", required = false) List<Integer> types) {
+            @RequestParam(value = "types", required = false) List<Integer> types) {
         return delegator.findAllInteractions(ids, status, types);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,6 +38,12 @@ public class AccountControllerInteractionDelegatorImpl implements AccountControl
         if (leads.size() > 0) {
             List<String> leadIds = leads.stream().map(LeadDTO::getId).collect(Collectors.toList());
             interactions = leadService.findBy(leadIds, status, types);
+            interactions = interactions
+                    .stream()
+                    .peek( (i) -> {
+                        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(i.getLead().getLeadId())).findAny();
+                        lead.ifPresent(value -> i.setAccount(value.getAccount()));
+                    }).collect(Collectors.toList());
         }
         return ResponseEntity.ok().body(interactions);
     }
