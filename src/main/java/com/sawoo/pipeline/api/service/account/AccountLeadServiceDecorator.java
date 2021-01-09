@@ -99,7 +99,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         Predicate<Lead> statusFilter = (leadStatus != null && leadStatus.length > 0) ?
                 l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
                 l -> true;
-        return accounts
+        List<LeadDTO> leads = accounts
                 .stream().flatMap( (account) -> {
                     AccountLeadDTO leadAccount = accountMapper.getDestination(account);
                     return account.getLeads()
@@ -111,6 +111,12 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                                 return lead;
                             });
                 }).collect(Collectors.toList());
+        log.debug("[{}] lead/s has/have been found for accounts with ids [{}] and status [{}]",
+                leads.size(),
+                accountIds,
+                leadStatus);
+
+        return leads;
     }
 
     @Override
