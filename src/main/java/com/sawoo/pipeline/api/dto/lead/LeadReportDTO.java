@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LeadReportDTO {
 
+    @JMap("${person.fullName}")
+    private String fullName;
+
     @JMap("${person.firstName}")
     private String firstName;
 
