@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface InteractionService extends BaseService<InteractionDTO>, BaseProxyService<InteractionRepository, InteractionMapper> {
 
-    List<InteractionDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types);
+    List<InteractionDTO> findBy(List<String> componentIds, List<Integer> status, List<Integer> types);
 
 }

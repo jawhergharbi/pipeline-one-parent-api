@@ -151,13 +151,28 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
 
     @Test
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByStatusTypeLeadsWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+    void findByStatusAndTypeWhenStatusListNullTypeListNullAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int INTERACTIONS_SIZE = 4;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
         List<Interaction> interactions = getRepository().findByStatusAndType(null, null, COMPONENT_IDS);
+
+        Assertions.assertFalse(interactions.isEmpty(), "Interactions can not be empty");
+        Assertions.assertEquals(INTERACTIONS_SIZE, interactions.size(), String.format("Interactions size must be [%d]", INTERACTIONS_SIZE));
+    }
+
+    @Test
+    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
+    void findByStatusAndTypeWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+        // Assign
+        int INTERACTIONS_SIZE = 2;
+        List<Integer> types = Collections.singletonList(1);
+        List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+
+        // Execute query
+        List<Interaction> interactions = getRepository().findByStatusAndType(null, types, COMPONENT_IDS);
 
         Assertions.assertFalse(interactions.isEmpty(), "Interactions can not be empty");
         Assertions.assertEquals(INTERACTIONS_SIZE, interactions.size(), String.format("Interactions size must be [%d]", INTERACTIONS_SIZE));

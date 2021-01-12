@@ -37,10 +37,10 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
         Criteria criteria = new Criteria();
         List<Criteria> andCriteria = new ArrayList<>();
         if (status != null && status.size() > 0) {
-            andCriteria.add(Criteria.where("status").is(status));
+            andCriteria.add(Criteria.where("status").in(status));
         }
         if (type != null && type.size() > 0) {
-            andCriteria.add(Criteria.where("type").is(type));
+            andCriteria.add(Criteria.where("type").in(type));
         }
         if (componentIds != null && componentIds.size() > 0) {
             andCriteria.add(Criteria.where("componentId").in(componentIds));
