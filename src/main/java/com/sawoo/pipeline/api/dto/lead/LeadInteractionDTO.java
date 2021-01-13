@@ -1,28 +1,17 @@
 package com.sawoo.pipeline.api.dto.lead;
 
-import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LeadInteractionDTO extends LeadInteractionBaseDTO {
+@ToString(callSuper = true)
+public class LeadInteractionDTO extends InteractionDTO {
 
-    @JMap("key")
-    private Long id;
+    private AccountLeadDTO account;
 
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
-    private LocalDateTime updated;
+    private LeadInteractionLeadDTO lead;
 }

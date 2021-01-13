@@ -2,9 +2,6 @@ package com.sawoo.pipeline.api.common.contants;
 
 public interface DomainConstants {
 
-    Integer AUTHORIZATION_PROVIDER_TYPE_EMAIL = 0;
-    Integer AUTHORIZATION_PROVIDER_TYPE_ID = 1;
-
     Integer SALUTATION_EMPTY = 0;
     Integer SALUTATION_MISTER = 1;
     Integer SALUTATION_MISS = 2;
@@ -13,20 +10,7 @@ public interface DomainConstants {
     Integer SALUTATION_PROFESSOR_HIM = 5;
     Integer SALUTATION_PROFESSOR_HER = 6;
 
-    String PROSPECT_REPORT_TEMPLATE_REPORT = "report";
-    String PROSPECT_REPORT_TEMPLATE_FULL_REPORT = "report-full";
+    String LEAD_REPORT_TEMPLATE_REPORT = "report";
+    String LEAD_REPORT_TEMPLATE_FULL_REPORT = "report-full";
 
-    enum ClientStatus {
-        ON_BOARDING,
-        RUNNING,
-        PAUSED,
-        ENDED
-    }
-
-    enum InteractionStatus {
-        SCHEDULED,
-        CANCELLED,
-        DONE,
-        RESCHEDULED
-    }
 }

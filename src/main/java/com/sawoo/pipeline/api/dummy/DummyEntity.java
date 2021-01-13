@@ -3,15 +3,14 @@ package com.sawoo.pipeline.api.dummy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity(name = "dummy")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Document(collection = "dummy")
 public class DummyEntity {
 
     @Id

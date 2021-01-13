@@ -7,4 +7,6 @@ public interface CommonConstants {
 
     int REPORT_PDF_FILE = 0;
     int REPORT_PDF_STREAM = 1;
+
+    int AUTH_PASSWORD_MIN_LENGTH = 6;
 }

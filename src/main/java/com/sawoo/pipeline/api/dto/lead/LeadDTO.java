@@ -1,43 +1,48 @@
 package com.sawoo.pipeline.api.dto.lead;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.sawoo.pipeline.api.dto.StatusDTO;
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.dto.person.PersonValid;
 import com.sawoo.pipeline.api.model.common.Note;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.sawoo.pipeline.api.model.common.Status;
+import lombok.*;
+import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 
-import java.time.LocalDateTime;
-
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class LeadDTO extends LeadBaseDTO {
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
+@Builder(toBuilder = true)
+public class LeadDTO extends BaseEntityDTO {
 
     @JMap
-    private Integer salutation;
+    private String id;
 
     @JMap
-    private String email;
+    @PersonValid(message = ExceptionMessageConstants.PERSON_CROSS_FIELD_VALIDATION_ERROR)
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    private PersonDTO person;
 
     @JMap
-    private String phoneNumber;
+    @Field(name = "linked_in_thread")
+    private String linkedInThread;
 
     @JMap
-    private Note extraNotes;
+    @Field(name = "lead_notes")
+    private Note leadNotes;
 
     @JMap
-    private Note companyComments;
+    @Field(name = "company_notes")
+    private Note companyNotes;
 
     @JMap
-    private StatusDTO status;
+    private Status status;
 
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
+    private AccountLeadDTO account;
 }

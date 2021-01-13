@@ -64,9 +64,11 @@ public class GlobalExceptionHandler {
         log.error(error.getMessage(), error);
         List<String> messages = error.getConstraintViolations()
                 .stream()
-                .map(constrain -> constrain.getPropertyPath() + constrain.getMessage())
+                .map(constrain -> {
+                    String message = constrain.getMessage();
+                    return messageSource.getMessage(message, new Object[]{constrain.getPropertyPath(), constrain.getRootBean().getClass().getSimpleName()}, locale);
+                })
                 .collect(Collectors.toList());
-        String errorMessage = messageSource.getMessage(error.getMessage(), null, locale);
         return new ResponseEntity<>(new ExceptionMessage(messages), HttpStatus.BAD_REQUEST);
     }
 
