@@ -51,6 +51,21 @@ app:
   cors:
     allowed-origins: http://localhost:4200, http://saas.localhost:4200, http://laas.localhost:4200, http://localhost:8080
 
+---
+spring:
+  profiles: dev-cloud-db
+  data:
+    mongodb:
+      auto-index-creation: false
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core?retryWrites=true&w=majority
+
+app:
+  server: "http://localhost:8080"
+  report-api: "http://localhost:4001"
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  cors:
+    allowed-origins: http://localhost:4200, http://saas.localhost:4200, http://laas.localhost:4200, http://localhost:8080
 
 ---
 spring:
@@ -96,7 +111,7 @@ server:
   port: 8081
 
 app:
-  server: "https://pipeline-api-dev.ew.r.appspot.com"
+  server: "https://pipeline-one-dev.ew.r.appspot.com"
   report-api: "http://pipeline-one-report-api-dot-pipeline-api-dev.ew.r.appspot.com"
   mail:
     contact-account: miguel.maquieira@sawoo.io
