@@ -130,21 +130,18 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         try {
             auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             return (UserAuthDetails) auth.getPrincipal();
-        } catch (ClassCastException | DisabledException exc) {
-            String message = ExceptionMessageConstants.AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION;
-            Object[] params;
-            if (exc instanceof ClassCastException) {
-                message = ExceptionMessageConstants.AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION;
-                params = new String[] {
-                        UserAuthDetails.class.getName(),
-                        (auth != null && auth.getPrincipal() != null) ?
-                            auth.getPrincipal().getClass().getName() :
-                            "null"
-                };
-            } else {
-                params = new String[]{ email };
-            }
-            throw new AuthException(message, params);
+        } catch (DisabledException exc) {
+            throw new AuthException(
+                    ExceptionMessageConstants.AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION,
+                    new String[]{email});
+        } catch (ClassCastException exc) {
+            String[] params = new String[]{
+                    UserAuthDetails.class.getName(),
+                    (auth != null && auth.getPrincipal() != null) ? auth.getPrincipal().getClass().getName() : "null"
+            };
+            throw new AuthException(
+                    ExceptionMessageConstants.AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION,
+                    params);
         } catch (BadCredentialsException exc) {
             throw new AuthException(
                     ExceptionMessageConstants.AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION,

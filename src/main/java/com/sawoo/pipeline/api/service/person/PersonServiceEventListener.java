@@ -15,13 +15,11 @@ public class PersonServiceEventListener implements BaseServiceEventListener<Pers
 
     @Override
     public void onBeforeSave(PersonDTO dto, Person entity) {
-        if (entity != null) {
-            // Consolidate firstName and lastName
-            if (dto.getFirstName() != null || dto.getLastName() != null) {
-                String firstName = dto.getFirstName() != null ? dto.getFirstName() : entity.getFirstName();
-                String lastName = dto.getLastName() != null ? dto.getLastName() : entity.getLastName();
-                entity.setFullName(String.join(" ", firstName, lastName));
-            }
+        // Consolidate firstName and lastName
+        if (entity != null && (dto.getFirstName() != null || dto.getLastName() != null)) {
+            String firstName = dto.getFirstName() != null ? dto.getFirstName() : entity.getFirstName();
+            String lastName = dto.getLastName() != null ? dto.getLastName() : entity.getLastName();
+            entity.setFullName(String.join(" ", firstName, lastName));
         }
     }
 
