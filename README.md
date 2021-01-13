@@ -1,25 +1,23 @@
 ## Running in the Local environment
 How to run App Engine and Datastore locally to execute the tests. 
-1. Start datastore emulator: 
-   ```console
-   gcloud beta emulators datastore start
-   ```
+1.  Start datastore emulator: 
+    ```console
+    gcloud beta emulators datastore start
+    ```
 
-2. Setting environment variables
-   1. If the application and the emulator are running in the same machine: run **env-init** using command substitution:
-   ```console
-   $(gcloud beta emulators datastore env-init)
-   ```
-      
-   2. If the application and the emulator are running in different machines, please check [this](https://cloud.google.com/datastore/docs/tools/datastore-emulator#manually_setting_the_variables) out.
+2.  Setting environment variables
+    1. If the application and the emulator are running in the same machine: run **env-init** using command substitution:
+        ```console
+        $(gcloud beta emulators datastore env-init)
+        ```
+    2. If the application and the emulator are running in different machines, please check [this](https://cloud.google.com/datastore/docs/tools/datastore-emulator#manually_setting_the_variables) out.
     
-3. Once you're done, remove the environment variables
-   1. If the application and the emulator are running in the same machine: run **env-unset** using command substitution: 
-   ```console
-   $(gcloud beta emulators datastore env-unset)
-   ```
-      
-   2. If the application and the emulator are running in different machines, please check [this](https://cloud.google.com/datastore/docs/tools/datastore-emulator#manually_removing_the_variables) out.
+3.  Once you're done, remove the environment variables
+    1. If the application and the emulator are running in the same machine: run **env-unset** using command substitution: 
+        ```console
+        $(gcloud beta emulators datastore env-unset)
+        ```
+    2. If the application and the emulator are running in different machines, please check [this](https://cloud.google.com/datastore/docs/tools/datastore-emulator#manually_removing_the_variables) out.
 
 ### Testing
 - [Hamcrest CheatSheet](https://www.marcphilipp.de/downloads/posts/2013-01-02-hamcrest-quick-reference/Hamcrest-1.3.pdf)
