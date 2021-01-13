@@ -173,7 +173,7 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         Assertions.assertFalse(returnedListADMIN.isEmpty(), "Returned list can not be empty");
         Assertions.assertEquals(listSize, returnedListADMIN.size(), String.format("Returned list size must be %d", listSize));
 
-        verify(userRepository, Mockito.times(2)).findById(any());
+        verify(userRepository, times(2)).findById(any());
         verify(getRepository(), Mockito.atMostOnce()).findAll();
         verify(getRepository(), Mockito.atMostOnce()).findByUserId(anyString());
     }

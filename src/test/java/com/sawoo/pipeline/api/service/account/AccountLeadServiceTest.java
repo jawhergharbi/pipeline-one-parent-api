@@ -17,7 +17,6 @@ import com.sawoo.pipeline.api.service.lead.LeadMapper;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import com.sawoo.pipeline.api.service.lead.LeadServiceImpl;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -89,7 +88,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                 () -> Assertions.assertNotNull(returnedList.get(0).getPerson(), "Person must be informed"),
                 () -> Assertions.assertNotNull(returnedList.get(0).getAccount(), "Account must be informed"));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
@@ -106,7 +105,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                 () -> getService().findAllLeads(ACCOUNT_ID),
                 String.format("Must throw ResourceNotFoundException for account id [%s]", ACCOUNT_ID));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
@@ -126,7 +125,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         Assertions.assertAll(String.format("Account id [%s] must have no leads", ACCOUNT_ID),
                 () -> Assertions.assertTrue(returnedList.isEmpty(), "Lead list must be empty"));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
@@ -165,7 +164,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                         returnedList.size(),
                         String.format("Lead list size must be [%d]", leadCount.get())));
 
-        verify(repository, Mockito.times(1)).findAllById(ACCOUNT_IDS);
+        verify(repository, times(1)).findAllById(ACCOUNT_IDS);
     }
 
     @Test
@@ -209,7 +208,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                         returnedList.size(),
                         String.format("Lead list size must be [%d]", deadLeadCount.get())));
 
-        verify(repository, Mockito.times(1)).findAllById(ACCOUNT_IDS);
+        verify(repository, times(1)).findAllById(ACCOUNT_IDS);
     }
 
     @Test
@@ -262,7 +261,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                 () -> getService().removeLead(LEAD_ID, ACCOUNT_ID),
                 String.format("Must throw ResourceNotFoundException for account id [%s]", ACCOUNT_ID));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test
@@ -290,7 +289,7 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
                 () -> getService().removeLead(LEAD_ID, ACCOUNT_ID),
                 String.format("Must throw CommonServiceException for account id [%s] and lead id [%s]", ACCOUNT_ID, LEAD_ID));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
+        verify(repository, times(1)).findById(anyString());
     }
 
     @Test

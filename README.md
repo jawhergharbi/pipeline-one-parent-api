@@ -1,6 +1,6 @@
 ## Running in the Local environment
 How to run App Engine and Datastore locally to execute the tests. 
-1.  Start datastore emulator: 
+1.  Start datastore emulator:
     ```console
     gcloud beta emulators datastore start
     ```

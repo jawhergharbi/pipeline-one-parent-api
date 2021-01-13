@@ -10,7 +10,6 @@ import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -96,7 +95,7 @@ public class CompanyServiceTest extends BaseServiceTest<CompanyDTO, Company, Com
         // Assert the response
         Assertions.assertFalse(returnedEntity.isPresent(), String.format("Company entity with name [%s] was found", COMPANY_NAME));
 
-        verify(repository, Mockito.times(1)).findByName(COMPANY_NAME);
+        verify(repository, times(1)).findByName(COMPANY_NAME);
     }
 
     @Test
