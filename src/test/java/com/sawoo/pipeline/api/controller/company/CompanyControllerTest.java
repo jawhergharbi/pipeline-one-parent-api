@@ -70,7 +70,6 @@ public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Compan
     @DisplayName("POST /api/companies: resource name not informed - Failure")
     void createWhenNameAndSiteNotInformedReturnsFailure() throws Exception {
         // Setup the mocked entities
-        String COMPANY_ID = getMockFactory().getComponentId();
         CompanyDTO postEntity = new CompanyDTO();
         postEntity.setHeadcount(1000);
 

@@ -10,7 +10,6 @@ import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.person.Person;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -36,15 +35,12 @@ public class Lead extends BaseEntity {
     private Person person;
 
     @JMap
-    @Field(name = "linked_in_thread")
     private String linkedInThread;
 
     @JMap
-    @Field(name = "lead_notes")
     private Note leadNotes;
 
     @JMap
-    @Field(name = "company_notes")
     private Note companyNotes;
 
     @JMap

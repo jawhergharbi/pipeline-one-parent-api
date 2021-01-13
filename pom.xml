@@ -66,14 +66,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-gcp-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-data-datastore</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud-datastore</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.googlecode.jmapper-framework</groupId>
@@ -213,7 +205,7 @@
             <id>dev</id>
             <properties>
                 <activatedProperties>dev</activatedProperties>
-                <appEngineProjectId>pipeline-api-dev</appEngineProjectId>
+                <appEngineProjectId>pipeline-one-dev</appEngineProjectId>
                 <rootLogLevel>INFO</rootLogLevel>
             </properties>
         </profile>
