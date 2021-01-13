@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReportDTO<T> {
 
-    String template;
-    T templateData;
-    Integer type;
-    String locale;
+    private String template;
+    private T templateData;
+    private Integer type;
+    private String locale;
 }

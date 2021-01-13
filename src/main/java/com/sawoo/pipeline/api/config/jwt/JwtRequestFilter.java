@@ -52,7 +52,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private JwtTokenWrapper getToken(HttpServletRequest request) {
         final String requestTokenHeader = request.getHeader(JwtConstants.AUTHORIZATION_HEADER_KEY);
-        String username = null, jwtToken = null;
+        String username = null;
+        String jwtToken = null;
         if (requestTokenHeader != null && requestTokenHeader.startsWith(JwtConstants.JWT_TOKEN_PREFIX)) {
             log.debug("Auth token has been found {} for request: {} ", request, request.getRequestURI());
             jwtToken = requestTokenHeader.substring(JwtConstants.JWT_TOKEN_PREFIX.length());
