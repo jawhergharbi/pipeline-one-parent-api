@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -43,7 +42,6 @@ public class User extends BaseEntity {
     private Set<String> roles;
 
     @JMap
-    @Field(name = "last_login")
     private LocalDateTime lastLogin;
 
     @ToString.Exclude

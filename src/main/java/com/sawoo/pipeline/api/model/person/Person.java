@@ -6,7 +6,6 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.company.Company;
 import lombok.*;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -45,16 +44,13 @@ public class Person extends BaseEntity {
     private String email;
 
     @JMap
-    @Field(name = "phone_number")
     private String phoneNumber;
 
     @JMap
-    @Field(name = "linked_in_url")
     @Indexed
     private String linkedInUrl;
 
     @JMap
-    @Field(name = "profile_picture")
     private String profilePicture;
 
     @JMap

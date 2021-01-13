@@ -9,7 +9,6 @@ import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.user.User;
 import lombok.*;
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -44,12 +43,10 @@ public class Account extends BaseEntity {
     private String email;
 
     @JMap
-    @Field(name = "phone_number")
     private String phoneNumber;
 
     @JMap
     @Indexed
-    @Field(name = "linked_in_url")
     private String linkedInUrl;
 
     @JMap
