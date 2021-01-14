@@ -102,6 +102,10 @@ app:
 ---
 spring:
   profiles: dev
+  data:
+    mongodb:
+      auto-index-creation: false
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core?retryWrites=true&w=majority
 
 # To fix GAE issue:
 # App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
