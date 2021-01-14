@@ -183,6 +183,19 @@
                 <activatedProperties>dev-cloud-db</activatedProperties>
                 <rootLogLevel>INFO</rootLogLevel>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>
+                                -Djdk.tls.client.protocols=TLSv1.2
+                            </jvmArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>unit-tests</id>
