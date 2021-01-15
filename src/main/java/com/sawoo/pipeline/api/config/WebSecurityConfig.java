@@ -30,7 +30,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-@Profile(value = {"dev-local", "dev", "test", "prod"})
+@Profile(value = {"dev-local", "dev-cloud-db", "dev", "test", "prod"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;

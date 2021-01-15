@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-@Profile(value = {"dev-local", "dev", "test", "prod"})
+@Profile(value = {"dev-local", "dev", "dev-cloud-db", "test", "prod"})
 public class MongoDBConfig {
 
     private final MongoTemplate mongoTemplate;

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sawoo</groupId>
     <artifactId>pipeline-one-api</artifactId>
-    <version>0-4-00-SNAPSHOT</version>
+    <version>0-4-00-snapshot</version>
     <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
@@ -65,6 +65,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-gcp-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-datastore</artifactId>
         </dependency>
 
         <dependency>
@@ -159,13 +163,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.google.cloud</groupId>
-                <artifactId>google-cloud-bom</artifactId>
-                <version>${google-cloud-bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -179,6 +176,26 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+        </profile>
+        <profile>
+            <id>dev-cloud-db</id>
+            <properties>
+                <activatedProperties>dev-cloud-db</activatedProperties>
+                <rootLogLevel>INFO</rootLogLevel>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>
+                                -Djdk.tls.client.protocols=TLSv1.2
+                            </jvmArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>unit-tests</id>
