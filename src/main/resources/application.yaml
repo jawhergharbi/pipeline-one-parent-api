@@ -120,7 +120,7 @@ app:
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
-    allowed-origins: https://pipeline-web-dev.ew.r.appspot.com
+    allowed-origins: https://pipeline-one-dev.ew.r.appspot.com
 
 ---
 spring:
@@ -139,7 +139,7 @@ app:
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
-    allowed-origins: https://pipeline-web-test.ew.r.appspot.com
+    allowed-origins: https://pipeline-one-test.ew.r.appspot.com
 
 
 
@@ -160,7 +160,7 @@ app:
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
-    allowed-origins: https://pipeline-web-prod.ew.r.appspot.com
+    allowed-origins: https://pipeline-one-prod.ew.r.appspot.com
 
 
 

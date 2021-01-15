@@ -1,2 +1,3 @@
+service: pipeline-one-core-api
 runtime: java11
 instance_class: F4
