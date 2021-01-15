@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sawoo</groupId>
     <artifactId>pipeline-one-api</artifactId>
-    <version>0-4-00-snapshot</version>
+    <version>0-4-01-snapshot</version>
     <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
@@ -230,7 +230,7 @@
             <id>test</id>
             <properties>
                 <activatedProperties>test</activatedProperties>
-                <appEngineProjectId>pipeline-api-test</appEngineProjectId>
+                <appEngineProjectId>pipeline-one-test</appEngineProjectId>
                 <rootLogLevel>INFO</rootLogLevel>
             </properties>
         </profile>
@@ -238,7 +238,7 @@
             <id>prod</id>
             <properties>
                 <activatedProperties>prod</activatedProperties>
-                <appEngineProjectId>pipeline-api-prod</appEngineProjectId>
+                <appEngineProjectId>pipeline-one-prod</appEngineProjectId>
                 <rootLogLevel>ERROR</rootLogLevel>
             </properties>
         </profile>
