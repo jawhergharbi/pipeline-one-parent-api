@@ -125,11 +125,11 @@ app:
 ---
 spring:
   profiles: test
+  data:
+    mongodb:
+      auto-index-creation: false
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-one-test?retryWrites=true&w=majority
 
-# To fix GAE issue:
-# App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
-# As a consequence, nginx cannot be started. Performance may be degraded. Please listen on the port defined by the
-# PORT environment variable
 server:
   port: 8081
 
@@ -147,10 +147,6 @@ app:
 spring:
   profiles: prod
 
-# To fix GAE issue:
-# App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
-# As a consequence, nginx cannot be started. Performance may be degraded. Please listen on the port defined by the
-# PORT environment variable
 server:
   port: 8081
 
