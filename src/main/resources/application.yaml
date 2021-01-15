@@ -115,8 +115,8 @@ server:
   port: 8081
 
 app:
-  server: "https://pipeline-one-dev.ew.r.appspot.com"
-  report-api: "https://pipeline-one-report-api-dot-pipeline-one-dev.ew.r.appspot.com"
+  server: https://pipeline-one-core-api-dot-pipeline-one-dev.ew.r.appspot.com
+  report-api: https://pipeline-one-report-api-dot-pipeline-one-dev.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
@@ -134,8 +134,8 @@ server:
   port: 8081
 
 app:
-  server: "https://pipeline-api-test.ew.r.appspot.com"
-  report-api: "http://pipeline-one-report-api-dot-pipeline-api-test.ew.r.appspot.com"
+  server: https://pipeline-one-core-api-dot-pipeline-one-test.ew.r.appspot.com
+  report-api: https://pipeline-one-report-api-dot-pipeline-one-test.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
@@ -155,8 +155,8 @@ server:
   port: 8081
 
 app:
-  server: "https://pipeline-api-prod.ew.r.appspot.com"
-  report-api: "http://pipeline-one-report-api-dot-pipeline-api-prod.ew.r.appspot.com"
+  server: https://pipeline-one-core-api-dot-pipeline-one-test.ew.r.appspot.com
+  report-api: https://pipeline-one-report-api-dot-pipeline-one-prod.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
