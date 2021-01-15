@@ -116,7 +116,7 @@ server:
 
 app:
   server: "https://pipeline-one-dev.ew.r.appspot.com"
-  report-api: "http://pipeline-one-report-api-dot-pipeline-api-dev.ew.r.appspot.com"
+  report-api: "https://pipeline-one-report-api-dot-pipeline-one-dev.ew.r.appspot.com"
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
