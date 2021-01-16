@@ -25,6 +25,9 @@ logging:
     root: ${rootLogLevel}
     com.sawoo.pipeline: DEBUG
 
+mongock:
+  change-logs-scan-package: com.sawoo.pipeline.api.repository.migratrion
+  enabled: false
 
 app:
   version: ${version}
@@ -38,9 +41,7 @@ spring:
   profiles: dev-local
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: pipeline-core
+      uri: mongodb://localhost:27017/pipeline-core?readPreference=primary&ssl=false
       auto-index-creation: false
 
 app:
