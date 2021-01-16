@@ -47,19 +47,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         log.debug("Configuring new authentication manager. Default bean is being used");
         return super.authenticationManagerBean();
     }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // we don't CSFR
-                .authorizeRequests()
-                    .antMatchers("/api/**", "/security/public/**")
-                        .permitAll()
-                    .antMatchers("/security/private/**").hasAnyRole("USER")
-                    .antMatchers("/security/admin/**").hasAnyRole("ADMIN")
-                    .anyRequest()
-                        .authenticated()
-                    .and()
-                        .httpBasic();
-    }
 }
