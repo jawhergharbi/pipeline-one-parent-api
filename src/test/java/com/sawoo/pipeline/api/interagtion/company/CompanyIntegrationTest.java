@@ -36,7 +36,8 @@ public class CompanyIntegrationTest extends BaseIntegrationTest<Company> {
     public CompanyIntegrationTest(MongoTemplate mongoTemplate) {
         super(mongoTemplate,
                 ControllerConstants.COMPANY_CONTROLLER_API_BASE_URI,
-                DBConstants.COMPANY_DOCUMENT);
+                DBConstants.COMPANY_DOCUMENT,
+                null);
     }
 
     @Override
