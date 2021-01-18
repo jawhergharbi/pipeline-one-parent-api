@@ -1,0 +1,38 @@
+[
+  {
+    "key": "findByIdWhenEntityFound",
+    "values": [
+      {
+        "id": "1",
+        "fullName": "Ray Alabern",
+        "linkedInUrl": "http://linkedin.com/rayalabern",
+        "position": "Managing Director",
+        "email": "ray@gmail.com",
+        "phoneNumber": "1234568345",
+        "company": {
+          "id": "34rfae63gt43d96fe63gt45fa",
+          "name": "google",
+          "url": "http://google.com",
+          "created": "2020-06-02T12:59:49.494",
+          "updated": "2020-06-02T05:59:49.494",
+          "headcount": 1200
+        },
+        "notes": {
+          "text": "here some other comments",
+          "updated": "2020-06-02T11:59:49.494"
+        },
+        "status": {
+          "value": 1,
+          "notes": {
+            "text": "here some other comments with regads to the account status",
+            "updated": "2020-06-02T11:59:49.494"
+          },
+          "updated": "2020-06-02T12:59:49.494"
+        },
+        "created": "2020-06-02T12:59:49.494",
+        "updated": "2020-06-02T05:59:49.494"
+      }
+    ],
+    "fieldsToBeChecked": ["fullName", "linkedInUrl", "position", "email", "phoneNumber", "created", "updated"]
+  }
+]

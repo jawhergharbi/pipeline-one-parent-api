@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.integration.ExpectedResult;
 import lombok.Getter;
 import org.junit.jupiter.api.*;

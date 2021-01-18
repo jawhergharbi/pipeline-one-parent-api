@@ -31,14 +31,14 @@ import org.springframework.test.web.servlet.MockMvc;
         collectionName = DBConstants.PERSON_DOCUMENT)
 public class PersonIntegrationTest extends BaseIntegrationTest<Person> {
 
-    private static final String PERSON_INTEGRATION_EXPECTED_RESULTS = "person-integration-expected-results.json";
+    private static final String PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "person-integration-expected-results.json";
 
     @Autowired
     public PersonIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate) {
         super(mockMvc, mongoTemplate,
                 ControllerConstants.PERSON_CONTROLLER_API_BASE_URI,
                 DBConstants.PERSON_DOCUMENT,
-                PERSON_INTEGRATION_EXPECTED_RESULTS);
+                PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME);
     }
 
     @Override

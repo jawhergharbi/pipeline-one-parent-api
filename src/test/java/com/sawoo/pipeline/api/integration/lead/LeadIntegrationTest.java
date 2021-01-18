@@ -1,11 +1,11 @@
-package com.sawoo.pipeline.api.integration.company;
+package com.sawoo.pipeline.api.integration.lead;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.integration.MongoDataFile;
 import com.sawoo.pipeline.api.integration.MongoSpringExtension;
 import com.sawoo.pipeline.api.integration.base.BaseIntegrationTest;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.company.Company;
+import com.sawoo.pipeline.api.model.lead.Lead;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -26,23 +26,23 @@ import org.springframework.test.web.servlet.MockMvc;
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @ExtendWith({SpringExtension.class, MongoSpringExtension.class})
 @MongoDataFile(
-        value = "company-integration-test-data.json",
-        classType = Company.class,
-        collectionName = DBConstants.COMPANY_DOCUMENT)
-public class CompanyIntegrationTest extends BaseIntegrationTest<Company> {
+        value = "lead-integration-test-data.json",
+        classType = Lead.class,
+        collectionName = DBConstants.LEAD_DOCUMENT)
+public class LeadIntegrationTest extends BaseIntegrationTest<Lead> {
 
-    private static final String COMPANY_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "company-integration-expected-results.json";
+    private static final String LEAD_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "lead-integration-expected-results.json";
 
     @Autowired
-    public CompanyIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate) {
+    public LeadIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate) {
         super(mockMvc, mongoTemplate,
-                ControllerConstants.COMPANY_CONTROLLER_API_BASE_URI,
-                DBConstants.COMPANY_DOCUMENT,
-                COMPANY_INTEGRATION_EXPECTED_RESULTS_FILE_NAME);
+                ControllerConstants.LEAD_CONTROLLER_API_BASE_URI,
+                DBConstants.LEAD_DOCUMENT,
+                LEAD_INTEGRATION_EXPECTED_RESULTS_FILE_NAME);
     }
 
     @Override
-    protected Class<Company> getClazz() {
-        return Company.class;
+    protected Class<Lead> getClazz() {
+        return Lead.class;
     }
 }
