@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class AccountLeadRepositoryTest {
 
@@ -78,14 +78,13 @@ public class AccountLeadRepositoryTest {
 
         Assertions.assertAll(String.format("Account id [%s] must have [%d] lead/s", ACCOUNT_ID, 1),
                 () -> Assertions.assertTrue(account.isPresent(), String.format("Account id [%s] must exist", ACCOUNT_ID)),
-                () -> Assertions.assertFalse(
-                        account.isPresent() && account.get().getLeads().isEmpty(),
-                        String.format("Lead list for account id [%s] can not be empty", ACCOUNT_ID)),
-                () -> Assertions.assertEquals(
+                () -> account.ifPresent( a -> Assertions.assertFalse(
+                        a.getLeads().isEmpty(),
+                        String.format("Lead list for account id [%s] can not be empty", ACCOUNT_ID))),
+                () -> account.ifPresent( a -> Assertions.assertEquals(
                         1,
-                        account.get().getLeads().size(),
-                        String.format("Lead list for account id [%s] must be [%d]", ACCOUNT_ID, 1))
-        );
+                        a.getLeads().size(),
+                        String.format("Lead list for account id [%s] must be [%d]", ACCOUNT_ID, 1))));
     }
 
     @Test

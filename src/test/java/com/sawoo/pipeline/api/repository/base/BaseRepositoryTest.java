@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +19,15 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
 
     private final R repository;
     private final F mockFactory;
-    private final File testDataFile;
+    private final String dataFileName;
     private final String componentId;
     private final String entityType;
     private int documentSize;
 
 
-    public BaseRepositoryTest(R repository, File testDataFile, String componentId, String entityType, F mockFactory) {
+    public BaseRepositoryTest(R repository, String dataFileName, String componentId, String entityType, F mockFactory) {
         this.repository = repository;
-        this.testDataFile = testDataFile;
+        this.dataFileName = dataFileName;
         this.componentId = componentId;
         this.entityType = entityType;
         this.mockFactory = mockFactory;
@@ -42,10 +43,12 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+        // Test data file
+        File testDataFile = Paths.get("src", "test", "resources", "test-data", dataFileName).toFile();
+
         // Deserialize our JSON file to an array of reviews
         M[] entityList = mapper.readValue(testDataFile, getClazz());
         documentSize = entityList.length;
-
 
         // Load each entity into the DB
         repository.insert(Arrays.asList(entityList));

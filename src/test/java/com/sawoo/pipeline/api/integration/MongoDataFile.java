@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.interagtion;
+package com.sawoo.pipeline.api.integration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

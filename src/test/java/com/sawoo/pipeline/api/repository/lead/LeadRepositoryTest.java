@@ -11,16 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
-import java.nio.file.Paths;
-
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository, LeadMockFactory> {
 
-    private static final File LEAD_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "lead-test-data.json").toFile();
+    private static final String LEAD_JSON_DATA_FILE_NAME = "lead-test-data.json";
     private static final String LEAD_ID = "5fa3c963da6ra335fa2s323d45b";
 
     private final PersonRepository personRepository;
@@ -33,7 +30,7 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
             LeadMockFactory mockFactory,
             PersonRepository personRepository,
             CompanyRepository companyRepository) {
-        super(repository, LEAD_JSON_DATA, LEAD_ID, Lead.class.getSimpleName(), mockFactory);
+        super(repository, LEAD_JSON_DATA_FILE_NAME, LEAD_ID, Lead.class.getSimpleName(), mockFactory);
         this.personRepository = personRepository;
         this.companyRepository = companyRepository;
     }

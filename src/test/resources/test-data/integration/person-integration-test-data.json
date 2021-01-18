@@ -1,0 +1,49 @@
+[
+  {
+    "id": "1",
+    "firstName": "Miguel",
+    "lastName": "Miguelín",
+    "fullName": "Miguel Miguelín",
+    "salutation": 0,
+    "linkedInUrl": "http://linkedin.com/miguel.miguelin",
+    "position": "Managing Director",
+    "email": "miguel@gmail.com",
+    "phoneNumber": "+34 242430948",
+    "profilePicture": "http://linkedin.com/picture/miguel.miguelin",
+    "company": {
+      "id": "5fa2fe63gt43d963da45b",
+      "name": "knomwad",
+      "url": "http://knowmad-edu.com",
+      "created": "2020-06-02T12:59:49.494",
+      "updated": "2020-06-02T05:59:49.494"
+    },
+    "personality": {
+      "type": 1
+    },
+    "created": "2020-06-02T12:59:49.494",
+    "updated": "2020-06-02T05:59:49.494"
+  },
+  {
+    "id": "2",
+    "firstName": "Miguel",
+    "lastName": "Miguelito",
+    "fullName": "Miguel Miguelito",
+    "salutation": 1,
+    "linkedInUrl": "http://linkedin.com/miguel.miguelito",
+    "position": "Managing Director",
+    "email": "miguelito@gmail.com",
+    "phoneNumber": "+34 543456345",
+    "company": {
+      "id": "5fa243d9fe63gtda4",
+      "name": "sawoo",
+      "url": "http://sawoo.io",
+      "created": "2020-06-02T12:59:49.494",
+      "updated": "2020-06-04T05:59:49.494"
+    },
+    "personality": {
+      "type": 2
+    },
+    "created": "2020-06-02T11:59:49.494",
+    "updated": "2020-06-03T05:59:49.494"
+  }
+]
