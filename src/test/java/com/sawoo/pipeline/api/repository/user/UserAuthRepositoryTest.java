@@ -9,25 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserRepository, UserMockFactory> {
 
-    private static final File AUTHENTICATION_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "user-auth-test-data.json").toFile();
+    private static final String AUTHENTICATION_JSON_DATA_FILE_NAME = "user-auth-test-data.json";
     private static final int ADMIN_USERS = 1;
     private static final String USER_ID = "5fa2e7c58b7a2a51f31f2bed";
 
     @Autowired
     public UserAuthRepositoryTest(UserRepository repository, UserMockFactory mockFactory) {
-        super(repository, AUTHENTICATION_JSON_DATA, USER_ID, User.class.getSimpleName(), mockFactory);
+        super(repository, AUTHENTICATION_JSON_DATA_FILE_NAME, USER_ID, User.class.getSimpleName(), mockFactory);
     }
 
     @Override

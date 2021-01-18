@@ -1,0 +1,32 @@
+[
+  {
+    "key": "findByIdWhenEntityFound",
+    "values": [
+      {
+        "id": "1",
+        "firstName": "Miguel",
+        "lastName": "Miguelín",
+        "fullName": "Miguel Miguelín",
+        "salutation": 0,
+        "linkedInUrl": "http://linkedin.com/miguel.miguelin",
+        "position": "Managing Director",
+        "email": "miguel@gmail.com",
+        "phoneNumber": "+34 242430948",
+        "profilePicture": "http://linkedin.com/picture/miguel.miguelin",
+        "company": {
+          "id": "5fa2fe63gt43d963da45b",
+          "name": "knomwad",
+          "url": "http://knowmad-edu.com",
+          "created": "2020-06-02T12:59:49.494",
+          "updated": "2020-06-02T05:59:49.494"
+        },
+        "personality": {
+          "type": 1
+        },
+        "created": "2020-06-02T12:59:49.494",
+        "updated": "2020-06-02T05:59:49.494"
+      }
+    ],
+    "fieldsToBeChecked": ["firstName", "lastName", "fullName" ,"created", "updated"]
+  }
+]

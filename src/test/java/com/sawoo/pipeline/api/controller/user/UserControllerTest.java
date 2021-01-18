@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, UserAuthService, UserMockFactory> {
@@ -72,8 +72,17 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     }
 
     @Override
-    protected void updateWhenResourceNotFoundReturnsResourceNotFoundException() throws Exception {
-        // update method can not be called
+    protected void createWhenResourceAlreadyExistsReturnsFailure() {
+        Assertions.assertTrue(true, "Override to avoid super class call");
+    }
+
+    @Override
+    protected void createWhenResourceCreateReturnsSuccess() {
+        Assertions.assertTrue(true, "Override to avoid super class call");
+    }
+
+    @Override
+    protected void updateWhenResourceNotFoundReturnsResourceNotFoundException() {
         Assertions.assertTrue(true, "Override to avoid super class call");
     }
 
@@ -100,7 +109,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         doReturn(mockedEntity).when(service).create(postEntity);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -135,7 +144,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .newDTO(null, USER_AUTH_FULL_NAME, USER_AUTH_EMAIL, USER_AUTH_PASSWORD, USER_AUTH_ANOTHER_PASSWORD, null);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -157,7 +166,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .newDTO(null, USER_AUTH_FULL_NAME, USER_AUTH_EMAIL, USER_AUTH_PASSWORD, USER_AUTH_ANOTHER_PASSWORD, null);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "es")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
@@ -182,7 +191,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .newDTO(null, USER_AUTH_FULL_NAME, USER_AUTH_EMAIL, "", USER_AUTH_ANOTHER_PASSWORD, null);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -204,7 +213,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         doReturn(null).when(service).create(any(UserAuthDTO.class));
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -221,7 +230,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -244,7 +253,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .newDTO(null, USER_AUTH_EMAIL, null, USER_AUTH_ANOTHER_PASSWORD, USER_AUTH_FULL_NAME, null);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postRegister)))
 
@@ -268,7 +277,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -291,7 +300,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         postEntity.setFullName(USER_AUTH_FULL_NAME);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -305,7 +314,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
     @Test
     @DisplayName("POST /api/auth: Invalid request body. Password is bellow min size - Failure")
-    void registerWhenRequestBodyInvalidPasswordAndConfirmPasswordAreBellowMinSizeReturnsFailure() throws Exception {
+    void createWhenRequestBodyInvalidPasswordAndConfirmPasswordAreBellowMinSizeReturnsFailure() throws Exception {
         // Setup mock authentication entity
         String USER_AUTH_EMAIL = getMockFactory().getFAKER().internet().emailAddress();
         String USER_AUTH_PASSWORD = getMockFactory().getFAKER().internet().password(1, 5);
@@ -314,7 +323,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .newDTO(null, USER_AUTH_EMAIL, USER_AUTH_PASSWORD, USER_AUTH_PASSWORD, USER_AUTH_FULL_NAME, null);
 
         // execute the POST request
-        mockMvc.perform(post(getResourceURI())
+        mockMvc.perform(post(getResourceURI() + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 

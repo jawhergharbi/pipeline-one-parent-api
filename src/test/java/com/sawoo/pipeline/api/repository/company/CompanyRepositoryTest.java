@@ -8,22 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRepository, CompanyMockFactory> {
 
-    private static final File COMPANY_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "company-test-data.json").toFile();
+    private static final String COMPANY_JSON_DATA_FILE_NAME = "company-test-data.json";
     private static final String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
 
     @Autowired
     public CompanyRepositoryTest(CompanyRepository repository, CompanyMockFactory mockFactory) {
-        super(repository, COMPANY_JSON_DATA, COMPANY_ID, Company.class.getSimpleName(), mockFactory);
+        super(repository, COMPANY_JSON_DATA_FILE_NAME, COMPANY_ID, Company.class.getSimpleName(), mockFactory);
     }
 
     @Override

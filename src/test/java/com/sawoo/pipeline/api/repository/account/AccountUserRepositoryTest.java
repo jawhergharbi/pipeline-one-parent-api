@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class AccountUserRepositoryTest {
 

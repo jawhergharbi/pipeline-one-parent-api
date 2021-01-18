@@ -10,18 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 public class PersonRepositoryTest extends BaseRepositoryTest<Person, PersonRepository, PersonMockFactory> {
 
-    private static final File PERSON_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "person-test-data.json").toFile();
+    private static final String PERSON_JSON_DATA_FILE_NAME = "person-test-data.json";
     private static final String PERSON_ID = "5fa3ce63rt4ef23d963da45b";
     private static final String PERSON_LINKED_IN_URL = "http://linkedin.com/miguel.miguelin";
 
@@ -29,7 +27,7 @@ public class PersonRepositoryTest extends BaseRepositoryTest<Person, PersonRepos
 
     @Autowired
     public PersonRepositoryTest(PersonRepository repository, PersonMockFactory mockFactory, CompanyRepository companyRepository) {
-        super(repository, PERSON_JSON_DATA, PERSON_ID, Person.class.getSimpleName(), mockFactory);
+        super(repository, PERSON_JSON_DATA_FILE_NAME, PERSON_ID, Person.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
 
@@ -126,10 +124,10 @@ public class PersonRepositoryTest extends BaseRepositoryTest<Person, PersonRepos
                         savedEntity.getCompany().getUrl(),
                         String.format("Company url must be [%s]", COMPANY_URL_UPDATED)),
                 () -> Assertions.assertTrue(updatedCompany.isPresent(), "Company updated entity can not be null"),
-                () -> Assertions.assertEquals(
+                () -> updatedCompany.ifPresent( c -> Assertions.assertEquals(
                         COMPANY_URL_UPDATED,
-                        updatedCompany.get().getUrl(),
-                        String.format("Company url must be [%s]", COMPANY_URL_UPDATED)));
+                        c.getUrl(),
+                        String.format("Company url must be [%s]", COMPANY_URL_UPDATED))));
     }
 
     @Test
@@ -160,9 +158,9 @@ public class PersonRepositoryTest extends BaseRepositoryTest<Person, PersonRepos
                         savedEntity.getCompany().getHeadcount(),
                         String.format("Company headcount must be [%d]", COMPANY_HEADCOUNT)),
                 () -> Assertions.assertTrue(updatedCompany.isPresent(), "Company updated entity can not be null"),
-                () -> Assertions.assertEquals(
+                () -> updatedCompany.ifPresent( c -> Assertions.assertEquals(
                         COMPANY_HEADCOUNT,
-                        updatedCompany.get().getHeadcount(),
-                        String.format("Company headcount must be [%s]", COMPANY_HEADCOUNT)));
+                        c.getHeadcount(),
+                        String.format("Company headcount must be [%s]", COMPANY_HEADCOUNT))));
     }
 }

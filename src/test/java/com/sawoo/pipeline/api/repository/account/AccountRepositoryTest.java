@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +17,11 @@ import java.util.stream.IntStream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Tags(value = {@Tag(value = "data"), @Tag(value = "integration")})
+@Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepository, AccountMockFactory> {
 
-    private static final File ACCOUNT_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "account-test-data.json").toFile();
+    private static final String ACCOUNT_JSON_DATA_FILE_NAME = "account-test-data.json";
     private static final String ACCOUNT_ID = "5fce6a364d9da6645ba36";
 
     private final CompanyRepository companyRepository;
@@ -32,7 +30,7 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
    public AccountRepositoryTest(AccountRepository repository,
                                 AccountMockFactory mockFactory,
                                 CompanyRepository companyRepository) {
-        super(repository, ACCOUNT_JSON_DATA, ACCOUNT_ID, Account.class.getSimpleName(), mockFactory);
+        super(repository, ACCOUNT_JSON_DATA_FILE_NAME, ACCOUNT_ID, Account.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
 
@@ -179,10 +177,10 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
                 () -> Assertions.assertNotNull(savedEntity.getCompany(), "Company entity can not be null"),
                 () -> Assertions.assertNotNull(savedEntity.getCompany().getId(), "Company id can not be null"),
                 () -> Assertions.assertTrue(updatedCompany.isPresent(), "Company updated entity can not be null"),
-                () -> Assertions.assertEquals(
+                () -> updatedCompany.ifPresent( c -> Assertions.assertEquals(
                         COMPANY_URL_UPDATED,
-                        updatedCompany.get().getUrl(),
-                        String.format("Company url must be [%s]", COMPANY_URL_UPDATED)));
+                        c.getUrl(),
+                        String.format("Company url must be [%s]", COMPANY_URL_UPDATED))));
     }
 
     @Test

@@ -1,0 +1,20 @@
+[
+  {
+    "key": "findByIdWhenEntityFound",
+    "values": [
+      {
+        "id": "1",
+        "email": "miguel@gmail.com",
+        "fullName": "Miguelín",
+        "active": true,
+        "roles": [
+          "USER",
+          "AST"
+        ],
+        "created": "2020-11-04T16:41:25.234",
+        "updated": "2020-11-05T07:31:47.545"
+      }
+    ],
+    "fieldsToBeChecked": ["fullName", "active", "email", "created", "updated"]
+  }
+]
