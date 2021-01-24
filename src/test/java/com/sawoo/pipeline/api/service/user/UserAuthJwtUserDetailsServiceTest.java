@@ -32,18 +32,18 @@ public class UserAuthJwtUserDetailsServiceTest {
 
     private final Faker FAKER;
     private final UserMockFactory mockFactory;
+    
+    @Autowired
+    private UserAuthJwtUserDetailsServiceImpl service;
+
+    @MockBean
+    private UserRepository repository;
 
     @Autowired
     public UserAuthJwtUserDetailsServiceTest(UserMockFactory mockFactory) {
         this.mockFactory = mockFactory;
         FAKER = Faker.instance();
     }
-
-    @Autowired
-    private UserAuthJwtUserDetailsServiceImpl service;
-
-    @MockBean
-    private UserRepository repository;
 
     @Test
     @DisplayName("loadUserByUsername: user found - Success")
