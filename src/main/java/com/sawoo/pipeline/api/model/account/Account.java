@@ -67,15 +67,15 @@ public class Account extends BaseEntity {
     @DBRef
     private Set<User> users;
 
+    @DBRef(lazy = true)
+    private List<Lead> leads;
+
     public Set<User> getUsers() {
         if (users == null) {
             users = new HashSet<>();
         }
         return users;
     }
-
-    @DBRef(lazy = true)
-    private List<Lead> leads;
 
     public List<Lead> getLeads() {
         if (leads == null) {
