@@ -5,7 +5,6 @@ import com.sawoo.pipeline.api.integration.MongoDataFile;
 import com.sawoo.pipeline.api.integration.MongoSpringExtension;
 import com.sawoo.pipeline.api.integration.base.BaseIntegrationTest;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.person.Person;
 import com.sawoo.pipeline.api.model.user.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;

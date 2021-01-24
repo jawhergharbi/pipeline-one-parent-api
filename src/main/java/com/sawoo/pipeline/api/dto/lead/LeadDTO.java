@@ -8,7 +8,12 @@ import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.dto.person.PersonValid;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
