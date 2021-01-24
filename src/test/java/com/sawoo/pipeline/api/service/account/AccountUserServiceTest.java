@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -189,8 +188,8 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         Assertions.assertEquals(listSize, returnedListADMIN.size(), String.format("Returned list size must be %d", listSize));
 
         verify(userRepository, times(2)).findById(any());
-        verify(getRepository(), Mockito.atMostOnce()).findAll();
-        verify(getRepository(), Mockito.atMostOnce()).findByUserId(anyString());
+        verify(getRepository(), atMostOnce()).findAll();
+        verify(getRepository(), atMostOnce()).findByUserId(anyString());
     }
 
     @Test
