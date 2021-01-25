@@ -2,26 +2,26 @@ package com.sawoo.pipeline.api.service.infra.email;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.EmailException;
+import com.sawoo.pipeline.api.dto.EmailDTO;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 public interface EmailService {
 
-    void send(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String to,
-              @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String subject,
-              @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String message) throws EmailException;
+    void send(@NotNull (message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+              @Valid EmailDTO email) throws EmailException;
 
-    void sendWithAttachment(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String to,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String subject,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String message,
-            String filename, String fileType, String fileContent)
+    void sendWithAttachment(@NotNull (message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+                            @Valid EmailDTO email,
+                            String filename, String fileType, String fileContent)
             throws EmailException;
 
-    void sendToSupport(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String subject,
-                       @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String message) throws EmailException;
+    void sendToSupport(@NotNull (message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+                       @Valid EmailDTO email) throws EmailException;
 
-    void sendToSupportWithAttachment(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String subject,
-                                     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)String message,
+    void sendToSupportWithAttachment(@NotNull (message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+                                     @Valid EmailDTO email,
                                      String filename, String fileType, String fileContent)
             throws EmailException;
 }

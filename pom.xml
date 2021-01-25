@@ -24,6 +24,7 @@
         <mongock.version>4.1.19</mongock.version>
         <hamcrest.version>2.2</hamcrest.version>
         <javafaker.version>1.0.2</javafaker.version>
+        <greenmail.version>1.6.1</greenmail.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <!-- Plugin versions -->
