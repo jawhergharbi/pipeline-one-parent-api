@@ -37,4 +37,7 @@ public interface ExceptionMessageConstants {
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
     String PERSON_CROSS_FIELD_VALIDATION_ERROR = "person.validation.cross-field.error";
 
+    String MAIL_EXCEPTION_SEND_MESSAGE = "mail.send-message.exception";
+    String MAIL_EXCEPTION_SEND_MESSAGE_WITH_ATTACHMENT = "mail.send-message-with-attachment.exception";
+
 }

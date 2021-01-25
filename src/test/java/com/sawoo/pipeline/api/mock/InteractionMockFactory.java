@@ -30,7 +30,7 @@ public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Inte
         return Interaction
                 .builder()
                 .id(id)
-                .invite(UrlTitle
+                .link(UrlTitle
                         .builder()
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
@@ -54,7 +54,7 @@ public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Inte
         InteractionDTO interaction = InteractionDTO
                 .builder()
                 .id(id)
-                .invite(UrlTitle
+                .link(UrlTitle
                         .builder()
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())

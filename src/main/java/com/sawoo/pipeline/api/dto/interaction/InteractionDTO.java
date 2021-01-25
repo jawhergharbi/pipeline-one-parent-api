@@ -35,7 +35,7 @@ public class InteractionDTO extends BaseEntityDTO {
     private Integer status;
 
     @JMap
-    private UrlTitle invite;
+    private UrlTitle link;
 
     @JMap
     private Note note;

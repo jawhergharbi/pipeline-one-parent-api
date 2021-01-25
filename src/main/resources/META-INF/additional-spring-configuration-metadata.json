@@ -34,6 +34,11 @@
       "name": "app.version",
       "type": "java.lang.String",
       "description": "App version taken from the POM file."
-    }
+    },
+    {
+      "name": "app.mail.info-account",
+      "type": "java.lang.String",
+      "description": "Info email account."
+    },
   ]
 }

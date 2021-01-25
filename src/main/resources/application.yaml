@@ -7,6 +7,17 @@ spring:
     basename: message
     fallback-to-system-locale: true
     use-code-as-default-message: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: info@sawoo.io
+    password: suitable wattage mannerly
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 management:
   endpoint:
     health:
@@ -35,6 +46,8 @@ app:
     secret: defeAtmarmalaDeheatIngcyAn
   cors:
     allowed-methods: GET,POST,HEAD,PUT,DELETE,OPTIONS
+  mail:
+    info-account: info@sawoo.io
 
 ---
 spring:
@@ -151,7 +164,7 @@ spring:
     mongodb:
       auto-index-creation: false
       uri: mongodb+srv://pipeline-core-user:X1YIozFkl9KTONtT@cluster0.stzrb.mongodb.net/pipeline-one-core?retryWrites=true&w=majority
-    
+
 
 server:
   port: 8081

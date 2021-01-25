@@ -32,7 +32,7 @@ public class UserAuthJwtUserDetailsServiceTest {
 
     private final Faker FAKER;
     private final UserMockFactory mockFactory;
-    
+
     @Autowired
     private UserAuthJwtUserDetailsServiceImpl service;
 
