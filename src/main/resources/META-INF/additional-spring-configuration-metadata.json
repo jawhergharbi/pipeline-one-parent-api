@@ -39,6 +39,6 @@
       "name": "app.mail.info-account",
       "type": "java.lang.String",
       "description": "Info email account."
-    },
+    }
   ]
 }
