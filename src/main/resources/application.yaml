@@ -90,6 +90,13 @@ spring:
       port: 27017
       database: pipeline-core-test
       auto-index-creation: false
+  mail:
+    password: greenfield
+    username: greenpapa
+    host: localhost
+    port: 3025 # default protocol port + 3000 as offset
+    protocol: smtp
+    test-connection: true
 
 app:
   server: "http://localhost:8080"
@@ -106,6 +113,13 @@ spring:
       port: 0
       database: pipeline-core-test
       auto-index-creation: false
+  mail:
+    password: springboot
+    username: duke
+    host: 127.0.0.1
+    port: 3025 # default protocol port + 3000 as offset
+    protocol: smtp
+    test-connection: true
 
 app:
   server: "http://localhost:8080"
