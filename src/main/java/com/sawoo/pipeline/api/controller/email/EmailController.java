@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.email.EmailDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithAttachmentDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithAttachmentRequestDTO;
+import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
 import com.sawoo.pipeline.api.service.infra.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,16 @@ public class EmailController {
          */
         email.setFileContent(emailRequest.getFilePath().getBytes(StandardCharsets.UTF_8));
         emailService.sendWithAttachment(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(
+            value = "/template",
+            method = RequestMethod.POST,
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> sendWithTemplate(@Valid @RequestBody EmailWithTemplateDTO email)
+            throws EmailException {
+        emailService.sendWithTemplate(email);
         return ResponseEntity.ok().build();
     }
 }
