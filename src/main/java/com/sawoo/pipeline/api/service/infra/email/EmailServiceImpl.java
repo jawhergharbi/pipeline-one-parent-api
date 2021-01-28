@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.exceptions.TemplateInputException;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
@@ -107,7 +108,7 @@ public class EmailServiceImpl implements EmailService {
             mailSender.send(message);
 
             log.debug("Email correctly sent to: {}", email.getTo());
-        } catch (MessagingException err) {
+        } catch (MessagingException | TemplateInputException err) {
             throw new EmailException(
                     ExceptionMessageConstants.MAIL_EXCEPTION_SEND_MESSAGE_WITH_TEMPLATE,
                     new Object[]{email.getTo(), email.getSubject(), email.getTemplateName(), err.getCause()});

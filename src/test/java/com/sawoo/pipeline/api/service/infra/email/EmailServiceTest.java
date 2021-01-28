@@ -6,6 +6,7 @@ import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.EmailException;
 import com.sawoo.pipeline.api.dto.email.EmailDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
 import lombok.Getter;
@@ -315,6 +316,33 @@ public class EmailServiceTest {
                 containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
                         .matches(exception.getMessage()));
         Assertions.assertEquals(1, exception.getConstraintViolations().size());
+    }
+
+    @Test
+    void sendWithTemplateWhenEmailEntityValidTemplateNotFoundNullReturnFailure() {
+        // Assign
+        Map<String, Object> CONTEXT = new HashMap<>();
+        CONTEXT.put("name", "John Michel!");
+        CONTEXT.put("location", "Sri Lanka");
+        CONTEXT.put("sign", "Java Developer");
+        String SUBJECT = "This is sample email with spring boot and thymeleaf";
+        String TO = "miguel.maquieira@sawoo.io";
+        String TEMPLATE_NAME = "wrongTemplate";
+        EmailWithTemplateDTO email = EmailWithTemplateDTO.builder()
+                .subject(SUBJECT)
+                .to(TO)
+                .templateName(TEMPLATE_NAME)
+                .templateContext(CONTEXT)
+                .build();
+
+        // Act / Assert
+        EmailException exception = Assertions.assertThrows(
+                EmailException.class,
+                () ->  emailService.sendWithTemplate(email),
+                "send must throw a EmailException");
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.MAIL_EXCEPTION_SEND_MESSAGE_WITH_TEMPLATE)
+                        .matches(exception.getMessage()));
     }
 
     @Test
