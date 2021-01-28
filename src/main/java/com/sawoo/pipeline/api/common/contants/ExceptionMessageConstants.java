@@ -39,5 +39,6 @@ public interface ExceptionMessageConstants {
 
     String MAIL_EXCEPTION_SEND_MESSAGE = "mail.send-message.exception";
     String MAIL_EXCEPTION_SEND_MESSAGE_WITH_ATTACHMENT = "mail.send-message-with-attachment.exception";
+    String MAIL_EXCEPTION_SEND_MESSAGE_WITH_TEMPLATE = "mail.send-message-with-template.exception";
 
 }
