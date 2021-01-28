@@ -26,7 +26,6 @@
         <javafaker.version>1.0.2</javafaker.version>
         <greenmail.version>1.6.1</greenmail.version>
         <awaitility.version>4.0.1</awaitility.version>
-        <testcontainers.version>1.15.1</testcontainers.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <!-- Plugin versions -->
@@ -181,12 +180,6 @@
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
             <version>${awaitility.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -63,8 +63,10 @@ public class EmailServiceImpl implements EmailService {
             helper.setTo(email.getTo());
             helper.setSubject(email.getSubject());
             helper.setText(email.getMessage(), false);
+            String FILE_TYPE_CONTENT = "text/plain; charset=UTF-8";
             helper.addAttachment(email.getFileName(),
-                    new ByteArrayDataSource(email.getFileContent(), email.getFileType())
+                    new ByteArrayDataSource(email.getFileContent(),
+                            email.getFileType() == null ? FILE_TYPE_CONTENT : email.getFileType())
             );
             mailSender.send(msg);
         } catch (MessagingException err) {

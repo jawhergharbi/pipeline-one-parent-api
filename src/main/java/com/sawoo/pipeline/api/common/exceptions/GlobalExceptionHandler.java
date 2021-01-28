@@ -45,6 +45,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<ExceptionMessage> handleEmailException(EmailException error, Locale locale) {
+        log.error(error.getMessage(), error);
+        String errorMessage = messageSource.getMessage(error.getMessage(), error.getArgs(), locale);
+        return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionMessage> handleResourceNotFoundException(ResourceNotFoundException error, Locale locale) {
         log.error(error.getMessage(), error);

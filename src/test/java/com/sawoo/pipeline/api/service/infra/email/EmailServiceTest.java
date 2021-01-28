@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.service.infra.email;
 
+import com.github.javafaker.Faker;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -7,6 +8,8 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.EmailException;
 import com.sawoo.pipeline.api.dto.email.EmailDTO;
+import com.sawoo.pipeline.api.dto.email.EmailWithAttachmentDTO;
+import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
@@ -18,15 +21,14 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.mail.internet.MimeMessage;
 import javax.validation.ConstraintViolationException;
-
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.containsString;
 
 /**
  * This test requires GreenMail server to running in the resting environment
@@ -37,9 +39,13 @@ import static org.awaitility.Awaitility.await;
  *                  greenmail/standalone:1.6.1
  *
  *  Check out https://greenmail-mail-test.github.io/greenmail/#deploy_docker_standalone for more details
+ *
+ * Another option would be to use @Testcontainer to wrap the greenmail server
+ * Check out more details here:
+ *   - https://greenmail-mail-test.github.io/greenmail/#deploy_docker_standalone for more details
+ *   - https://rieckpil.de/howto-write-spring-boot-integration-tests-with-a-real-database/
  */
 
-@Testcontainers
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags({@Tag(value = "integration")})
@@ -49,6 +55,9 @@ public class EmailServiceTest {
 
     @Autowired
     private EmailService emailService;
+
+    @Getter
+    private final Faker FAKER = Faker.instance();
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
@@ -88,6 +97,7 @@ public class EmailServiceTest {
                             TO,
                             receivedMessage.getAllRecipients()[0].toString(),
                             String.format("Recipient must be [%s]", TO)));
+            greenMail.purgeEmailFromAllMailboxes();
         });
     }
 
@@ -155,7 +165,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    void sendWhenEmailEntityNotValidToWrognEmailReturnFailure() {
+    void sendWhenEmailEntityNotValidToWrongEmailReturnFailure() {
         // Assign
         String CONTENT = "Spring Mail Integration Testing with JUnit and GreenMail Example";
         String SUBJECT = "GreenMail Test";
@@ -181,15 +191,19 @@ public class EmailServiceTest {
     @Test
     void sendWithAttachmentWhenEmailEntityIsValidReturnSuccess() {
         // Assign
-        /*String TO = "miguel.maquieira@gmail.com";
+        String TO = "miguel.maquieira@gmail.com";
         String SUBJECT = "GreenMail Test";
-        String CONTENT = "Spring Mail Integration Testing with JUnit and GreenMail Example";
+        String CONTENT = FAKER.lordOfTheRings().toString();
+        String FILE_NAME = FAKER.lorem().word();
+        byte[] FILE_CONTENT = FAKER.lorem().characters(2).getBytes(StandardCharsets.UTF_8);
         int NUMBER_OF_RECIPIENTS = 1;
         EmailWithAttachmentDTO mail = EmailWithAttachmentDTO
                 .builder()
                 .to(TO)
                 .subject(SUBJECT)
                 .message(CONTENT)
+                .fileName(FILE_NAME)
+                .fileContent(FILE_CONTENT)
                 .build();
 
         // Act
@@ -209,6 +223,6 @@ public class EmailServiceTest {
                 () -> Assertions.assertEquals(
                         TO,
                         receivedMessage.getAllRecipients()[0].toString(),
-                        String.format("Recipient must be [%s]", TO)));*/
+                        String.format("Recipient must be [%s]", TO)));
     }
 }
