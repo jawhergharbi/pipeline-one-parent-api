@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -76,8 +75,15 @@ public class UserController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserAuthJwtTokenResponse> login(@RequestBody UserAuthLogin authRequest) throws AuthException {
+    public ResponseEntity<UserAuthJwtTokenResponse> login(@RequestBody UserAuthLogin authRequest) {
         return delegator.login(authRequest);
+    }
+
+    @RequestMapping(
+            value = "/reset-password",
+            method = RequestMethod.POST)
+    public ResponseEntity<Void> resetPassword(@RequestParam("email") String userEmail) {
+        return delegator.resetPassword(userEmail);
     }
 
     @RequestMapping(

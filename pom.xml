@@ -282,6 +282,13 @@
             </dependencies>
         </profile>
         <profile>
+            <id>integration-tests</id>
+            <properties>
+                <activatedProperties>integration-tests</activatedProperties>
+                <rootLogLevel>ERROR</rootLogLevel>
+            </properties>
+        </profile>
+        <profile>
             <id>dev</id>
             <properties>
                 <activatedProperties>dev</activatedProperties>

@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -116,6 +117,15 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
                     ExceptionMessageConstants.AUTH_LOGIN_USER_IDENTIFIER_NOT_FOUND_ERROR_EXCEPTION,
                     new String[]{ email });
         }
+    }
+
+    @Override
+    public ResponseEntity<Void> resetPassword(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+            @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
+                    String userEmail) throws AuthException {
+        getService().resetPassword(userEmail);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override

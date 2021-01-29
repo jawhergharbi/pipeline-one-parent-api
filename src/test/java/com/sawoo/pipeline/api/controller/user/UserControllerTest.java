@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.user;
 
+import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -39,7 +40,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -535,7 +539,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
     @Test
     @DisplayName("GET /api/auth/roles: role list null - Failure")
-    void findAllByRolesWhenInvalidRequestRoleListNullFailure() throws Exception {
+    void findAllByRolesWhenInvalidRequestRoleListNullReturnsFailure() throws Exception {
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/role"))
@@ -551,7 +555,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
     @Test
     @DisplayName("GET /api/auth/role: role list empty - Failure")
-    void findAllByRolesWhenInvalidRequestRoleListEmptyFailure() throws Exception {
+    void findAllByRolesWhenInvalidRequestRoleListEmptyReturnsFailure() throws Exception {
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/role")
@@ -566,5 +570,88 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(jsonPath(
                         "$.message",
                         stringContainsInOrder("Field or param", "in component", "is bellow its min size")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email found - Success")
+    void resetPasswordWhenEmailFoundReturnsSuccess() throws Exception {
+        // Assign
+        String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+
+        // setup the mocked service
+        doNothing().when(service).resetPassword(anyString());
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email is invalid - Failure")
+    void resetPasswordWhenEmailNotValidReturnsFailure() throws Exception {
+        // Assign
+        String USER_EMAIl = "wrongEmail";
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "in component", "must be a proper email address")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email is empty - Failure")
+    void resetPasswordWhenEmailEmptyReturnsFailure() throws Exception {
+        // Assign
+        String USER_EMAIl = "";
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "in component", "can not be empty or null")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when service thrown auth exception is invalid - Failure")
+    void resetPasswordWhenServiceThrowsAuthExceptionReturnsFailure() throws Exception {
+        // Assign
+        // ACTIVATE WHEN WE HAVE AN EXCEPTION FOR THE resetPassword METHOD
+        /*String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+
+        // setup the mocked service
+        doThrow(new AuthException("Auth exception", new String[]{"param1, param2"})).when(service).resetPassword(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Auth exception")));*/
     }
 }

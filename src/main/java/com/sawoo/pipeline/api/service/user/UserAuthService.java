@@ -17,6 +17,8 @@ public interface UserAuthService extends BaseService<UserAuthDTO> {
 
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 
+    void resetPassword(String userEmail) throws AuthException;
+
     List<UserAuthDTO> findAllByRole(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @Size(min = 1, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR) List<String> roles);

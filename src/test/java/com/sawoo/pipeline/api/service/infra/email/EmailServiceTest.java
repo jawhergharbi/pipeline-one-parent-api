@@ -50,7 +50,7 @@ import static org.hamcrest.Matchers.containsString;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags({@Tag(value = "integration")})
-@Profile(value = {"unit-tests", "unit-tests-embedded"})
+@Profile(value = {"integration-tests"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EmailServiceTest {
 
