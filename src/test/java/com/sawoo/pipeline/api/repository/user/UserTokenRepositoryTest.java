@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository.user;
 
 import com.sawoo.pipeline.api.mock.UserTokenMockFactory;
 import com.sawoo.pipeline.api.model.user.UserToken;
+import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -80,7 +81,7 @@ public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserT
 
     @Test
     @DisplayName("findByUserId: entities found - Success")
-    void findByUserIdWhenEntityFoundReturnsSuccess() {
+    void findByUserIdWhenEntityListFoundReturnsSuccess() {
         String USER_ID = "6153e632-62c9-11eb-ae93-0242ac130002";
         List<UserToken> tokens = getRepository().findAllByUserId(USER_ID);
         int TOKEN_LIST_SIZE = 2;
@@ -93,5 +94,46 @@ public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserT
                         TOKEN_LIST_SIZE,
                         tokens.size(),
                         String.format("List of tokens for userId [%s] must be [%d]", USER_ID, TOKEN_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("findByUserId: entities list empty - Success")
+    void findByUserIdWhenEntityListEmptyReturnsSuccess() {
+        String USER_ID = "wrongUserId";
+        List<UserToken> tokens = getRepository().findAllByUserId(USER_ID);
+
+        Assertions.assertAll(String.format("The list of tokens must be empty for userId [%s]", USER_ID),
+                () -> Assertions.assertTrue(
+                        tokens.isEmpty(),
+                        String.format("UserToken list for [userId]: %s must be empty", USER_ID)));
+    }
+
+    @Test
+    @DisplayName("findByUserId: entities found - Success")
+    void findByUserIdAndTypeWhenEntityListFoundReturnsSuccess() {
+        String USER_ID = "6153e632-62c9-11eb-ae93-0242ac130002";
+        List<UserToken> tokens = getRepository().findAllByUserIdAndType(USER_ID, UserTokenType.PASSWORD);
+        int TOKEN_LIST_SIZE = 1;
+
+        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.PASSWORD),
+                () -> Assertions.assertFalse(
+                        tokens.isEmpty(),
+                        String.format("UserToken list for [userId]: %s can not be empty", USER_ID)),
+                () -> Assertions.assertEquals(
+                        TOKEN_LIST_SIZE,
+                        tokens.size(),
+                        String.format("List of tokens for userId [%s] must be [%d]", USER_ID, TOKEN_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("findByUserId: entities list empty - Success")
+    void findByUserIdAndTypeWhenEntityListEmptyReturnsSuccess() {
+        String USER_ID = "6153e632-62c9-11eb-ae93-0242ac130002";
+        List<UserToken> tokens = getRepository().findAllByUserIdAndType(USER_ID, UserTokenType.SESSION_REFRESH);
+
+        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.PASSWORD),
+                () -> Assertions.assertTrue(
+                        tokens.isEmpty(),
+                        String.format("UserToken list for [userId]: %s must be empty", USER_ID)));
     }
 }
