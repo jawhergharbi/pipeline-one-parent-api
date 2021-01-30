@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.mock;
 
-import com.sawoo.pipeline.api.dto.user.UserAuthTokenDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.model.user.UserToken;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class UserTokenMockFactory extends BaseMockFactory<UserAuthTokenDTO, UserToken> {
+public class UserTokenMockFactory extends BaseMockFactory<UserTokenDTO, UserToken> {
 
     @Override
     public String getComponentId() {
@@ -26,8 +26,8 @@ public class UserTokenMockFactory extends BaseMockFactory<UserAuthTokenDTO, User
     }
 
     @Override
-    public UserAuthTokenDTO newDTO(String id) {
-        return UserAuthTokenDTO.builder()
+    public UserTokenDTO newDTO(String id) {
+        return UserTokenDTO.builder()
                 .id(id)
                 .userId(getFAKER().internet().uuid())
                 .token(UUID.randomUUID().toString())
@@ -36,8 +36,8 @@ public class UserTokenMockFactory extends BaseMockFactory<UserAuthTokenDTO, User
     }
 
     @Override
-    public UserAuthTokenDTO newDTO(String id, UserAuthTokenDTO dto) {
-        return UserAuthTokenDTO.builder()
+    public UserTokenDTO newDTO(String id, UserTokenDTO dto) {
+        return UserTokenDTO.builder()
                 .id(id)
                 .token(dto.getToken())
                 .userId(dto.getUserId())

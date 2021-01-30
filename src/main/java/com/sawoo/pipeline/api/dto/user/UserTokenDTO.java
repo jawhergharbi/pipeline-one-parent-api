@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 @SuperBuilder
-public class UserAuthTokenDTO extends BaseEntityDTO {
+public class UserTokenDTO extends BaseEntityDTO {
 
     @JMap
     private String id;
