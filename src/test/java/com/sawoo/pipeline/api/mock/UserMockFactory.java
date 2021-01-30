@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.model.user.UserToken;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -110,5 +111,9 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         mockUserAuth.setCreated(now);
         mockUserAuth.setUpdated(now);
         return mockUserAuth;
+    }
+
+    public UserToken newUserToken(String token) {
+        return null;
     }
 }

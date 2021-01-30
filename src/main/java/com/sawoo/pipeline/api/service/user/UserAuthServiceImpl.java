@@ -110,6 +110,13 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
 
     @Override
     public void resetPassword(String userEmail) throws AuthException {
+        log.debug("Resetting password for user with email [{}]", userEmail);
+        User user = getRepository()
+                .findByEmail(userEmail)
+                .orElseThrow(() -> new AuthException(
+                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                        new String[]{userEmail}));
+
 
     }
 

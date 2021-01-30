@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -22,12 +24,15 @@ import java.util.Set;
  * https://github.com/FasterXML/jackson-databind/issues/1226
  */
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonIgnoreProperties(value = {"password", "confirmPassword"}, allowSetters = true)
-public class UserAuthDTO {
+public class UserAuthDTO extends BaseEntityDTO {
 
     @JMap
     @Id
@@ -59,12 +64,6 @@ public class UserAuthDTO {
 
     @JMap
     private Set<String> roles;
-
-    @JMap
-    private LocalDateTime created;
-
-    @JMap
-    private LocalDateTime updated;
 
     @JMap
     private LocalDateTime lastLogin;

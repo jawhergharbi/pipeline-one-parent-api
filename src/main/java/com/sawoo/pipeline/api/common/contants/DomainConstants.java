@@ -12,5 +12,4 @@ public interface DomainConstants {
 
     String LEAD_REPORT_TEMPLATE_REPORT = "report";
     String LEAD_REPORT_TEMPLATE_FULL_REPORT = "report-full";
-
 }

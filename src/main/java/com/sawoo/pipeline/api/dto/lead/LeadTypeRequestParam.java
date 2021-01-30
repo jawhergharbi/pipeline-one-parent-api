@@ -6,7 +6,7 @@ public enum LeadTypeRequestParam {
 
     private final int type;
 
-    private LeadTypeRequestParam(int type) {
+    LeadTypeRequestParam(int type) {
         this.type = type;
     }
 

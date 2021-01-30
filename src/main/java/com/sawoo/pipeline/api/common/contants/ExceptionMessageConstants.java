@@ -3,13 +3,13 @@ package com.sawoo.pipeline.api.common.contants;
 public interface ExceptionMessageConstants {
 
     String AUTH_COMMON_PASSWORD_MATCH_EXCEPTION = "auth.common.password-must-match.exception";
-    String AUTH_REGISTER_IDENTIFIER_ALREADY_EXISTS_EXCEPTION = "auth.register.identifier-already-exists.exception";
     String AUTH_REGISTER_USER_SERVICE_ERROR_EXCEPTION = "auth.register.user-service-error.exception";
     String AUTH_LOGIN_USER_DISABLE_ERROR_EXCEPTION = "auth.login.user-disable-error.exception";
     String AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION = "auth.login.invalid-credentials-error.exception";
     String AUTH_LOGIN_USERNAME_NOT_FOUND_ERROR_EXCEPTION = "auth.login.username-not-found-error.exception";
     String AUTH_LOGIN_USER_IDENTIFIER_NOT_FOUND_ERROR_EXCEPTION = "auth.login.user-identifier-not-found-error.exception";
     String AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION = "auth.login.user-details-class-error.exception";
+    String AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.reset-password-user-email-not-found-error.exception";
 
     String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
 

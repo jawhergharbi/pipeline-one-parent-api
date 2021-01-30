@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.user;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
@@ -634,11 +635,15 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     @DisplayName("POST /api/auth/reset-password: reset password when service thrown auth exception is invalid - Failure")
     void resetPasswordWhenServiceThrowsAuthExceptionReturnsFailure() throws Exception {
         // Assign
-        // ACTIVATE WHEN WE HAVE AN EXCEPTION FOR THE resetPassword METHOD
-        /*String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+        String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
 
         // setup the mocked service
-        doThrow(new AuthException("Auth exception", new String[]{"param1, param2"})).when(service).resetPassword(anyString());
+        doThrow(
+                new AuthException(
+                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                        new String[]{USER_EMAIl}))
+                .when(service)
+                .resetPassword(anyString());
 
         // Execute the GET request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
@@ -652,6 +657,6 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(jsonPath("$.messages").exists())
                 .andExpect(jsonPath(
                         "$.messages[0]",
-                        stringContainsInOrder("Auth exception")));*/
+                        stringContainsInOrder("Authentication component. Reset password user not found", USER_EMAIl)));
     }
 }
