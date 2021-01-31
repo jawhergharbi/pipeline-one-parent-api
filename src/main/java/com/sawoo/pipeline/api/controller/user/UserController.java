@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -82,8 +83,10 @@ public class UserController {
     @RequestMapping(
             value = "/reset-password",
             method = RequestMethod.POST)
-    public ResponseEntity<Void> resetPassword(@RequestParam("email") String userEmail) {
-        return delegator.resetPassword(userEmail);
+    public ResponseEntity<?> resetPassword(
+            final HttpServletRequest request,
+            @RequestParam("email") String userEmail) {
+        return delegator.resetPassword(userEmail, "");
     }
 
     @RequestMapping(

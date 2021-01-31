@@ -39,6 +39,11 @@
       "name": "app.mail.info-account",
       "type": "java.lang.String",
       "description": "Info email account."
+    },
+    {
+      "name": "app.auth.password-token-expiration",
+      "type": "java.lang.String",
+      "description": "Token expiration time."
     }
   ]
 }

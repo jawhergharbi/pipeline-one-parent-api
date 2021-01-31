@@ -13,6 +13,8 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
+import com.sawoo.pipeline.api.service.infra.email.EmailService;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,13 @@ import java.util.Optional;
 public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO, UserAuthService> implements UserControllerCustomDelegator {
 
     private final JwtTokenUtil jwtTokenUtil;
+    private final EmailService emailService;
 
     @Autowired
-    public UserControllerDelegator(UserAuthService service, JwtTokenUtil jwtTokenUtil) {
+    public UserControllerDelegator(UserAuthService service, JwtTokenUtil jwtTokenUtil, EmailService emailService) {
         super(service, ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI);
         this.jwtTokenUtil = jwtTokenUtil;
+        this.emailService = emailService;
     }
 
     @Override
@@ -123,8 +127,9 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     public ResponseEntity<Void> resetPassword(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
-                    String userEmail) throws AuthException {
-        getService().resetPassword(userEmail);
+                    String userEmail,
+            String contextPath) throws AuthException {
+        UserTokenDTO token = getService().resetPassword(userEmail);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

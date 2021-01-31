@@ -27,7 +27,8 @@ public interface UserControllerCustomDelegator {
     ResponseEntity<Void>  resetPassword(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
-                    String userEmail) throws AuthException;
+                    String userEmail,
+            String contextPath) throws AuthException;
 
     ResponseEntity<List<UserAuthDTO>> findByRole(@NotNull String[] roles) throws RestException;
 

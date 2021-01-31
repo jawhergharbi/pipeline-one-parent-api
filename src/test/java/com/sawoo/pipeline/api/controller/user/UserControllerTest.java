@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
@@ -42,7 +43,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -578,15 +579,21 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     void resetPasswordWhenEmailFoundReturnsSuccess() throws Exception {
         // Assign
         String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+        String USER_TOKEN_ID = getMockFactory().getFAKER().internet().uuid();
+        UserTokenDTO tokenDTO = getMockFactory().getUserTokenMockFactory().newDTO(USER_TOKEN_ID);
 
         // setup the mocked service
-        doNothing().when(service).resetPassword(anyString());
+        doReturn(tokenDTO).when(service).resetPassword(anyString());
+
         // Execute the GET request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
                 .param("email", USER_EMAIl))
 
                 // Validate the response code and the content type
                 .andExpect(status().isNoContent());
+
+        // Verify
+        verify(service, atMostOnce()).resetPassword(anyString());
     }
 
     @Test
@@ -632,18 +639,17 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
     }
 
     @Test
-    @DisplayName("POST /api/auth/reset-password: reset password when service thrown auth exception is invalid - Failure")
+    @DisplayName("POST /api/auth/reset-password: reset password when service thrown auth exception - Failure")
     void resetPasswordWhenServiceThrowsAuthExceptionReturnsFailure() throws Exception {
         // Assign
         String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
 
         // setup the mocked service
-        doThrow(
-                new AuthException(
-                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
-                        new String[]{USER_EMAIl}))
-                .when(service)
-                .resetPassword(anyString());
+        AuthException exception = new AuthException(
+                ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                new String[]{USER_EMAIl});
+
+        doThrow(exception).when(service).resetPassword(anyString());
 
         // Execute the GET request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
@@ -654,9 +660,11 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath(
-                        "$.messages[0]",
+                        "$.message",
                         stringContainsInOrder("Authentication component. Reset password user not found", USER_EMAIl)));
+        // Verify
+        verify(service, atMostOnce()).resetPassword(anyString());
     }
 }

@@ -4,7 +4,8 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
-import com.sawoo.pipeline.api.model.user.UserToken;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,11 @@ import java.util.Collections;
 import java.util.HashSet;
 
 @Component
+@RequiredArgsConstructor
 public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
+
+    @Getter
+    private final UserTokenMockFactory userTokenMockFactory;
 
     @Override
     public String getComponentId() {
@@ -70,7 +75,10 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
 
     @Override
     public UserAuthDTO newDTO(String id, UserAuthDTO dto) {
-        return dto.toBuilder().id(id).build();
+        UserAuthDTO newDTO = dto.toBuilder().id(id).build();
+        newDTO.setCreated(dto.getCreated());
+        newDTO.setUpdated(dto.getUpdated());
+        return newDTO;
     }
 
     public UserAuthDTO newDTO(String id, String email, String password, String[] roles) {
@@ -111,9 +119,5 @@ public class UserMockFactory extends BaseMockFactory<UserAuthDTO, User> {
         mockUserAuth.setCreated(now);
         mockUserAuth.setUpdated(now);
         return mockUserAuth;
-    }
-
-    public UserToken newUserToken(String token) {
-        return null;
     }
 }

@@ -48,6 +48,8 @@ app:
     allowed-methods: GET,POST,HEAD,PUT,DELETE,OPTIONS
   mail:
     info-account: info@sawoo.io
+  auth:
+    password-token-expiration: 180
 
 ---
 spring:

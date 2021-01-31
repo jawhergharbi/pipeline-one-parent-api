@@ -8,13 +8,16 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -30,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -40,16 +44,22 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final UserTokenService tokenService;
+
+    @Value("${app.auth.password-token-expiration:180}")
+    private int passwordTokenExpirationTime;
 
     @Autowired
     public UserAuthServiceImpl(UserRepository repository,
                                UserAuthMapper mapper,
                                UserAuthServiceEventListener eventListener,
                                AuthenticationManager authenticationManager,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder,
+                               UserTokenService tokenService) {
         super(repository, mapper, DBConstants.USER_DOCUMENT, eventListener);
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -109,7 +119,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     }
 
     @Override
-    public void resetPassword(String userEmail) throws AuthException {
+    public UserTokenDTO resetPassword(String userEmail) throws AuthException {
         log.debug("Resetting password for user with email [{}]", userEmail);
         User user = getRepository()
                 .findByEmail(userEmail)
@@ -117,7 +127,18 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                         ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
                         new String[]{userEmail}));
 
+        // Create user token
+        UserTokenDTO token = UserTokenDTO.builder()
+                .token(UUID.randomUUID().toString())
+                .type(UserTokenType.PASSWORD)
+                .userId(user.getId())
+                .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(passwordTokenExpirationTime))
+                .build();
 
+        token = tokenService.create(token);
+        log.debug("Password reset token [{}] created for user id [{}]", token.getToken(), user.getId());
+
+        return token;
     }
 
     @Override
@@ -175,4 +196,5 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
             }
         }
     }
+
 }
