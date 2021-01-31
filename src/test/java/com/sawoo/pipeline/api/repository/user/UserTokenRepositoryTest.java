@@ -136,4 +136,22 @@ public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserT
                         tokens.isEmpty(),
                         String.format("UserToken list for [userId]: %s must be empty", USER_ID)));
     }
+
+    @Test
+    @DisplayName("createToken: entity id is null and entity is created - Success")
+    void createWhenTokenIdIsNullBeforeInsertReturnsSuccess() {
+        // Set up mock entities
+        UserToken newToken = getMockFactory().newEntity(null);
+        String token = newToken.getToken();
+
+        // Execute the service call
+        getRepository().save(newToken);
+        Optional<UserToken> savedEntity = getRepository().findByToken(token);
+
+        // Assert the response
+        Assertions.assertTrue(
+                savedEntity.isPresent(),
+                String.format("UserToken entity with token [%s] can not be null", token));
+        savedEntity.ifPresent((ut) -> Assertions.assertNotNull(ut.getId(), "User token id can not be null"));
+    }
 }

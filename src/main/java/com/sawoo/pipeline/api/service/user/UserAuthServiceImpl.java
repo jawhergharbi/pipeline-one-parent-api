@@ -46,7 +46,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     private final PasswordEncoder passwordEncoder;
     private final UserTokenService tokenService;
 
-    @Value("${app.auth.password-token-expiration:180}")
+    @Value("${app.auth.password-token.expiration:180}")
     private int passwordTokenExpirationTime;
 
     @Autowired

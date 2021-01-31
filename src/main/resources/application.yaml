@@ -49,7 +49,11 @@ app:
   mail:
     info-account: info@sawoo.io
   auth:
-    password-token-expiration: 180
+    password-token:
+      expiration: 180
+      template-name: password-reset-email
+      password-reset-confirm-url-key: confirm-url
+      password-reset-confirm-url: auth/confirm-reset-password
 
 ---
 spring:
@@ -60,8 +64,8 @@ spring:
       auto-index-creation: false
 
 app:
-  server: "http://localhost:8080"
-  report-api: "http://localhost:4001"
+  server: http://localhost:8080
+  report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:

@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,9 @@ import java.util.List;
 public class UserController {
 
     private final UserControllerDelegator delegator;
+
+    @Value("${app.server}")
+    private String serverPath;
 
     @RequestMapping(
             value = "/register",
@@ -86,7 +90,8 @@ public class UserController {
     public ResponseEntity<?> resetPassword(
             final HttpServletRequest request,
             @RequestParam("email") String userEmail) {
-        return delegator.resetPassword(userEmail, "");
+        String path = serverPath + (serverPath.endsWith("/") ? "": "/") + request.getContextPath();
+        return delegator.resetPassword(userEmail, path);
     }
 
     @RequestMapping(

@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.config.jwt.JwtTokenUtil;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
+import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
@@ -18,6 +19,7 @@ import com.sawoo.pipeline.api.service.infra.email.EmailService;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +32,9 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -39,6 +43,16 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
 
     private final JwtTokenUtil jwtTokenUtil;
     private final EmailService emailService;
+
+    @Value("${app.auth.password-token.template-name:password-reset-email}")
+    private String passwordResetTemplate;
+
+    @Value("${app.auth.password-token.password-reset-confirm-url-key:confirm-url}")
+    private String passwordResetConfirmUrlKey;
+
+    @Value("${app.auth.password-token.password-reset-confirm-url:auth/confirm-reset-password}")
+    private String passwordResetConfirmUrl;
+
 
     @Autowired
     public UserControllerDelegator(UserAuthService service, JwtTokenUtil jwtTokenUtil, EmailService emailService) {
@@ -129,7 +143,24 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
                     String userEmail,
             String contextPath) throws AuthException {
+        // Create the password token
         UserTokenDTO token = getService().resetPassword(userEmail);
+
+        // Send email
+        String confirmUrl = contextPath
+                + (contextPath.endsWith("/") ? "" : "/")
+                + passwordResetConfirmUrl
+                + (passwordResetConfirmUrl.endsWith("/") ? "" : "/")
+                + "?token=" + token.getToken();
+        Map<String, Object> context = new HashMap<>();
+        context.put(passwordResetConfirmUrlKey, confirmUrl);
+        EmailWithTemplateDTO email = EmailWithTemplateDTO.builder()
+                .templateContext(context)
+                .to(userEmail)
+                .subject("Pipeline.one: Reset your password")
+                .templateName(passwordResetTemplate)
+                .build();
+        emailService.sendWithTemplate(email);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

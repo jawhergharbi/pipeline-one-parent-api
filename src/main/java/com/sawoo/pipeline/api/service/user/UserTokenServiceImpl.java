@@ -30,10 +30,10 @@ public class UserTokenServiceImpl extends BaseServiceImpl<UserTokenDTO, UserToke
     @Override
     public Optional<UserToken> entityExists(UserTokenDTO entityToCreate) {
         log.debug(
-                "Checking entity existence. [type: {}, id: {}]",
+                "Checking entity existence. [type: {}, token: {}]",
                 DBConstants.USER_TOKEN_DOCUMENT,
-                entityToCreate.getId());
-        return getRepository().findById(entityToCreate.getId());
+                entityToCreate.getToken());
+        return getRepository().findByToken(entityToCreate.getToken());
     }
 
     @Override

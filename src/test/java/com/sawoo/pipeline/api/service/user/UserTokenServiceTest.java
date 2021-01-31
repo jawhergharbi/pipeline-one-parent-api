@@ -91,7 +91,7 @@ public class UserTokenServiceTest extends BaseServiceTest<UserTokenDTO, UserToke
 
     @Test
     @DisplayName("findByToken: entity not found return optional empty - Failure")
-    void findByTokenWhenCompanyDoesNotExitsReturnsOptionalEmpty() {
+    void findByTokenWhenTokenDoesNotExitsReturnsSuccess() {
         // Set up mock entities
         String TOKEN = getMockFactory().getFAKER().internet().uuid();
 
