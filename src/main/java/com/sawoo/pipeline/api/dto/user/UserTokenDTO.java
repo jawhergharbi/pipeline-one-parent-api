@@ -32,5 +32,6 @@ public class UserTokenDTO extends BaseEntityDTO {
     @JMap
     private UserTokenType type;
 
+    @JMap
     private String userId;
 }

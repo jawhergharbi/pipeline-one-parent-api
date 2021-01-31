@@ -36,5 +36,6 @@ public class UserToken extends BaseEntity {
     @JMap
     private UserTokenType type;
 
+    @JMap
     private String userId;
 }

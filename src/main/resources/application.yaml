@@ -51,8 +51,8 @@ app:
   auth:
     password-token:
       expiration: 180
-      template-name: password-reset-email
-      password-reset-confirm-url-key: confirm-url
+      template-name: passwordResetEmailTemplate
+      password-reset-confirm-url-key: confirmUrl
       password-reset-confirm-url: auth/confirm-reset-password
 
 ---

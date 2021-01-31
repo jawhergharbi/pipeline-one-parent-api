@@ -127,15 +127,9 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                         ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
                         new String[]{userEmail}));
 
-        // Create user token
-        UserTokenDTO token = UserTokenDTO.builder()
-                .token(UUID.randomUUID().toString())
-                .type(UserTokenType.PASSWORD)
-                .userId(user.getId())
-                .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(passwordTokenExpirationTime))
-                .build();
+        // Get user token
+        UserTokenDTO token = getToken(user);
 
-        token = tokenService.create(token);
         log.debug("Password reset token [{}] created for user id [{}]", token.getToken(), user.getId());
 
         return token;
@@ -197,4 +191,21 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         }
     }
 
+    private UserTokenDTO getToken(User user) {
+        List<UserTokenDTO> tokenList = tokenService.findAllByUserIdAndType(user.getId(), UserTokenType.PASSWORD);
+        Optional<UserTokenDTO> tokenExists = tokenList
+                .stream()
+                .filter(ut -> ut.getExpirationDate().isAfter(LocalDateTime.now(ZoneOffset.UTC)))
+                .findFirst();
+
+        return tokenExists.orElseGet(() -> {
+            UserTokenDTO token = UserTokenDTO.builder()
+                    .token(UUID.randomUUID().toString())
+                    .type(UserTokenType.PASSWORD)
+                    .userId(user.getId())
+                    .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(passwordTokenExpirationTime))
+                    .build();
+            return tokenService.create(token);
+        });
+    }
 }

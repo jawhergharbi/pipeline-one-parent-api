@@ -150,7 +150,6 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
         String confirmUrl = contextPath
                 + (contextPath.endsWith("/") ? "" : "/")
                 + passwordResetConfirmUrl
-                + (passwordResetConfirmUrl.endsWith("/") ? "" : "/")
                 + "?token=" + token.getToken();
         Map<String, Object> context = new HashMap<>();
         context.put(passwordResetConfirmUrlKey, confirmUrl);
