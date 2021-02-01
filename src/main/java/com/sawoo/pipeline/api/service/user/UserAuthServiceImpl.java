@@ -151,6 +151,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                         ExceptionMessageConstants.AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION,
                         new String[]{token, ut.getExpirationDate().toString()});
             } else {
+                // update user password
                 UserAuthUpdateDTO updateUser = new UserAuthUpdateDTO();
                 updateUser.setPassword(newPassword);
                 updateUser.setConfirmPassword(newPassword);
@@ -158,6 +159,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
 
                 UserAuthDTO user = update(updateUser);
                 log.debug("Password successfully reset for user [id: {}, email: {}]", user.getId(), user.getEmail());
+                
+                // delete token
+                tokenService.delete(ut.getId());
+
                 return user;
             }
         }).orElseThrow(() -> new AuthException(
