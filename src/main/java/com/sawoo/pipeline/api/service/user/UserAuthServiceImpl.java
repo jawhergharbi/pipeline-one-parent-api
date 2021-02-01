@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -133,6 +134,35 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         log.debug("Password reset token [{}] created for user id [{}]", token.getToken(), user.getId());
 
         return token;
+    }
+
+    @Override
+    public UserAuthDTO confirmResetPassword(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String token,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String newPassword)
+            throws AuthException {
+        log.debug("Confirming reset password for user with reset token [{}]", token);
+
+        Optional<UserTokenDTO> tokenEntity = tokenService.findByToken(token);
+
+        return tokenEntity.map((ut) -> {
+            if (LocalDateTime.now(ZoneOffset.UTC).isAfter(ut.getExpirationDate())) {
+                throw new AuthException(
+                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION,
+                        new String[]{token, ut.getExpirationDate().toString()});
+            } else {
+                UserAuthUpdateDTO updateUser = new UserAuthUpdateDTO();
+                updateUser.setPassword(newPassword);
+                updateUser.setConfirmPassword(newPassword);
+                updateUser.setId(tokenEntity.get().getUserId());
+
+                UserAuthDTO user = update(updateUser);
+                log.debug("Password successfully reset for user [id: {}, email: {}]", user.getId(), user.getEmail());
+                return user;
+            }
+        }).orElseThrow(() -> new AuthException(
+                ExceptionMessageConstants.AUTH_RESET_PASSWORD_CONFIRM_TOKEN_NOT_FOUND_ERROR_EXCEPTION,
+                new String[]{token}));
     }
 
     @Override

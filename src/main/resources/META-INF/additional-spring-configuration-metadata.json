@@ -59,6 +59,11 @@
       "name": "app.auth.password-token.password-reset-confirm-url",
       "type": "java.lang.String",
       "description": "Confirm url to be used in the reset password template."
+    },
+    {
+      "name": "app.web-server",
+      "type": "java.lang.String",
+      "description": "Web server base url."
     }
   ]
 }

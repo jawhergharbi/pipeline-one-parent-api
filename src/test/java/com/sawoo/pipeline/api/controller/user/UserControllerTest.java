@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
@@ -14,6 +15,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -33,6 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -46,6 +49,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -666,5 +670,102 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                         stringContainsInOrder("Authentication component. Reset password user not found", USER_EMAIl)));
         // Verify
         verify(service, atMostOnce()).resetPassword(anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when service thrown auth exception - Failure")
+    void confirmResetPasswordWhenPasswordAndConfirmPasswordDoesNotMatchReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = UUID.randomUUID().toString();
+        String PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .token(TOKEN)
+                .build();
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath(
+                        "$.message",
+                        stringContainsInOrder(
+                                "Authentication component. Reset password for token",
+                                "password and confirmPassword does not match")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when password empty - Failure")
+    void confirmResetPasswordWhenPasswordEmptyReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = UUID.randomUUID().toString();
+        String PASSWORD = Strings.EMPTY;
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .token(TOKEN)
+                .build();
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder(
+                                "Field or param",
+                                "is bellow its min size")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when token not informed - Failure")
+    void confirmResetPasswordWhenTokenNullReturnsFailure() throws Exception {
+        // Assign
+        String PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .build();
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder(
+                                "Field or param",
+                                "can not be empty")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
     }
 }

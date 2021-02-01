@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,8 @@ public class UserController {
 
     private final UserControllerDelegator delegator;
 
-    @Value("${app.server}")
-    private String serverPath;
+    @Value("${app.web-server}")
+    private String websServerPath;
 
     @RequestMapping(
             value = "/register",
@@ -90,8 +91,16 @@ public class UserController {
     public ResponseEntity<?> resetPassword(
             final HttpServletRequest request,
             @RequestParam("email") String userEmail) {
-        String path = serverPath + (serverPath.endsWith("/") ? "": "/") + request.getContextPath();
+        String path = websServerPath + (websServerPath.endsWith("/") ? "": "/") + request.getContextPath();
         return delegator.resetPassword(userEmail, path);
+    }
+
+    @RequestMapping(
+            value = "/confirm-reset-password",
+            method = RequestMethod.POST)
+    public ResponseEntity<Void> confirmResetPassword(
+            @RequestBody UserAuthResetPasswordRequest resetPassword) {
+        return delegator.confirmResetPassword(resetPassword);
     }
 
     @RequestMapping(

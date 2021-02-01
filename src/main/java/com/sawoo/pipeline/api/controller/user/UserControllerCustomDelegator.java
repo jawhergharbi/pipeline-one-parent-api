@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,10 @@ public interface UserControllerCustomDelegator {
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
                     String userEmail,
             String contextPath) throws AuthException;
+
+    ResponseEntity<Void>  confirmResetPassword(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Valid UserAuthResetPasswordRequest resetPassword) throws AuthException;
 
     ResponseEntity<List<UserAuthDTO>> findByRole(@NotNull String[] roles) throws RestException;
 

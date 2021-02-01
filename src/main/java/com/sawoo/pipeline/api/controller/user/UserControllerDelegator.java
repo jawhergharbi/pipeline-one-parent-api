@@ -13,6 +13,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.service.infra.email.EmailService;
@@ -138,6 +139,14 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     }
 
     @Override
+    public ResponseEntity<Void> logout(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id) {
+        // invalidate token
+        log.info("Invalidate token for user id: [{}]. TO BE IMPLEMENTED", id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
     public ResponseEntity<Void> resetPassword(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
@@ -164,11 +173,17 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     }
 
     @Override
-    public ResponseEntity<Void> logout(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id) {
-        // invalidate token
-        log.info("Invalidate token for user id: [{}]. TO BE IMPLEMENTED", id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<Void> confirmResetPassword(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Valid UserAuthResetPasswordRequest resetPassword) throws AuthException {
+        if (resetPassword.getPassword().equals(resetPassword.getConfirmPassword())) {
+            getService().confirmResetPassword(resetPassword.getToken(), resetPassword.getPassword());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            throw new AuthException(
+                    ExceptionMessageConstants.AUTH_RESET_PASSWORD_PASSWORD_MATCH_EXCEPTION,
+                    new Object[]{ resetPassword.getToken() } );
+        }
     }
 
     @Override

@@ -9,7 +9,10 @@ public interface ExceptionMessageConstants {
     String AUTH_LOGIN_USERNAME_NOT_FOUND_ERROR_EXCEPTION = "auth.login.username-not-found-error.exception";
     String AUTH_LOGIN_USER_IDENTIFIER_NOT_FOUND_ERROR_EXCEPTION = "auth.login.user-identifier-not-found-error.exception";
     String AUTH_LOGIN_USER_DETAILS_CLASS_ERROR_EXCEPTION = "auth.login.user-details-class-error.exception";
-    String AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.reset-password-user-email-not-found-error.exception";
+    String AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.reset-password.user-email-not-found-error.exception";
+    String AUTH_RESET_PASSWORD_PASSWORD_MATCH_EXCEPTION = "auth.reset-password.password-must-match.exception";
+    String AUTH_RESET_PASSWORD_CONFIRM_TOKEN_NOT_FOUND_ERROR_EXCEPTION = "auth.reset-password.confirm-token-not-found-error.exception";
+    String AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION = "auth.reset-password.confirm-token-expired-error.exception";
 
     String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
 

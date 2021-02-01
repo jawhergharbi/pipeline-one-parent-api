@@ -9,6 +9,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -19,6 +20,10 @@ public interface UserAuthService extends BaseService<UserAuthDTO> {
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 
     UserTokenDTO resetPassword(String userEmail) throws AuthException;
+
+    UserAuthDTO confirmResetPassword(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String token,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String newPassword) throws AuthException;
 
     List<UserAuthDTO> findAllByRole(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
