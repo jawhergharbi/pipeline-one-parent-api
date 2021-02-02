@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +28,19 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
             // Load the MongoDataFile annotation value from the test method
             MongoDataFile mongoDataFile = method.getAnnotation(MongoDataFile.class);
 
-            // Load the MongoTemplate that we can use to drop the test collection
-            dropCollection(context, mongoDataFile);
+            // drop the specified collections
+            if (mongoDataFile != null) {
+                String[] collections = mongoDataFile.collectionNames();
+                Arrays.asList(collections).forEach( c -> dropCollection(context, c) );
+            }
+
+            // Load the MongoCleanUp annotation value from the test method
+            MongoCleanUp mongoCleanUp = method.getAnnotation(MongoCleanUp.class);
+
+            if (mongoCleanUp != null) {
+                String[] collections = mongoCleanUp.collectionNames();
+                Arrays.asList(collections).forEach( c -> dropCollection(context, c) );
+            }
         });
     }
 
@@ -50,7 +62,10 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
             MongoDataFile mongoDataFile = clazz.getAnnotation(MongoDataFile.class);
 
             // Load the MongoTemplate that we can use to import our data
-            dropCollection(context, mongoDataFile);
+            if (mongoDataFile != null) {
+                String[] collectionNames = mongoDataFile.collectionNames();
+                Arrays.asList(collectionNames).forEach(c -> dropCollection(context, c));
+            }
         });
     }
 
@@ -90,11 +105,9 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
         return Optional.empty();
     }
 
-    private void dropCollection(ExtensionContext context, MongoDataFile mongoDataFile) {
-        if (mongoDataFile != null) {
-            Optional<MongoTemplate> mongoTemplate = getMongoTemplate(context);
-            mongoTemplate.ifPresent(t -> t.dropCollection(mongoDataFile.collectionName()));
-        }
+    private void dropCollection(ExtensionContext context, String collectionName) {
+        Optional<MongoTemplate> mongoTemplate = getMongoTemplate(context);
+        mongoTemplate.ifPresent(t -> t.dropCollection(collectionName));
     }
 
     private void insertCollection(ExtensionContext context, MongoDataFile mongoDataFile) {

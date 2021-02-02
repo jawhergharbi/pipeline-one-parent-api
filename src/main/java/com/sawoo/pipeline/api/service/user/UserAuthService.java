@@ -7,6 +7,8 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
+import com.sawoo.pipeline.api.repository.user.UserRepository;
+import com.sawoo.pipeline.api.service.base.BaseProxyService;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
 import javax.validation.constraints.NotBlank;
@@ -15,7 +17,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 
-public interface UserAuthService extends BaseService<UserAuthDTO> {
+public interface UserAuthService extends BaseService<UserAuthDTO>, BaseProxyService<UserRepository, UserAuthMapper> {
 
     UserAuthDTO update(UserAuthUpdateDTO user) throws ResourceNotFoundException, AuthException;
 

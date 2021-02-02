@@ -12,23 +12,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MongoDataFile {
+public @interface MongoCleanUp {
 
     /**
-     * The name of the MongoDB JSON test file.
-     * @return  The name of the MongoDB JSON test file.
-     */
-    String value();
-
-    /**
-     * The class of objects stored in the MongoDB test file.
-     * @return  The class of objects stored in the MongoDB test file.
-     */
-    Class<?> classType();
-
-    /**
-     * The name of the MongoDB collection hosting the test objects.
-     * @return  The name of the MongoDB collection hosting the test objects.
+     * The name of the MongoDB collections hosting the test objects to be dropped from the database.
+     * @return  The name of the MongoDB collections hosting the test objects.
      */
     String[] collectionNames();
 }

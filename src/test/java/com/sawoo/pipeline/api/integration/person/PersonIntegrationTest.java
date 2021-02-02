@@ -1,9 +1,11 @@
 package com.sawoo.pipeline.api.integration.person;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.integration.MongoDataFile;
 import com.sawoo.pipeline.api.integration.MongoSpringExtension;
 import com.sawoo.pipeline.api.integration.base.BaseIntegrationTest;
+import com.sawoo.pipeline.api.mock.PersonMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.person.Person;
 import org.junit.jupiter.api.MethodOrderer;
@@ -19,7 +21,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc(addFilters = false)
 @Tags({@Tag(value = "integration")})
@@ -28,17 +29,18 @@ import org.springframework.test.web.servlet.MockMvc;
 @MongoDataFile(
         value = "person-integration-test-data.json",
         classType = Person.class,
-        collectionName = DBConstants.PERSON_DOCUMENT)
-public class PersonIntegrationTest extends BaseIntegrationTest<Person> {
+        collectionNames = {DBConstants.PERSON_DOCUMENT})
+public class PersonIntegrationTest extends BaseIntegrationTest<PersonDTO, Person, PersonMockFactory> {
 
     private static final String PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "person-integration-expected-results.json";
 
     @Autowired
-    public PersonIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate) {
+    public PersonIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, PersonMockFactory mockFactory) {
         super(mockMvc, mongoTemplate,
                 ControllerConstants.PERSON_CONTROLLER_API_BASE_URI,
                 DBConstants.PERSON_DOCUMENT,
-                PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME);
+                PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
+                mockFactory);
     }
 
     @Override
