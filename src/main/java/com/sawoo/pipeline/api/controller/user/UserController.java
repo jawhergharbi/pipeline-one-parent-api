@@ -104,6 +104,14 @@ public class UserController {
     }
 
     @RequestMapping(
+            value = "/is-token-valid",
+            method = RequestMethod.POST)
+    public ResponseEntity<Boolean> isValidToken(
+            @RequestParam("token") String token) {
+        return delegator.isValidToken(token);
+    }
+
+    @RequestMapping(
             value = "/logout/{id}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Void> logout(

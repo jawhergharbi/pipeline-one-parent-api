@@ -146,7 +146,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         Optional<UserTokenDTO> tokenEntity = tokenService.findByToken(token);
 
         return tokenEntity.map((ut) -> {
-            if (LocalDateTime.now(ZoneOffset.UTC).isAfter(ut.getExpirationDate())) {
+            if (LocalDateTime.now(ZoneOffset.UTC).isBefore(ut.getExpirationDate())) {
                 throw new AuthException(
                         ExceptionMessageConstants.AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION,
                         new String[]{token, ut.getExpirationDate().toString()});
@@ -159,7 +159,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
 
                 UserAuthDTO user = update(updateUser);
                 log.debug("Password successfully reset for user [id: {}, email: {}]", user.getId(), user.getEmail());
-                
+
                 // delete token
                 tokenService.delete(ut.getId());
 
@@ -209,6 +209,16 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                     ExceptionMessageConstants.AUTH_LOGIN_INVALID_CREDENTIALS_ERROR_EXCEPTION,
                     new String[]{ email });
         }
+    }
+
+    @Override
+    public boolean isValidToken(String token) {
+        Optional<UserTokenDTO> tokenEntity = tokenService.findByToken(token);
+        return tokenEntity.map((ut) -> {
+            LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+            LocalDateTime expirationDateTime = ut.getExpirationDate();
+            return now.isBefore(expirationDateTime);
+        }).orElse(false);
     }
 
     private void userUpdateValidation(UserAuthUpdateDTO userToUpdate, User user) throws AuthException {

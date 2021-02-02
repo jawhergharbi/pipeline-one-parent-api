@@ -655,7 +655,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
         doThrow(exception).when(service).resetPassword(anyString());
 
-        // Execute the GET request
+        // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
                 .param("email", USER_EMAIl))
 
@@ -685,7 +685,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .token(TOKEN)
                 .build();
 
-        // Execute the GET request
+        // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(resetPassword)))
@@ -718,7 +718,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .token(TOKEN)
                 .build();
 
-        // Execute the GET request
+        // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(resetPassword)))
@@ -749,7 +749,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .confirmPassword(CONFIRM_PASSWORD)
                 .build();
 
-        // Execute the GET request
+        // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(resetPassword)))
@@ -767,5 +767,52 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                                 "can not be empty")));
         // Verify
         verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/is-valid-token: is valid token when token is empty - Failure")
+    void isValidTokenPasswordWhenTokenEmptyReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = Strings.EMPTY;
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/is-token-valid")
+                .param("token", TOKEN))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "can not be empty or null")));
+        // Verify
+        verify(service, never()).isValidToken(anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/is-valid-token: is valid token when token is empty - Failure")
+    void isValidTokenPasswordWhenTokenValidReturnsSuccess() throws Exception {
+        // Assign
+        String TOKEN = getMockFactory().getFAKER().internet().uuid();
+
+        // setup the mocked service
+        doReturn(true).when(service).isValidToken(anyString());
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/is-token-valid")
+                .param("token", TOKEN))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", is(true)));
+
+        // Verify
+        verify(service, atMostOnce()).isValidToken(anyString());
     }
 }

@@ -35,6 +35,10 @@ public interface UserControllerCustomDelegator {
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @Valid UserAuthResetPasswordRequest resetPassword) throws AuthException;
 
+    ResponseEntity<Boolean>  isValidToken(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+            String token);
+
     ResponseEntity<List<UserAuthDTO>> findByRole(@NotNull String[] roles) throws RestException;
 
     ResponseEntity<?> update(

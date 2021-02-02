@@ -30,4 +30,6 @@ public interface UserAuthService extends BaseService<UserAuthDTO> {
             @Size(min = 1, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR) List<String> roles);
 
     UserAuthDetails authenticate(String email, String password) throws AuthException;
+
+    boolean isValidToken(String token);
 }

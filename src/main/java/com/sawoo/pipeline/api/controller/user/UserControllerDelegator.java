@@ -187,6 +187,13 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     }
 
     @Override
+    public ResponseEntity<Boolean> isValidToken(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                    String token) {
+        return ResponseEntity.status(HttpStatus.OK).body(getService().isValidToken(token));
+    }
+
+    @Override
     public ResponseEntity<List<UserAuthDTO>> findByRole(@NotNull String[] roles) throws RestException {
         if (roles.length == 0) {
             throw new RestException(
