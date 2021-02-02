@@ -87,6 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/auth/register",
                         "/api/auth/reset-password",
                         "/api/auth/confirm-reset-password",
+                        "/api/auth/is-token-valid",
                         "/api/common/**",
                         "/actuator/**")
                 .permitAll()

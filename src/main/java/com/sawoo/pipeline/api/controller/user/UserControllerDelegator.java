@@ -187,10 +187,10 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     }
 
     @Override
-    public ResponseEntity<Boolean> isValidToken(
+    public ResponseEntity<Boolean> isTokenValid(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
                     String token) {
-        return ResponseEntity.status(HttpStatus.OK).body(getService().isValidToken(token));
+        return ResponseEntity.status(HttpStatus.OK).body(getService().isTokenValid(token));
     }
 
     @Override

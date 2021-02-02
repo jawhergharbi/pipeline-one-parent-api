@@ -108,7 +108,7 @@ public class UserController {
             method = RequestMethod.POST)
     public ResponseEntity<Boolean> isValidToken(
             @RequestParam("token") String token) {
-        return delegator.isValidToken(token);
+        return delegator.isTokenValid(token);
     }
 
     @RequestMapping(

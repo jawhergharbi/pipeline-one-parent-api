@@ -337,7 +337,7 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.empty()).when(tokenService).findByToken(anyString());
 
         // Execute the service
-        boolean isValid = getService().isValidToken(TOKEN);
+        boolean isValid = getService().isTokenValid(TOKEN);
 
         Assertions.assertFalse(isValid, "Token must be invalid");
     }
@@ -354,7 +354,7 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.of(token)).when(tokenService).findByToken(anyString());
 
         // Execute the service
-        boolean isValid = getService().isValidToken(TOKEN);
+        boolean isValid = getService().isTokenValid(TOKEN);
 
         Assertions.assertTrue(isValid, "Token must be valid");
     }
@@ -372,7 +372,7 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.of(token)).when(tokenService).findByToken(anyString());
 
         // Execute the service
-        boolean isValid = getService().isValidToken(TOKEN);
+        boolean isValid = getService().isTokenValid(TOKEN);
 
         Assertions.assertFalse(isValid, "Token must be invalid");
     }

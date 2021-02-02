@@ -789,7 +789,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                         "$.messages[0]",
                         stringContainsInOrder("Field or param", "can not be empty or null")));
         // Verify
-        verify(service, never()).isValidToken(anyString());
+        verify(service, never()).isTokenValid(anyString());
     }
 
     @Test
@@ -799,7 +799,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         String TOKEN = getMockFactory().getFAKER().internet().uuid();
 
         // setup the mocked service
-        doReturn(true).when(service).isValidToken(anyString());
+        doReturn(true).when(service).isTokenValid(anyString());
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/is-token-valid")
@@ -813,6 +813,6 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(jsonPath("$", is(true)));
 
         // Verify
-        verify(service, atMostOnce()).isValidToken(anyString());
+        verify(service, atMostOnce()).isTokenValid(anyString());
     }
 }

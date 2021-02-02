@@ -31,5 +31,5 @@ public interface UserAuthService extends BaseService<UserAuthDTO> {
 
     UserAuthDetails authenticate(String email, String password) throws AuthException;
 
-    boolean isValidToken(String token);
+    boolean isTokenValid(String token);
 }

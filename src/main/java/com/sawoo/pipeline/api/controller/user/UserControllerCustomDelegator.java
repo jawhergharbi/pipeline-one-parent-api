@@ -35,7 +35,7 @@ public interface UserControllerCustomDelegator {
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @Valid UserAuthResetPasswordRequest resetPassword) throws AuthException;
 
-    ResponseEntity<Boolean>  isValidToken(
+    ResponseEntity<Boolean> isTokenValid(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
             String token);
 
