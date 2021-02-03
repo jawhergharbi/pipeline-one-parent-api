@@ -94,7 +94,8 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
                     webServerPath
                     + (webServerPath.endsWith("/") ? "" : "/")
                     + activationTokenConfirmationUrl
-                    + "?token=" + token.getToken();
+                    + "?token=" + token.getToken()
+                    + "&activation=true";
             Map<String, Object> context = new HashMap<>();
             context.put(activationTokenConfirmationUrlKey, confirmUrl);
             context.put(activationTokenUserKey, dto);
