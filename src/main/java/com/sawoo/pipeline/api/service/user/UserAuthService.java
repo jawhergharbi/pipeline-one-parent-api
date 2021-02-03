@@ -26,11 +26,14 @@ public interface UserAuthService extends BaseService<UserAuthDTO>, BaseProxyServ
     UserTokenDTO createToken(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)  String userEmail,
-            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) UserTokenType type) throws AuthException;
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) UserTokenType type,
+            int expirationTime)
+            throws AuthException;
 
     UserAuthDTO confirmResetPassword(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String token,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String newPassword) throws AuthException;
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String newPassword)
+            throws AuthException;
 
     List<UserAuthDTO> findAllByRole(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)

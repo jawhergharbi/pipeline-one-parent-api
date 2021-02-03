@@ -46,6 +46,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atMostOnce;
@@ -589,7 +590,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
         UserTokenDTO tokenDTO = getMockFactory().getUserTokenMockFactory().newDTO(USER_TOKEN_ID);
 
         // setup the mocked service
-        doReturn(tokenDTO).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD));
+        doReturn(tokenDTO).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
 
         // Execute the GET request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
@@ -599,7 +600,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(status().isNoContent());
 
         // Verify
-        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD));
+        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
     }
 
     @Test
@@ -655,7 +656,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 ExceptionMessageConstants.AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
                 new String[]{UserTokenType.RESET_PASSWORD.name(), USER_EMAIl});
 
-        doThrow(exception).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD));
+        doThrow(exception).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/reset-password")
@@ -673,7 +674,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                                 "Authentication component. Creating token of type",
                                 String.format("User with email [%s] not found", USER_EMAIl))));
         // Verify
-        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD));
+        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
     }
 
     @Test

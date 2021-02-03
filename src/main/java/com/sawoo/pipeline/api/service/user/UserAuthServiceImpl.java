@@ -48,8 +48,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     private final PasswordEncoder passwordEncoder;
     private final UserTokenService tokenService;
 
-    @Value("${app.auth.password-token.expiration:180}")
-    private int passwordTokenExpirationTime;
+    @Value("${app.auth.default-expiration:180}")
+    private int defaultExpirationTime;
 
     @Autowired
     public UserAuthServiceImpl(UserRepository repository,
@@ -124,7 +124,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     public UserTokenDTO createToken(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR) String userEmail,
-            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) UserTokenType type)
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) UserTokenType type,
+            int expirationTime)
             throws AuthException {
         log.debug("Create a token of the type [{}] for user with [{}]", type.name(), userEmail);
         User user = getRepository()
@@ -133,7 +134,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                         ExceptionMessageConstants.AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
                         new String[]{type.name(), userEmail}));
         // Get user token
-        UserTokenDTO token = getToken(user, type);
+        UserTokenDTO token = getToken(user, type, expirationTime < 0 ? defaultExpirationTime : expirationTime);
 
         log.debug("Token [{}] of type [{}] created for user id [{}]", token.getToken(), type, user.getId());
 
@@ -240,7 +241,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         }
     }
 
-    private UserTokenDTO getToken(User user, UserTokenType type) {
+    private UserTokenDTO getToken(User user, UserTokenType type, int expirationTime) {
         List<UserTokenDTO> tokenList = tokenService.findAllByUserIdAndType(user.getId(), type);
         Optional<UserTokenDTO> tokenExists = tokenList
                 .stream()
@@ -252,7 +253,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
                     .token(UUID.randomUUID().toString())
                     .type(type)
                     .userId(user.getId())
-                    .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(passwordTokenExpirationTime))
+                    .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(expirationTime))
                     .build();
             return tokenService.create(token);
         });

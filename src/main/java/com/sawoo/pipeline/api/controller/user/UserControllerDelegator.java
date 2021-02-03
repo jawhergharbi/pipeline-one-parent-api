@@ -46,14 +46,20 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     private final JwtTokenUtil jwtTokenUtil;
     private final EmailService emailService;
 
+    @Value("${app.auth.password-token.expiration:180}")
+    private int resetPasswordExpirationTime;
+
     @Value("${app.auth.password-token.template-name:password-reset-email}")
     private String passwordResetTemplate;
 
-    @Value("${app.auth.password-token.password-reset-confirm-url-key:confirm-url}")
-    private String passwordResetConfirmUrlKey;
+    @Value("${app.auth.password-token.confirmation-url-key:confirm-url}")
+    private String passwordResetConfirmationUrlKey;
 
-    @Value("${app.auth.password-token.password-reset-confirm-url:auth/confirm-reset-password}")
-    private String passwordResetConfirmUrl;
+    @Value("${app.auth.password-token.confirmation-url:auth/confirm-reset-password}")
+    private String passwordResetConfirmationUrl;
+
+    @Value("${app.web-server}")
+    private String webServerPath;
 
 
     @Autowired
@@ -151,18 +157,17 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
     public ResponseEntity<Void> resetPassword(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
             @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR)
-                    String userEmail,
-            String contextPath) throws AuthException {
+                    String userEmail) throws AuthException {
         // Create the password token
-        UserTokenDTO token = getService().createToken(userEmail, UserTokenType.RESET_PASSWORD);
+        UserTokenDTO token = getService().createToken(userEmail, UserTokenType.RESET_PASSWORD, resetPasswordExpirationTime);
 
         // Send email
-        String confirmUrl = contextPath
-                + (contextPath.endsWith("/") ? "" : "/")
-                + passwordResetConfirmUrl
+        String confirmUrl = webServerPath
+                + (webServerPath.endsWith("/") ? "" : "/")
+                + passwordResetConfirmationUrl
                 + "?token=" + token.getToken();
         Map<String, Object> context = new HashMap<>();
-        context.put(passwordResetConfirmUrlKey, confirmUrl);
+        context.put(passwordResetConfirmationUrlKey, confirmUrl);
         EmailWithTemplateDTO email = EmailWithTemplateDTO.builder()
                 .templateContext(context)
                 .to(userEmail)

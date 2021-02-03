@@ -9,7 +9,6 @@ import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -29,9 +27,6 @@ import java.util.List;
 public class UserController {
 
     private final UserControllerDelegator delegator;
-
-    @Value("${app.web-server}")
-    private String websServerPath;
 
     @RequestMapping(
             value = "/register",
@@ -88,18 +83,14 @@ public class UserController {
     @RequestMapping(
             value = "/reset-password",
             method = RequestMethod.POST)
-    public ResponseEntity<?> resetPassword(
-            final HttpServletRequest request,
-            @RequestParam("email") String userEmail) {
-        String path = websServerPath + (websServerPath.endsWith("/") ? "": "/") + request.getContextPath();
-        return delegator.resetPassword(userEmail, path);
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String userEmail) {
+        return delegator.resetPassword(userEmail);
     }
 
     @RequestMapping(
-            value = "/confirm-reset-password",
+            value = {"/confirm-reset-password", "/account-password-activation"},
             method = RequestMethod.POST)
-    public ResponseEntity<Void> confirmResetPassword(
-            @RequestBody UserAuthResetPasswordRequest resetPassword) {
+    public ResponseEntity<Void> confirmResetPassword(@RequestBody UserAuthResetPasswordRequest resetPassword) {
         return delegator.confirmResetPassword(resetPassword);
     }
 

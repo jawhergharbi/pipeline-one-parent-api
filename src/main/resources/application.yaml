@@ -49,11 +49,19 @@ app:
   mail:
     info-account: info@sawoo.io
   auth:
+    default-expiration: 180
     password-token:
       expiration: 180
       template-name: passwordResetEmailTemplate
-      password-reset-confirm-url-key: confirmUrl
-      password-reset-confirm-url: auth/confirm-reset-password
+      confirmation-url-key: confirmUrl
+      confirmation-url: auth/confirm-reset-password
+    activation-token:
+      active: true
+      expiration: 1440
+      template-name: accountUserCreatedEmailTemplate
+      confirmation-url-key: confirmUrl
+      confirmation-url: auth/account-password-activation
+      user-key: user
 
 ---
 spring:
@@ -71,6 +79,7 @@ app:
     contact-account: miguel.maquieira@sawoo.io
   cors:
     allowed-origins: http://localhost:4200, http://saas.localhost:4200, http://laas.localhost:4200, http://localhost:8080
+
 
 ---
 spring:
@@ -105,6 +114,9 @@ app:
   report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
+  auth:
+    activation-token:
+      active: false
 
 ---
 spring:
@@ -122,6 +134,9 @@ app:
   report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
+  auth:
+    activation-token:
+      active: false
 
 ---
 spring:
