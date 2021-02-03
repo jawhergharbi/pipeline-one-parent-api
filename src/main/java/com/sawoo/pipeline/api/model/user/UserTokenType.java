@@ -1,9 +1,10 @@
 package com.sawoo.pipeline.api.model.user;
 
 public enum UserTokenType {
-    PASSWORD(0),
-    SESSION(1),
-    SESSION_REFRESH(2);
+    RESET_PASSWORD(0),
+    ACTIVATE_ACCOUNT(1),
+    SESSION(2),
+    SESSION_REFRESH(3);
 
     private final int type;
 

@@ -16,6 +16,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
 import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
+import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.service.infra.email.EmailService;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -153,7 +154,7 @@ public class UserControllerDelegator extends BaseControllerDelegator<UserAuthDTO
                     String userEmail,
             String contextPath) throws AuthException {
         // Create the password token
-        UserTokenDTO token = getService().resetPassword(userEmail);
+        UserTokenDTO token = getService().createToken(userEmail, UserTokenType.RESET_PASSWORD);
 
         // Send email
         String confirmUrl = contextPath

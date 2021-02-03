@@ -112,10 +112,10 @@ public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserT
     @DisplayName("findByUserId: entities found - Success")
     void findByUserIdAndTypeWhenEntityListFoundReturnsSuccess() {
         String USER_ID = "6153e632-62c9-11eb-ae93-0242ac130002";
-        List<UserToken> tokens = getRepository().findAllByUserIdAndType(USER_ID, UserTokenType.PASSWORD);
+        List<UserToken> tokens = getRepository().findAllByUserIdAndType(USER_ID, UserTokenType.RESET_PASSWORD);
         int TOKEN_LIST_SIZE = 1;
 
-        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.PASSWORD),
+        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.RESET_PASSWORD),
                 () -> Assertions.assertFalse(
                         tokens.isEmpty(),
                         String.format("UserToken list for [userId]: %s can not be empty", USER_ID)),
@@ -131,7 +131,7 @@ public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserT
         String USER_ID = "6153e632-62c9-11eb-ae93-0242ac130002";
         List<UserToken> tokens = getRepository().findAllByUserIdAndType(USER_ID, UserTokenType.SESSION_REFRESH);
 
-        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.PASSWORD),
+        Assertions.assertAll(String.format("A list of tokens must be found for userId [%s] and type [%s]", USER_ID, UserTokenType.RESET_PASSWORD),
                 () -> Assertions.assertTrue(
                         tokens.isEmpty(),
                         String.format("UserToken list for [userId]: %s must be empty", USER_ID)));

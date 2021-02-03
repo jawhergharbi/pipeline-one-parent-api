@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -120,18 +121,21 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     }
 
     @Override
-    public UserTokenDTO resetPassword(String userEmail) throws AuthException {
-        log.debug("Resetting password for user with email [{}]", userEmail);
+    public UserTokenDTO createToken(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Email(message = ExceptionMessageConstants.COMMON_FIELD_MUST_BE_AN_EMAIL_ERROR) String userEmail,
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) UserTokenType type)
+            throws AuthException {
+        log.debug("Create a token of the type [{}] for user with [{}]", type.name(), userEmail);
         User user = getRepository()
                 .findByEmail(userEmail)
                 .orElseThrow(() -> new AuthException(
-                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
-                        new String[]{userEmail}));
-
+                        ExceptionMessageConstants.AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                        new String[]{type.name(), userEmail}));
         // Get user token
-        UserTokenDTO token = getToken(user);
+        UserTokenDTO token = getToken(user, type);
 
-        log.debug("Password reset token [{}] created for user id [{}]", token.getToken(), user.getId());
+        log.debug("Token [{}] of type [{}] created for user id [{}]", token.getToken(), type, user.getId());
 
         return token;
     }
@@ -236,8 +240,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         }
     }
 
-    private UserTokenDTO getToken(User user) {
-        List<UserTokenDTO> tokenList = tokenService.findAllByUserIdAndType(user.getId(), UserTokenType.PASSWORD);
+    private UserTokenDTO getToken(User user, UserTokenType type) {
+        List<UserTokenDTO> tokenList = tokenService.findAllByUserIdAndType(user.getId(), type);
         Optional<UserTokenDTO> tokenExists = tokenList
                 .stream()
                 .filter(ut -> ut.getExpirationDate().isAfter(LocalDateTime.now(ZoneOffset.UTC)))
@@ -246,7 +250,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         return tokenExists.orElseGet(() -> {
             UserTokenDTO token = UserTokenDTO.builder()
                     .token(UUID.randomUUID().toString())
-                    .type(UserTokenType.PASSWORD)
+                    .type(type)
                     .userId(user.getId())
                     .expirationDate(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(passwordTokenExpirationTime))
                     .build();

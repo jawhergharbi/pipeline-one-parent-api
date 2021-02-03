@@ -13,6 +13,7 @@ public interface ExceptionMessageConstants {
     String AUTH_RESET_PASSWORD_PASSWORD_MATCH_EXCEPTION = "auth.reset-password.password-must-match.exception";
     String AUTH_RESET_PASSWORD_CONFIRM_TOKEN_NOT_FOUND_ERROR_EXCEPTION = "auth.reset-password.confirm-token-not-found-error.exception";
     String AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION = "auth.reset-password.confirm-token-expired-error.exception";
+    String AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.token.email-not-found-error.exception";
 
     String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
 
