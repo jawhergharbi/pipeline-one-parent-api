@@ -7,7 +7,6 @@ import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

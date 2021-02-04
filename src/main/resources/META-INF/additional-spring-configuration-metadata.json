@@ -99,6 +99,11 @@
       "name": "app.auth.default-expiration",
       "type": "java.lang.String",
       "description": "Default token expiration time."
+    },
+    {
+      "name": "app.mongo.lead-interaction.cascading",
+      "type": "java.lang.String",
+      "description": "Cascading for Lead interaction document activated."
     }
   ]
 }

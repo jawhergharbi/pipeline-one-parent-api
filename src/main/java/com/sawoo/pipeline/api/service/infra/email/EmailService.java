@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.service.infra.email;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.EmailException;
-import com.sawoo.pipeline.api.dto.email.EmailWithAttachmentDTO;
 import com.sawoo.pipeline.api.dto.email.EmailDTO;
+import com.sawoo.pipeline.api.dto.email.EmailWithAttachmentDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
 
 import javax.validation.Valid;

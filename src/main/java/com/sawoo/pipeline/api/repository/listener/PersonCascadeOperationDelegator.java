@@ -13,25 +13,25 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class PersonCascadeOperationDelegator implements CascadeOperationDelegation<Person> {
 
-    private final PersonRepository personRepository;
+    private final PersonRepository repository;
 
     @Override
     public void onSave(Person child, Consumer<Person> parentFunction) {
         if (child != null) {
             if (child.getId() == null) {
-                personRepository
+                repository
                         .findByLinkedInUrl(child.getLinkedInUrl())
                         .ifPresentOrElse(parentFunction,
                                 () -> {
                                     LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                                     child.setCreated(now);
                                     child.setUpdated(now);
-                                    personRepository.insert(child);
+                                    repository.insert(child);
                                 });
             } else {
                 LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
                 child.setUpdated(now);
-                personRepository.save(child);
+                repository.save(child);
             }
         }
     }

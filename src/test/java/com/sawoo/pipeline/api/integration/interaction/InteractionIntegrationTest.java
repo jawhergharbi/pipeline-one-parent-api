@@ -1,13 +1,13 @@
-package com.sawoo.pipeline.api.integration.person;
+package com.sawoo.pipeline.api.integration.interaction;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
-import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.integration.MongoDataFile;
 import com.sawoo.pipeline.api.integration.MongoSpringExtension;
 import com.sawoo.pipeline.api.integration.base.BaseIntegrationTest;
-import com.sawoo.pipeline.api.mock.PersonMockFactory;
+import com.sawoo.pipeline.api.mock.InteractionMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.person.Person;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,24 +25,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @ExtendWith({SpringExtension.class, MongoSpringExtension.class})
 @MongoDataFile(
-        value = "person-integration-test-data.json",
-        classType = Person.class,
-        collectionNames = {DBConstants.PERSON_DOCUMENT})
-public class PersonIntegrationTest extends BaseIntegrationTest<PersonDTO, Person, PersonMockFactory> {
+        value = "interaction-integration-test-data.json",
+        classType = Interaction.class,
+        collectionNames = {DBConstants.INTERACTION_DOCUMENT})
+public class InteractionIntegrationTest extends BaseIntegrationTest<InteractionDTO, Interaction, InteractionMockFactory> {
 
-    private static final String PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "person-integration-expected-results.json";
+    private static final String INTERACTION_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "interaction-integration-expected-results.json";
 
     @Autowired
-    public PersonIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, PersonMockFactory mockFactory) {
+    public InteractionIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, InteractionMockFactory mockFactory) {
         super(mockMvc, mongoTemplate,
-                ControllerConstants.PERSON_CONTROLLER_API_BASE_URI,
-                DBConstants.PERSON_DOCUMENT,
-                PERSON_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
+                ControllerConstants.INTERACTION_CONTROLLER_API_BASE_URI,
+                DBConstants.INTERACTION_DOCUMENT,
+                INTERACTION_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
                 mockFactory);
     }
 
     @Override
-    protected Class<Person> getClazz() {
-        return Person.class;
+    protected Class<Interaction> getClazz() {
+        return Interaction.class;
     }
 }

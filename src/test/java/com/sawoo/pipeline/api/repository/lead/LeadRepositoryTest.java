@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
+import java.util.Optional;
+
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
@@ -25,7 +27,7 @@ import org.springframework.context.annotation.Profile;
 public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository, LeadMockFactory> {
 
     private static final String LEAD_JSON_DATA_FILE_NAME = "lead-test-data.json";
-    private static final String LEAD_ID = "5fa3c963da6ra335fa2s323d45b";
+    private static final String LEAD_ID = "601c1e3de7681e0dbe0aa540";
 
     private final PersonRepository personRepository;
     private final CompanyRepository companyRepository;
@@ -88,6 +90,24 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
                 () -> Assertions.assertNotNull(
                         savedEntity.getPerson().getCompany().getId(),
                         "Person company id can not be null"));
+    }
+
+    @Test
+    @DisplayName("save: lead cascade saving - Success")
+    void findByIdWhenLeadExistsAndHaveInteractionsReturnsSuccess() {
+        Optional<Lead> lead =  getRepository().findById(LEAD_ID);
+        // There is no cascading saving with interactions in the lead entity
+        int INTERACTIONS = 0;
+
+        Assertions.assertAll(
+                String.format(
+                        "Lead with id [%s] must be found and must have [%d] interactions",
+                        LEAD_ID,
+                        INTERACTIONS),
+                () -> Assertions.assertTrue(lead.isPresent(), "Lead can not be null"),
+                () -> lead.ifPresent(l -> Assertions.assertTrue(
+                        l.getInteractions().isEmpty(),
+                        "Interactions list can not be null")));
     }
 
     @Test

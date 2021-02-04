@@ -1,7 +1,7 @@
 [
   {
-    "id": "601c2aa26add8698a6c18aec",
-    "linkedInThread": "http://linkedin.com/thread/lead1",
+    "id": "1",
+    "linkedInThread": "http://linkedin.com/thread/withlead2",
     "person": {
       "id": "5fa2fe63gt4ed34d965da46y",
       "firstName": "Miguel",
@@ -45,8 +45,8 @@
     "updated": "2020-06-02T05:59:49.494"
   },
   {
-    "id": "601c2aa7cb7a517712ad6be3",
-    "linkedInThread": "http://linkedin.com/thread/lead2",
+    "id": "2",
+    "linkedInThread": "http://linkedin.com/thread/withlead1",
     "person": {
       "id": "5fa3ce63rt4ef23d963da45b",
       "firstName": "Miguel",
@@ -88,17 +88,6 @@
       "updated": "2020-06-02T12:59:49.494"
     },
     "created": "2020-06-02T12:59:49.494",
-    "updated": "2020-06-02T05:59:49.494",
-    "interactions": [
-      {
-        "id": "601c29225d8c53d72699655d"
-      },
-      {
-        "id": "601c2926725d6d124aee7b68"
-      },
-      {
-        "id": "601c292a06c49ff05aee5675"
-      }
-    ]
+    "updated": "2020-06-02T05:59:49.494"
   }
 ]

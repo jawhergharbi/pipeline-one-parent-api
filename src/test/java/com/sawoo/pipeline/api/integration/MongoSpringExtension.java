@@ -58,12 +58,17 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         context.getTestClass().ifPresent(clazz -> {
-            // Load test file from the annotation
+            // Class data file
             MongoDataFile mongoDataFile = clazz.getAnnotation(MongoDataFile.class);
-
-            // Load the MongoTemplate that we can use to import our data
             if (mongoDataFile != null) {
                 String[] collectionNames = mongoDataFile.collectionNames();
+                Arrays.asList(collectionNames).forEach(c -> dropCollection(context, c));
+            }
+
+            // Class list of data file
+            MongoDataFileList mongoDataFileList = clazz.getAnnotation(MongoDataFileList.class);
+            if (mongoDataFileList != null) {
+                String[] collectionNames = mongoDataFileList.collectionNames();
                 Arrays.asList(collectionNames).forEach(c -> dropCollection(context, c));
             }
         });
@@ -72,11 +77,16 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         context.getTestClass().ifPresent(clazz -> {
-            // Load test file from the annotation
+            // Class data file
             MongoDataFile mongoDataFile = clazz.getAnnotation(MongoDataFile.class);
-
-            // Load the MongoTemplate that we can use to import our data
             insertCollection(context, mongoDataFile);
+
+            // Class list of data file
+            MongoDataFileList mongoDataFileList = clazz.getAnnotation(MongoDataFileList.class);
+            if (mongoDataFileList != null) {
+                MongoTestFile[] testFiles = mongoDataFileList.files();
+                Arrays.asList(testFiles).forEach( f -> insertCollection(context, f.fileName(), f.classType()) );
+            }
         });
     }
 
@@ -112,23 +122,27 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
 
     private void insertCollection(ExtensionContext context, MongoDataFile mongoDataFile) {
         if (mongoDataFile != null) {
-            getMongoTemplate(context).ifPresent(mongoTemplate -> {
-                try {
-                    // Use Jackson's ObjectMapper to load a list of objects from the JSON file
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.registerModule(new JavaTimeModule());
-                    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                    List<?> objects = mapper.readValue(
-                            JSON_PATH.resolve(mongoDataFile.value()).toFile(),
-                            mapper.getTypeFactory().constructCollectionType(
-                                    List.class, mongoDataFile.classType()));
-
-                    // Save each object into MongoDB
-                    mongoTemplate.insertAll(objects);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            });
+            insertCollection(context, mongoDataFile.value(), mongoDataFile.classType());
         }
+    }
+
+    private void insertCollection(ExtensionContext context, String filename, Class<?> clazz) {
+        getMongoTemplate(context).ifPresent(mongoTemplate -> {
+            try {
+                // Use Jackson's ObjectMapper to load a list of objects from the JSON file
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JavaTimeModule());
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                List<?> objects = mapper.readValue(
+                        JSON_PATH.resolve(filename).toFile(),
+                        mapper.getTypeFactory().constructCollectionType(
+                                List.class, clazz));
+
+                // Save each object into MongoDB
+                mongoTemplate.insertAll(objects);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 }
