@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseLightControllerTest;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
@@ -316,7 +317,9 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
         String INTERACTION_ID = getMockFactory().getInteractionMockFactory().getComponentId();
-        InteractionDTO interactionMock = getMockFactory().getInteractionMockFactory().newDTO(INTERACTION_ID);
+        InteractionAssigneeDTO interactionMock = getMockFactory()
+                .getInteractionAssigneeMockFactory()
+                .newDTO(INTERACTION_ID);
 
         // setup the mocked service
         doReturn(interactionMock).when(service).getInteraction(anyString(), anyString());

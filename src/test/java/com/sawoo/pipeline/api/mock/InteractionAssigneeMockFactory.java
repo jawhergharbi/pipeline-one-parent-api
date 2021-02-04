@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.mock;
 
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
-public class InteractionMockFactory extends InteractionMockBaseFactory<InteractionDTO> {
+public class InteractionAssigneeMockFactory extends InteractionMockBaseFactory<InteractionAssigneeDTO> {
 
     @Autowired
-    public InteractionMockFactory(PersonMockFactory personMockFactory) {
+    public InteractionAssigneeMockFactory(PersonMockFactory personMockFactory) {
         super(personMockFactory);
     }
 
     @Override
-    public InteractionDTO newDTO(String id) {
+    public InteractionAssigneeDTO newDTO(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        InteractionDTO interaction = InteractionDTO
+        InteractionAssigneeDTO interaction = InteractionAssigneeDTO
                 .builder()
                 .id(id)
                 .link(UrlTitle
@@ -44,7 +44,9 @@ public class InteractionMockFactory extends InteractionMockBaseFactory<Interacti
     }
 
     @Override
-    public InteractionDTO newDTO(String id, InteractionDTO dto) {
-        return dto.withId(id);
+    public InteractionAssigneeDTO newDTO(String id, InteractionAssigneeDTO dto) {
+        InteractionAssigneeDTO interaction = dto.withAssignee(dto.getAssignee());
+        interaction.setId(id);
+        return interaction;
     }
 }

@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
@@ -31,6 +32,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     private final InteractionService service;
     private final LeadRepository repository;
+    private final LeadInteractionServiceDecoratorHelper helper;
     private final LeadMapper mapper;
 
     @Override
@@ -91,13 +93,24 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     @Override
     public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
         log.debug("Getting interactions from lead id: [{}].", leadId);
-        List<InteractionAssigneeDTO> interactions = findLeadById(leadId)
-                .getInteractions()
-                .stream()
-                .map(service.getMapper().getAssigneeMapperOut()::getDestination)
-                .collect(Collectors.toList());
+
+        List<Interaction> interactions = findLeadById(leadId).getInteractions();
+        List<InteractionAssigneeDTO> assigneeInteractions = Collections.emptyList();
+        if (interactions.size() > 0 ) {
+            final List<UserCommon> users = helper.getUsers(leadId);
+            assigneeInteractions = interactions
+                    .stream()
+                    .map(i -> {
+                        InteractionAssigneeDTO interaction = service.getMapper().getAssigneeMapperOut().getDestination(i);
+                        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
+                        user.ifPresent(interaction::setAssignee);
+                        return interaction;
+                    })
+                    .collect(Collectors.toList());
+        }
         log.debug("[{}] interactions has been found for lead id [{}]", leadId, interactions.size());
-        return interactions;
+
+        return  assigneeInteractions;
     }
 
     @Override

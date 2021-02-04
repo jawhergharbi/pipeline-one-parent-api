@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.With;
 import lombok.experimental.SuperBuilder;
 
 @Data
@@ -16,5 +17,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class InteractionAssigneeDTO extends InteractionDTO {
 
+    @With
     UserCommon assignee;
 }

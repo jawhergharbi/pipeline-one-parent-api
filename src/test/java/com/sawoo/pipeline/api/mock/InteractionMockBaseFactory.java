@@ -3,25 +3,30 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@Component
-public class InteractionMockFactory extends InteractionMockBaseFactory<InteractionDTO> {
+@RequiredArgsConstructor
+public abstract class InteractionMockBaseFactory<D extends InteractionDTO> extends BaseMockFactory<D , Interaction> {
 
-    @Autowired
-    public InteractionMockFactory(PersonMockFactory personMockFactory) {
-        super(personMockFactory);
+    @Getter
+    private final PersonMockFactory personMockFactory;
+
+    @Override
+    public String getComponentId() {
+        return getFAKER().internet().uuid();
     }
 
     @Override
-    public InteractionDTO newDTO(String id) {
+    public Interaction newEntity(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        InteractionDTO interaction = InteractionDTO
+        return Interaction
                 .builder()
                 .id(id)
                 .link(UrlTitle
@@ -37,14 +42,14 @@ public class InteractionMockFactory extends InteractionMockBaseFactory<Interacti
                         .text(getFAKER().lorem().sentence(25))
                         .updated(now)
                         .build())
+                .created(now)
+                .updated(now)
                 .build();
-        interaction.setCreated(now);
-        interaction.setUpdated(now);
-        return interaction;
     }
 
     @Override
-    public InteractionDTO newDTO(String id, InteractionDTO dto) {
-        return dto.withId(id);
-    }
+    public abstract D newDTO(String id);
+
+    @Override
+    public abstract D newDTO(String id, D dto);
 }
