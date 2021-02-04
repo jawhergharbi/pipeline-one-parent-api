@@ -100,12 +100,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
             final List<UserCommon> users = helper.getUsers(leadId);
             assigneeInteractions = interactions
                     .stream()
-                    .map(i -> {
-                        InteractionAssigneeDTO interaction = service.getMapper().getAssigneeMapperOut().getDestination(i);
-                        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
-                        user.ifPresent(interaction::setAssignee);
-                        return interaction;
-                    })
+                    .map(i -> mapInteraction(i, leadId, users))
                     .collect(Collectors.toList());
         }
         log.debug("[{}] interactions has been found for lead id [{}]", leadId, interactions.size());
@@ -124,7 +119,8 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                 .findAny()
                 .map(i -> {
                     log.debug("Interaction id [{}] for lead id [{}] has been found. \nInteraction: [{}]", interactionId, leadId, i);
-                    return service.getMapper().getAssigneeMapperOut().getDestination(i);
+                    List<UserCommon> users = helper.getUsers(leadId);
+                    return mapInteraction(i, leadId, users);
                 })
                 .orElseThrow( () ->
                         new ResourceNotFoundException(
@@ -162,5 +158,12 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
+    }
+
+    private InteractionAssigneeDTO mapInteraction(Interaction i, String leadId, List<UserCommon> users) {
+        InteractionAssigneeDTO interaction = service.getMapper().getAssigneeMapperOut().getDestination(i);
+        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
+        user.ifPresent(interaction::setAssignee);
+        return interaction;
     }
 }

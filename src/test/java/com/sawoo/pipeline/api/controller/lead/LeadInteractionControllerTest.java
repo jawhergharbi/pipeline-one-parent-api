@@ -5,6 +5,8 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseLightControllerTest;
+import com.sawoo.pipeline.api.dto.UserCommon;
+import com.sawoo.pipeline.api.dto.UserCommonType;
 import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
@@ -245,11 +247,19 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
         int INTERACTION_LIST_SIZE = 3;
-        List<InteractionDTO> interactionList = IntStream
+        String USER_FULL_NAME = getMockFactory().getFAKER().name().fullName();
+        String USER_ID = getMockFactory().getFAKER().internet().uuid();
+        UserCommon user = UserCommon.builder()
+                .fullName(USER_FULL_NAME)
+                .id(USER_ID)
+                .type(UserCommonType.USER).build();
+        List<InteractionAssigneeDTO> interactionList = IntStream
                 .range(0, INTERACTION_LIST_SIZE)
                 .mapToObj( (i) -> {
                     String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getInteractionMockFactory().newDTO(INTERACTION_ID);
+                    InteractionAssigneeDTO interaction = getMockFactory().getInteractionAssigneeMockFactory().newDTO(INTERACTION_ID);
+                    interaction.setAssignee(user);
+                    return interaction;
                 }).collect(Collectors.toList());
 
         // setup the mocked service
@@ -265,7 +275,9 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(INTERACTION_LIST_SIZE)))
                 .andExpect(jsonPath("$.[0].scheduled").exists())
-                .andExpect(jsonPath("$.[0].id", is(interactionList.get(0).getId())));
+                .andExpect(jsonPath("$.[0].id", is(interactionList.get(0).getId())))
+                .andExpect(jsonPath("$.[0].assignee").exists())
+                .andExpect(jsonPath("$.[0].assignee.id", is(USER_ID)));
     }
 
     @Test
@@ -320,6 +332,14 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
         InteractionAssigneeDTO interactionMock = getMockFactory()
                 .getInteractionAssigneeMockFactory()
                 .newDTO(INTERACTION_ID);
+        String USER_FULL_NAME = getMockFactory().getFAKER().name().fullName();
+        String USER_ID = getMockFactory().getFAKER().internet().uuid();
+        UserCommon user = UserCommon.builder()
+                .fullName(USER_FULL_NAME)
+                .id(USER_ID)
+                .type(UserCommonType.USER).build();
+        interactionMock.setAssignee(user);
+
 
         // setup the mocked service
         doReturn(interactionMock).when(service).getInteraction(anyString(), anyString());
@@ -333,7 +353,10 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.id", is(INTERACTION_ID)));
+                .andExpect(jsonPath("$.id", is(INTERACTION_ID)))
+                .andExpect(jsonPath("$.assignee").exists())
+                .andExpect(jsonPath("$.assignee.id", is(USER_ID)))
+                .andExpect(jsonPath("$.assignee.fullName", is(USER_FULL_NAME)));
     }
 
     @Test
