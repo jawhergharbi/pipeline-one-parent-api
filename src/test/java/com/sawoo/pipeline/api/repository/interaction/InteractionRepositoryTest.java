@@ -79,7 +79,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findByLeadId: entities found - Success")
     void findByLeadIdInWhenEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 4;
+        int INTERACTIONS_SIZE = 5;
         List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -143,7 +143,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 4;
+        int INTERACTIONS_SIZE = 5;
         List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -157,7 +157,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListNullTypeListNullAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 4;
+        int INTERACTIONS_SIZE = 5;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -171,7 +171,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 2;
+        int INTERACTIONS_SIZE = 3;
         List<Integer> types = Collections.singletonList(1);
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
@@ -180,5 +180,40 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
 
         Assertions.assertFalse(interactions.isEmpty(), "Interactions can not be empty");
         Assertions.assertEquals(INTERACTIONS_SIZE, interactions.size(), String.format("Interactions size must be [%d]", INTERACTIONS_SIZE));
+    }
+
+    @Test
+    @DisplayName("findByAssigneeId: filter interactions by userId - Success")
+    void findByAssigneeIdWhenUserIdDoesExistReturnsSuccess() {
+        // Assign
+        int INTERACTIONS_SIZE = 3;
+        String ASSIGNEE_ID = "5fa317cd0efe4d20ad3edd13";
+
+        // Execute query
+        List<Interaction> interactions = getRepository().findByAssigneeId(ASSIGNEE_ID);
+
+        Assertions.assertAll(String.format("Interactions filter by userId [%s]", ASSIGNEE_ID),
+                () -> Assertions.assertFalse(
+                        interactions.isEmpty(),
+                        "Interactions can not be empty"),
+                () -> Assertions.assertEquals(
+                        INTERACTIONS_SIZE,
+                        interactions.size(),
+                        String.format("Interactions size must be [%d]", INTERACTIONS_SIZE)));
+    }
+
+    @Test
+    @DisplayName("findByAssigneeId: filter interactions by userId not interactions found- Success")
+    void findByAssigneeIdWhenUserIdDoesNotExistReturnsSuccess() {
+        // Assign
+        String ASSIGNEE_ID = "wrongId";
+
+        // Execute query
+        List<Interaction> interactions = getRepository().findByAssigneeId(ASSIGNEE_ID);
+
+        Assertions.assertAll(String.format("Interactions filter by assingeeId [%s]", ASSIGNEE_ID),
+                () -> Assertions.assertTrue(
+                        interactions.isEmpty(),
+                        "Interactions must be empty"));
     }
 }

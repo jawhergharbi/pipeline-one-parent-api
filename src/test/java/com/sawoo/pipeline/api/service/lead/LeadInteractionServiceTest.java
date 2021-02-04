@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
@@ -271,7 +272,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(new InteractionMapper()).when(interactionService).getMapper();
 
         // Execute the service call
-        List<InteractionDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+        List<InteractionAssigneeDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
 
         // Assertions
         Assertions.assertAll(String.format("Lead with id [%s] has a list of interactions", LEAD_ID),

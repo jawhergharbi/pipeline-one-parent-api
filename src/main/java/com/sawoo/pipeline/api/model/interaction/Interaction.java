@@ -47,4 +47,7 @@ public class Interaction extends BaseEntity {
 
     @JMap
     private String componentId;
+
+    @JMap
+    private String assigneeId;
 }

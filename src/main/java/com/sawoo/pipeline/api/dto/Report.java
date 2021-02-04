@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReportDTO<T> {
+public class Report<T> {
 
     private String template;
     private T templateData;

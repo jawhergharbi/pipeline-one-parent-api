@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -88,19 +89,19 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     @Override
-    public List<InteractionDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+    public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
         log.debug("Getting interactions from lead id: [{}].", leadId);
-        List<InteractionDTO> interactions = findLeadById(leadId)
+        List<InteractionAssigneeDTO> interactions = findLeadById(leadId)
                 .getInteractions()
                 .stream()
-                .map(service.getMapper().getMapperOut()::getDestination)
+                .map(service.getMapper().getAssigneeMapperOut()::getDestination)
                 .collect(Collectors.toList());
         log.debug("[{}] interactions has been found for lead id [{}]", leadId, interactions.size());
         return interactions;
     }
 
     @Override
-    public InteractionDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public InteractionAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         log.debug("Getting interaction id [{}] from lead id: [{}].", interactionId, leadId);
         Lead lead = findLeadById(leadId);
         return lead
@@ -110,7 +111,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                 .findAny()
                 .map(i -> {
                     log.debug("Interaction id [{}] for lead id [{}] has been found. \nInteraction: [{}]", interactionId, leadId, i);
-                    return service.getMapper().getMapperOut().getDestination(i);
+                    return service.getMapper().getAssigneeMapperOut().getDestination(i);
                 })
                 .orElseThrow( () ->
                         new ResourceNotFoundException(

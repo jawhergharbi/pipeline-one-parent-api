@@ -6,11 +6,12 @@ import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.With;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -20,10 +21,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Builder(toBuilder = true)
+@SuperBuilder
 public class InteractionDTO extends BaseEntityDTO {
 
     @JMap
+    @With
     private String id;
 
     @JMap
@@ -46,4 +48,7 @@ public class InteractionDTO extends BaseEntityDTO {
 
     @JMap
     private String componentId;
+
+    @JMap
+    private String assigneeId;
 }

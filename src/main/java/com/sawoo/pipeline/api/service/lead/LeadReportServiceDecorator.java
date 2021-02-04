@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
-import com.sawoo.pipeline.api.dto.ReportDTO;
+import com.sawoo.pipeline.api.dto.Report;
 import com.sawoo.pipeline.api.dto.lead.LeadReportDTO;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
@@ -79,7 +79,7 @@ public class LeadReportServiceDecorator implements LeadReportService {
     private byte[] getPDFReport(String template, LeadReportDTO leadReportData, String lan) throws CommonServiceException {
         RestTemplate restTemplate = new RestTemplate();
         final String baseUrl = reportAPI + "/api/create-pdf";
-        ReportDTO<LeadReportDTO> reportBody = ReportDTO
+        Report<LeadReportDTO> reportBody = Report
                 .<LeadReportDTO>builder()
                 .template(template)
                 .templateData(leadReportData)
@@ -92,7 +92,7 @@ public class LeadReportServiceDecorator implements LeadReportService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            HttpEntity<ReportDTO<LeadReportDTO>> request = new HttpEntity<>(reportBody, headers);
+            HttpEntity<Report<LeadReportDTO>> request = new HttpEntity<>(reportBody, headers);
             URI uri = new URI(baseUrl);
             ResponseEntity<byte[]> result = restTemplate.postForEntity(uri, request, byte[].class);
 

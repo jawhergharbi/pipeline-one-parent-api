@@ -75,6 +75,6 @@ public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Inte
 
     @Override
     public InteractionDTO newDTO(String id, InteractionDTO dto) {
-        return dto.toBuilder().id(id).build();
+        return dto.withId(id);
     }
 }
