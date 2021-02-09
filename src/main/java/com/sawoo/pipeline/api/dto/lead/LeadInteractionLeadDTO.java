@@ -14,7 +14,7 @@ public class LeadInteractionLeadDTO {
     private String leadId;
 
     @JMap("${person.id}")
-    private String id;
+    private String personId;
 
     @JMap("${person.fullName}")
     private String fullName;
