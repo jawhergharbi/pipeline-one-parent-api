@@ -1,8 +1,12 @@
 package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.dto.UserCommon;
+import com.sawoo.pipeline.api.dto.UserCommonType;
+import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +44,27 @@ public class AccountControllerInteractionDelegatorImpl implements AccountControl
             interactions = leadService.findBy(leadIds, status, types);
             interactions = interactions
                     .stream()
-                    .peek( (i) -> {
-                        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(i.getLead().getLeadId())).findAny();
-                        lead.ifPresent(value -> i.setAccount(value.getAccount()));
-                    }).collect(Collectors.toList());
+                    .peek( (i) -> mapAccountData(leads, i))
+                    .collect(Collectors.toList());
         }
         return ResponseEntity.ok().body(interactions);
+    }
+
+    private void mapAccountData(List<LeadDTO> leads, LeadInteractionDTO interaction) {
+        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(interaction.getLead().getLeadId())).findAny();
+        lead.ifPresent(l -> {
+            AccountLeadDTO account = l.getAccount();
+            interaction.setAccount(account);
+            if (interaction.getAssigneeId() != null) {
+                Optional<UserAuthDTO> assignee = account.getUsers()
+                        .stream()
+                        .filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
+                assignee.ifPresent(a -> interaction.setAssignee(UserCommon.builder()
+                        .fullName(a.getFullName())
+                        .id(a.getId())
+                        .type(UserCommonType.USER)
+                        .build()));
+            }
+        });
     }
 }
