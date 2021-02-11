@@ -17,4 +17,7 @@ public interface AccountRepository extends MongoRepository<Account, String>, Acc
 
     @Query("{'users': {'$ref': 'user' , '$id': {'$oid': ?0}}}")
     List<Account> findByUserId(String userId);
+
+    @Query("{'leads': {'$ref': 'lead' , '$id': {'$oid': ?0}}}")
+    Optional<Account> findByLeadId(String leadId);
 }

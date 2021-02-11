@@ -1,16 +1,22 @@
 package com.sawoo.pipeline.api.controller.user;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -30,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,7 +46,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -535,7 +548,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
     @Test
     @DisplayName("GET /api/auth/roles: role list null - Failure")
-    void findAllByRolesWhenInvalidRequestRoleListNullFailure() throws Exception {
+    void findAllByRolesWhenInvalidRequestRoleListNullReturnsFailure() throws Exception {
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/role"))
@@ -551,7 +564,7 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
 
     @Test
     @DisplayName("GET /api/auth/role: role list empty - Failure")
-    void findAllByRolesWhenInvalidRequestRoleListEmptyFailure() throws Exception {
+    void findAllByRolesWhenInvalidRequestRoleListEmptyReturnsFailure() throws Exception {
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/role")
@@ -566,5 +579,245 @@ public class UserControllerTest extends BaseControllerTest<UserAuthDTO, User, Us
                 .andExpect(jsonPath(
                         "$.message",
                         stringContainsInOrder("Field or param", "in component", "is bellow its min size")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email found - Success")
+    void resetPasswordWhenEmailFoundReturnsSuccess() throws Exception {
+        // Assign
+        String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+        String USER_TOKEN_ID = getMockFactory().getFAKER().internet().uuid();
+        UserTokenDTO tokenDTO = getMockFactory().getUserTokenMockFactory().newDTO(USER_TOKEN_ID);
+
+        // setup the mocked service
+        doReturn(tokenDTO).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isNoContent());
+
+        // Verify
+        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email is invalid - Failure")
+    void resetPasswordWhenEmailNotValidReturnsFailure() throws Exception {
+        // Assign
+        String USER_EMAIl = "wrongEmail";
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "in component", "must be a proper email address")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when email is empty - Failure")
+    void resetPasswordWhenEmailEmptyReturnsFailure() throws Exception {
+        // Assign
+        String USER_EMAIl = "";
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "in component", "can not be empty or null")));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/reset-password: reset password when service thrown auth exception - Failure")
+    void resetPasswordWhenServiceThrowsAuthExceptionReturnsFailure() throws Exception {
+        // Assign
+        String USER_EMAIl = getMockFactory().getFAKER().internet().emailAddress();
+
+        // setup the mocked service
+        AuthException exception = new AuthException(
+                ExceptionMessageConstants.AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                new String[]{UserTokenType.RESET_PASSWORD.name(), USER_EMAIl});
+
+        doThrow(exception).when(service).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/reset-password")
+                .param("email", USER_EMAIl))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath(
+                        "$.message",
+                        stringContainsInOrder(
+                                "Authentication component. Creating token of type",
+                                String.format("User with email [%s] not found", USER_EMAIl))));
+        // Verify
+        verify(service, atMostOnce()).createToken(anyString(), eq(UserTokenType.RESET_PASSWORD), anyInt());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when service thrown auth exception - Failure")
+    void confirmResetPasswordWhenPasswordAndConfirmPasswordDoesNotMatchReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = UUID.randomUUID().toString();
+        String PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .token(TOKEN)
+                .build();
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath(
+                        "$.message",
+                        stringContainsInOrder(
+                                "Authentication component. Reset password for token",
+                                "password and confirmPassword does not match")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when password empty - Failure")
+    void confirmResetPasswordWhenPasswordEmptyReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = UUID.randomUUID().toString();
+        String PASSWORD = Strings.EMPTY;
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .token(TOKEN)
+                .build();
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder(
+                                "Field or param",
+                                "is bellow its min size")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/confirm-reset-password: confirm reset password when token not informed - Failure")
+    void confirmResetPasswordWhenTokenNullReturnsFailure() throws Exception {
+        // Assign
+        String PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        String CONFIRM_PASSWORD = getMockFactory().getFAKER().internet().password(8, 12);
+        UserAuthResetPasswordRequest resetPassword = UserAuthResetPasswordRequest.builder()
+                .password(PASSWORD)
+                .confirmPassword(CONFIRM_PASSWORD)
+                .build();
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/confirm-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(resetPassword)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder(
+                                "Field or param",
+                                "can not be empty")));
+        // Verify
+        verify(service, never()).confirmResetPassword(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/is-valid-token: is valid token when token is empty - Failure")
+    void isValidTokenPasswordWhenTokenEmptyReturnsFailure() throws Exception {
+        // Assign
+        String TOKEN = Strings.EMPTY;
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/is-token-valid")
+                .param("token", TOKEN))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "can not be empty or null")));
+        // Verify
+        verify(service, never()).isTokenValid(anyString());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/is-valid-token: is valid token when token is empty - Failure")
+    void isValidTokenPasswordWhenTokenValidReturnsSuccess() throws Exception {
+        // Assign
+        String TOKEN = getMockFactory().getFAKER().internet().uuid();
+
+        // setup the mocked service
+        doReturn(true).when(service).isTokenValid(anyString());
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/is-token-valid")
+                .param("token", TOKEN))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", is(true)));
+
+        // Verify
+        verify(service, atMostOnce()).isTokenValid(anyString());
     }
 }

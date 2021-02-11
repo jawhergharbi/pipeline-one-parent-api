@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 
@@ -20,11 +21,11 @@ public interface LeadInteractionService {
                                      @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException;
 
-    List<InteractionDTO> getInteractions(
+    List<InteractionAssigneeDTO> getInteractions(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException;
 
-    InteractionDTO getInteraction(
+    InteractionAssigneeDTO getInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException;

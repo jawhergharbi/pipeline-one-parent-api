@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled = true)
 @AllArgsConstructor
-@Profile(value = {"unit-tests"})
+@Profile(value = {"unit-tests", "integration-tests", "unit-tests-embedded"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override

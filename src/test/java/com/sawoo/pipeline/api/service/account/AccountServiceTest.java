@@ -20,8 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -62,43 +60,6 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
     @BeforeAll
     public void setup() {
         setRepository(repository);
-    }
-
-    @Test
-    @DisplayName("create: when entity does not exist - Success")
-    void createWhenEntityDoesNotExistReturnsSuccess() {
-        // Set up mocked entities
-        String ACCOUNT_ID = getMockFactory().getComponentId();
-        String ACCOUNT_LINKED_IN_URL = getMockFactory().getFAKER().internet().url();
-        AccountDTO mockedDTO = getMockFactory().newDTO(ACCOUNT_ID);
-        mockedDTO.setLinkedInUrl(ACCOUNT_LINKED_IN_URL);
-        Account mockedEntity = getMockFactory().newEntity(ACCOUNT_ID);
-        mockedEntity.setLinkedInUrl(ACCOUNT_LINKED_IN_URL);
-
-        // Set up the mocked repository
-        doReturn(Optional.empty()).when(repository).findByLinkedInUrl(anyString());
-        doReturn(mockedEntity).when(repository).insert(any(Account.class));
-
-        // Execute the service call
-        AccountDTO returnedEntity = getService().create(mockedDTO);
-
-        // Assert the response
-        Assertions.assertNotNull(returnedEntity, "Entity can not be null");
-        Assertions.assertEquals(
-                ACCOUNT_LINKED_IN_URL,
-                returnedEntity.getLinkedInUrl(),
-                "Account.linkedInUrl should be the same");
-        Assertions.assertEquals(
-                LocalDate.now(ZoneOffset.UTC),
-                returnedEntity.getCreated().toLocalDate(),
-                "Creation time must be today");
-        Assertions.assertEquals(
-                LocalDate.now(ZoneOffset.UTC),
-                returnedEntity.getUpdated().toLocalDate(),
-                "Update time must be today");
-
-        verify(repository, Mockito.times(1)).findByLinkedInUrl(anyString());
-        verify(repository, Mockito.times(1)).insert(any(Account.class));
     }
 
     @Test

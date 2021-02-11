@@ -7,6 +7,17 @@ spring:
     basename: message
     fallback-to-system-locale: true
     use-code-as-default-message: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: info@sawoo.io
+    password: ghkzcucljercmuah
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 management:
   endpoint:
     health:
@@ -35,6 +46,25 @@ app:
     secret: defeAtmarmalaDeheatIngcyAn
   cors:
     allowed-methods: GET,POST,HEAD,PUT,DELETE,OPTIONS
+  mail:
+    info-account: info@sawoo.io
+  auth:
+    default-expiration: 180
+    password-token:
+      expiration: 180
+      template-name: passwordResetEmailTemplate
+      confirmation-url-key: confirmUrl
+      confirmation-url: auth/confirm-reset-password
+    activation-token:
+      active: true
+      expiration: 1440
+      template-name: accountUserCreatedEmailTemplate
+      confirmation-url-key: confirmUrl
+      confirmation-url: auth/account-password-activation
+      user-key: user
+  mongo:
+    lead-interaction:
+      cascading: false
 
 ---
 spring:
@@ -45,12 +75,14 @@ spring:
       auto-index-creation: false
 
 app:
-  server: "http://localhost:8080"
-  report-api: "http://localhost:4001"
+  server: http://localhost:8080
+  web-server: http://localhost:4200
+  report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
     allowed-origins: http://localhost:4200, http://saas.localhost:4200, http://laas.localhost:4200, http://localhost:8080
+
 
 ---
 spring:
@@ -61,8 +93,9 @@ spring:
       uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core?retryWrites=true&w=majority
 
 app:
-  server: "http://localhost:8080"
-  report-api: "http://localhost:4001"
+  server: http://localhost:8080
+  web-server: http://localhost:4200
+  report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
   cors:
@@ -79,10 +112,17 @@ spring:
       auto-index-creation: false
 
 app:
-  server: "http://localhost:8080"
-  report-api: "http://localhost:4001"
+  server: http://localhost:8080
+  web-server: http://localhost:4200
+  report-api: http://localhost:4001
   mail:
     contact-account: miguel.maquieira@sawoo.io
+  auth:
+    activation-token:
+      active: false
+  mongo:
+    lead-interaction:
+      cascading: false
 
 ---
 spring:
@@ -93,6 +133,36 @@ spring:
       port: 0
       database: pipeline-core-test
       auto-index-creation: false
+
+app:
+  server: http://localhost:8080
+  web-server: http://localhost:4200
+  report-api: http://localhost:4001
+  mail:
+    contact-account: miguel.maquieira@sawoo.io
+  auth:
+    activation-token:
+      active: false
+  mongo:
+    lead-interaction:
+      cascading: false
+
+---
+spring:
+  profiles: integration-tests
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: pipeline-core-test
+      auto-index-creation: false
+  mail:
+    password: springboot
+    username: duke
+    host: 127.0.0.1
+    port: 3025 # default protocol port + 3000 as offset
+    protocol: smtp
+    test-connection: true
 
 app:
   server: "http://localhost:8080"
@@ -117,6 +187,7 @@ server:
 
 app:
   server: https://pipeline-one-core-api-dot-pipeline-one-dev.ew.r.appspot.com
+  web-server: https://pipeline-one-dev.ew.r.appspot.com
   report-api: https://pipeline-one-report-api-dot-pipeline-one-dev.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io
@@ -136,6 +207,7 @@ server:
 
 app:
   server: https://pipeline-one-core-api-dot-pipeline-one-test.ew.r.appspot.com
+  web-server: https://pipeline-one-test.ew.r.appspot.com
   report-api: https://pipeline-one-report-api-dot-pipeline-one-test.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io
@@ -151,13 +223,14 @@ spring:
     mongodb:
       auto-index-creation: false
       uri: mongodb+srv://pipeline-core-user:X1YIozFkl9KTONtT@cluster0.stzrb.mongodb.net/pipeline-one-core?retryWrites=true&w=majority
-    
+
 
 server:
   port: 8081
 
 app:
   server: https://pipeline-one-core-api-dot-pipeline-one-prod.ew.r.appspot.com
+  web-server: https://pipeline-one-prod.ew.r.appspot.com
   report-api: https://pipeline-one-report-api-dot-pipeline-one-prod.ew.r.appspot.com
   mail:
     contact-account: miguel.maquieira@sawoo.io

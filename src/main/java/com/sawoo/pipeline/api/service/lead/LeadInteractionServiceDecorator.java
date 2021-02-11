@@ -3,6 +3,8 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.UserCommon;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -30,6 +32,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     private final InteractionService service;
     private final LeadRepository repository;
+    private final LeadInteractionServiceDecoratorHelper helper;
     private final LeadMapper mapper;
 
     @Override
@@ -88,19 +91,26 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     @Override
-    public List<InteractionDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+    public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
         log.debug("Getting interactions from lead id: [{}].", leadId);
-        List<InteractionDTO> interactions = findLeadById(leadId)
-                .getInteractions()
-                .stream()
-                .map(service.getMapper().getMapperOut()::getDestination)
-                .collect(Collectors.toList());
+
+        Lead lead = findLeadById(leadId);
+        List<Interaction> interactions = lead.getInteractions();
+        List<InteractionAssigneeDTO> assigneeInteractions = Collections.emptyList();
+        if (interactions.size() > 0 ) {
+            final List<UserCommon> users = helper.getUsers(leadId);
+            assigneeInteractions = interactions
+                    .stream()
+                    .map(i -> mapInteraction(i, users))
+                    .collect(Collectors.toList());
+        }
         log.debug("[{}] interactions has been found for lead id [{}]", leadId, interactions.size());
-        return interactions;
+
+        return  assigneeInteractions;
     }
 
     @Override
-    public InteractionDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public InteractionAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         log.debug("Getting interaction id [{}] from lead id: [{}].", interactionId, leadId);
         Lead lead = findLeadById(leadId);
         return lead
@@ -110,7 +120,8 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                 .findAny()
                 .map(i -> {
                     log.debug("Interaction id [{}] for lead id [{}] has been found. \nInteraction: [{}]", interactionId, leadId, i);
-                    return service.getMapper().getMapperOut().getDestination(i);
+                    List<UserCommon> users = helper.getUsers(leadId);
+                    return mapInteraction(i, users);
                 })
                 .orElseThrow( () ->
                         new ResourceNotFoundException(
@@ -148,5 +159,12 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
+    }
+
+    private InteractionAssigneeDTO mapInteraction(Interaction i, List<UserCommon> users) {
+        InteractionAssigneeDTO interaction = service.getMapper().getAssigneeMapperOut().getDestination(i);
+        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
+        user.ifPresent(interaction::setAssignee);
+        return interaction;
     }
 }

@@ -1,11 +1,11 @@
 package com.sawoo.pipeline.api.controller.user;
 
-import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
+import com.sawoo.pipeline.api.dto.user.UserAuthResetPasswordRequest;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,8 +76,30 @@ public class UserController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserAuthJwtTokenResponse> login(@RequestBody UserAuthLogin authRequest) throws AuthException {
+    public ResponseEntity<UserAuthJwtTokenResponse> login(@RequestBody UserAuthLogin authRequest) {
         return delegator.login(authRequest);
+    }
+
+    @RequestMapping(
+            value = "/reset-password",
+            method = RequestMethod.POST)
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String userEmail) {
+        return delegator.resetPassword(userEmail);
+    }
+
+    @RequestMapping(
+            value = {"/confirm-reset-password", "/account-password-activation"},
+            method = RequestMethod.POST)
+    public ResponseEntity<Void> confirmResetPassword(@RequestBody UserAuthResetPasswordRequest resetPassword) {
+        return delegator.confirmResetPassword(resetPassword);
+    }
+
+    @RequestMapping(
+            value = "/is-token-valid",
+            method = RequestMethod.POST)
+    public ResponseEntity<Boolean> isValidToken(
+            @RequestParam("token") String token) {
+        return delegator.isTokenValid(token);
     }
 
     @RequestMapping(

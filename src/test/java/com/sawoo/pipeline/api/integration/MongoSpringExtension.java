@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +28,19 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
             // Load the MongoDataFile annotation value from the test method
             MongoDataFile mongoDataFile = method.getAnnotation(MongoDataFile.class);
 
-            // Load the MongoTemplate that we can use to drop the test collection
-            dropCollection(context, mongoDataFile);
+            // drop the specified collections
+            if (mongoDataFile != null) {
+                String[] collections = mongoDataFile.collectionNames();
+                Arrays.asList(collections).forEach( c -> dropCollection(context, c) );
+            }
+
+            // Load the MongoCleanUp annotation value from the test method
+            MongoCleanUp mongoCleanUp = method.getAnnotation(MongoCleanUp.class);
+
+            if (mongoCleanUp != null) {
+                String[] collections = mongoCleanUp.collectionNames();
+                Arrays.asList(collections).forEach( c -> dropCollection(context, c) );
+            }
         });
     }
 
@@ -46,22 +58,35 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         context.getTestClass().ifPresent(clazz -> {
-            // Load test file from the annotation
+            // Class data file
             MongoDataFile mongoDataFile = clazz.getAnnotation(MongoDataFile.class);
+            if (mongoDataFile != null) {
+                String[] collectionNames = mongoDataFile.collectionNames();
+                Arrays.asList(collectionNames).forEach(c -> dropCollection(context, c));
+            }
 
-            // Load the MongoTemplate that we can use to import our data
-            dropCollection(context, mongoDataFile);
+            // Class list of data file
+            MongoDataFileList mongoDataFileList = clazz.getAnnotation(MongoDataFileList.class);
+            if (mongoDataFileList != null) {
+                String[] collectionNames = mongoDataFileList.collectionNames();
+                Arrays.asList(collectionNames).forEach(c -> dropCollection(context, c));
+            }
         });
     }
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         context.getTestClass().ifPresent(clazz -> {
-            // Load test file from the annotation
+            // Class data file
             MongoDataFile mongoDataFile = clazz.getAnnotation(MongoDataFile.class);
-
-            // Load the MongoTemplate that we can use to import our data
             insertCollection(context, mongoDataFile);
+
+            // Class list of data file
+            MongoDataFileList mongoDataFileList = clazz.getAnnotation(MongoDataFileList.class);
+            if (mongoDataFileList != null) {
+                MongoTestFile[] testFiles = mongoDataFileList.files();
+                Arrays.asList(testFiles).forEach( f -> insertCollection(context, f.fileName(), f.classType()) );
+            }
         });
     }
 
@@ -90,32 +115,34 @@ public class MongoSpringExtension implements BeforeEachCallback, AfterEachCallba
         return Optional.empty();
     }
 
-    private void dropCollection(ExtensionContext context, MongoDataFile mongoDataFile) {
-        if (mongoDataFile != null) {
-            Optional<MongoTemplate> mongoTemplate = getMongoTemplate(context);
-            mongoTemplate.ifPresent(t -> t.dropCollection(mongoDataFile.collectionName()));
-        }
+    private void dropCollection(ExtensionContext context, String collectionName) {
+        Optional<MongoTemplate> mongoTemplate = getMongoTemplate(context);
+        mongoTemplate.ifPresent(t -> t.dropCollection(collectionName));
     }
 
     private void insertCollection(ExtensionContext context, MongoDataFile mongoDataFile) {
         if (mongoDataFile != null) {
-            getMongoTemplate(context).ifPresent(mongoTemplate -> {
-                try {
-                    // Use Jackson's ObjectMapper to load a list of objects from the JSON file
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.registerModule(new JavaTimeModule());
-                    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                    List<?> objects = mapper.readValue(
-                            JSON_PATH.resolve(mongoDataFile.value()).toFile(),
-                            mapper.getTypeFactory().constructCollectionType(
-                                    List.class, mongoDataFile.classType()));
-
-                    // Save each object into MongoDB
-                    mongoTemplate.insertAll(objects);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            });
+            insertCollection(context, mongoDataFile.value(), mongoDataFile.classType());
         }
+    }
+
+    private void insertCollection(ExtensionContext context, String filename, Class<?> clazz) {
+        getMongoTemplate(context).ifPresent(mongoTemplate -> {
+            try {
+                // Use Jackson's ObjectMapper to load a list of objects from the JSON file
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JavaTimeModule());
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                List<?> objects = mapper.readValue(
+                        JSON_PATH.resolve(filename).toFile(),
+                        mapper.getTypeFactory().constructCollectionType(
+                                List.class, clazz));
+
+                // Save each object into MongoDB
+                mongoTemplate.insertAll(objects);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 }

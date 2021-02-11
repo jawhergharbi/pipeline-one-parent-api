@@ -12,4 +12,6 @@ public interface InteractionRepository extends MongoRepository<Interaction, Stri
     List<Interaction> findByComponentId(String componentId);
 
     List<Interaction> findByComponentIdIn(List<String> componentId);
+
+    List<Interaction> findByAssigneeId(String assigneeId);
 }

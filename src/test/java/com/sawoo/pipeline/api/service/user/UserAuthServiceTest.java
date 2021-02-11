@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.AuthException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthUpdateDTO;
+import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
@@ -51,6 +52,9 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
 
     @MockBean
     private UserRepository repository;
+
+    @MockBean
+    private UserTokenService tokenService;
 
     @Autowired
     public UserAuthServiceTest(UserMockFactory mockFactory, UserAuthService service) {
@@ -313,7 +317,6 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
     @Test
     @DisplayName("findAllByRole: list of roles is empty - Failure")
     void findAllByRolesWhenListOfRolesIsEmptyReturnsConstraintViolationException() {
-
         // Assertions
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
@@ -322,6 +325,56 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
 
         // Asserts
         Assertions.assertEquals(1, exception.getConstraintViolations().size());
+    }
+
+    @Test
+    @DisplayName("isValidToken: token not found - False")
+    void isValidTokenWhenTokenNotFoundReturnsFalse() {
+        // Set up mock entities
+        String TOKEN = getMockFactory().getFAKER().internet().uuid();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(tokenService).findByToken(anyString());
+
+        // Execute the service
+        boolean isValid = getService().isTokenValid(TOKEN);
+
+        Assertions.assertFalse(isValid, "Token must be invalid");
+    }
+
+    @Test
+    @DisplayName("isValidToken: token found & valid - True")
+    void isValidTokenWhenTokenFoundAndValidReturnsTrue() {
+        // Set up mock entities
+        String TOKEN = getMockFactory().getFAKER().internet().uuid();
+        String TOKEN_ID = getMockFactory().getUserTokenMockFactory().getComponentId();
+        UserTokenDTO token = getMockFactory().getUserTokenMockFactory().newDTO(TOKEN_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(token)).when(tokenService).findByToken(anyString());
+
+        // Execute the service
+        boolean isValid = getService().isTokenValid(TOKEN);
+
+        Assertions.assertTrue(isValid, "Token must be valid");
+    }
+
+    @Test
+    @DisplayName("isValidToken: token found & invalid - False")
+    void isValidTokenWhenTokenFoundAndInValidReturnsFalse() {
+        // Set up mock entities
+        String TOKEN = getMockFactory().getFAKER().internet().uuid();
+        String TOKEN_ID = getMockFactory().getUserTokenMockFactory().getComponentId();
+        UserTokenDTO token = getMockFactory().getUserTokenMockFactory().newDTO(TOKEN_ID);
+        token.setExpirationDate(LocalDateTime.now(ZoneOffset.UTC).minusHours(1));
+
+        // Set up the mocked repository
+        doReturn(Optional.of(token)).when(tokenService).findByToken(anyString());
+
+        // Execute the service
+        boolean isValid = getService().isTokenValid(TOKEN);
+
+        Assertions.assertFalse(isValid, "Token must be invalid");
     }
 
 

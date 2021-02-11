@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
@@ -55,12 +56,12 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<List<InteractionDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
+    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteractions(leadId);
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public ResponseEntity<InteractionAssigneeDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteraction(leadId, interactionId);
     }
 }

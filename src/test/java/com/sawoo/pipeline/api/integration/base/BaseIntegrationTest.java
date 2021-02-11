@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sawoo.pipeline.api.integration.ExpectedResult;
+import com.sawoo.pipeline.api.mock.MockFactory;
+import com.sawoo.pipeline.api.utils.JacksonObjectMapperUtils;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -33,23 +36,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Getter
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class BaseIntegrationTest<M> {
+public abstract class BaseIntegrationTest<D, M, F extends MockFactory<D, M>> {
 
     private final MockMvc mockMvc;
     private final String resourceURI;
     private final String entityType;
     private final MongoTemplate mongoTemplate;
     private final String expectedResultsFileName;
+    private final F mockFactory;
 
     private List<ExpectedResult<M>> expectedResults;
 
 
-    public BaseIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, String resourceURI, String entityType, String expectedResultsFileName) {
+    public BaseIntegrationTest(MockMvc mockMvc,
+                               MongoTemplate mongoTemplate,
+                               String resourceURI,
+                               String entityType,
+                               String expectedResultsFileName,
+                               F mockFactory) {
         this.mockMvc = mockMvc;
         this.mongoTemplate = mongoTemplate;
         this.resourceURI = resourceURI;
         this.entityType = entityType;
         this.expectedResultsFileName = expectedResultsFileName;
+        this.mockFactory = mockFactory;
+    }
+
+    protected static String asJsonString(final Object obj) {
+        return JacksonObjectMapperUtils.asJsonString(obj);
     }
 
     protected abstract Class<M> getClazz();
@@ -99,7 +113,8 @@ public abstract class BaseIntegrationTest<M> {
     }
 
     @Test
-    @DisplayName("POST /api/entities/{id}: find by id when entity found - Success")
+    @Order(1)
+    @DisplayName("GET /api/entities/{id}: find by id when entity found - Success")
     void findByIdWhenEntityFoundReturnsSuccess() throws Exception {
         // Set up
         String EXPECTED_RESULTS_KEY = "findByIdWhenEntityFound";
@@ -133,7 +148,7 @@ public abstract class BaseIntegrationTest<M> {
         });
     }
 
-    private Field getField(Class clazz, String fieldName) {
+    private Field getField(Class<?> clazz, String fieldName) {
         List<Field> fields = Arrays.asList(clazz.getDeclaredFields());
         return fields
                 .stream()

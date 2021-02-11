@@ -3,49 +3,19 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
-@RequiredArgsConstructor
-public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Interaction> {
+public class InteractionMockFactory extends InteractionMockBaseFactory<InteractionDTO> {
 
-    @Getter
-    private final PersonMockFactory personMockFactory;
-
-    @Override
-    public String getComponentId() {
-        return getFAKER().internet().uuid();
-    }
-
-    @Override
-    public Interaction newEntity(String id) {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return Interaction
-                .builder()
-                .id(id)
-                .invite(UrlTitle
-                        .builder()
-                        .url(getFAKER().internet().url())
-                        .description(getFAKER().lebowski().quote())
-                        .build())
-                .status(0)
-                .scheduled(now.plusDays(10).plusHours(10))
-                .type(InteractionStatusList.DONE.getStatus())
-                .note(Note
-                        .builder()
-                        .text(getFAKER().lorem().sentence(25))
-                        .updated(now)
-                        .build())
-                .created(now)
-                .updated(now)
-                .build();
+    @Autowired
+    public InteractionMockFactory(PersonMockFactory personMockFactory) {
+        super(personMockFactory);
     }
 
     @Override
@@ -54,7 +24,7 @@ public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Inte
         InteractionDTO interaction = InteractionDTO
                 .builder()
                 .id(id)
-                .invite(UrlTitle
+                .link(UrlTitle
                         .builder()
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
@@ -75,6 +45,6 @@ public class InteractionMockFactory extends BaseMockFactory<InteractionDTO, Inte
 
     @Override
     public InteractionDTO newDTO(String id, InteractionDTO dto) {
-        return dto.toBuilder().id(id).build();
+        return dto.withId(id);
     }
 }

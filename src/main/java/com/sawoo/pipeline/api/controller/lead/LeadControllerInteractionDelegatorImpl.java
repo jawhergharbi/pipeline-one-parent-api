@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +54,14 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
     }
 
     @Override
-    public ResponseEntity<List<InteractionDTO>> getInteractions(
+    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.getInteractions(leadId));
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> getInteraction(
+    public ResponseEntity<InteractionAssigneeDTO> getInteraction(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException {

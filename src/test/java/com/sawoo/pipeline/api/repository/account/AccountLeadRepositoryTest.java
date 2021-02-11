@@ -116,4 +116,17 @@ public class AccountLeadRepositoryTest {
 
         Assertions.assertFalse(account.isPresent(), String.format("Account id [%s] can not be present", ACCOUNT_ID));
     }
+
+    @Test
+    @DisplayName("findByLeadId: entities found - Success")
+    void findByLeadIdWhenEntitiesFoundReturnsSuccess() {
+        String LEAD_ID = "601bbbf0f9589897c09cb668";
+        Optional<Account> account = repository.findByLeadId(LEAD_ID);
+
+        Assertions.assertAll(String.format("Accounts by leadId [%s] must have [%d] entities", LEAD_ID, 1),
+                () -> Assertions.assertTrue(account.isPresent(), "Account must be present"),
+                () -> account.ifPresent(
+                        (a) -> Assertions.assertTrue(a.getLeads().stream().anyMatch(l -> l.getId().equals(LEAD_ID)),
+                                String.format("Lead with id [%s] must be present]", LEAD_ID))));
+    }
 }

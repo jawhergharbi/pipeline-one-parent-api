@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
@@ -123,7 +124,7 @@ public class LeadController {
             value = "/{id}/interactions",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionDTO>> getInteractions(
+    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
             @PathVariable("id") String leadId) {
         return delegator.getInteractions(leadId);
     }
@@ -132,7 +133,7 @@ public class LeadController {
             value = "/{id}/interactions/{interactionId}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionDTO> getInteraction(
+    public ResponseEntity<InteractionAssigneeDTO> getInteraction(
             @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) {
         return delegator.getInteraction(leadId, interactionId);

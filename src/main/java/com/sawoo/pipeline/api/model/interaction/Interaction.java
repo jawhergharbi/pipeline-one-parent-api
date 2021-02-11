@@ -37,7 +37,7 @@ public class Interaction extends BaseEntity {
     private Integer status;
 
     @JMap
-    private UrlTitle invite;
+    private UrlTitle link;
 
     @JMap
     private Note note;
@@ -47,4 +47,7 @@ public class Interaction extends BaseEntity {
 
     @JMap
     private String componentId;
+
+    @JMap
+    private String assigneeId;
 }

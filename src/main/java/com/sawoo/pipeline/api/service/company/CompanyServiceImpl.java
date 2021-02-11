@@ -28,7 +28,7 @@ public class CompanyServiceImpl extends BaseServiceImpl<CompanyDTO, Company, Com
     public Optional<Company> entityExists(CompanyDTO entityToCreate) {
         log.debug(
                 "Checking entity existence. [type: {}, name: {}]",
-                DBConstants.PERSON_DOCUMENT,
+                DBConstants.COMPANY_DOCUMENT,
                 entityToCreate.getName());
         return getRepository().findByName(entityToCreate.getName());
     }

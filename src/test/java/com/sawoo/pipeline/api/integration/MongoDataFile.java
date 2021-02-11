@@ -30,5 +30,5 @@ public @interface MongoDataFile {
      * The name of the MongoDB collection hosting the test objects.
      * @return  The name of the MongoDB collection hosting the test objects.
      */
-    String collectionName();
+    String[] collectionNames();
 }

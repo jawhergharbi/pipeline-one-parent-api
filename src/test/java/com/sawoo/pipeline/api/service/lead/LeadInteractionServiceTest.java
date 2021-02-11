@@ -3,6 +3,8 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.UserCommon;
+import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
@@ -28,6 +30,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -38,6 +41,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -56,6 +60,9 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
 
     @MockBean
     private InteractionService interactionService;
+
+    @MockBean
+    private LeadInteractionServiceDecoratorHelper helper;
 
     @Autowired
     public LeadInteractionServiceTest(LeadMockFactory mockFactory, LeadService service) {
@@ -269,9 +276,10 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         // Set up the mocked repository
         doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
         doReturn(new InteractionMapper()).when(interactionService).getMapper();
+        doReturn(Collections.emptyList()).when(helper).getUsers(anyString());
 
         // Execute the service call
-        List<InteractionDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+        List<InteractionAssigneeDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
 
         // Assertions
         Assertions.assertAll(String.format("Lead with id [%s] has a list of interactions", LEAD_ID),
@@ -280,6 +288,59 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
                         INTERACTION_LIST_SIZE,
                         returnedListDTO.size(),
                         String.format("Interaction list size must be [%d]", INTERACTION_LIST_SIZE)));
+
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(helper, atMostOnce()).getUsers(anyString());
+    }
+
+    @Test
+    @DisplayName("getInteractions: lead found - Success")
+    void getInteractionsWhenLeadFoundAndAccountFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        int INTERACTION_LIST_SIZE = 10;
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+        List<UserCommon> mockedUsers = IntStream
+                .range(0, 2)
+                .mapToObj( (u) -> {
+                    String USER_FULL_NAME = getMockFactory().getFAKER().name().fullName();
+                    String USER_ID = getMockFactory().getFAKER().internet().uuid();
+                    return UserCommon.builder().fullName(USER_FULL_NAME).id(USER_ID).build();
+                }).collect(Collectors.toList());
+
+        List<Interaction> interactionList = IntStream
+                .range(0, INTERACTION_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
+                    Interaction interaction = getMockFactory().getInteractionMockFactory().newEntity(INTERACTION_ID);
+                    interaction.setAssigneeId(mockedUsers
+                            .get(getMockFactory()
+                                    .getFAKER()
+                                    .random()
+                                    .nextInt(1)).getId());
+                    return interaction;
+                }).collect(Collectors.toList());
+        leadEntity.setInteractions(interactionList);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+        doReturn(new InteractionMapper()).when(interactionService).getMapper();
+        doReturn(mockedUsers).when(helper).getUsers(anyString());
+
+        // Execute the service call
+        List<InteractionAssigneeDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+
+        // Assertions
+        Assertions.assertAll(String.format("Lead with id [%s] has a list of interactions", LEAD_ID),
+                () -> Assertions.assertFalse(returnedListDTO.isEmpty(), "Interaction list can not be empty"),
+                () -> Assertions.assertEquals(
+                        INTERACTION_LIST_SIZE,
+                        returnedListDTO.size(),
+                        String.format("Interaction list size must be [%d]", INTERACTION_LIST_SIZE)),
+                () -> Assertions.assertNotNull(returnedListDTO.get(0).getAssignee(), "Assignee can not be null"));
+
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(helper, atMostOnce()).getUsers(anyString());
     }
 
     @Test

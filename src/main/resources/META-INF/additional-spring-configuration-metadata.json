@@ -34,6 +34,76 @@
       "name": "app.version",
       "type": "java.lang.String",
       "description": "App version taken from the POM file."
+    },
+    {
+      "name": "app.mail.info-account",
+      "type": "java.lang.String",
+      "description": "Info email account."
+    },
+    {
+      "name": "app.auth.password-token.expiration",
+      "type": "java.lang.String",
+      "description": "Token expiration time."
+    },
+    {
+      "name": "app.auth.password-token.template-name",
+      "type": "java.lang.String",
+      "description": "Password reset email template with reset token url."
+    },
+    {
+      "name": "app.auth.password-token.confirmation-url-key",
+      "type": "java.lang.String",
+      "description": "Key to store the reset password confirm url to be used in the reset password template."
+    },
+    {
+      "name": "app.auth.password-token.confirmation-url",
+      "type": "java.lang.String",
+      "description": "Confirm url to be used in the reset password template."
+    },
+    {
+      "name": "app.web-server",
+      "type": "java.lang.String",
+      "description": "Web server base url."
+    },
+    {
+      "name": "app.auth.activation-token.active",
+      "type": "java.lang.String",
+      "description": "Activation token sent when a new account is created."
+    },
+    {
+      "name": "app.auth.activation-token.expiration",
+      "type": "java.lang.String",
+      "description": "Token expiration time."
+    },
+    {
+      "name": "app.auth.activation-token.template-name",
+      "type": "java.lang.String",
+      "description": "Create user account email template with reset token url."
+    },
+    {
+      "name": "app.auth.activation-token.confirmation-url-key",
+      "type": "java.lang.String",
+      "description": "Key to store the account creation confirm url to be used in the account set up email template."
+    },
+    {
+      "name": "app.auth.activation-token.confirmation-url",
+      "type": "java.lang.String",
+      "description": "Confirm url to be used in the account set up."
+    },
+    {
+      "name": "app.auth.activation-token.user-key",
+      "type": "java.lang.String",
+      "description": "Key to store the user entity when a new account is created and it must be used in the welcome email."
+    },
+    {
+      "name": "app.auth.default-expiration",
+      "type": "java.lang.String",
+      "description": "Default token expiration time."
+    },
+    {
+      "name": "app.mongo.lead-interaction.cascading",
+      "type": "java.lang.String",
+      "description": "Cascading for Lead interaction document activated."
     }
   ]
 }
