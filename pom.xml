@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sawoo</groupId>
     <artifactId>pipeline-one-api</artifactId>
-    <version>0-5-01</version>
+    <version>0-6-00-snapshot</version>
     <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
