@@ -131,7 +131,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
         User user = getRepository()
                 .findByEmail(userEmail)
                 .orElseThrow(() -> new AuthException(
-                        ExceptionMessageConstants.AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                        ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
                         new String[]{type.name(), userEmail}));
         // Get user token
         UserTokenDTO token = getToken(user, type, expirationTime < 0 ? defaultExpirationTime : expirationTime);

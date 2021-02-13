@@ -1,0 +1,45 @@
+[
+  {
+    "id": "60278c364334846b8d167131",
+    "name": "sequence for CTOs",
+    "description": "Use this sequence to reach out only CTO",
+    "users": [
+      {
+        "userId":"6027a2ff4542c0de858d2936",
+        "type": 0
+      }
+    ],
+    "created": "2020-11-04T16:41:25.130Z",
+    "updated": "2020-11-05T07:31:47.545Z"
+  },
+  {
+    "id": "60278c41d0629e9f04279cf3",
+    "name": "sequence for CIOs",
+    "description": "Use this sequence to reach out only CIO",
+    "users": [
+      {
+        "userId":"6027a2ff4542c0de858d2936",
+        "type": 0
+      }
+      ],
+    "created": "2020-11-06T16:41:25.130Z",
+    "updated": "2020-11-07T07:31:47.545Z"
+  },
+  {
+    "id": "60278c6194f933c341f62f3a",
+    "name": "sequence for CEOs",
+    "description": "Use this sequence to reach out only CEOs",
+    "users": [
+      {
+        "userId":"6027a2ff4542c0de858d2936",
+        "type": 0
+      },
+      {
+        "userId":"6027a2ff4542c0de858d2936",
+        "type": 10
+      }
+    ],
+    "created": "2020-11-10T16:41:25.130Z",
+    "updated": "2020-11-11T07:31:47.545Z"
+  }
+]

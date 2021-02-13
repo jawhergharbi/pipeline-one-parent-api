@@ -27,7 +27,7 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserReposit
 
     private static final String AUTHENTICATION_JSON_DATA_FILE_NAME = "user-auth-test-data.json";
     private static final int ADMIN_USERS = 1;
-    private static final String USER_ID = "5fa2e7c58b7a2a51f31f2bed";
+    private static final String USER_ID = "6027a2ff4542c0de858d2936";
 
     @Autowired
     public UserAuthRepositoryTest(UserRepository repository, UserMockFactory mockFactory) {
