@@ -1,25 +1,23 @@
-package com.sawoo.pipeline.api.model.sequence;
+package com.sawoo.pipeline.api.dto.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.BaseEntity;
-import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@Document(collection = DBConstants.SEQUENCE_STEP_DOCUMENT)
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
-public class SequenceStep extends BaseEntity {
+@Builder(toBuilder = true)
+public class SequenceStepDTO extends BaseEntity {
 
     @JMap
     @Id

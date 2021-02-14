@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,10 +39,21 @@ public class Sequence extends BaseEntity {
     @JMap
     private Set<SequenceUser> users;
 
+    @JMap
+    @DBRef(lazy = true)
+    private List<SequenceStep> steps;
+
     public Set<SequenceUser> getUsers() {
         if (users == null) {
             users = new HashSet<>();
         }
         return users;
+    }
+
+    public List<SequenceStep> getSteps() {
+        if (steps == null) {
+            steps = new ArrayList<>();
+        }
+        return steps;
     }
 }

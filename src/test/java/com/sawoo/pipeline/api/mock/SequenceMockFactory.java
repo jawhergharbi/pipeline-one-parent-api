@@ -3,13 +3,19 @@ package com.sawoo.pipeline.api.mock;
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
+@RequiredArgsConstructor
 public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> {
+
+    @Getter
+    private final SequenceStepMockFactory sequenceStepMockFactory;
 
     @Override
     public String getComponentId() {
@@ -19,7 +25,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
     @Override
     public Sequence newEntity(String id) {
         Faker FAKER = getFAKER();
-        Sequence entity = Sequence
+        return Sequence
                 .builder()
                 .id(id)
                 .name(FAKER.funnyName().name())
@@ -27,7 +33,6 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .created(LocalDateTime.now(ZoneOffset.UTC))
                 .updated(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
-        return entity;
     }
 
     @Override
