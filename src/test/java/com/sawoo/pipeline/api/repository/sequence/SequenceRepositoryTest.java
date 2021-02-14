@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -64,6 +65,66 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
     protected void afterEach() {
         super.afterEach();
         sequenceStepRepository.deleteAll();
+    }
+
+    @Test
+    @DisplayName("findById: steps found in the sequence - Success")
+    void findByIdWhenStepsArrayIsNotEmptyReturnsSuccess() {
+        // Arrange
+        int SEQUENCE_STEPS_SIZE = 3;
+
+        // Act
+        Optional<Sequence> sequence = getRepository().findById(SEQUENCE_ID);
+
+        // Assert
+        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated ", SEQUENCE_ID),
+                () -> Assertions.assertTrue(sequence.isPresent(), "Sequence can not be null"),
+                () -> sequence.ifPresent((s) -> Assertions.assertEquals(
+                        SEQUENCE_ID, s.getId(),
+                        String.format("Sequence id must be equal to [%s]", SEQUENCE_ID))),
+                () -> sequence.ifPresent((s) -> Assertions.assertFalse(
+                        s.getSteps().isEmpty(),
+                        "Steps can not be empty")),
+                () -> sequence.ifPresent((s) -> Assertions.assertEquals(
+                        SEQUENCE_STEPS_SIZE,
+                        s.getSteps().size(),
+                        String.format("Steps size must be [%s]", SEQUENCE_STEPS_SIZE))));
+    }
+
+    @Test
+    @DisplayName("deleteById: sequence and steps must be deleted - Success")
+    void deleteByIdWhenStepsShouldAlsoBeDeletedReturnsSuccess() {
+        // Arrange
+        String SEQUENCE_ID = "60278c41d0629e9f04279cf3";
+        int SEQUENCE_STEPS_SIZE = 1;
+        Optional<Sequence> sequence = getRepository().findById(SEQUENCE_ID);
+        Function<Sequence, String> getStep =
+                (s) -> (s.getSteps().isEmpty() || s.getSteps().get(0) == null) ?
+                        null :
+                        s.getSteps().get(0).getId();
+        String SEQUENCE_STEP_ID = sequence.map(getStep).orElse(null);
+
+        // Act
+        getRepository().deleteById(SEQUENCE_ID);
+
+        // Assert
+        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated", SEQUENCE_ID),
+                () -> Assertions.assertTrue(
+                        sequence.isPresent(),
+                        "Sequence can not be null"),
+                () -> sequence.ifPresent(s -> Assertions.assertFalse(
+                        s.getSteps().isEmpty(),
+                        "Steps list can not be empty")),
+                () -> sequence.ifPresent(s -> Assertions.assertEquals(
+                        SEQUENCE_STEPS_SIZE,
+                        s.getSteps().size(),
+                        String.format("Steps size must be [%d]", SEQUENCE_STEPS_SIZE))),
+                () -> Assertions.assertNotNull(SEQUENCE_STEP_ID, "SEQUENCE_STEP_ID can not be null"));
+
+        Optional<SequenceStep> sequenceStep = sequenceStepRepository.findById(SEQUENCE_STEP_ID);
+        Assertions.assertTrue(
+                sequenceStep.isEmpty(),
+                String.format("Sequence step with id [%s] should have been deleted", SEQUENCE_STEP_ID));
     }
 
     @Test
@@ -203,7 +264,5 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
                 () -> Assertions.assertTrue(sequenceFound.isPresent(), "Sequence can not be null"),
                 () -> sequenceFound.ifPresent((s) -> Assertions.assertFalse(s.getSteps().isEmpty(), "Steps can not be empty")),
                 () -> sequenceFound.ifPresent((s) -> Assertions.assertNotNull(s.getSteps().get(0), "Steps[0] can not null")));
-
-
     }
 }

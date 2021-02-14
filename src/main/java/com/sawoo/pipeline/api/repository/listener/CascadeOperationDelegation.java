@@ -6,4 +6,5 @@ import java.util.function.Consumer;
 
 public interface CascadeOperationDelegation<C extends BaseEntity> {
     void onSave(C child, Consumer<C> parentFunction);
+    void onDelete(C child);
 }

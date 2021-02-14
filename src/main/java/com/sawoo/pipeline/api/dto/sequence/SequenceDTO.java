@@ -2,12 +2,15 @@ package com.sawoo.pipeline.api.dto.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.model.sequence.SequenceUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -25,4 +28,7 @@ public class SequenceDTO extends BaseEntityDTO {
 
     @JMap
     private String description;
+
+    @JMap
+    private Set<SequenceUser> users;
 }

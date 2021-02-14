@@ -48,6 +48,4 @@ public class SequenceStep extends BaseEntity {
 
     @JMap
     private SequenceStepChannel channel;
-
-
 }

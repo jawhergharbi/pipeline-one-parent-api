@@ -26,4 +26,9 @@ public class InteractionCascadeOperationDelegator implements CascadeOperationDel
             }
         }
     }
+
+    @Override
+    public void onDelete(Interaction child) {
+        // nothing to do atm
+    }
 }

@@ -35,4 +35,9 @@ public class PersonCascadeOperationDelegator implements CascadeOperationDelegati
             }
         }
     }
+
+    @Override
+    public void onDelete(Person child) {
+        // nothing to do atm
+    }
 }

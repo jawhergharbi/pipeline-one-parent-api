@@ -39,7 +39,6 @@ public class Sequence extends BaseEntity {
     @JMap
     private Set<SequenceUser> users;
 
-    @JMap
     @DBRef(lazy = true)
     private List<SequenceStep> steps;
 

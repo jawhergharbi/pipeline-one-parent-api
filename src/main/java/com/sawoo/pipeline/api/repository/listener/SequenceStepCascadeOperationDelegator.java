@@ -26,4 +26,11 @@ public class SequenceStepCascadeOperationDelegator implements CascadeOperationDe
             }
         }
     }
+
+    @Override
+    public void onDelete(SequenceStep child) {
+        if (child != null) {
+            repository.delete(child);
+        }
+    }
 }
