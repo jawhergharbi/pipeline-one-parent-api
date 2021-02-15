@@ -2,13 +2,17 @@ package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
+import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +47,11 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .id(id)
                 .name(FAKER.funnyName().name())
                 .description(FAKER.lebowski().quote())
+                .users(new HashSet<>(Collections.singleton(
+                        SequenceUserDTO.builder()
+                                .userId(FAKER.internet().uuid())
+                                .type(SequenceUserType.OWNER)
+                                .build())))
                 .build();
         dto.setCreated(LocalDateTime.now(ZoneOffset.UTC));
         dto.setUpdated(LocalDateTime.now(ZoneOffset.UTC));

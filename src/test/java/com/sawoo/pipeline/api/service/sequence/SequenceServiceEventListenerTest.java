@@ -1,6 +1,9 @@
 package com.sawoo.pipeline.api.service.sequence;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.model.sequence.SequenceUser;
@@ -23,6 +26,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.containsString;
+
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
@@ -35,6 +40,9 @@ public class SequenceServiceEventListenerTest {
     @Autowired
     private SequenceMockFactory mockFactory;
 
+    @Autowired
+    private SequenceMapper mapper;
+
     @Test
     @DisplayName("onBeforeInsert: sequence contains user - Success")
     void onBeforeInsertWhenSequenceContainsUsersWithoutTimestampsReturnsSuccess() {
@@ -43,7 +51,7 @@ public class SequenceServiceEventListenerTest {
         Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
 
         String USER_ID = mockFactory.getFAKER().internet().uuid();
-        SequenceUser user = SequenceUser.builder().userId(USER_ID).type(SequenceUserType.OWNER).build();
+        SequenceUserDTO user = SequenceUserDTO.builder().userId(USER_ID).type(SequenceUserType.OWNER).build();
         SequenceDTO postDTO = mockFactory.newDTO(null);
         postDTO.setUsers(new HashSet<>(Collections.singleton(user)));
 
@@ -51,7 +59,7 @@ public class SequenceServiceEventListenerTest {
         listener.onBeforeInsert(postDTO, entity);
 
         // Assertions
-        SequenceUser u = postDTO.getUsers().iterator().next();
+        SequenceUserDTO u = postDTO.getUsers().iterator().next();
         Assertions.assertEquals(
                 SequenceUserType.OWNER,
                 u.getType(),
@@ -61,12 +69,33 @@ public class SequenceServiceEventListenerTest {
     }
 
     @Test
+    @DisplayName("onBeforeInsert: sequence contains user but user type owner is not present - Failure")
+    void onBeforeInsertWhenSequenceContainsUsersAndUserIsNotOwnerTypeReturnsFailure() {
+        // Set up mocked entities
+        String USER_ID = mockFactory.getFAKER().internet().uuid();
+        SequenceUserDTO user = SequenceUserDTO.builder().userId(USER_ID).type(SequenceUserType.EDITOR).build();
+        SequenceDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setUsers(new HashSet<>(Collections.singleton(user)));
+        Sequence entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () ->  listener.onBeforeInsert(postDTO, entity),
+                "create must throw a CommonServiceException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.SEQUENCE_CREATE_USER_OWNER_NOT_SPECIFIED_EXCEPTION)
+                        .matches(exception.getMessage()));
+    }
+
+    @Test
     @DisplayName("onBeforeSave: sequence contains user, update timestamp should be updated - Success")
     void onBeforeSaveWhenSequenceContainsUsersReturnsSuccess() {
         // Set up mocked entities
         String SEQUENCE_ID = mockFactory.getComponentId();
         Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
-
         String USER_ID = mockFactory.getFAKER().internet().uuid();
         SequenceUser user = SequenceUser.builder()
                 .userId(USER_ID)
@@ -74,14 +103,20 @@ public class SequenceServiceEventListenerTest {
                 .created(LocalDateTime.now(ZoneOffset.UTC).minusDays(10))
                 .updated(LocalDateTime.now(ZoneOffset.UTC).minusDays(2))
                 .build();
+        entity.getUsers().add(user);
+
+        SequenceUserDTO userDTO = SequenceUserDTO.builder()
+                .userId(USER_ID)
+                .type(SequenceUserType.EDITOR)
+                .build();
         SequenceDTO postDTO = mockFactory.newDTO(null);
-        postDTO.setUsers(new HashSet<>(Collections.singleton(user)));
+        postDTO.setUsers(new HashSet<>(Collections.singleton(userDTO)));
 
         // Execute the service call
         listener.onBeforeSave(postDTO, entity);
 
         // Assertions
-        SequenceUser u = postDTO.getUsers().iterator().next();
+        SequenceUserDTO u = postDTO.getUsers().iterator().next();
         Assertions.assertNotNull(u.getCreated(), "'created' timestamp can not be null");
         Assertions.assertNotNull(u.getUpdated(), "'updated' timestamp can not be null");
         Assertions.assertEquals(
@@ -99,7 +134,7 @@ public class SequenceServiceEventListenerTest {
         Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
 
         String USER_ID = mockFactory.getFAKER().internet().uuid();
-        SequenceUser user = SequenceUser.builder().userId(USER_ID).type(SequenceUserType.OWNER).build();
+        SequenceUserDTO user = SequenceUserDTO.builder().userId(USER_ID).type(SequenceUserType.OWNER).build();
         SequenceDTO postDTO = new SequenceDTO();
         postDTO.setId(SEQUENCE_ID);
         postDTO.setUsers(new HashSet<>(Collections.singleton(user)));
@@ -139,7 +174,7 @@ public class SequenceServiceEventListenerTest {
 
         SequenceDTO postDTO = new SequenceDTO();
         String NEW_USER_ID = mockFactory.getFAKER().internet().uuid();
-        SequenceUser newUser = SequenceUser.builder()
+        SequenceUserDTO newUser = SequenceUserDTO.builder()
                 .userId(NEW_USER_ID)
                 .type(SequenceUserType.OWNER)
                 .build();
