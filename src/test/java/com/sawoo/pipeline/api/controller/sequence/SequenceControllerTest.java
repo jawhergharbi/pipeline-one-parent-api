@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -216,5 +217,31 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.message", containsString("User id has not been informed.")));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/sequences/{id}/user/{userId}: sequence found and user is not the owner - Success")
+    void deleteUserWhenUserFoundAndIsNotOwnerReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        String USER_ID = getMockFactory().getFAKER().internet().uuid();
+        SequenceDTO mockedEntity = getMockFactory().newDTO(SEQUENCE_ID);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteUser(SEQUENCE_ID, USER_ID);
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/user/{userId}", SEQUENCE_ID, USER_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + SEQUENCE_ID))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(SEQUENCE_ID)))
+                .andExpect(jsonPath("$.users", hasSize(1)));
     }
 }

@@ -5,5 +5,5 @@ import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.base.BaseProxyService;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
-public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper> {
+public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper>, SequenceUserService {
 }

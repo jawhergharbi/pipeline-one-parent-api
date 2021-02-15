@@ -54,6 +54,16 @@ public class SequenceController {
     }
 
     @RequestMapping(
+            value = "/{id}/user/{userId}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SequenceDTO> deleteUser(
+            @PathVariable String id,
+            @PathVariable String userId) {
+        return delegator.deleteUser(id, userId);
+    }
+
+    @RequestMapping(
             value = "/{id}",
             method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
