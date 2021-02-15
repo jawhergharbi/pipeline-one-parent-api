@@ -18,8 +18,8 @@ import java.util.Optional;
 public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, SequenceRepository, SequenceMapper> implements SequenceService {
 
     @Autowired
-    public SequenceServiceImpl(SequenceRepository repository, SequenceMapper mapper) {
-        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT);
+    public SequenceServiceImpl(SequenceRepository repository, SequenceMapper mapper, SequenceServiceEventListener eventListener) {
+        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener);
     }
 
     @Override

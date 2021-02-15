@@ -50,14 +50,14 @@ public class AccountServiceEventListenerTest {
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
                         1, UserRole.MNG.name()),
-                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
+                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of users can not be empty"),
                 () -> Assertions.assertEquals(1, entity.getUsers().size(), String.format("User list size must be [%s]", 1)),
                 () -> {
                     User u = entity.getUsers().iterator().next();
                     Assertions.assertEquals(
                             UserRole.MNG,
                             UserRole.getDefaultRole(u.getRoles()),
-                            String.format("User id: [%s] default role have to be [%s]" , UserRole.MNG.name(), u.getId()));
+                            String.format("User id: [%s] default role have to be [%s]" , u.getId(), UserRole.MNG.name()));
                 });
     }
 
@@ -116,7 +116,7 @@ public class AccountServiceEventListenerTest {
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
                         1, UserRole.MNG.name()),
-                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
+                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of users can not be empty"),
                 () -> Assertions.assertEquals(2, entity.getUsers().size(), String.format("User list size must be [%s]", 2))
         );
     }
@@ -145,7 +145,7 @@ public class AccountServiceEventListenerTest {
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
                         1, UserRole.MNG.name()),
-                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of user can not be empty"),
+                () -> Assertions.assertFalse(entity.getUsers().isEmpty(), "List of users can not be empty"),
                 () -> Assertions.assertEquals(1, entity.getUsers().size(), String.format("User list size must be [%s]", 1)),
                 () -> {
                     User u = entity.getUsers().iterator().next();

@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.dto.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.model.sequence.SequenceUser;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Data
@@ -24,6 +26,7 @@ public class SequenceDTO extends BaseEntityDTO {
     private String id;
 
     @JMap
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String name;
 
     @JMap
