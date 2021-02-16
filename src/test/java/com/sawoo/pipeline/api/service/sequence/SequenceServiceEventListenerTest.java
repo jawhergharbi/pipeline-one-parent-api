@@ -156,21 +156,38 @@ public class SequenceServiceEventListenerTest {
     }
 
     @Test
+    @DisplayName("onBeforeUpdate: add user without id - Failure")
+    void onBeforeUpdateWhenAddUserWhenUserIdNotInformedReturnsFailure() {
+        // Set up mocked entities
+        String SEQUENCE_ID = mockFactory.getComponentId();
+        Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
+
+        SequenceDTO postDTO = SequenceDTO.builder().id(SEQUENCE_ID).build();
+        SequenceUserDTO newUser = SequenceUserDTO.builder()
+                .type(SequenceUserType.VIEWER)
+                .toBeDeleted(true)
+                .build();
+        postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
+
+        // Execute the service call
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> listener.onBeforeUpdate(postDTO, entity),
+                "onBeforeUpdate must throw an update must throw an CommonServiceException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION);
+        Assertions.assertEquals(1, exception.getArgs().length);
+    }
+
+    @Test
     @DisplayName("onBeforeUpdate: sequence does have an owner - Success")
     void onBeforeUpdateWhenSequenceDoesHaveAnUserOwnerReturnsSuccess() {
         // Set up mocked entities
         int USERS_SIZE = 2;
         String SEQUENCE_ID = mockFactory.getComponentId();
-        Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
         String USER_ID = mockFactory.getFAKER().internet().uuid();
-        SequenceUser user = SequenceUser.builder()
-                .userId(USER_ID)
-                .type(SequenceUserType.OWNER)
-                .updated(LocalDateTime.now(ZoneOffset.UTC).minusDays(10))
-                .created(LocalDateTime.now(ZoneOffset.UTC).minusDays(10))
-                .build();
-        entity.getUsers().add(user);
-
+        Sequence entity = createSequenceEntityWithOwner(SEQUENCE_ID, USER_ID);
 
         SequenceDTO postDTO = new SequenceDTO();
         String NEW_USER_ID = mockFactory.getFAKER().internet().uuid();
@@ -197,5 +214,93 @@ public class SequenceServiceEventListenerTest {
                 NEW_USER_ID,
                 u.getUserId(),
                 String.format("Owner user must be user with id [%s]", NEW_USER_ID)));
+    }
+
+    @Test
+    @DisplayName("onBeforeUpdate: delete user but the sequence's owner - Failure")
+    void onBeforeUpdateWhenDeleteUserAndSequenceDoesHaveAnUserOwnerReturnsFailure() {
+        String SEQUENCE_ID = mockFactory.getComponentId();
+        String USER_ID = mockFactory.getFAKER().internet().uuid();
+        Sequence entity = createSequenceEntityWithOwner(SEQUENCE_ID, USER_ID);
+
+        SequenceDTO postDTO = SequenceDTO.builder().id(SEQUENCE_ID).build();
+        SequenceUserDTO newUser = SequenceUserDTO.builder()
+                .userId(USER_ID)
+                .toBeDeleted(true)
+                .build();
+        postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
+
+        // Execute the service call
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> listener.onBeforeUpdate(postDTO, entity),
+                "onBeforeUpdate must throw an update must throw an CommonServiceException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+    }
+
+    @Test
+    @DisplayName("onBeforeUpdate: delete user and the sequence does not contain the user id - Failure")
+    void onBeforeUpdateWhenDeleteUserAndSequenceDoesNotContainUserReturnsFailure() {
+        String SEQUENCE_ID = mockFactory.getComponentId();
+        String USER_ID = mockFactory.getFAKER().internet().uuid();
+        Sequence entity = createSequenceEntityWithOwner(SEQUENCE_ID, USER_ID);
+
+        SequenceDTO postDTO = SequenceDTO.builder().id(SEQUENCE_ID).build();
+        String ANOTHER_USER_ID = mockFactory.getFAKER().internet().uuid();
+        SequenceUserDTO newUser = SequenceUserDTO.builder()
+                .userId(ANOTHER_USER_ID)
+                .toBeDeleted(true)
+                .build();
+        postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
+
+        // Execute the service call
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> listener.onBeforeUpdate(postDTO, entity),
+                "onBeforeUpdate must throw an update must throw an CommonServiceException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+    }
+
+    @Test
+    @DisplayName("onBeforeUpdate: delete user and the sequence does have users - Failure")
+    void onBeforeUpdateWhenDeleteUserAndSequenceDoesNotHaveUsersReturnsFailure() {
+        String SEQUENCE_ID = mockFactory.getComponentId();
+        Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
+
+        String USER_ID = mockFactory.getFAKER().internet().uuid();
+        SequenceDTO postDTO = SequenceDTO.builder().id(SEQUENCE_ID).build();
+        SequenceUserDTO newUser = SequenceUserDTO.builder()
+                .userId(USER_ID)
+                .toBeDeleted(true)
+                .build();
+        postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
+
+        // Execute the service call
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> listener.onBeforeUpdate(postDTO, entity),
+                "onBeforeUpdate must throw an update must throw an CommonServiceException");
+        Assertions.assertEquals(
+                exception.getMessage(),
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION);
+        Assertions.assertEquals(1, exception.getArgs().length);
+    }
+
+    private Sequence createSequenceEntityWithOwner(String sequenceId, String userId) {
+        Sequence entity = mockFactory.newEntity(sequenceId);
+        SequenceUser user = SequenceUser.builder()
+                .userId(userId)
+                .type(SequenceUserType.OWNER)
+                .updated(LocalDateTime.now(ZoneOffset.UTC).minusDays(10))
+                .created(LocalDateTime.now(ZoneOffset.UTC).minusDays(10))
+                .build();
+        entity.getUsers().add(user);
+        return entity;
     }
 }
