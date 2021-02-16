@@ -46,7 +46,11 @@ public interface ExceptionMessageConstants {
     String MAIL_EXCEPTION_SEND_MESSAGE_WITH_TEMPLATE = "mail.send-message-with-template.exception";
 
     String SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION = "sequence.update.user-id-not-informed.exception";
+    String SEQUENCE_UPDATE_DELETE_USER_NOT_FOUND_EXCEPTION = "sequence.update.delete-user-not-found.exception";
+    String SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION = "sequence.update.delete-list-empty.exception";
+    String SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION = "sequence.update.delete-user-owner.exception";
     String SEQUENCE_CREATE_USER_OWNER_NOT_SPECIFIED_EXCEPTION = "sequence.create.user-owner-not-informed.exception";
+
 
     String REPOSITORY_EXCEPTION_DATA_CONVERSATION_ERROR_EXCEPTION = "repository.data-conversation.exception";
 

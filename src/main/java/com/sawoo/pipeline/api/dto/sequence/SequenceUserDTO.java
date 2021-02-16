@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.dto.sequence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
@@ -11,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -28,4 +28,9 @@ public class SequenceUserDTO extends BaseEntityDTO {
 
     @JMap
     private SequenceUserType type;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    private boolean toBeDeleted;
 }
