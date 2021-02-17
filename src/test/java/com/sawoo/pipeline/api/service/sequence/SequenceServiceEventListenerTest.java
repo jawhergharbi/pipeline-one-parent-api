@@ -209,7 +209,7 @@ public class SequenceServiceEventListenerTest {
                 u -> u.getType().equals(SequenceUserType.EDITOR)),
                 String.format("There must be a user of type [%s]", SequenceUserType.EDITOR));
         Optional<SequenceUser> owner = users.stream().filter(u -> u.getType().equals(SequenceUserType.OWNER)).findFirst();
-        Assertions.assertTrue(owner.isPresent(), "");
+        Assertions.assertTrue(owner.isPresent(), "There is still an owner in the sequence");
         owner.ifPresent(u -> Assertions.assertEquals(
                 NEW_USER_ID,
                 u.getUserId(),
