@@ -47,19 +47,17 @@ public class SequenceServiceEventListenerTest {
     @DisplayName("onBeforeInsert: sequence contains user - Success")
     void onBeforeInsertWhenSequenceContainsUsersWithoutTimestampsReturnsSuccess() {
         // Set up mocked entities
-        String SEQUENCE_ID = mockFactory.getComponentId();
-        Sequence entity = mockFactory.newEntity(SEQUENCE_ID);
-
         String USER_ID = mockFactory.getFAKER().internet().uuid();
         SequenceUserDTO user = SequenceUserDTO.builder().userId(USER_ID).type(SequenceUserType.OWNER).build();
         SequenceDTO postDTO = mockFactory.newDTO(null);
         postDTO.setUsers(new HashSet<>(Collections.singleton(user)));
+        Sequence entity = mapper.getMapperIn().getDestination(postDTO);
 
         // Execute the service call
         listener.onBeforeInsert(postDTO, entity);
 
         // Assertions
-        SequenceUserDTO u = postDTO.getUsers().iterator().next();
+        SequenceUser u = entity.getUsers().iterator().next();
         Assertions.assertEquals(
                 SequenceUserType.OWNER,
                 u.getType(),

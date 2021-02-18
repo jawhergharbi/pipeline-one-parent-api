@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.dto.sequence;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,9 @@ public class SequenceDTO extends BaseEntityDTO {
 
     @JMap
     private String description;
+
+    @JMap
+    private SequenceStatus status;
 
     @JMap
     @Valid

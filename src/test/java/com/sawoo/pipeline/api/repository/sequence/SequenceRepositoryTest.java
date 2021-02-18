@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.repository.sequence;
 
 import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -264,5 +266,102 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
                 () -> Assertions.assertTrue(sequenceFound.isPresent(), "Sequence can not be null"),
                 () -> sequenceFound.ifPresent((s) -> Assertions.assertFalse(s.getSteps().isEmpty(), "Steps can not be empty")),
                 () -> sequenceFound.ifPresent((s) -> Assertions.assertNotNull(s.getSteps().get(0), "Steps[0] can not null")));
+    }
+
+    @Test
+    @DisplayName("findByStatus: sequence with status 0 - Success")
+    void findByStatusWhenStatusIsFoundReturnsSuccess() {
+        // Arrange
+        int SEQUENCES_FOUND_STATUS_IN_PROGRESS = 2;
+
+        // Act
+        List<Sequence> sequencesInProgress = getRepository().findByStatus(SequenceStatus.IN_PROGRESS);
+        List<Sequence> sequencesArchived = getRepository().findByStatus(SequenceStatus.ARCHIVED);
+
+        Assertions.assertFalse(
+                sequencesInProgress.isEmpty(),
+                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
+        Assertions.assertEquals(
+                SEQUENCES_FOUND_STATUS_IN_PROGRESS,
+                sequencesInProgress.size(),
+                String.format(
+                        "Sequence list size for status [%s] must be [%d]",
+                        SequenceStatus.IN_PROGRESS,
+                        SEQUENCES_FOUND_STATUS_IN_PROGRESS));
+
+        Assertions.assertTrue(sequencesArchived.isEmpty(),
+                String.format(
+                        "Sequence list for status [%s] can not be not empty",
+                        SequenceStatus.ARCHIVED));
+    }
+
+    @Test
+    @DisplayName("findByUserAndStatus: sequence with status 0 - Success")
+    void findByUserAndStatusWhenStatusIsFoundReturnsSuccess() {
+        // Arrange
+        String USER_ID = "6027a3436fb12b99f63b0e23";
+        int SEQUENCES_FOUND = 1;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByUserAndStatus(USER_ID, SequenceStatus.IN_PROGRESS);
+
+        // Assert
+        Assertions.assertFalse(
+                sequences.isEmpty(),
+                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
+        Assertions.assertEquals(
+                SEQUENCES_FOUND,
+                sequences.size(),
+                String.format(
+                        "Sequence list size for status [%s] must be [%d]",
+                        SequenceStatus.IN_PROGRESS,
+                        SEQUENCES_FOUND));
+    }
+
+    @Test
+    @DisplayName("findByUserAndStatus: sequence with status 0 but we search a list of users- Success")
+    void findByUsersAndStatusWhenUsersAndStatusIsFoundReturnsSuccess() {
+        // Arrange
+        String USER_ID_1 = "6027a3436fb12b99f63b0e23";
+        String USER_ID_2 = "6027a2ff4542c0de858d2936";
+        Set<String> userIds = new HashSet<>(Arrays.asList(USER_ID_1, USER_ID_2));
+        int SEQUENCES_FOUND = 2;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByUsersAndStatus(userIds, SequenceStatus.IN_PROGRESS);
+
+        // Assert
+        Assertions.assertFalse(
+                sequences.isEmpty(),
+                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
+        Assertions.assertEquals(
+                SEQUENCES_FOUND,
+                sequences.size(),
+                String.format(
+                        "Sequence list size for status [%s] must be [%d]",
+                        SequenceStatus.IN_PROGRESS,
+                        SEQUENCES_FOUND));
+    }
+
+    @Test
+    @DisplayName("findByUserAndStatus: sequence with status 0 - Success")
+    void findByUserAndStatusWhenStatusIsNotInformedReturnsSuccess() {
+        // Arrange
+        String USER_ID = "6027a2ff4542c0de858d2936";
+        int SEQUENCES_FOUND = 3;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByUsersAndStatus(new HashSet<>(Collections.singleton(USER_ID)), null);
+
+        // Assert
+        Assertions.assertFalse(
+                sequences.isEmpty(),
+                "Sequence list can not be empty");
+        Assertions.assertEquals(
+                SEQUENCES_FOUND,
+                sequences.size(),
+                String.format(
+                        "Sequence list size must be [%d]",
+                        SEQUENCES_FOUND));
     }
 }

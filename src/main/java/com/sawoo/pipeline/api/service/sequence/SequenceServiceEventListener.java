@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceUser;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
@@ -25,14 +26,19 @@ public class SequenceServiceEventListener implements BaseServiceEventListener<Se
 
     @Override
     public void onBeforeInsert(SequenceDTO dto, Sequence entity) {
-        Set<SequenceUserDTO> users = dto.getUsers();
+        // status
+        if (entity.getStatus() == null) {
+            entity.setStatus(SequenceStatus.IN_PROGRESS);
+        }
+        // users
+        Set<SequenceUser> users = entity.getUsers();
         if (CommonUtils.isNotEmptyNorNull(users)) {
             if (users.stream().noneMatch(u -> SequenceUserType.OWNER.equals(u.getType()))) {
                 throw new CommonServiceException(
                         ExceptionMessageConstants.SEQUENCE_CREATE_USER_OWNER_NOT_SPECIFIED_EXCEPTION,
                         new String[] {entity.getName(), dto.getUsers().toString()});
             }
-            Consumer<SequenceUserDTO> setTimeStamps = u -> {
+            Consumer<SequenceUser> setTimeStamps = u -> {
                 u.setCreated(LocalDateTime.now(ZoneOffset.UTC));
                 u.setUpdated(u.getCreated());
             };

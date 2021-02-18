@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .builder()
                 .id(id)
                 .name(FAKER.funnyName().name())
+                .status(SequenceStatus.IN_PROGRESS)
                 .description(FAKER.lebowski().quote())
                 .created(LocalDateTime.now(ZoneOffset.UTC))
                 .updated(LocalDateTime.now(ZoneOffset.UTC))
@@ -46,6 +48,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .builder()
                 .id(id)
                 .name(FAKER.funnyName().name())
+                .status(SequenceStatus.IN_PROGRESS)
                 .description(FAKER.lebowski().quote())
                 .users(new HashSet<>(Collections.singleton(
                         SequenceUserDTO.builder()

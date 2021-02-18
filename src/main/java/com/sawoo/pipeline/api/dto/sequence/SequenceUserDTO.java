@@ -29,6 +29,8 @@ public class SequenceUserDTO extends BaseEntityDTO {
     @JMap
     private SequenceUserType type;
 
+    private String fullName;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore

@@ -3,6 +3,7 @@
     "id": "60278c364334846b8d167131",
     "name": "sequence for CTOs",
     "description": "Use this sequence to reach out only CTO",
+    "status": 0,
     "users": [
       {
         "userId": "6027a2ff4542c0de858d2936",
@@ -51,6 +52,7 @@
     "id": "60278c41d0629e9f04279cf3",
     "name": "sequence for CIOs",
     "description": "Use this sequence to reach out only CIO",
+    "status": 1,
     "steps": [
       {
         "position": 0,
@@ -77,6 +79,7 @@
     "id": "60278c6194f933c341f62f3a",
     "name": "sequence for CEOs",
     "description": "Use this sequence to reach out only CEOs",
+    "status": 0,
     "users": [
       {
         "userId": "6027a2ff4542c0de858d2936",
