@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
+
 @Component
 @Primary
 public class SequenceControllerDelegator extends BaseControllerDelegator<SequenceDTO, SequenceService> implements SequenceControllerUserDelegator {
@@ -34,5 +37,10 @@ public class SequenceControllerDelegator extends BaseControllerDelegator<Sequenc
     @Override
     public ResponseEntity<SequenceDTO> deleteUser(String id, String userId) throws ResourceNotFoundException, CommonServiceException {
         return userDelegator.deleteUser(id, userId);
+    }
+
+    @Override
+    public ResponseEntity<List<SequenceDTO>> findByAccounts(Set<String> accountIds) throws CommonServiceException {
+        return userDelegator.findByAccounts(accountIds);
     }
 }

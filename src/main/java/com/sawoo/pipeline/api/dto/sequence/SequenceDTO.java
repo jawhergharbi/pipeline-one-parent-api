@@ -41,4 +41,6 @@ public class SequenceDTO extends BaseEntityDTO {
     @Valid
     @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private Set<SequenceUserDTO> users;
+
+    private String ownerId;
 }

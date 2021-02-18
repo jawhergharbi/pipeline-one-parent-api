@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -43,6 +44,15 @@ public class SequenceController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/accounts/{accountIds}/main",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<SequenceDTO>> findByAccountIds(
+            @PathVariable("accountIds") Set<String> accountIds) {
+        return delegator.findByAccounts(accountIds);
     }
 
     @RequestMapping(
