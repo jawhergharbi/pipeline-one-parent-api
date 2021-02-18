@@ -64,7 +64,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest<AccountDTO, Acco
 
     @Test
     @Order(10)
-    @DisplayName("POST /api/account: create account must also create the user - Success")
+    @DisplayName("POST /api/accounts: create account must also create the user - Success")
     @MongoCleanUp(collectionNames = {DBConstants.ACCOUNT_DOCUMENT, DBConstants.USER_DOCUMENT, DBConstants.COMPANY_DOCUMENT})
     void createWhenEntityNotFoundReturnsSuccess() throws Exception {
         // Set up the mock entities
@@ -108,7 +108,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest<AccountDTO, Acco
 
     @Test
     @Order(11)
-    @DisplayName("POST /api/account: create account when user is already created - Failure")
+    @DisplayName("POST /api/accounts: create account when user is already created - Failure")
     @MongoCleanUp(collectionNames = {DBConstants.ACCOUNT_DOCUMENT, DBConstants.USER_DOCUMENT, DBConstants.COMPANY_DOCUMENT})
     void createWhenEntityNotFoundButUserFoundReturnsFailure() throws Exception {
         // Set up the mock entities

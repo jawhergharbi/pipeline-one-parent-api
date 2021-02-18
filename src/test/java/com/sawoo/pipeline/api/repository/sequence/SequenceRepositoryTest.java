@@ -296,6 +296,28 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
     }
 
     @Test
+    @DisplayName("findByUser: sequence with users - Success")
+    void findByUsersStatusWhenStatusIsFoundReturnsSuccess() {
+        // Arrange
+        String USER_ID = "6027a2ff4542c0de858d2936";
+        int SEQUENCES_FOUND = 3;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByUsers(new HashSet<>(Collections.singletonList(USER_ID)));
+
+        // Assert
+        Assertions.assertFalse(
+                sequences.isEmpty(),
+                String.format("Sequence list [%s] is not empty", SequenceStatus.IN_PROGRESS));
+        Assertions.assertEquals(
+                SEQUENCES_FOUND,
+                sequences.size(),
+                String.format(
+                        "Sequence list size must be [%d]",
+                        SEQUENCES_FOUND));
+    }
+
+    @Test
     @DisplayName("findByUserAndStatus: sequence with status 0 - Success")
     void findByUserAndStatusWhenStatusIsFoundReturnsSuccess() {
         // Arrange

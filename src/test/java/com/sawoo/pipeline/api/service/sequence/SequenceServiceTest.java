@@ -28,10 +28,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -149,6 +151,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
         // Execute the service call
         SequenceDTO sequenceDTO = getService().deleteUser(SEQUENCE_ID, USER_ID);
 
+        // Assertions
         Assertions.assertAll(String.format("Sequence with id [%s] is correctly validated", SEQUENCE_ID),
                 () -> Assertions.assertEquals(
                         1,
@@ -174,7 +177,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
     }
 
     @Test
-    @DisplayName("deleteUser: user id is present - Success")
+    @DisplayName("deleteUser: user id is present - Failure")
     void deleteUserWhenUserIsTheOwnerPresentReturnsFailure() {
         // Set up mocked entities
         String SEQUENCE_ID = getMockFactory().getComponentId();
@@ -187,6 +190,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
         // Set up the mocked repository
         doReturn(Optional.of(mockedEntity)).when(repository).findById(anyString());
 
+        // Execute the service call
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
                 () -> getService().deleteUser(SEQUENCE_ID, USER_OWNER_ID),
@@ -200,6 +204,34 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
 
         verify(repository, times(2)).findById(anyString());
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("findByAccountIds: user id is present - Success")
+    void findByAccountIdsWhenUserIsTheOwnerPresentReturnsSuccess() {
+        // Set up mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        Sequence mockedEntity = getMockFactory().newEntity(SEQUENCE_ID);
+        String USER_OWNER_ID = getMockFactory().getFAKER().internet().uuid();
+        String USER_EDITOR_ID = getMockFactory().getFAKER().internet().uuid();
+        addUserToSequence(mockedEntity, USER_OWNER_ID, SequenceUserType.OWNER);
+        addUserToSequence(mockedEntity, USER_EDITOR_ID, SequenceUserType.EDITOR);
+
+        // Set up the mocked repository
+        doReturn(Collections.singletonList(mockedEntity)).when(repository).findByUsers(anySet());
+
+        // Execute the service call
+        List<SequenceDTO> sequences = getService().findByAccountIds(new HashSet<>(Collections.singleton(USER_OWNER_ID)));
+
+        // Assertions
+        Assertions.assertAll(String.format("Sequence list must contain 1 sequence with id [%s]", SEQUENCE_ID),
+                () -> Assertions.assertFalse(sequences.isEmpty(), "sequence list can not be empty"),
+                () -> {
+                    SequenceDTO sequence = sequences.get(0);
+                    Assertions.assertEquals(SEQUENCE_ID, sequence.getId(), String.format("Sequence id must be [%s]", SEQUENCE_ID));
+                    Assertions.assertNotNull(sequence.getOwnerId(), "Owner id can not be null");
+                    Assertions.assertEquals(USER_OWNER_ID, sequence.getOwnerId(), String.format("Sequence owner id must be [%s]", USER_OWNER_ID));
+                });
     }
 
     private void addUserToSequence(Sequence sequence, String userId, SequenceUserType userType) {
