@@ -24,9 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,11 +63,10 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
     @DisplayName("GET /api/sequences/accounts/{accountIds}/main: findByAccountIds - Success")
     void findByAccountIdsWhenEntityFoundReturnsSuccess() throws Exception {
         // Set up
-        String ACCOUNT_ID = "6030d65af796188aabff390b";
-        Set<String> accountIds = new HashSet<>(Collections.singletonList(ACCOUNT_ID));
+        String ACCOUNT_ID = "6030d6600c296a3a3c071293";
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", accountIds))
+        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", ACCOUNT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -87,10 +83,10 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
         // Set up
         String ACCOUNT_ID_1 = "6030d65af796188aabff390b";
         String ACCOUNT_ID_2 = "6030d6600c296a3a3c071293";
-        Set<String> accountIds = new HashSet<>(Arrays.asList(ACCOUNT_ID_1, ACCOUNT_ID_2));
+        String ACCOUNT_IDS = String.join(",", Arrays.asList(ACCOUNT_ID_1, ACCOUNT_ID_2));
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", accountIds))
+        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", ACCOUNT_IDS))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
