@@ -4,6 +4,7 @@
     "name": "sequence for CTOs",
     "description": "Use this sequence to reach out only CTO",
     "status": 0,
+    "componentId": "6030d65af796188aabff390b",
     "users": [
       {
         "userId": "6027a2ff4542c0de858d2936",
@@ -17,6 +18,7 @@
     "id": "60278c41d0629e9f04279cf3",
     "name": "sequence for CIOs",
     "description": "Use this sequence to reach out only CIO",
+    "componentId": "6030d65af796188aabff390b",
     "status": 0,
     "users": [
       {
@@ -31,6 +33,7 @@
     "id": "60278c6194f933c341f62f3a",
     "name": "sequence for CEOs",
     "description": "Use this sequence to reach out only CEOs",
+    "componentId": "6030d6600c296a3a3c071293",
     "status": 1,
     "users": [
       {

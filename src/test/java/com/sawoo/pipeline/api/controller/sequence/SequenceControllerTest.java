@@ -34,10 +34,12 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -263,5 +265,27 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_ID)))
                 .andExpect(jsonPath("$.users", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/accounts/{accountIds}/main: sequence found - Success")
+    void findByAccountsWhenSequenceEntitiesFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String COMPONENT_ID = getMockFactory().getAccountMockFactory().getComponentId();
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceDTO mockedSequence = getMockFactory().newDTO(SEQUENCE_ID);
+
+        // setup the mocked service
+        doReturn(Collections.singletonList(mockedSequence)).when(service).findByAccountIds(anySet());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/accounts/{accountIds}/main", new HashSet<>(Collections.singletonList(COMPONENT_ID))))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

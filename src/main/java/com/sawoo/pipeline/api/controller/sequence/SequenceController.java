@@ -47,11 +47,11 @@ public class SequenceController {
     }
 
     @RequestMapping(
-            value = {"/accounts/{accountIds}/main", "/accounts/main"},
+            value = "/accounts/{accountIds}/main",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<SequenceDTO>> findByAccountIds(
-            @PathVariable(value = "accountIds", required = false) Set<String> accountIds) {
+            @PathVariable(value = "accountIds") Set<String> accountIds) {
         return delegator.findByAccounts(accountIds);
     }
 

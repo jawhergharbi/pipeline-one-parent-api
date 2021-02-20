@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,8 +65,8 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
     @Order(10)
     @DisplayName("GET /api/sequences/accounts/{accountIds}/main: findByAccountIds - Success")
     void findByAccountIdsWhenEntityFoundReturnsSuccess() throws Exception {
-        // Set up the mock entities
-        String ACCOUNT_ID = "6027a3436fb12b99f63b0e23";
+        // Set up
+        String ACCOUNT_ID = "6030d65af796188aabff390b";
         Set<String> accountIds = new HashSet<>(Collections.singletonList(ACCOUNT_ID));
 
         // Execute the GET request
@@ -83,8 +84,13 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
     @Order(11)
     @DisplayName("GET /api/sequences/accounts/main: findByAccountIds when accountIds null - Success")
     void findByAccountIdsWhenAccountIdsNotInformedReturnsSuccess() throws Exception {
+        // Set up
+        String ACCOUNT_ID_1 = "6030d65af796188aabff390b";
+        String ACCOUNT_ID_2 = "6030d6600c296a3a3c071293";
+        Set<String> accountIds = new HashSet<>(Arrays.asList(ACCOUNT_ID_1, ACCOUNT_ID_2));
+
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/accounts/main"))
+        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", accountIds))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
