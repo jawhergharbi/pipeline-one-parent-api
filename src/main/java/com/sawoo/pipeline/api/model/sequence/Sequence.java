@@ -40,6 +40,9 @@ public class Sequence extends BaseEntity {
     private SequenceStatus status;
 
     @JMap
+    private String componentId;
+
+    @JMap
     private Set<SequenceUser> users;
 
     @DBRef(lazy = true)

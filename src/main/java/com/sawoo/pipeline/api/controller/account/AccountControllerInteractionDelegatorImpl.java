@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.controller.account;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
-import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -53,7 +53,7 @@ public class AccountControllerInteractionDelegatorImpl implements AccountControl
     private void mapAccountData(List<LeadDTO> leads, LeadInteractionDTO interaction) {
         Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(interaction.getLead().getLeadId())).findAny();
         lead.ifPresent(l -> {
-            AccountLeadDTO account = l.getAccount();
+            AccountFieldDTO account = l.getAccount();
             interaction.setAccount(account);
             if (interaction.getAssigneeId() != null) {
                 Optional<UserAuthDTO> assignee = account.getUsers()

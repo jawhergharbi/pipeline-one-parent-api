@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.dto.sequence;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,9 +39,15 @@ public class SequenceDTO extends BaseEntityDTO {
     private SequenceStatus status;
 
     @JMap
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+    private String componentId;
+
+    @JMap
     @Valid
     @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private Set<SequenceUserDTO> users;
 
     private String ownerId;
+
+    private AccountFieldDTO account;
 }

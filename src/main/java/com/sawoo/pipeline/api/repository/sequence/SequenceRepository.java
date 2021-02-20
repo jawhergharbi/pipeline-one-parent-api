@@ -13,6 +13,14 @@ public interface SequenceRepository extends MongoRepository<Sequence, String>, S
 
     List<Sequence> findByStatus(SequenceStatus status);
 
+    List<Sequence> findByComponentId(String componentId);
+
+    List<Sequence> findByComponentIdAndStatus(String componentId, SequenceStatus status);
+
+    List<Sequence> findByComponentIdIn(Set<String> componentIds);
+
+    List<Sequence> findByComponentIdInAndStatus(Set<String> componentIds, SequenceStatus status);
+
     @Query(value = "{ users: { $elemMatch: { userId: ?0 } }}")
     List<Sequence> findByUser(String userId);
 

@@ -84,7 +84,7 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
     @Test
     @DisplayName("POST /api/sequences: resource name and users not informed - Failure")
-    void createWhenNameNotAndUsersNotInformedReturnsFailure() throws Exception {
+    void createWhenNameNotInformedAndUsersNotInformedReturnsFailure() throws Exception {
         // Setup the mocked entities
         SequenceDTO postEntity = getMockFactory().newDTO(null);
         postEntity.setName(null);
@@ -101,6 +101,26 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences: resource componentId - Failure")
+    void createWhenComponentIdNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        SequenceDTO postEntity = getMockFactory().newDTO(null);
+        postEntity.setComponentId(null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
     }
 
     @Test

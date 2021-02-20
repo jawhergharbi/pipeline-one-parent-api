@@ -4,7 +4,7 @@ import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -65,8 +65,8 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
 
         log.debug("[{}] lead/s has/have been found for account id [{}]", account.getLeads().size(), accountId);
 
-        JMapper<AccountLeadDTO, Account> accountMapper = new JMapper<>(AccountLeadDTO.class, Account.class);
-        AccountLeadDTO accountLead = accountMapper.getDestination(account);
+        JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
+        AccountFieldDTO accountLead = accountMapper.getDestination(account);
         return account.getLeads()
                 .stream()
                 .map( (l) -> {
@@ -95,13 +95,13 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                     accounts.size(),
                     accountIds);
         }
-        JMapper<AccountLeadDTO, Account> accountMapper = new JMapper<>(AccountLeadDTO.class, Account.class);
+        JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
         Predicate<Lead> statusFilter = (leadStatus != null && leadStatus.length > 0) ?
                 l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
                 l -> true;
         List<LeadDTO> leads = accounts
                 .stream().flatMap( (account) -> {
-                    AccountLeadDTO leadAccount = accountMapper.getDestination(account);
+                    AccountFieldDTO leadAccount = accountMapper.getDestination(account);
                     return account.getLeads()
                             .stream()
                             .filter(statusFilter)

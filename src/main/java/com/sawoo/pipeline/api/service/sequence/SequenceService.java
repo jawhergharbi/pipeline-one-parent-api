@@ -9,15 +9,11 @@ import com.sawoo.pipeline.api.service.base.BaseProxyService;
 import com.sawoo.pipeline.api.service.base.BaseService;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.Set;
 
-public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper> {
+public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper>, SequenceAccountService {
 
     SequenceDTO deleteUser(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String userId)
             throws ResourceNotFoundException, CommonServiceException;
-
-    List<SequenceDTO> findByAccountIds(Set<String> accountIds) throws CommonServiceException;
 }

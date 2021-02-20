@@ -20,7 +20,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 @Builder(toBuilder = true)
-public class AccountLeadDTO extends BaseEntityDTO {
+public class AccountFieldDTO extends BaseEntityDTO {
 
     @JMap
     private String id;

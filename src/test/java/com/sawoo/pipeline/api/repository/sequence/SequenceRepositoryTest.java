@@ -278,21 +278,9 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         List<Sequence> sequencesInProgress = getRepository().findByStatus(SequenceStatus.IN_PROGRESS);
         List<Sequence> sequencesArchived = getRepository().findByStatus(SequenceStatus.ARCHIVED);
 
-        Assertions.assertFalse(
-                sequencesInProgress.isEmpty(),
-                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
-        Assertions.assertEquals(
-                SEQUENCES_FOUND_STATUS_IN_PROGRESS,
-                sequencesInProgress.size(),
-                String.format(
-                        "Sequence list size for status [%s] must be [%d]",
-                        SequenceStatus.IN_PROGRESS,
-                        SEQUENCES_FOUND_STATUS_IN_PROGRESS));
-
-        Assertions.assertTrue(sequencesArchived.isEmpty(),
-                String.format(
-                        "Sequence list for status [%s] can not be not empty",
-                        SequenceStatus.ARCHIVED));
+        // Assert
+        assertListOfSequenceWithStatus(sequencesInProgress, SEQUENCES_FOUND_STATUS_IN_PROGRESS, SequenceStatus.IN_PROGRESS);
+        assertListOfSequenceWithStatus(sequencesArchived, 0, SequenceStatus.ARCHIVED);
     }
 
     @Test
@@ -306,15 +294,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         List<Sequence> sequences = getRepository().findByUsers(new HashSet<>(Collections.singletonList(USER_ID)));
 
         // Assert
-        Assertions.assertFalse(
-                sequences.isEmpty(),
-                String.format("Sequence list [%s] is not empty", SequenceStatus.IN_PROGRESS));
-        Assertions.assertEquals(
-                SEQUENCES_FOUND,
-                sequences.size(),
-                String.format(
-                        "Sequence list size must be [%d]",
-                        SEQUENCES_FOUND));
+        assertListOfSequence(sequences, SEQUENCES_FOUND);
     }
 
     @Test
@@ -328,16 +308,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         List<Sequence> sequences = getRepository().findByUserAndStatus(USER_ID, SequenceStatus.IN_PROGRESS);
 
         // Assert
-        Assertions.assertFalse(
-                sequences.isEmpty(),
-                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
-        Assertions.assertEquals(
-                SEQUENCES_FOUND,
-                sequences.size(),
-                String.format(
-                        "Sequence list size for status [%s] must be [%d]",
-                        SequenceStatus.IN_PROGRESS,
-                        SEQUENCES_FOUND));
+        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
     @Test
@@ -353,16 +324,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         List<Sequence> sequences = getRepository().findByUsersAndStatus(userIds, SequenceStatus.IN_PROGRESS);
 
         // Assert
-        Assertions.assertFalse(
-                sequences.isEmpty(),
-                String.format("Sequence list for status [%s] is not empty", SequenceStatus.IN_PROGRESS));
-        Assertions.assertEquals(
-                SEQUENCES_FOUND,
-                sequences.size(),
-                String.format(
-                        "Sequence list size for status [%s] must be [%d]",
-                        SequenceStatus.IN_PROGRESS,
-                        SEQUENCES_FOUND));
+        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
     @Test
@@ -376,14 +338,106 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         List<Sequence> sequences = getRepository().findByUsersAndStatus(new HashSet<>(Collections.singleton(USER_ID)), null);
 
         // Assert
-        Assertions.assertFalse(
-                sequences.isEmpty(),
-                "Sequence list can not be empty");
-        Assertions.assertEquals(
-                SEQUENCES_FOUND,
-                sequences.size(),
-                String.format(
-                        "Sequence list size must be [%d]",
-                        SEQUENCES_FOUND));
+        assertListOfSequence(sequences, SEQUENCES_FOUND);
+    }
+
+    @Test
+    @DisplayName("findByComponentId: sequence by component id and entities found - Success")
+    void findByComponentIdWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        int SEQUENCES_FOUND = 2;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByComponentId(COMPONENT_ID);
+
+        // Assert
+        assertListOfSequence(sequences, SEQUENCES_FOUND);
+    }
+
+    @Test
+    @DisplayName("findByComponentIdIn: sequence by component id and entities found - Success")
+    void findByComponentIdInWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
+        String COMPONENT_ID_2 = "6030d65af796188aabff390b";
+        int SEQUENCES_FOUND = 3;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
+
+        // Assert
+        assertListOfSequence(sequences, SEQUENCES_FOUND);
+    }
+
+    @Test
+    @DisplayName("findByComponentIdIn: sequence by component id and entities not found - Success")
+    void findByComponentIdInWhenEntitiesNotFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID_1 = "wrong_id_1";
+        String COMPONENT_ID_2 = "wrong_id_2";
+        int SEQUENCES_FOUND = 0;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
+
+        // Assert
+        assertListOfSequence(sequences, SEQUENCES_FOUND);
+    }
+
+    @Test
+    @DisplayName("findByComponentId: sequence by component id and entities found - Success")
+    void findByComponentIdAndStatusWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        int SEQUENCES_FOUND = 1;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByComponentIdAndStatus(COMPONENT_ID, SequenceStatus.IN_PROGRESS);
+
+        // Assert
+        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+    }
+
+    @Test
+    @DisplayName("findByComponentId: sequence by component id and entities found - Success")
+    void findByComponentIdInAndStatusWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
+        String COMPONENT_ID_2 = "6030d65af796188aabff390b";
+        int SEQUENCES_FOUND = 2;
+
+        // Act
+        List<Sequence> sequences = getRepository().findByComponentIdInAndStatus(
+                new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)),
+                SequenceStatus.IN_PROGRESS);
+
+        // Assert
+        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+    }
+
+    private void assertListOfSequence(List<Sequence> sequences, int expectedSize) {
+        if (expectedSize > 0) {
+            Assertions.assertFalse(sequences.isEmpty(), "Sequence list can not be empty");
+            Assertions.assertEquals(expectedSize, sequences.size(), String.format("Sequence list size must be [%d]", expectedSize));
+        } else {
+            Assertions.assertTrue(sequences.isEmpty(), "Sequence list must be empty");
+        }
+    }
+
+    private void assertListOfSequenceWithStatus(List<Sequence> sequences, int expectedSize, SequenceStatus status) {
+        if (expectedSize > 0) {
+            Assertions.assertFalse(
+                    sequences.isEmpty(),
+                    String.format("Sequence list for status [%s] can not be not empty", status));
+            Assertions.assertEquals(
+                    expectedSize,
+                    sequences.size(),
+                    String.format("\"Sequence list size for status [%s] must be [%d]", status, expectedSize));
+        } else {
+            Assertions.assertTrue(
+                    sequences.isEmpty(),
+                    String.format("Sequence list for status [%s] must be not empty", status));
+        }
     }
 }

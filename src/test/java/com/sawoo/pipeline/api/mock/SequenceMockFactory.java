@@ -22,6 +22,9 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
     @Getter
     private final SequenceStepMockFactory sequenceStepMockFactory;
 
+    @Getter
+    private final AccountMockFactory accountMockFactory;
+
     @Override
     public String getComponentId() {
         return getFAKER().internet().uuid();
@@ -35,6 +38,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .id(id)
                 .name(FAKER.funnyName().name())
                 .status(SequenceStatus.IN_PROGRESS)
+                .componentId(FAKER.internet().uuid())
                 .description(FAKER.lebowski().quote())
                 .created(LocalDateTime.now(ZoneOffset.UTC))
                 .updated(LocalDateTime.now(ZoneOffset.UTC))
@@ -49,6 +53,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .id(id)
                 .name(FAKER.funnyName().name())
                 .status(SequenceStatus.IN_PROGRESS)
+                .componentId(FAKER.internet().uuid())
                 .description(FAKER.lebowski().quote())
                 .users(new HashSet<>(Collections.singleton(
                         SequenceUserDTO.builder()
