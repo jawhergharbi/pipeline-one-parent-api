@@ -17,16 +17,19 @@ import java.util.Set;
 
 @Component
 @Primary
-public class SequenceControllerDelegator extends BaseControllerDelegator<SequenceDTO, SequenceService> implements SequenceControllerUserDelegator {
+public class SequenceControllerDelegator extends BaseControllerDelegator<SequenceDTO, SequenceService> implements SequenceControllerUserDelegator, SequenceControllerAccountDelegator {
 
     private final SequenceControllerUserDelegator userDelegator;
+    private final SequenceControllerAccountDelegator accountDelegator;
 
     @Autowired
     public SequenceControllerDelegator(
             SequenceService service,
-                @Qualifier("sequenceUserController") SequenceControllerUserDelegator userDelegator) {
+            @Qualifier("sequenceUserController") SequenceControllerUserDelegator userDelegator,
+            @Qualifier("sequenceAccountController") SequenceControllerAccountDelegator accountDelegator) {
         super(service, ControllerConstants.SEQUENCE_CONTROLLER_API_BASE_URI);
         this.userDelegator = userDelegator;
+        this.accountDelegator = accountDelegator;
     }
 
     @Override
@@ -41,6 +44,6 @@ public class SequenceControllerDelegator extends BaseControllerDelegator<Sequenc
 
     @Override
     public ResponseEntity<List<SequenceDTO>> findByAccounts(Set<String> accountIds) throws CommonServiceException {
-        return userDelegator.findByAccounts(accountIds);
+        return accountDelegator.findByAccounts(accountIds);
     }
 }

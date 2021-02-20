@@ -62,7 +62,7 @@ public class SequenceAccountServiceDecorator implements SequenceAccountService {
             owner.ifPresent(o -> sequence.setOwnerId(o.getUserId()));
             Optional<Account> account = accountList.stream().filter(a -> a.getId().equals(sequence.getComponentId())).findFirst();
             account.ifPresentOrElse(
-                    a -> sequence.setAccount(accountMapper.getDestination(a)), 
+                    a -> sequence.setAccount(accountMapper.getDestination(a)),
                     () -> log.warn("Sequence id [{}] where component with id [{}] has not been found",
                             sequence.getId(),
                             sequence.getComponentId()));

@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Set;
 
 @Component
 @Qualifier("sequenceUserController")
@@ -44,10 +42,5 @@ public class SequenceControllerUserDelegatorImpl implements SequenceControllerUs
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    @Override
-    public ResponseEntity<List<SequenceDTO>> findByAccounts(Set<String> accountIds) throws CommonServiceException {
-        return ResponseEntity.ok().body(service.findByAccountIds(accountIds));
     }
 }
