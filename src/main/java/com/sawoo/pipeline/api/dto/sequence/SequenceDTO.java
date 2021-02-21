@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.dto.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
@@ -36,7 +37,7 @@ public class SequenceDTO extends BaseEntityDTO {
     private String description;
 
     @JMap
-    private SequenceStatus status;
+    private Integer status;
 
     @JMap
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
@@ -50,4 +51,10 @@ public class SequenceDTO extends BaseEntityDTO {
     private String ownerId;
 
     private AccountFieldDTO account;
+
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public Integer statusConversion(SequenceStatus status) {
+        return status != null ? status.getValue() : -1;
+    }
+
 }

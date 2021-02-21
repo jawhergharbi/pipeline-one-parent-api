@@ -52,7 +52,7 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
                 .builder()
                 .id(id)
                 .name(FAKER.funnyName().name())
-                .status(SequenceStatus.IN_PROGRESS)
+                .status(SequenceStatus.IN_PROGRESS.getValue())
                 .componentId(FAKER.internet().uuid())
                 .description(FAKER.lebowski().quote())
                 .users(new HashSet<>(Collections.singleton(

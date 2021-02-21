@@ -45,6 +45,8 @@ public interface ExceptionMessageConstants {
     String MAIL_EXCEPTION_SEND_MESSAGE_WITH_ATTACHMENT = "mail.send-message-with-attachment.exception";
     String MAIL_EXCEPTION_SEND_MESSAGE_WITH_TEMPLATE = "mail.send-message-with-template.exception";
 
+    String COMMON_ENUM_WRONG_VALUE_ILLEGAL_ARGUMENT_EXCEPTION = "common.enum-wrong-value.exception";
+
     String SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION = "sequence.update.user-id-not-informed.exception";
     String SEQUENCE_UPDATE_DELETE_USER_NOT_FOUND_EXCEPTION = "sequence.update.delete-user-not-found.exception";
     String SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION = "sequence.update.delete-list-empty.exception";

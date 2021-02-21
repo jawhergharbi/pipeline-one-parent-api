@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import lombok.AllArgsConstructor;
@@ -60,5 +61,10 @@ public class Sequence extends BaseEntity {
             steps = new ArrayList<>();
         }
         return steps;
+    }
+
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public SequenceStatus statusConversion(Integer status) {
+        return SequenceStatus.fromValue(status);
     }
 }

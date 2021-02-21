@@ -73,6 +73,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionMessage> handleIllegalArgumentException(IllegalArgumentException error, Locale locale) {
+        log.error(error.getMessage(), error);
+        String errorMessage = messageSource.getMessage(error.getMessage(), error.getArgs(), locale);
+        return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionMessage> handleValidationException(ConstraintViolationException error, Locale locale) {
         log.error(error.getMessage(), error);
