@@ -35,4 +35,9 @@ public class CompanyCascadeOperationDelegator implements CascadeOperationDelegat
             }
         }
     }
+
+    @Override
+    public void onDelete(Company child) {
+        // nothing to do atm
+    }
 }

@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.mock.UserMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.Assertions;
@@ -375,6 +376,25 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         boolean isValid = getService().isTokenValid(TOKEN);
 
         Assertions.assertFalse(isValid, "Token must be invalid");
+    }
+
+    @Test
+    @DisplayName("createToken: email is not found found & invalid - False")
+    void createTokenWhenEmailNotFoundReturnsFailure() {
+        String USER_EMAIL = getMockFactory().getFAKER().internet().emailAddress();
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(getRepository()).findByEmail(USER_EMAIL);
+
+        // Execute the service
+        // Assertions
+        AuthException exception = Assertions.assertThrows(
+                AuthException.class,
+                () -> getService().createToken(USER_EMAIL, UserTokenType.RESET_PASSWORD, 500),
+                "createToken must throw an AuthException");
+
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
     }
 
 

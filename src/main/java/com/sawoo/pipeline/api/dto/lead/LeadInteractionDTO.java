@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.dto.lead;
 
-import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class LeadInteractionDTO extends InteractionAssigneeDTO {
 
-    private AccountLeadDTO account;
+    private AccountFieldDTO account;
 
     private LeadInteractionLeadDTO lead;
 }

@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.account.AccountLeadDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
@@ -474,13 +474,13 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     void findAllLeadsWhenAccountsFoundAndLeadsFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         int ACCOUNT_LIST_SIZE = 2;
-        List<AccountLeadDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+        List<AccountFieldDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
                 .mapToObj( (obj) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
                     return getMockFactory().newLeadDTO(COMPONENT_ID);
                 })
                 .collect(Collectors.toList());
-        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountLeadDTO::getId).collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountFieldDTO::getId).collect(Collectors.toList());
         int LEAD_LIST_SIZE = 4;
         List<LeadDTO> LEAD_LIST = IntStream.range(0, LEAD_LIST_SIZE)
                 .mapToObj( (obj) -> {
@@ -517,13 +517,13 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
     void findAllLeadsWhenAccountsFoundAndLeadStatusDeadAndLeadsFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         int ACCOUNT_LIST_SIZE = 1;
-        List<AccountLeadDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+        List<AccountFieldDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
                 .mapToObj( (obj) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
                     return getMockFactory().newLeadDTO(COMPONENT_ID);
                 })
                 .collect(Collectors.toList());
-        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountLeadDTO::getId).collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountFieldDTO::getId).collect(Collectors.toList());
         int LEAD_LIST_SIZE = 3;
         List<LeadDTO> LEAD_LIST = IntStream.range(0, LEAD_LIST_SIZE)
                 .mapToObj( (obj) -> {

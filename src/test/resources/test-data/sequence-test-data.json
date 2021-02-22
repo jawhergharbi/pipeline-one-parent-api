@@ -1,0 +1,99 @@
+[
+  {
+    "id": "60278c364334846b8d167131",
+    "name": "sequence for CTOs",
+    "description": "Use this sequence to reach out only CTO",
+    "status": 0,
+    "componentId": "6030d640f3022dc07d72d786",
+    "users": [
+      {
+        "userId": "6027a2ff4542c0de858d2936",
+        "type": 0
+      }
+    ],
+    "steps": [
+      {
+        "position": 0,
+        "timespan": 7,
+        "personality": 1,
+        "message": "this is one reach out message",
+        "attachment": "http://content.com/link1",
+        "version": "my first version",
+        "channel": 0,
+        "created": "2020-11-04T16:41:25.130Z",
+        "updated": "2020-11-05T07:31:47.545Z"
+      },
+      {
+        "position": 1,
+        "timespan": 7,
+        "personality": 1,
+        "message": "this is another reach out message",
+        "attachment": "http://content.com/link2",
+        "version": "my first version",
+        "channel": 0,
+        "created": "2020-11-06T16:41:25.130Z",
+        "updated": "2020-11-07T07:31:47.545Z"
+      },
+      {
+        "position": 3,
+        "timespan": 7,
+        "personality": 1,
+        "message": "a different reach message",
+        "attachment": "http://content.com/link3",
+        "version": "my first version",
+        "channel": 0,
+        "created": "2020-11-08T16:41:25.130Z",
+        "updated": "2020-11-09T07:31:47.545Z"
+      }
+    ],
+    "created": "2020-11-04T16:41:25.130Z",
+    "updated": "2020-11-05T07:31:47.545Z"
+  },
+  {
+    "id": "60278c41d0629e9f04279cf3",
+    "name": "sequence for CIOs",
+    "description": "Use this sequence to reach out only CIO",
+    "status": 1,
+    "componentId": "6030d640f3022dc07d72d786",
+    "steps": [
+      {
+        "position": 0,
+        "timespan": 7,
+        "personality": 1,
+        "message": "this is one reach out message",
+        "attachment": "http://content.com/link1",
+        "version": "my first version",
+        "channel": 0,
+        "created": "2020-11-04T16:41:25.130Z",
+        "updated": "2020-11-05T07:31:47.545Z"
+      }
+    ],
+    "users": [
+      {
+        "userId": "6027a2ff4542c0de858d2936",
+        "type": 10
+      }
+    ],
+    "created": "2020-11-06T16:41:25.130Z",
+    "updated": "2020-11-07T07:31:47.545Z"
+  },
+  {
+    "id": "60278c6194f933c341f62f3a",
+    "name": "sequence for CEOs",
+    "description": "Use this sequence to reach out only CEOs",
+    "status": 0,
+    "componentId": "6030d65af796188aabff390b",
+    "users": [
+      {
+        "userId": "6027a2ff4542c0de858d2936",
+        "type": 0
+      },
+      {
+        "userId": "6027a3436fb12b99f63b0e23",
+        "type": 10
+      }
+    ],
+    "created": "2020-11-10T16:41:25.130Z",
+    "updated": "2020-11-11T07:31:47.545Z"
+  }
+]

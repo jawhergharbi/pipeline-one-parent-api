@@ -1,0 +1,22 @@
+[
+  {
+    "key": "findByIdWhenEntityFound",
+    "values": [
+      {
+        "id": "1",
+        "name": "sequence for CTOs",
+        "description": "Use this sequence to reach out only CTO",
+        "status": 0,
+        "users": [
+          {
+            "userId": "6027a2ff4542c0de858d2936",
+            "type": 0
+          }
+        ],
+        "created": "2020-11-04T16:41:25.138Z",
+        "updated": "2020-11-05T07:31:47.545Z"
+      }
+    ],
+    "fieldsToBeChecked": ["name", "description", "created", "updated", "status"]
+  }
+]

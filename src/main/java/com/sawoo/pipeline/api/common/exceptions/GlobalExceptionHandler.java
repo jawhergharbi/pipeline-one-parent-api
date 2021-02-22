@@ -31,6 +31,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RepositoryException.class)
+    public ResponseEntity<ExceptionMessage> handleRepositoryException(RepositoryException error, Locale locale) {
+        log.error(error.getMessage(), error);
+        String errorMessage = messageSource.getMessage(error.getMessage(), error.getArgs(), locale);
+        return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(CommonServiceException.class)
     public ResponseEntity<ExceptionMessage> handleCommonServiceException(CommonServiceException error, Locale locale) {
         log.error(error.getMessage(), error);
@@ -61,6 +68,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ExceptionMessage> handleAuthException(AuthException error, Locale locale) {
+        log.error(error.getMessage(), error);
+        String errorMessage = messageSource.getMessage(error.getMessage(), error.getArgs(), locale);
+        return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionMessage> handleIllegalArgumentException(IllegalArgumentException error, Locale locale) {
         log.error(error.getMessage(), error);
         String errorMessage = messageSource.getMessage(error.getMessage(), error.getArgs(), locale);
         return new ResponseEntity<>(new ExceptionMessage(errorMessage), HttpStatus.BAD_REQUEST);

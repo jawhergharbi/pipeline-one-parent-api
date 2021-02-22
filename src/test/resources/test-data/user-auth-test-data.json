@@ -1,6 +1,6 @@
 [
   {
-    "id": "5fa2e7c58b7a2a51f31f2bed",
+    "id": "6027a2ff4542c0de858d2936",
     "email": "miguel@gmail.com",
     "fullName": "Miguelín",
     "active": true,
@@ -13,7 +13,7 @@
     "password": "$2a$10$S2luOACgSF9DILb3aHvfqu8VWI0rV2LVps2RPA1bC/FxnFBt/NllW"
   },
   {
-    "id": "5fa317cd0efe4d20ad3edd13",
+    "id": "6027a2ff4542c0de858d2936",
     "email": "miguel.maquieira@gmail.com",
     "fullName": "Miguelín Miguelón",
     "active": true,
@@ -26,7 +26,7 @@
     "password": "$2a$10$JLH0b18b09G6NPi8GNZPqe7fUcnI4OU8tgI.R37X9StLrkxmKJzKe"
   },
   {
-    "id": "5fa32fdd14eb800b88e47656",
+    "id": "6027a3436fb12b99f63b0e23",
     "email": "miguel.maquieira@sawoo.io",
     "fullName": "Miguel Maquieira",
     "active": false,
@@ -38,7 +38,7 @@
     "password": "$2a$10$8cjjLINJ8e7j7RJlRP8IX.Hj4nY4WE3cB9pgK3Ic.2GnxBJJ6mU0."
   },
   {
-    "id": "5fa3ce63ee4ef64d966da45a",
+    "id": "6027a34963f95b32bee3cb89",
     "email": "miguel.gonzalez@gmail.com",
     "fullName": "Miguel Gonzalez",
     "active": true,
@@ -50,7 +50,7 @@
     "password": "$2a$10$5nPOba5UUtU2.6MuMeDZiOa7ijVWu31JGxD/P0ZXYxKmaGNjxIqM."
   },
   {
-    "id": "5fd4ce63fe4gf43d543df23f",
+    "id": "6027a35197e4fbdaf779d6ed",
     "email": "miguel.g.maquieira@gmail.com",
     "fullName": "Miguel Gonzalez Maquieira",
     "roles": [

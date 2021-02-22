@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +24,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -85,7 +85,7 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
                 returnedDTO.getFullName(),
                 String.format("FullName must be '%s'", ACCOUNT_NEW_FULL_NAME));
 
-        verify(repository, Mockito.times(1)).findById(anyString());
-        verify(repository, Mockito.times(1)).save(any());
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).save(any());
     }
 }

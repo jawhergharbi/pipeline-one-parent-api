@@ -146,6 +146,7 @@ app:
   mongo:
     lead-interaction:
       cascading: false
+  version: ${version}
 
 ---
 spring:
