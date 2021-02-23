@@ -1,14 +1,17 @@
 package com.sawoo.pipeline.api.controller.sequence;
 
+import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import com.sawoo.pipeline.api.service.sequence.SequenceService;
 import org.junit.jupiter.api.DisplayName;
@@ -287,5 +290,35 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/step: step valid and sequence found - Success")
+    void addStepWhenSequenceFoundAndStepValidReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+        SequenceStep mockedEntity = new JMapper<>(SequenceStep.class, SequenceStepDTO.class).getDestination(postEntity);
+        mockedEntity.setId(SEQUENCE_STEP_ID);
+
+        // setup the mocked service
+        doReturn(Collections.singletonList(mockedEntity)).when(service).addStep(anyString(), any(SequenceStepDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/step", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + SEQUENCE_ID))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
+                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())));
     }
 }

@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.service.base.BaseService;
 
 import javax.validation.constraints.NotBlank;
 
-public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper>, SequenceAccountService {
+public interface SequenceService extends BaseService<SequenceDTO>, BaseProxyService<SequenceRepository, SequenceMapper>, SequenceAccountService, SequenceStepService {
 
     SequenceDTO deleteUser(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id,
