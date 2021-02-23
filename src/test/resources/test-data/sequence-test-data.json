@@ -17,7 +17,10 @@
         "timespan": 7,
         "personality": 1,
         "message": "this is one reach out message",
-        "attachment": "http://content.com/link1",
+        "attachment": {
+          "description": "link1",
+          "url": "http://content.com/link1"
+        },
         "version": "my first version",
         "channel": 0,
         "created": "2020-11-04T16:41:25.130Z",
@@ -28,7 +31,10 @@
         "timespan": 7,
         "personality": 1,
         "message": "this is another reach out message",
-        "attachment": "http://content.com/link2",
+        "attachment": {
+          "description": "link2",
+          "url": "http://content.com/link2"
+        },
         "version": "my first version",
         "channel": 0,
         "created": "2020-11-06T16:41:25.130Z",
@@ -39,7 +45,10 @@
         "timespan": 7,
         "personality": 1,
         "message": "a different reach message",
-        "attachment": "http://content.com/link3",
+        "attachment": {
+          "description": "link3",
+          "url": "http://content.com/link3"
+        },
         "version": "my first version",
         "channel": 0,
         "created": "2020-11-08T16:41:25.130Z",
@@ -61,7 +70,10 @@
         "timespan": 7,
         "personality": 1,
         "message": "this is one reach out message",
-        "attachment": "http://content.com/link1",
+        "attachment": {
+          "description": "link1",
+          "url": "http://content.com/link1"
+        },
         "version": "my first version",
         "channel": 0,
         "created": "2020-11-04T16:41:25.130Z",
