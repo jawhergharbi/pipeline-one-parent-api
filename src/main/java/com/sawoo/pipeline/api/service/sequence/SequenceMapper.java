@@ -4,6 +4,7 @@ import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.service.base.BaseMapper;
+import com.sawoo.pipeline.api.service.sequencestep.SequenceStepMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class SequenceMapper implements BaseMapper<SequenceDTO, Sequence> {
+
+    private final SequenceStepMapper sequenceStepMapper;
 
     private final JMapper<SequenceDTO, Sequence> mapperOut = new JMapper<>(SequenceDTO.class, Sequence.class);
     private final JMapper<Sequence, SequenceDTO> mapperIn = new JMapper<>(Sequence.class, SequenceDTO.class);

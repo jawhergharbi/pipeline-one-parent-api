@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
-    private final InteractionService service;
+    private final InteractionService interactionService;
     private final LeadRepository repository;
     private final LeadInteractionServiceDecoratorHelper helper;
     private final LeadMapper mapper;
@@ -40,7 +40,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @Valid InteractionDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Adding new interaction for lead id: [{}].", leadId);
+        log.debug("Add new interaction for lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         List<Interaction> interactions = lead.getInteractions();
@@ -54,11 +54,11 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                 });
 
         interaction.setComponentId(leadId);
-        final InteractionDTO savedInteraction = service.create(interaction);
+        final InteractionDTO savedInteraction = interactionService.create(interaction);
 
         log.debug("Lead interaction has been created for lead id: [{}]. Interaction id [{}]", leadId, interaction.getId());
 
-        interactions.add(service.getMapper().getMapperIn().getDestination(savedInteraction));
+        interactions.add(interactionService.getMapper().getMapperIn().getDestination(savedInteraction));
         lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
         repository.save(lead);
 
@@ -70,7 +70,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
             throws ResourceNotFoundException {
-        log.debug("Removing interaction from lead id: [{}].", leadId);
+        log.debug("Remove interaction from lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         return lead.getInteractions()
@@ -82,7 +82,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                     lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(lead);
                     log.debug("Interaction with id [{}] for lead id [{}] has been deleted.", interactionId, leadId);
-                    return service.delete(i.getId());
+                    return interactionService.delete(i.getId());
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
@@ -92,7 +92,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     @Override
     public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
-        log.debug("Getting interactions from lead id: [{}].", leadId);
+        log.debug("Get interactions from lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         List<Interaction> interactions = lead.getInteractions();
@@ -111,7 +111,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     @Override
     public InteractionAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        log.debug("Getting interaction id [{}] from lead id: [{}].", interactionId, leadId);
+        log.debug("Gettinteraction id [{}] from lead id: [{}].", interactionId, leadId);
         Lead lead = findLeadById(leadId);
         return lead
                 .getInteractions()
@@ -131,9 +131,9 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     @Override
     public List<LeadInteractionDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        log.debug("Getting interactions from leads [{}] with status [{}] and types[{}]", leadIds, status, types);
+        log.debug("Get interactions from leads [{}] with status [{}] and types[{}]", leadIds, status, types);
 
-        List<InteractionDTO> interactions = service.findBy(leadIds, status, types);
+        List<InteractionDTO> interactions = interactionService.findBy(leadIds, status, types);
         if (interactions.size() > 0) {
             List<Lead> leads = leadIds.size() > 0 ? repository.findAllByIdIn(leadIds) : Collections.emptyList();
 
@@ -162,7 +162,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     private InteractionAssigneeDTO mapInteraction(Interaction i, List<UserCommon> users) {
-        InteractionAssigneeDTO interaction = service.getMapper().getAssigneeMapperOut().getDestination(i);
+        InteractionAssigneeDTO interaction = interactionService.getMapper().getAssigneeMapperOut().getDestination(i);
         Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
         user.ifPresent(interaction::setAssignee);
         return interaction;
