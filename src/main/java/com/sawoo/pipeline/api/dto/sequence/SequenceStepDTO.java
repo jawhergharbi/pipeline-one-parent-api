@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class SequenceStepDTO extends BaseEntity {
     private Integer timespan;
 
     @JMap
+    @Min(value = 0, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR)
+    @Max(value = 3, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_EXCEED_MAX_SIZE_ERROR)
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private Integer personality;
 
     @JMap
@@ -53,6 +58,7 @@ public class SequenceStepDTO extends BaseEntity {
     private String version;
 
     @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private SequenceStepChannel channel;
 
 

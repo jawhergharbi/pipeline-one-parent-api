@@ -86,7 +86,7 @@ public class SequenceController {
     }
 
     @RequestMapping(
-            value = "/{id}/step",
+            value = "/{id}/steps",
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -97,12 +97,34 @@ public class SequenceController {
     }
 
     @RequestMapping(
-            value = "/{id}/step/{stepId}",
+            value = "/{id}/steps/{stepId}",
             method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceStepDTO> removeStep(
             @PathVariable("id") String sequenceId,
             @PathVariable("stepId") String sequenceStepId) {
         return delegator.removeStep(sequenceId, sequenceStepId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps/{stepId}",
+            method = RequestMethod.PUT,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SequenceStepDTO> updateStep(
+            @PathVariable("id") String sequenceId,
+            @PathVariable("stepId") String sequenceStepId,
+            @RequestBody SequenceStepDTO step) {
+        step.setId(sequenceStepId);
+        return delegator.updateStep(sequenceId, step);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<SequenceStepDTO>> getSteps(
+            @PathVariable("id") String sequenceId) {
+        return delegator.getSteps(sequenceId);
     }
 }

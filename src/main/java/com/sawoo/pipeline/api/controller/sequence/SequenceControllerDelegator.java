@@ -58,6 +58,12 @@ public class SequenceControllerDelegator extends BaseControllerDelegator<Sequenc
     }
 
     @Override
+    public ResponseEntity<SequenceStepDTO> updateStep(String sequenceId, SequenceStepDTO step)
+            throws ResourceNotFoundException, CommonServiceException {
+        return stepDelegator.updateStep(sequenceId, step);
+    }
+
+    @Override
     public ResponseEntity<SequenceStepDTO> removeStep(String sequenceId, String sequenceStepId)
             throws ResourceNotFoundException {
         return stepDelegator.removeStep(sequenceId, sequenceStepId);

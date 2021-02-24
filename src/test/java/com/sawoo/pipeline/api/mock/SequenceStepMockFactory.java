@@ -20,7 +20,7 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
 
     @Override
     public SequenceStep newEntity(String id) {
-        return newSequenceStepEntity(id, 0, SequenceStepChannel.LINKED_IN);
+        return newSequenceStepEntity(id, 1, SequenceStepChannel.LINKED_IN);
     }
 
     public SequenceStep newSequenceStepEntity(String id, int position) {
@@ -35,6 +35,7 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
                 .historyId(id)
                 .position(position)
                 .timespan(FAKER.random().nextInt(10))
+                .personality(0)
                 .message(FAKER.lebowski().quote())
                 .attachment(UrlTitle.builder()
                         .description(FAKER.lebowski().character())
@@ -53,7 +54,8 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
                 .builder()
                 .id(id)
                 .historyId(id)
-                .position(0)
+                .position(1)
+                .personality(0)
                 .timespan(FAKER.random().nextInt(10))
                 .message(FAKER.lebowski().quote())
                 .attachment(UrlTitle.builder()

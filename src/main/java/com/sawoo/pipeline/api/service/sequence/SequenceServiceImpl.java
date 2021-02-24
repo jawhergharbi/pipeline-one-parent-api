@@ -89,8 +89,19 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     }
 
     @Override
+    public SequenceStepDTO updateStep(String sequenceId, SequenceStepDTO step)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceStepService.updateStep(sequenceId, step);
+    }
+
+    @Override
     public SequenceStepDTO removeStep(String sequenceId, String sequenceStepId)
             throws ResourceNotFoundException, CommonServiceException {
         return sequenceStepService.removeStep(sequenceId, sequenceStepId);
+    }
+
+    @Override
+    public List<SequenceStepDTO> getSteps(String sequenceId) throws ResourceNotFoundException {
+        return sequenceStepService.getSteps(sequenceId);
     }
 }

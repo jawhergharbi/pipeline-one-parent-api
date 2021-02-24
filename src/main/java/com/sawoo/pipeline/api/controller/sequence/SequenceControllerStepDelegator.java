@@ -22,6 +22,12 @@ public interface SequenceControllerStepDelegator {
             @Valid SequenceStepDTO step)
             throws ResourceNotFoundException, CommonServiceException;
 
+    ResponseEntity<SequenceStepDTO> updateStep(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String sequenceId,
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            SequenceStepDTO step)
+            throws ResourceNotFoundException, CommonServiceException;
+
     ResponseEntity<SequenceStepDTO> removeStep(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceStepId)
