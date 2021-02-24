@@ -30,14 +30,14 @@ import java.util.Set;
 public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, SequenceRepository, SequenceMapper> implements SequenceService {
 
     private final SequenceAccountService sequenceAccountService;
-    private final SequenceStepService sequenceStepService;
+    private final SequenceStepsService sequenceStepService;
 
     @Autowired
     public SequenceServiceImpl(SequenceRepository repository,
                                SequenceMapper mapper,
                                SequenceServiceEventListener eventListener,
                                SequenceAccountService sequenceAccountService,
-                               SequenceStepService sequenceStepService) {
+                               SequenceStepsService sequenceStepService) {
         super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener);
         this.sequenceAccountService = sequenceAccountService;
         this.sequenceStepService = sequenceStepService;

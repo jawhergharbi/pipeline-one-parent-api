@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-public interface SequenceStepService {
+public interface SequenceStepsService {
 
     SequenceStepDTO addStep(
             @NotEmpty(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String sequenceId,

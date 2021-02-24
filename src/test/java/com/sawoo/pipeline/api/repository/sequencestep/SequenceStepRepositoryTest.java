@@ -1,4 +1,4 @@
-package com.sawoo.pipeline.api.repository.sequence;
+package com.sawoo.pipeline.api.repository.sequencestep;
 
 import com.sawoo.pipeline.api.mock.SequenceStepMockFactory;
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;

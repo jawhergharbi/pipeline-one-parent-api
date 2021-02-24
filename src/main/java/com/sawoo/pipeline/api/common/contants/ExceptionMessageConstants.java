@@ -52,6 +52,7 @@ public interface ExceptionMessageConstants {
     String SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION = "sequence.update.delete-list-empty.exception";
     String SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION = "sequence.update.delete-user-owner.exception";
     String SEQUENCE_CREATE_USER_OWNER_NOT_SPECIFIED_EXCEPTION = "sequence.create.user-owner-not-informed.exception";
+    String SEQUENCE_STEP_ADD_STEP_POSITION_AND_PERSONALITY_ALREADY_FILLED_EXCEPTION = "sequence.step.add-step-position-and-personality-already-filled.exception";
 
 
     String REPOSITORY_EXCEPTION_DATA_CONVERSATION_ERROR_EXCEPTION = "repository.data-conversation.exception";

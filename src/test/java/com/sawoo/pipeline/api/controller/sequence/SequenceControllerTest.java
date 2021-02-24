@@ -5,7 +5,6 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
-import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
@@ -28,7 +27,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -529,14 +527,13 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
     @Test
     @DisplayName("GET /api/sequences/{id}/steps: sequence found - Success")
-    void getStepsWhenSequenceNotFoundReturnsFailure() throws Exception {
+    void getStepsWhenSequenceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
         int ID_LIST_SIZE = 3;
         String SEQUENCE_ID = getMockFactory().getComponentId();
-        List<String> ids = new ArrayList<>();
         List<SequenceStepDTO> stepList = IntStream.range(0, ID_LIST_SIZE)
                 .mapToObj((step) -> {
                     String COMPONENT_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
-                    ids.add(COMPONENT_ID);
                     return getMockFactory().getSequenceStepMockFactory().newDTO(COMPONENT_ID);
                 }).collect(Collectors.toList());
 
@@ -552,5 +549,33 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(ID_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps: sequence found - Failure")
+    void getStepsWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).getSteps(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps", SEQUENCE_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
     }
 }
