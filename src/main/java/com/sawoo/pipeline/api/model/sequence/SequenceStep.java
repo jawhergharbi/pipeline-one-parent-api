@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
@@ -49,4 +50,9 @@ public class SequenceStep extends BaseEntity {
 
     @JMap
     private SequenceStepChannel channel;
+
+    @JMapConversion(from = {"channel"}, to = {"channel"})
+    public SequenceStepChannel channelConversion(Integer channel) {
+        return SequenceStepChannel.fromValue(channel);
+    }
 }

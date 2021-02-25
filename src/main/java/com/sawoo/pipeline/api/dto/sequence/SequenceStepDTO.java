@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.dto.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
@@ -59,7 +60,10 @@ public class SequenceStepDTO extends BaseEntity {
 
     @JMap
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
-    private SequenceStepChannel channel;
+    private Integer channel;
 
-
+    @JMapConversion(from = {"channel"}, to = {"channel"})
+    public Integer channelConversion(SequenceStepChannel channel) {
+        return channel != null ? channel.getValue() : -1;
+    }
 }

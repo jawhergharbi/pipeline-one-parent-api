@@ -62,7 +62,7 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
                         .description(FAKER.lebowski().character())
                         .url(FAKER.internet().url())
                         .build())
-                .channel(SequenceStepChannel.LINKED_IN)
+                .channel(SequenceStepChannel.LINKED_IN.getValue())
                 .build();
         dto.setCreated(LocalDateTime.now(ZoneOffset.UTC));
         dto.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
