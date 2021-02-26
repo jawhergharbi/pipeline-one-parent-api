@@ -42,7 +42,7 @@ public class SequenceStepsServiceDecorator implements SequenceStepsService {
         Sequence sequence = findSequenceById(sequenceId);
 
         List<SequenceStep> steps = sequence.getSteps();
-        // Validating that the step is not created already
+        // Validate step: position and personality
         if (steps.stream()
                 .anyMatch(s -> s.getPosition().equals(step.getPosition()) && s.getPersonality().equals(step.getPersonality()))) {
             throw new CommonServiceException(
@@ -69,12 +69,19 @@ public class SequenceStepsServiceDecorator implements SequenceStepsService {
         log.debug("Update step id: [{}] from sequence id: [{}].", step.getId(), sequenceId);
 
         Sequence sequence = findSequenceById(sequenceId);
+
         return sequence.getSteps()
                 .stream()
                 .filter(s -> s.getId().equals(step.getId()))
                 .findAny()
-                .map( s -> sequenceStepService.update(step.getId(), step))
-                .orElseThrow(() ->
+                .map( s -> {
+                    if (!s.getPosition().equals(step.getPosition()) || !s.getPersonality().equals(step.getPersonality())) {
+                        throw new CommonServiceException(
+                                ExceptionMessageConstants.SEQUENCE_STEP_UPDATE_STEP_POSITION_OR_PERSONALITY_CANT_CHANGE_EXCEPTION,
+                                new Object[]{sequenceId, sequence.getName(), step.getId(), step.getPosition(), step.getPersonality()});
+                    }
+                    return sequenceStepService.update(step.getId(), step);
+                }).orElseThrow(() ->
                         new CommonServiceException(
                                 ExceptionMessageConstants.SEQUENCE_STEP_UPDATE_STEP_NOT_FOUND_IN_THE_SEQUENCE_EXCEPTION,
                                 new String[]{ sequenceId, step.getId() }));
