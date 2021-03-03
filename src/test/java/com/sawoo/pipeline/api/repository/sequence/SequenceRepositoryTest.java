@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
+import com.sawoo.pipeline.api.repository.sequencestep.SequenceStepRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

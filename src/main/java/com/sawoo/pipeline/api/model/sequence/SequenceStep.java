@@ -1,8 +1,10 @@
 package com.sawoo.pipeline.api.model.sequence;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.common.UrlTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,11 +43,16 @@ public class SequenceStep extends BaseEntity {
     private String message;
 
     @JMap
-    private String attachment;
+    private UrlTitle attachment;
 
     @JMap
     private String version;
 
     @JMap
     private SequenceStepChannel channel;
+
+    @JMapConversion(from = {"channel"}, to = {"channel"})
+    public SequenceStepChannel channelConversion(Integer channel) {
+        return SequenceStepChannel.fromValue(channel);
+    }
 }

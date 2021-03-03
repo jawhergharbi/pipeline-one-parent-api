@@ -2,9 +2,11 @@ package com.sawoo.pipeline.api.controller.sequence;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -29,6 +31,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -287,5 +291,291 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/step: step valid and sequence found - Success")
+    void addStepWhenSequenceFoundAndStepValidReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+        SequenceStepDTO mockedEntity = getMockFactory().getSequenceStepMockFactory().newDTO(SEQUENCE_STEP_ID, postEntity);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).addStep(anyString(), any(SequenceStepDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/steps", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + SEQUENCE_ID + "/steps/" + SEQUENCE_STEP_ID))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
+                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/steps: step invalid position not informed and sequence found - Failure")
+    void addStepWhenSequenceStepInvalidPositionNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+        postEntity.setPosition(-1);
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/steps", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/steps: step invalid and sequence found - Failure")
+    void addStepWhenSequenceStepInvalidPositionAndPersonalityAndChannelNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+        postEntity.setPosition(-1);
+        postEntity.setPersonality(null);
+        postEntity.setChannel(null);
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/steps", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(3)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/steps: step invalid and sequence found - Failure")
+    void addStepWhenSequenceStepInvalidPersonalityOutOfRangeReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+        postEntity.setPersonality(5);
+
+        // Execute the GET request
+        mockMvc.perform(post(getResourceURI() + "/{id}/steps", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences/{id}/steps/{stepsId}: sequence not found - Success")
+    void addStepWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        SequenceStepDTO postEntity = getMockFactory().getSequenceStepMockFactory().newDTO(null);
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).addStep(anyString(), any(SequenceStepDTO.class));
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/{id}/steps", SEQUENCE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/sequences/{id}/steps/{stepsId}: sequence and step found - Success")
+    void removeStepWhenSequenceAndSequenceStepFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+        SequenceStepDTO mockedStep = getMockFactory().getSequenceStepMockFactory().newDTO(SEQUENCE_STEP_ID);
+
+        // setup the mocked service
+        doReturn(mockedStep).when(service).removeStep(anyString(), anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/steps/{stepId}", SEQUENCE_ID, SEQUENCE_STEP_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
+                .andExpect(jsonPath("$.message", is(mockedStep.getMessage())));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/sequences/{id}/steps/{stepsId}: sequence not found - Success")
+    void removeStepWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).removeStep(anyString(), anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/steps/{stepId}", SEQUENCE_ID, SEQUENCE_STEP_ID))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
+    }
+
+    @Test
+    @DisplayName("PUT /api/sequences/{id}/step/{stepID}: sequence and step found - Success")
+    void updateStepWhenSequenceFoundAndStepValidReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        int STEP_POSITION = 2;
+        SequenceStepDTO postEntity = SequenceStepDTO.builder().position(STEP_POSITION).build();
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+        SequenceStepDTO mockedEntity = getMockFactory().getSequenceStepMockFactory().newDTO(SEQUENCE_STEP_ID);
+        mockedEntity.setPosition(postEntity.getPosition());
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).updateStep(anyString(), any(SequenceStepDTO.class));
+
+        // Execute the GET request
+        mockMvc.perform(put(getResourceURI() + "/{id}/steps/{stepId}", SEQUENCE_ID, SEQUENCE_STEP_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + SEQUENCE_ID + "/steps/" + SEQUENCE_STEP_ID))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
+                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())))
+                .andExpect(jsonPath("$.position", is(STEP_POSITION)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/sequences/{id}/steps/{stepsId}: sequence not found - Success")
+    void updateStepWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        String SEQUENCE_STEP_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+        SequenceStepDTO postEntity = SequenceStepDTO.builder().position(2).build();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).updateStep(anyString(), any(SequenceStepDTO.class));
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/steps/{stepId}", SEQUENCE_ID, SEQUENCE_STEP_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps: sequence found - Success")
+    void getStepsWhenSequenceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        int ID_LIST_SIZE = 3;
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        List<SequenceStepDTO> stepList = IntStream.range(0, ID_LIST_SIZE)
+                .mapToObj((step) -> {
+                    String COMPONENT_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+                    return getMockFactory().getSequenceStepMockFactory().newDTO(COMPONENT_ID);
+                }).collect(Collectors.toList());
+
+        // setup the mocked service
+        doReturn(stepList).when(service).getSteps(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps", SEQUENCE_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(ID_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps: sequence found - Failure")
+    void getStepsWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).getSteps(anyString());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps", SEQUENCE_ID))
+
+                // Validate the response code and the content type
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
     }
 }

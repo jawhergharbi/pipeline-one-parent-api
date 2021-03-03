@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.listener;
 
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;
-import com.sawoo.pipeline.api.repository.sequence.SequenceStepRepository;
+import com.sawoo.pipeline.api.repository.sequencestep.SequenceStepRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

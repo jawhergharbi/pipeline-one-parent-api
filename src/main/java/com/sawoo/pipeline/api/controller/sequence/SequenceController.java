@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.sequence;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -82,5 +83,48 @@ public class SequenceController {
             @RequestBody SequenceDTO dto,
             @PathVariable("id") String id) {
         return delegator.update(id, dto);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps",
+            method = RequestMethod.POST,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SequenceStepDTO> addStep(
+            @PathVariable("id") String sequenceId,
+            @RequestBody SequenceStepDTO step) {
+        return delegator.addStep(sequenceId, step);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps/{stepId}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SequenceStepDTO> removeStep(
+            @PathVariable("id") String sequenceId,
+            @PathVariable("stepId") String sequenceStepId) {
+        return delegator.removeStep(sequenceId, sequenceStepId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps/{stepId}",
+            method = RequestMethod.PUT,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SequenceStepDTO> updateStep(
+            @PathVariable("id") String sequenceId,
+            @PathVariable("stepId") String sequenceStepId,
+            @RequestBody SequenceStepDTO step) {
+        step.setId(sequenceStepId);
+        return delegator.updateStep(sequenceId, step);
+    }
+
+    @RequestMapping(
+            value = "/{id}/steps",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<SequenceStepDTO>> getSteps(
+            @PathVariable("id") String sequenceId) {
+        return delegator.getSteps(sequenceId);
     }
 }

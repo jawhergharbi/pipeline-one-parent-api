@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceUserDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
@@ -29,14 +30,17 @@ import java.util.Set;
 public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, SequenceRepository, SequenceMapper> implements SequenceService {
 
     private final SequenceAccountService sequenceAccountService;
+    private final SequenceStepsService sequenceStepService;
 
     @Autowired
     public SequenceServiceImpl(SequenceRepository repository,
                                SequenceMapper mapper,
                                SequenceServiceEventListener eventListener,
-                               SequenceAccountService sequenceAccountService) {
+                               SequenceAccountService sequenceAccountService,
+                               SequenceStepsService sequenceStepService) {
         super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener);
         this.sequenceAccountService = sequenceAccountService;
+        this.sequenceStepService = sequenceStepService;
     }
 
     @Override
@@ -76,5 +80,28 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     public List<SequenceDTO> findByAccountIds(Set<String> accountIds)
             throws CommonServiceException {
         return sequenceAccountService.findByAccountIds(accountIds);
+    }
+
+    @Override
+    public SequenceStepDTO addStep(String sequenceId, SequenceStepDTO step)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceStepService.addStep(sequenceId, step);
+    }
+
+    @Override
+    public SequenceStepDTO updateStep(String sequenceId, SequenceStepDTO step)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceStepService.updateStep(sequenceId, step);
+    }
+
+    @Override
+    public SequenceStepDTO removeStep(String sequenceId, String sequenceStepId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceStepService.removeStep(sequenceId, sequenceStepId);
+    }
+
+    @Override
+    public List<SequenceStepDTO> getSteps(String sequenceId) throws ResourceNotFoundException {
+        return sequenceStepService.getSteps(sequenceId);
     }
 }
