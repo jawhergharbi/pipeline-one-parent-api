@@ -130,7 +130,6 @@ public class ServiceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, S
         // Set up mocked entities
         String SEQUENCE_ID = getMockFactory().getComponentId();
         int STEP_SIZE = 4;
-        Sequence mockedEntity = newSequenceWithSteps(SEQUENCE_ID, STEP_SIZE);
         SequenceStepDTO mockedStep = getMockFactory().getSequenceStepMockFactory().newDTO(null);
         mockedStep.setPosition(STEP_SIZE);
 
