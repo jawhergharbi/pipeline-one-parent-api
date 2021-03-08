@@ -1,5 +1,7 @@
 package com.sawoo.pipeline.api.service.account;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -19,11 +21,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -87,5 +93,70 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
 
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("deleteAccountNotes: entity does exist - Success")
+    void deleteAccountNotesWhenEntityFoundReturnsSuccess() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account entity = getMockFactory().newEntity(ACCOUNT_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(entity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        AccountDTO returnedDTO = getService().deleteAccountNotes(ACCOUNT_ID);
+
+        // Assertions and verifications
+        Assertions.assertNotNull(returnedDTO, "Account can not be null");
+        Assertions.assertNull(returnedDTO.getNotes(), "Account notes must be null");
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Account.class));
+    }
+
+    @Test
+    @DisplayName("deleteAccountNotes: entity does not exist - Failure")
+    void deleteAccountNotesWhenEntityFoundReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = "wrong _id";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().deleteAccountNotes(ACCOUNT_ID),
+                "deleteAccountNotes must throw a ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Account.class));
+    }
+
+    @Test
+    @DisplayName("deleteAccountNotes: account id invalid (empty string) - Failure")
+    void deleteAccountNotesWhenLeadIdInvalidReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = "";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().deleteAccountNotes(ACCOUNT_ID),
+                "deleteAccountNotes must throw a ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                        .matches(exception.getMessage()));
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Account.class));
     }
 }

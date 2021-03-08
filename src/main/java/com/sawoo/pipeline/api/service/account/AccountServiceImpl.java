@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,5 +109,27 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
     @Override
     public LeadDTO removeLead(String accountId, String leadId) throws ResourceNotFoundException {
         return leadService.removeLead(accountId, leadId);
+    }
+
+    @Override
+    public AccountDTO deleteAccountNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)
+            throws ResourceNotFoundException {
+        log.debug("Delete account notes for account id [{}]", accountId);
+        Account account = findAccountById(accountId);
+        account.setNotes(null);
+        account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        getRepository().save(account);
+        log.debug("Account with id [{}] has been correctly updated", accountId);
+        return getMapper().getMapperOut().getDestination(account);
+    }
+
+    private Account findAccountById(String accountId) throws ResourceNotFoundException {
+        return getRepository()
+                .findById(accountId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{ DBConstants.ACCOUNT_DOCUMENT, accountId }));
     }
 }

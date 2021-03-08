@@ -276,8 +276,6 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     void deleteLeadSummaryWhenResourceNotFoundReturnsFailure() throws Exception {
         // Setup the mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        LeadDTO mockedEntity = getMockFactory().newDTO(LEAD_ID);
-        mockedEntity.setLeadNotes(null);
 
         // setup the mocked service
         ResourceNotFoundException exception = new ResourceNotFoundException(

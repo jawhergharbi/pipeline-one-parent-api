@@ -4,6 +4,7 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
+import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.lead.Lead;
@@ -52,6 +53,12 @@ public class Account extends BaseEntity {
     @JMap
     @Indexed
     private String linkedInUrl;
+
+    @JMap
+    private String profilePicture;
+
+    @JMap
+    private Personality personality;
 
     @JMap
     private Note notes;

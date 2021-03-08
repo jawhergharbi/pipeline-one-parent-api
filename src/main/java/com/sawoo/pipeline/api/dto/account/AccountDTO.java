@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.model.common.Note;
+import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +43,12 @@ public class AccountDTO extends BaseEntityDTO {
     @JMap
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private String linkedInUrl;
+
+    @JMap
+    private String profilePicture;
+
+    @JMap
+    private Personality personality;
 
     @JMap
     @Valid

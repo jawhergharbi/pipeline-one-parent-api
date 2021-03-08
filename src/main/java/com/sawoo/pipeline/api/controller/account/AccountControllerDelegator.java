@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ import java.util.Map;
 @Component
 @Primary
 public class AccountControllerDelegator extends BaseControllerDelegator<AccountDTO, AccountService>
-        implements AccountControllerUserDelegator, AccountControllerLeadDelegator, AccountControllerInteractionDelegator {
+        implements AccountControllerUserDelegator, AccountControllerLeadDelegator, AccountControllerInteractionDelegator, AccountControllerCustomDelegator {
 
     private final AccountControllerUserDelegator userDelegator;
     private final AccountControllerLeadDelegator leadDelegator;
@@ -150,5 +152,12 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
             List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException {
         return interactionDelegator.findAllInteractions(accountIds, status, types);
+    }
+
+    @Override
+    public ResponseEntity<AccountDTO> deleteAccountNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(getService().deleteAccountNotes(accountId));
     }
 }

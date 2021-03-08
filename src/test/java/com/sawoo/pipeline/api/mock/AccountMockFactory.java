@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
+import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
 import lombok.Getter;
@@ -55,6 +56,11 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
                         .builder()
                         .value(AccountStatus.ON_BOARDING.getValue()).build());
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        entity.setNotes(
+                Note.builder()
+                        .text(getFAKER().lorem().sentence(15))
+                        .updated(LocalDateTime.now()).
+                        build());
         entity.setUpdated(now);
         entity.setCreated(now);
         return entity;
@@ -82,6 +88,11 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
         company.setCreated(LocalDateTime.of(2019, 12, 1, 10, 0));
         company.setUpdated(LocalDateTime.of(2020, 1, 2, 9, 50));
         entity.setCompany(company);
+        entity.setNotes(
+                Note.builder()
+                        .text(getFAKER().lorem().sentence(15))
+                        .updated(LocalDateTime.now()).
+                        build());
         entity.setStatus(
                 Status
                         .builder()

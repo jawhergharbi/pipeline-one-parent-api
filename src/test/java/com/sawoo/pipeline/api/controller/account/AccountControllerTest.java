@@ -732,4 +732,55 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(1)));
     }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/notes: resource exists - Success")
+    void deleteAccountNotesWhenResourceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        AccountDTO mockedEntity = getMockFactory().newDTO(ACCOUNT_ID);
+        mockedEntity.setNotes(null);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteAccountNotes(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/notes", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
+                .andExpect(jsonPath("$.notes").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/summary: resource does not exists - Failure")
+    void deleteAccountNotesWhenResourceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ DBConstants.ACCOUNT_DOCUMENT, ACCOUNT_ID });
+
+        // setup the mocked service
+        doThrow(exception).when(service).deleteAccountNotes(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/notes", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        ACCOUNT_ID)));
+    }
 }
