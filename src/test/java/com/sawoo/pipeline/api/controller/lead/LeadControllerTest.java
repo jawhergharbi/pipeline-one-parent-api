@@ -1,5 +1,7 @@
 package com.sawoo.pipeline.api.controller.lead;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
@@ -33,8 +35,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -240,5 +245,106 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(LEAD_ID)))
                 .andExpect(jsonPath("$.linkedInThread", is(LEAD_LINKEDIN_THREAD)));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/leads/{id}/summary: resource exists - Success")
+    void deleteLeadSummaryWhenResourceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(LEAD_ID);
+        mockedEntity.setLeadNotes(null);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteLeadSummary(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/summary", LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.leadNotes").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/leads/{id}/summary: resource does not exists - Failure")
+    void deleteLeadSummaryWhenResourceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(LEAD_ID);
+        mockedEntity.setLeadNotes(null);
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ DBConstants.LEAD_DOCUMENT, LEAD_ID });
+
+        // setup the mocked service
+        doThrow(exception).when(service).deleteLeadSummary(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/summary", LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", getEntityType()),
+                        LEAD_ID)));
+    }
+
+    @Test
+    @DisplayName("DELETE /api/leads/{id}/company-summary: resource exists - Success")
+    void deleteLeadCompanyCommentsWhenResourceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(LEAD_ID);
+        mockedEntity.setCompanyNotes(null);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteLeadCompanyComments(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/company-summary", LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.companyNotes").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/leads/{id}/qualification-notes: resource exists - Success")
+    void deleteLeadQualificationCommentsWhenResourceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        LeadDTO mockedEntity = getMockFactory().newDTO(LEAD_ID);
+        mockedEntity.getStatus().setNotes(null);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteLeadQualificationComments(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/qualification-notes", LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(LEAD_ID)))
+                .andExpect(jsonPath("$.status.notes").doesNotExist());
     }
 }

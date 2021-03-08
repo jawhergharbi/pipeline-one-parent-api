@@ -78,6 +78,30 @@ public class LeadController {
     }
 
     @RequestMapping(
+            value = "/{id}/summary",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadDTO> deleteLeadSummary(@PathVariable String id) {
+        return delegator.deleteLeadSummary(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/company-summary",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadDTO> deleteLeadCompanyComments(@PathVariable String id) {
+        return delegator.deleteLeadCompanyComments(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/qualification-notes",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadDTO> deleteLeadQualificationNotes(@PathVariable String id) {
+        return delegator.deleteLeadQualificationComments(id);
+    }
+
+    @RequestMapping(
             value = "/{id}",
             method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},

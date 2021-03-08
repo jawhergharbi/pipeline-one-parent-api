@@ -1,25 +1,25 @@
-package com.sawoo.pipeline.api.service.lead;
+package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.repository.lead.LeadRepository;
-import com.sawoo.pipeline.api.service.base.BaseProxyService;
-import com.sawoo.pipeline.api.service.base.BaseService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 
-public interface LeadService extends BaseService<LeadDTO>, BaseProxyService<LeadRepository, LeadMapper>, LeadReportService, LeadInteractionService {
+@Validated
+public interface LeadControllerCustomDelegator {
 
-    LeadDTO deleteLeadSummary(
+    ResponseEntity<LeadDTO> deleteLeadSummary(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+            throws ResourceNotFoundException;
+
+    ResponseEntity<LeadDTO> deleteLeadQualificationComments(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
             throws ResourceNotFoundException;
 
-    LeadDTO deleteLeadQualificationComments(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
-            throws ResourceNotFoundException;
-
-    LeadDTO deleteLeadCompanyComments(
+    ResponseEntity<LeadDTO> deleteLeadCompanyComments(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
             throws ResourceNotFoundException;
 
