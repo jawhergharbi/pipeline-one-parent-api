@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.service.lead;
 
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
@@ -17,8 +18,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -76,5 +81,54 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Override
     public List<LeadInteractionDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
         return interactionService.findBy(leadIds, status, types);
+    }
+
+    @Override
+    public LeadDTO deleteLeadSummary(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        log.debug("Delete lead summary for lead id [{}]", leadId);
+        Consumer<Lead> setNull = l -> l.setLeadNotes(null);
+        return deleteLeadNotes(leadId, setNull);
+    }
+
+    @Override
+    public LeadDTO deleteLeadQualificationComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        log.debug("Delete qualification comments for lead id [{}]", leadId);
+        Consumer<Lead> setNull = l -> {
+            if (l.getStatus() != null) {
+                l.getStatus().setNotes(null);
+            }
+        };
+        return deleteLeadNotes(leadId, setNull);
+    }
+
+    @Override
+    public LeadDTO deleteLeadCompanyComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        log.debug("Delete lead company comments for lead id [{}]", leadId);
+        Consumer<Lead> setNull = l -> l.setCompanyNotes(null);
+        return deleteLeadNotes(leadId, setNull);
+    }
+
+    private Lead findLeadById(String leadId) throws ResourceNotFoundException {
+        return getRepository()
+                .findById(leadId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                                new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
+    }
+
+    private LeadDTO deleteLeadNotes(String leadId, Consumer<Lead> setNull) {
+        Lead lead = findLeadById(leadId);
+        setNull.accept(lead);
+        lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        getRepository().save(lead);
+        log.debug("Lead with id [{}] has been correctly updated", leadId);
+        return getMapper().getMapperOut().getDestination(lead);
     }
 }

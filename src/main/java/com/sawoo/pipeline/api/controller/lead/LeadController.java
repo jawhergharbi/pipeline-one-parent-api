@@ -78,6 +78,14 @@ public class LeadController {
     }
 
     @RequestMapping(
+            value = "/{id}/summary",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<LeadDTO> deleteLeadSummary(@PathVariable String id) {
+        return delegator.deleteById(id);
+    }
+
+    @RequestMapping(
             value = "/{id}",
             method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},

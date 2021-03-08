@@ -15,11 +15,12 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Component
 @Primary
-public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements LeadControllerReportDelegator, LeadControllerInteractionDelegator {
+public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements LeadControllerReportDelegator, LeadControllerInteractionDelegator, LeadControllerCustomDelegator {
 
     private final LeadControllerReportDelegator reportDelegator;
     private final LeadControllerInteractionDelegator leadInteractionDelegator;
@@ -63,5 +64,11 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     @Override
     public ResponseEntity<InteractionAssigneeDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteraction(leadId, interactionId);
+    }
+
+    @Override
+    public ResponseEntity<LeadDTO> deleteLeadSummary(String leadId) throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(getService().deleteLeadSummary(leadId));
+
     }
 }

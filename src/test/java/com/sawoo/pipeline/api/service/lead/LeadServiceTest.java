@@ -1,5 +1,7 @@
 package com.sawoo.pipeline.api.service.lead;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
@@ -21,11 +23,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -116,6 +122,7 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         // Execute the service call
         LeadDTO returnedDTO = getService().update(LEAD_ID, mockedDTOTOUpdate);
 
+        // Assertions and verifications
         Assertions.assertAll(String.format("Lead entity with id [%s] must be properly updated", LEAD_ID),
                 () -> Assertions.assertNotNull(returnedDTO, "Lead entity can not be null"),
                 () -> Assertions.assertEquals(
@@ -126,4 +133,201 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).save(any());
     }
+
+    @Test
+    @DisplayName("deleteLeadSummary: entity does exist - Success")
+    void deleteLeadSummaryWhenEntityFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        LeadDTO returnedDTO = getService().deleteLeadSummary(LEAD_ID);
+
+        // Assertions and verifications
+        Assertions.assertNotNull(returnedDTO, "Lead DTO can not be null");
+        Assertions.assertNull(returnedDTO.getLeadNotes(), "Lead notes must be null");
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadSummary: entity does not exist - Failure")
+    void deleteLeadSummaryWhenEntityFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "wrong _id";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().deleteLeadSummary(LEAD_ID),
+                "deleteLeadSummary must throw a ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadSummary: lead id invalid (empty string) - Failure")
+    void deleteLeadSummaryWhenLeadIdInvalidReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().deleteLeadSummary(LEAD_ID),
+                "deleteLeadSummary must throw a ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                        .matches(exception.getMessage()));
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadCompanyComments: entity does exist - Success")
+    void deleteLeadCompanyCommentsWhenEntityFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        LeadDTO returnedDTO = getService().deleteLeadCompanyComments(LEAD_ID);
+
+        // Assertions and verifications
+        Assertions.assertNotNull(returnedDTO, "Lead DTO can not be null");
+        Assertions.assertNull(returnedDTO.getCompanyNotes(), "Lead company comments must be null");
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadCompanyComments: entity does not exist - Failure")
+    void deleteLeadCompanyCommentsWhenEntityFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "wrong _id";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().deleteLeadCompanyComments(LEAD_ID),
+                "deleteLeadCompanyComments must throw a ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadCompanyComments: lead id invalid (empty string) - Failure")
+    void deleteLeadCompanyCommentsWhenLeadIdInvalidReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().deleteLeadCompanyComments(LEAD_ID),
+                "deleteLeadCompanyComments must throw a ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                        .matches(exception.getMessage()));
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadQualificationComments: entity does exist - Success")
+    void deleteLeadQualificationCommentsWhenEntityFoundReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+        Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        LeadDTO returnedDTO = getService().deleteLeadQualificationComments(LEAD_ID);
+
+        // Assertions and verifications
+        Assertions.assertNotNull(returnedDTO, "Lead DTO can not be null");
+        Assertions.assertNotNull(returnedDTO.getStatus(), "Lead status can not be null");
+        Assertions.assertNull(returnedDTO.getStatus().getNotes(), "Lead qualification comments must be null");
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadQualificationComments: entity does not exist - Failure")
+    void deleteLeadQualificationCommentsWhenEntityFoundReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "wrong _id";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().deleteLeadQualificationComments(LEAD_ID),
+                "deleteLeadQualificationComments must throw a ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
+    @Test
+    @DisplayName("deleteLeadQualificationComments: lead id invalid (empty string) - Failure")
+    void deleteLeadQualificationCommentsWhenLeadIdInvalidReturnsFailure() {
+        // Set up mocked entities
+        String LEAD_ID = "";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().deleteLeadQualificationComments(LEAD_ID),
+                "v must throw a ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                        .matches(exception.getMessage()));
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Lead.class));
+    }
+
 }

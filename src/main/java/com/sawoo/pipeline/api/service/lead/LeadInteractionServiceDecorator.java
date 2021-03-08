@@ -91,7 +91,9 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     @Override
-    public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+    public List<InteractionAssigneeDTO> getInteractions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+            throws ResourceNotFoundException {
         log.debug("Get interactions from lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
@@ -110,8 +112,11 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     }
 
     @Override
-    public InteractionAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        log.debug("Gettinteraction id [{}] from lead id: [{}].", interactionId, leadId);
+    public InteractionAssigneeDTO getInteraction(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            throws ResourceNotFoundException {
+        log.debug("Get interaction id [{}] from lead id: [{}].", interactionId, leadId);
         Lead lead = findLeadById(leadId);
         return lead
                 .getInteractions()
