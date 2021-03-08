@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.lead;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
@@ -70,5 +71,19 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     public ResponseEntity<LeadDTO> deleteLeadSummary(String leadId) throws ResourceNotFoundException {
         return ResponseEntity.ok().body(getService().deleteLeadSummary(leadId));
 
+    }
+
+    @Override
+    public ResponseEntity<LeadDTO> deleteLeadQualificationComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(getService().deleteLeadQualificationComments(leadId));
+    }
+
+    @Override
+    public ResponseEntity<LeadDTO> deleteLeadCompanyComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(getService().deleteLeadCompanyComments(leadId));
     }
 }

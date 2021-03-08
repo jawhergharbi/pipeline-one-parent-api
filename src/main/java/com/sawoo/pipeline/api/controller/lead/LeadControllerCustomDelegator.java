@@ -15,4 +15,12 @@ public interface LeadControllerCustomDelegator {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException;
 
+    ResponseEntity<LeadDTO> deleteLeadQualificationComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException;
+
+    ResponseEntity<LeadDTO> deleteLeadCompanyComments(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
+            throws ResourceNotFoundException;
+
 }
