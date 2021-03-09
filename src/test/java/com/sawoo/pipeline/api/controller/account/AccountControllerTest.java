@@ -783,4 +783,28 @@ public class AccountControllerTest extends BaseControllerTest<AccountDTO, Accoun
                         String.format("GET operation. Component type [%s]", getEntityType()),
                         ACCOUNT_ID)));
     }
+
+    @Test
+    @DisplayName("DELETE /api/accounts/{id}/company-notes: resource exists - Success")
+    void deleteLeadCompanyCommentsWhenResourceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        AccountDTO mockedEntity = getMockFactory().newDTO(ACCOUNT_ID);
+        mockedEntity.setCompanyNotes(null);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).deleteAccountCompanyNotes(anyString());
+
+        // Execute the DELETE request
+        mockMvc.perform(delete(getResourceURI() + "/{id}/company-notes", ACCOUNT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(ACCOUNT_ID)))
+                .andExpect(jsonPath("$.companyNotes").doesNotExist());
+    }
 }

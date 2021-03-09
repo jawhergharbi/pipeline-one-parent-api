@@ -16,4 +16,8 @@ public interface AccountService extends BaseService<AccountDTO>, BaseProxyServic
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)
             throws ResourceNotFoundException;
 
+    AccountDTO deleteAccountCompanyNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)
+            throws ResourceNotFoundException;
+
 }

@@ -15,4 +15,8 @@ public interface AccountControllerCustomDelegator {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
             throws ResourceNotFoundException;
 
+    ResponseEntity<AccountDTO> deleteAccountCompanyNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
+            throws ResourceNotFoundException;
+
 }

@@ -35,4 +35,13 @@ public enum UserRole {
         }
         return defaultRole;
     }
+
+    public static UserRole getUserManagementRole(Set<String> roles) {
+        if (roles.contains(MNG.name())) {
+            return MNG;
+        } else if (roles.contains(AST.name())) {
+            return AST;
+        }
+        return null;
+    }
 }

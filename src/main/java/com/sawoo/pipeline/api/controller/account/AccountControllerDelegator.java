@@ -160,4 +160,11 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(getService().deleteAccountNotes(accountId));
     }
+
+    @Override
+    public ResponseEntity<AccountDTO> deleteAccountCompanyNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(getService().deleteAccountCompanyNotes(accountId));
+    }
 }

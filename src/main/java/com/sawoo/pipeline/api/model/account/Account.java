@@ -68,6 +68,9 @@ public class Account extends BaseEntity {
     private Company company;
 
     @JMap
+    private Note companyNotes;
+
+    @JMap
     private Status status;
 
     @JMap
