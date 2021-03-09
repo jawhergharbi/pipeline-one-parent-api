@@ -40,7 +40,7 @@ public class AccountServiceEventListener implements BaseServiceEventListener<Acc
                             entity.getId(),
                             entity.getFullName());
                 } else {
-                    UserRole userRole = UserRole.getDefaultRole(user.getRoles());
+                    UserRole userRole = UserRole.getUserManagementRole(user.getRoles());
                     users.removeIf(u -> u.getRoles().contains(userRole.name()));
                     users.add(mapper.getUserMapperIn().getDestination(user));
                 }
