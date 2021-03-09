@@ -58,6 +58,7 @@ public class PersonDTO extends BaseEntityDTO {
     private CompanyDTO company;
 
     @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private PersonalityDTO personality;
 
     @JMap
