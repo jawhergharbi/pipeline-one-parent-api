@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -116,8 +117,22 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)
             throws ResourceNotFoundException {
         log.debug("Delete account notes for account id [{}]", accountId);
+        Consumer<Account> setNull = l -> l.setNotes(null);
+        return deleteAccountNotes(accountId, setNull);
+    }
+
+    @Override
+    public AccountDTO deleteAccountCompanyNotes(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)
+            throws ResourceNotFoundException {
+        log.debug("Delete account company notes for account id [{}]", accountId);
+        Consumer<Account> setNull = l -> l.setCompanyNotes(null);
+        return deleteAccountNotes(accountId, setNull);
+    }
+
+    private AccountDTO deleteAccountNotes(String accountId, Consumer<Account> setNull) {
         Account account = findAccountById(accountId);
-        account.setNotes(null);
+        setNull.accept(account);
         account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
         getRepository().save(account);
         log.debug("Account with id [{}] has been correctly updated", accountId);

@@ -85,6 +85,14 @@ public class AccountController {
     }
 
     @RequestMapping(
+            value = "/{id}/company-notes",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<AccountDTO> deleteLeadCompanyComments(@PathVariable String id) {
+        return delegator.deleteAccountCompanyNotes(id);
+    }
+
+    @RequestMapping(
             value = "/user/{id}",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})

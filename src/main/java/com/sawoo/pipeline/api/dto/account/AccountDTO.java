@@ -56,6 +56,9 @@ public class AccountDTO extends BaseEntityDTO {
     private CompanyDTO company;
 
     @JMap
+    private Note companyNotes;
+
+    @JMap
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)
     private String email;
 

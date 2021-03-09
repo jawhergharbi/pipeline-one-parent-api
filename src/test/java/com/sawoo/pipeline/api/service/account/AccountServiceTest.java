@@ -159,4 +159,69 @@ public class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, Acc
         verify(repository, never()).findById(anyString());
         verify(repository, never()).save(any(Account.class));
     }
+
+    @Test
+    @DisplayName("deleteAccountCompanyNotes: entity does exist - Success")
+    void deleteAccountCompanyNotesWhenEntityFoundReturnsSuccess() {
+        // Set up mocked entities
+        String ACCOUNT_ID = getMockFactory().getComponentId();
+        Account entity = getMockFactory().newEntity(ACCOUNT_ID);
+
+        // Set up the mocked repository
+        doReturn(Optional.of(entity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        AccountDTO returnedDTO = getService().deleteAccountCompanyNotes(ACCOUNT_ID);
+
+        // Assertions and verifications
+        Assertions.assertNotNull(returnedDTO, "Account can not be null");
+        Assertions.assertNull(returnedDTO.getCompanyNotes(), "Account company notes must be null");
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Account.class));
+    }
+
+    @Test
+    @DisplayName("deleteAccountCompanyNotes: entity does not exist - Failure")
+    void deleteAccountCompanyNotesWhenEntityFoundReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = "wrong _id";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> getService().deleteAccountCompanyNotes(ACCOUNT_ID),
+                "deleteAccountCompanyNotes must throw a ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(2, exception.getArgs().length);
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Account.class));
+    }
+
+    @Test
+    @DisplayName("deleteAccountCompanyNotes: account id invalid (empty string) - Failure")
+    void deleteAccountCompanyNotesWhenLeadIdInvalidReturnsFailure() {
+        // Set up mocked entities
+        String ACCOUNT_ID = "";
+
+        // Set up the mocked repository
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> getService().deleteAccountCompanyNotes(ACCOUNT_ID),
+                "deleteAccountCompanyNotes must throw a ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+                        .matches(exception.getMessage()));
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Account.class));
+    }
 }
