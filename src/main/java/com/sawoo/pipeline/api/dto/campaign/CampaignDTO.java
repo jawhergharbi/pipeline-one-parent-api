@@ -1,8 +1,11 @@
 package com.sawoo.pipeline.api.dto.campaign;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
+import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +39,7 @@ public class CampaignDTO extends BaseEntityDTO {
     private LocalDateTime endDate;
 
     @JMap
-    private CampaignStatus status;
+    private Integer status;
 
     @JMap
     private String componentId;
@@ -46,4 +49,11 @@ public class CampaignDTO extends BaseEntityDTO {
 
     @JMap
     private LocalDateTime actualEndDate;
+
+    private AccountFieldDTO account;
+
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public Integer statusConversion(CampaignStatus status) {
+        return status != null ? status.getValue() : -1;
+    }
 }

@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.campaign;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,11 @@ public class Campaign extends BaseEntity  {
     @JMap
     private LocalDateTime actualEndDate;
 
-    @JMap
     private List<CampaignLead> leads;
+
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public CampaignStatus statusConversion(Integer status) {
+        return CampaignStatus.fromValue(status);
+    }
 
 }

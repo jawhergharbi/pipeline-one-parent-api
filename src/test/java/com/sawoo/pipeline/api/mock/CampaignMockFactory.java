@@ -46,7 +46,7 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
                 .builder()
                 .id(id)
                 .name(FAKER.funnyName().name())
-                .status(CampaignStatus.RUNNING)
+                .status(CampaignStatus.RUNNING.getValue())
                 .componentId(FAKER.internet().uuid())
                 .description(FAKER.lebowski().quote())
                 .startDate(now.plusDays(10))
