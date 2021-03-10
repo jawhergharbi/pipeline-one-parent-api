@@ -10,5 +10,6 @@ public interface DBConstants {
     String USER_TOKEN_DOCUMENT = "user-token";
     String INTERACTION_DOCUMENT = "interaction";
     String ACCOUNT_DOCUMENT = "account";
+    String CAMPAIGN_DOCUMENT = "campaign";
     String COMPANY_DOCUMENT = "company";
 }

@@ -15,7 +15,7 @@ public class AccountEventListener extends AbstractMongoEventListener<Account> {
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Account> event) {
-            Account account = event.getSource();
+        Account account = event.getSource();
         companyCascadeDelegator.onSave(account.getCompany(), account::setCompany);
         super.onBeforeConvert(event);
     }

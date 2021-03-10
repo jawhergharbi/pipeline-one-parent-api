@@ -362,13 +362,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
         String COMPONENT_ID_2 = "6030d65af796188aabff390b";
-        int SEQUENCES_FOUND = 3;
+        int ENTITIES_FOUND = 3;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
 
         // Assert
-        assertListOfSequence(sequences, SEQUENCES_FOUND);
+        assertListOfSequence(sequences, ENTITIES_FOUND);
     }
 
     @Test
@@ -377,13 +377,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "wrong_id_1";
         String COMPONENT_ID_2 = "wrong_id_2";
-        int SEQUENCES_FOUND = 0;
+        int ENTITIES_FOUND = 0;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
 
         // Assert
-        assertListOfSequence(sequences, SEQUENCES_FOUND);
+        assertListOfSequence(sequences, ENTITIES_FOUND);
     }
 
     @Test
@@ -391,13 +391,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
     void findByComponentIdAndStatusWhenEntitiesFoundReturnsSuccess() {
         // Arrange
         String COMPONENT_ID = "6030d640f3022dc07d72d786";
-        int SEQUENCES_FOUND = 1;
+        int ENTITIES_FOUND = 1;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdAndStatus(COMPONENT_ID, SequenceStatus.IN_PROGRESS);
 
         // Assert
-        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+        assertListOfSequenceWithStatus(sequences, ENTITIES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
     @Test
@@ -406,7 +406,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
         String COMPONENT_ID_2 = "6030d65af796188aabff390b";
-        int SEQUENCES_FOUND = 2;
+        int ENTITIES_FOUND = 2;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdInAndStatus(
@@ -414,7 +414,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
                 SequenceStatus.IN_PROGRESS);
 
         // Assert
-        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+        assertListOfSequenceWithStatus(sequences, ENTITIES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
     private void assertListOfSequence(List<Sequence> sequences, int expectedSize) {
@@ -434,7 +434,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
             Assertions.assertEquals(
                     expectedSize,
                     sequences.size(),
-                    String.format("\"Sequence list size for status [%s] must be [%d]", status, expectedSize));
+                    String.format("Sequence list size for status [%s] must be [%d]", status, expectedSize));
         } else {
             Assertions.assertTrue(
                     sequences.isEmpty(),
