@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Profile;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -47,6 +48,21 @@ public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, Campaig
     protected Campaign getNewEntity() {
         String ENTITY_ID = getMockFactory().getFAKER().internet().uuid();
         return getMockFactory().newEntity(ENTITY_ID);
+    }
+
+    @Test
+    @DisplayName("findByStatus: campaigns with status 0 and 2 - Success")
+    void findByStatusWhenStatusIsFoundReturnsSuccess() {
+        // Arrange
+        int ENTITIES_FOUND = 1;
+
+        // Act
+        List<Campaign> campaignsInProgress = getRepository().findByStatus(CampaignStatus.RUNNING);
+        List<Campaign> campaignsPaused = getRepository().findByStatus(CampaignStatus.PAUSED);
+
+        // Assert
+        assertListOfCampaignsWithStatus(campaignsInProgress, ENTITIES_FOUND, CampaignStatus.RUNNING);
+        assertListOfCampaignsWithStatus(campaignsPaused, 0, CampaignStatus.PAUSED);
     }
 
     @Test
@@ -123,6 +139,34 @@ public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, Campaig
 
         // Assert
         assertListOfCampaignsWithStatus(campaigns, ENTITIES_FOUND, CampaignStatus.UNDER_CONSTRUCTION);
+    }
+
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity found - Success")
+    void findByComponentIdAndNameWhenEntityFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        String NAME = "Campaign for CTOs";
+
+        // Act
+        Optional<Campaign> campaign = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(campaign.isPresent(), String.format("Campaign with id: [%s] must be found", COMPONENT_ID));
+    }
+
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity not found - Failure")
+    void findByComponentIdAndNameWhenEntityNotFoundReturnsFailure() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        String NAME = "Campaign for CTO";
+
+        // Act
+        Optional<Campaign> campaign = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(campaign.isEmpty(), String.format("Campaign with id: [%s] can not be found", COMPONENT_ID));
     }
 
     private void assertListOfCampaigns(List<Campaign> campaigns, int expectedSize) {

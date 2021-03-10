@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface CampaignRepository extends MongoRepository<Campaign, String> {
@@ -18,4 +19,6 @@ public interface CampaignRepository extends MongoRepository<Campaign, String> {
     List<Campaign> findByComponentIdIn(Set<String> componentIds);
 
     List<Campaign> findByComponentIdInAndStatus(Set<String> componentIds, CampaignStatus status);
+
+    Optional<Campaign> findByComponentIdAndName(String componentId, String name);
 }
