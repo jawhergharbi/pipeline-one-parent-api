@@ -24,7 +24,7 @@ public class CampaignControllerDelegator extends BaseControllerDelegator<Campaig
     public CampaignControllerDelegator(
             CampaignService service,
             @Qualifier("campaignAccountController") CampaignControllerAccountDelegator accountDelegator) {
-        super(service, ControllerConstants.SEQUENCE_CONTROLLER_API_BASE_URI);
+        super(service, ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI);
         this.accountDelegator = accountDelegator;
     }
 

@@ -21,9 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -87,7 +92,7 @@ public class CampaignControllerTest extends BaseControllerTest<CampaignDTO, Camp
     }
 
     @Test
-    @DisplayName("POST /api/sequences: user id not informed - Failure")
+    @DisplayName("POST /api/campaigns: name and endDate are not informed - Failure")
     void createWhenNameAndEndDateNotInformedReturnsFailure() throws Exception {
         // Setup the mocked entities
         CampaignDTO postEntity = getMockFactory().newDTO(null);
@@ -105,5 +110,27 @@ public class CampaignControllerTest extends BaseControllerTest<CampaignDTO, Camp
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.messages", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("GET /api/campaigns/accounts/{accountIds}/main: campaign found - Success")
+    void findByAccountsWhenSequenceEntitiesFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        String COMPONENT_ID = getMockFactory().getAccountMockFactory().getComponentId();
+        String ENTITY_ID = getMockFactory().getComponentId();
+        CampaignDTO mockedDTO = getMockFactory().newDTO(ENTITY_ID);
+
+        // setup the mocked service
+        doReturn(Collections.singletonList(mockedDTO)).when(service).findByAccountIds(anySet());
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/accounts/{accountIds}/main", new HashSet<>(Collections.singletonList(COMPONENT_ID))))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
