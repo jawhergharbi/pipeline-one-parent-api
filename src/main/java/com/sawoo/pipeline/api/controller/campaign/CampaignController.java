@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.campaign;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
+import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -62,5 +64,14 @@ public class CampaignController {
             @RequestBody CampaignDTO dto,
             @PathVariable("id") String id) {
         return delegator.update(id, dto);
+    }
+
+    @RequestMapping(
+            value = "/accounts/{accountIds}/main",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<CampaignDTO>> findByAccountIds(
+            @PathVariable(value = "accountIds") Set<String> accountIds) {
+        return delegator.findByAccounts(accountIds);
     }
 }

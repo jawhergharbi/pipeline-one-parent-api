@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,9 @@ import java.time.ZoneOffset;
 @Component
 @RequiredArgsConstructor
 public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> {
+
+    @Getter
+    private final AccountMockFactory accountMockFactory;
 
     @Override
     public String getComponentId() {

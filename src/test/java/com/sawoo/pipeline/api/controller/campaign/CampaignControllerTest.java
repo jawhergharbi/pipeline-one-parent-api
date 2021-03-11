@@ -7,18 +7,27 @@ import com.sawoo.pipeline.api.mock.CampaignMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -55,5 +64,46 @@ public class CampaignControllerTest extends BaseControllerTest<CampaignDTO, Camp
     @Override
     protected Class<CampaignDTO> getDTOClass() {
         return CampaignDTO.class;
+    }
+
+    @Test
+    @DisplayName("POST /api/campaigns: resource componentId - Failure")
+    void createWhenComponentIdNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        CampaignDTO postEntity = getMockFactory().newDTO(null);
+        postEntity.setComponentId(null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("POST /api/sequences: user id not informed - Failure")
+    void createWhenNameAndEndDateNotInformedReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        CampaignDTO postEntity = getMockFactory().newDTO(null);
+        postEntity.setName(null);
+        postEntity.setEndDate(null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(2)));
     }
 }

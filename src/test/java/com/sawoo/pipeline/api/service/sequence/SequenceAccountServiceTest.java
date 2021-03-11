@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.containsString;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ServiceAccountServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
+public class SequenceAccountServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
 
     @MockBean
     private SequenceRepository repository;
@@ -49,7 +49,7 @@ public class ServiceAccountServiceTest extends BaseLightServiceTest<SequenceDTO,
     private AccountRepository accountRepository;
 
     @Autowired
-    public ServiceAccountServiceTest(SequenceMockFactory mockFactory, SequenceService service) {
+    public SequenceAccountServiceTest(SequenceMockFactory mockFactory, SequenceService service) {
         super(mockFactory, DBConstants.SEQUENCE_DOCUMENT, service);
     }
 

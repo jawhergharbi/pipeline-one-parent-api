@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ServiceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
+public class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
 
     @MockBean
     private SequenceRepository repository;
@@ -52,7 +52,7 @@ public class ServiceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, S
     private SequenceStepService sequenceStepService;
 
     @Autowired
-    public ServiceStepsServiceTest(SequenceMockFactory mockFactory, SequenceService service) {
+    public SequenceStepsServiceTest(SequenceMockFactory mockFactory, SequenceService service) {
         super(mockFactory, DBConstants.SEQUENCE_DOCUMENT, service);
     }
 
