@@ -20,8 +20,8 @@ import java.util.Optional;
 public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, CampaignRepository, CampaignMapper> implements CampaignService {
 
     @Autowired
-    public CampaignServiceImpl(CampaignRepository repository, CampaignMapper mapper) {
-        super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT);
+    public CampaignServiceImpl(CampaignRepository repository, CampaignMapper mapper, CampaignServiceEventListener eventListener) {
+        super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, eventListener);
     }
 
     @Override
@@ -32,13 +32,5 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
                 entityToCreate.getName(),
                 entityToCreate.getComponentId());
         return getRepository().findByComponentIdAndName(entityToCreate.getComponentId(), entityToCreate.getName());
-    }
-
-    @Override
-    public Optional<CampaignDTO> findByComponentIdAndName(String componentId, String name) {
-        log.debug("Retrieve campaign by componentId and name. Component id: [{}], Name: [{}]", componentId, name);
-        return getRepository()
-                .findByComponentIdAndName(componentId, name)
-                .map(getMapper().getMapperOut()::getDestination);
     }
 }

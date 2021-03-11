@@ -74,7 +74,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
     }
 
     @Test
-    @DisplayName("update: user id not informed - Failure")
+    @DisplayName("create: user id not informed - Failure")
     void createWhenUserOwnerNotInformedReturnsFailure() {
         // Set up mock entities
         String USER_ID = getMockFactory().getFAKER().internet().uuid();

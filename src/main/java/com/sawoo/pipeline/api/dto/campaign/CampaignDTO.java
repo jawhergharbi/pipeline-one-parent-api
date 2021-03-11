@@ -2,10 +2,10 @@ package com.sawoo.pipeline.api.dto.campaign;
 
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
-import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -27,21 +29,25 @@ public class CampaignDTO extends BaseEntityDTO {
     private String id;
 
     @JMap
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String name;
 
     @JMap
     private String description;
 
     @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private LocalDateTime startDate;
 
     @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private LocalDateTime endDate;
 
     @JMap
     private Integer status;
 
     @JMap
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String componentId;
 
     @JMap
