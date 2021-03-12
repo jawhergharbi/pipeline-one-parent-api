@@ -417,6 +417,34 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         assertListOfSequenceWithStatus(sequences, ENTITIES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity found - Success")
+    void findByComponentIdAndNameWhenEntityFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        String NAME = "sequence for CTOs";
+
+        // Act
+        Optional<Sequence> sequence = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(sequence.isPresent(), String.format("Sequence with id: [%s] must be found", COMPONENT_ID));
+    }
+
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity not found - Failure")
+    void findByComponentIdAndNameWhenEntityNotFoundReturnsFailure() {
+        // Arrange
+        String COMPONENT_ID = "60278c364334846b8d167131";
+        String NAME = "Sequence for CTO";
+
+        // Act
+        Optional<Sequence> sequence = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(sequence.isEmpty(), String.format("Sequence with id: [%s] can not be found", COMPONENT_ID));
+    }
+
     private void assertListOfSequence(List<Sequence> sequences, int expectedSize) {
         if (expectedSize > 0) {
             Assertions.assertFalse(sequences.isEmpty(), "Sequence list can not be empty");

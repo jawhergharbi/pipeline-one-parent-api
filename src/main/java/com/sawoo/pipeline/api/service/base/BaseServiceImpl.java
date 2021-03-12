@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.model.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import javax.validation.Valid;
@@ -27,16 +28,22 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     private R repository;
     private String entityType;
     private BaseServiceEventListener<D, M> eventListener;
+    private ApplicationEventPublisher eventPublisher;
 
-    public BaseServiceImpl(R repository, OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
+    public BaseServiceImpl(R repository, OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
         this.eventListener = eventListener;
+        this.eventPublisher = eventPublisher;
+    }
+
+    public BaseServiceImpl(R repository,OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
+        this(repository, mapper, entityType, eventListener, null);
     }
 
     public BaseServiceImpl(R repository,OM mapper, String entityType) {
-        this(repository, mapper, entityType, null);
+        this(repository, mapper, entityType, null, null);
     }
 
     public abstract Optional<M> entityExists(D entityToCreate);
@@ -57,6 +64,9 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         entity.setUpdated(now);
         if (eventListener != null) {
             eventListener.onBeforeInsert(dto, entity);
+        }
+        if (eventPublisher != null) {
+            eventPublisher.publishEvent(new BeforeInsertEvent<>(dto, entity));
         }
         entity = repository.insert(entity);
 

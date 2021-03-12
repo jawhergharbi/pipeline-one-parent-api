@@ -12,6 +12,7 @@ import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -36,21 +37,22 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     public SequenceServiceImpl(SequenceRepository repository,
                                SequenceMapper mapper,
                                SequenceServiceEventListener eventListener,
+                               ApplicationEventPublisher eventPublisher,
                                SequenceAccountService sequenceAccountService,
                                SequenceStepsService sequenceStepService) {
-        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener);
+        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener, eventPublisher);
         this.sequenceAccountService = sequenceAccountService;
         this.sequenceStepService = sequenceStepService;
     }
 
     @Override
     public Optional<Sequence> entityExists(SequenceDTO entityToCreate) {
-        String entityId = entityToCreate.getId();
         log.debug(
-                "Checking entity existence. [type: {}, id: {}]",
-                DBConstants.SEQUENCE_DOCUMENT,
-                entityId);
-        return entityId == null ? Optional.empty() : getRepository().findById(entityToCreate.getId());
+                "Checking entity existence. [type: {}, name: {}, componentId: {}]",
+                DBConstants.CAMPAIGN_DOCUMENT,
+                entityToCreate.getName(),
+                entityToCreate.getComponentId());
+        return getRepository().findByComponentIdAndName(entityToCreate.getComponentId(), entityToCreate.getName());
     }
 
     @Override

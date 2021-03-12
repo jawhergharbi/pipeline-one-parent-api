@@ -11,7 +11,9 @@ import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceUser;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
 import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
+import com.sawoo.pipeline.api.service.base.BeforeInsertEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,11 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class SequenceServiceEventListener implements BaseServiceEventListener<SequenceDTO, Sequence> {
+
+    @EventListener
+    public void handleBeforeInsertEvent(BeforeInsertEvent<SequenceDTO, Sequence> event) {
+        System.out.println(event.toString());
+    }
 
     @Override
     public void onBeforeInsert(SequenceDTO dto, Sequence entity) {

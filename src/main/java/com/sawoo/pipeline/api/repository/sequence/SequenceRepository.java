@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface SequenceRepository extends MongoRepository<Sequence, String>, SequenceRepositoryCustom {
@@ -20,6 +21,8 @@ public interface SequenceRepository extends MongoRepository<Sequence, String>, S
     List<Sequence> findByComponentIdIn(Set<String> componentIds);
 
     List<Sequence> findByComponentIdInAndStatus(Set<String> componentIds, SequenceStatus status);
+
+    Optional<Sequence> findByComponentIdAndName(String componentId, String name);
 
     @Query(value = "{ users: { $elemMatch: { userId: ?0 } }}")
     List<Sequence> findByUser(String userId);
