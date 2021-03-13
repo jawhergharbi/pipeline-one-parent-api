@@ -29,7 +29,7 @@ public class SequenceServiceEventListener {
 
     @EventListener
     public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<SequenceDTO, Sequence> event) {
-        log.debug("Sequence  before insert lister");
+        log.debug("Sequence before insert listener");
         Sequence entity = event.getModel();
         SequenceDTO dto = event.getDto();
         // status
@@ -54,7 +54,7 @@ public class SequenceServiceEventListener {
 
     @EventListener
     public void handleBeforeSaveEvent(BaseServiceBeforeSaveEvent<SequenceDTO, Sequence> event) {
-        log.debug("Sequence  before save listener");
+        log.debug("Sequence before save listener");
         SequenceDTO dto = event.getDto();
         Set<SequenceUserDTO> users = dto.getUsers();
         if (users != null && users.size() > 0) {

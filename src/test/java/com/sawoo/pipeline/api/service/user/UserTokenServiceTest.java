@@ -53,7 +53,7 @@ public class UserTokenServiceTest extends BaseServiceTest<UserTokenDTO, UserToke
 
     @Override
     protected void mockedEntityExists(UserToken entity) {
-        doReturn(Optional.of(entity)).when(repository).findById(anyString());
+        doReturn(Optional.of(entity)).when(repository).findByToken(anyString());
     }
 
     @BeforeAll

@@ -18,6 +18,7 @@ import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -54,11 +55,11 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     @Autowired
     public UserAuthServiceImpl(UserRepository repository,
                                UserAuthMapper mapper,
-                               UserAuthServiceEventListener eventListener,
+                               ApplicationEventPublisher publisher,
                                AuthenticationManager authenticationManager,
                                PasswordEncoder passwordEncoder,
                                UserTokenService tokenService) {
-        super(repository, mapper, DBConstants.USER_DOCUMENT, eventListener);
+        super(repository, mapper, DBConstants.USER_DOCUMENT, publisher);
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;

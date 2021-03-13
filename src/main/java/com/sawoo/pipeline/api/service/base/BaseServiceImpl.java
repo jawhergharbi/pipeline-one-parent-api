@@ -30,27 +30,17 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     private OM mapper;
     private R repository;
     private String entityType;
-    private BaseServiceEventListener<D, M> eventListener;
     private ApplicationEventPublisher eventPublisher;
 
-    public BaseServiceImpl(R repository, OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener, ApplicationEventPublisher eventPublisher) {
+    public BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
-        this.eventListener = eventListener;
         this.eventPublisher = eventPublisher;
     }
 
-    public BaseServiceImpl(R repository,OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
-        this(repository, mapper, entityType, eventListener, null);
-    }
-
-    public BaseServiceImpl(R repository,OM mapper, String entityType, ApplicationEventPublisher eventPublisher) {
-        this(repository, mapper, entityType, null, eventPublisher);
-    }
-
     public BaseServiceImpl(R repository,OM mapper, String entityType) {
-        this(repository, mapper, entityType, null, null);
+        this(repository, mapper, entityType, null);
     }
 
     public abstract Optional<M> entityExists(D entityToCreate);
@@ -69,9 +59,6 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         entity.setCreated(now);
         entity.setUpdated(now);
-        if (eventListener != null) {
-            eventListener.onBeforeInsert(dto, entity);
-        }
         if (eventPublisher != null) {
             eventPublisher.publishEvent(new BaseServiceBeforeInsertEvent<>(dto, entity));
         }
@@ -133,9 +120,6 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         return getRepository()
                 .findById(id)
                 .map((entity) -> {
-                    if (eventListener != null) {
-                        eventListener.onBeforeUpdate(dto, entity);
-                    }
                     if (eventPublisher != null) {
                         eventPublisher.publishEvent(new BaseServiceBeforeUpdateEvent<>(dto, entity));
                     }
@@ -146,9 +130,6 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                                     MappingType.ALL_FIELDS,
                                     MappingType.ONLY_VALUED_FIELDS);
                     entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-                    if (eventListener != null) {
-                        eventListener.onBeforeSave(dto, entity);
-                    }
                     if (eventPublisher != null) {
                         eventPublisher.publishEvent(new BaseServiceBeforeSaveEvent<>(dto, entity));
                     }

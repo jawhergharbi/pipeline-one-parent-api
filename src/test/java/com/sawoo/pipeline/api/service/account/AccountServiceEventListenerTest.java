@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeUpdateEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -45,7 +46,7 @@ public class AccountServiceEventListenerTest {
         postDTO.getUsers().add(user);
 
         // Execute the service call
-        listener.onBeforeUpdate(postDTO, entity);
+        listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity));
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
@@ -77,7 +78,7 @@ public class AccountServiceEventListenerTest {
         postDTO.getUsers().add(newUser);
 
         // Execute the service call
-        listener.onBeforeUpdate(postDTO, entity);
+        listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity));
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
@@ -111,7 +112,7 @@ public class AccountServiceEventListenerTest {
         postDTO.getUsers().add(newUser);
 
         // Execute the service call
-        listener.onBeforeUpdate(postDTO, entity);
+        listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity));
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",
@@ -140,7 +141,7 @@ public class AccountServiceEventListenerTest {
         postDTO.getUsers().add(newUser);
 
         // Execute the service call
-        listener.onBeforeUpdate(postDTO, entity);
+        listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity));
 
         Assertions.assertAll(
                 String.format("User list can not be empty, size must be [%d] and the default role by the user must be [%s]",

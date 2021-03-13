@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.repository.person.PersonRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,8 +20,10 @@ import java.util.Optional;
 public class PersonServiceImpl extends BaseServiceImpl<PersonDTO, Person, PersonRepository, PersonMapper> implements PersonService {
 
     @Autowired
-    public PersonServiceImpl(PersonRepository repository, PersonMapper mapper, PersonServiceEventListener eventListener) {
-        super(repository, mapper, DBConstants.PERSON_DOCUMENT, eventListener);
+    public PersonServiceImpl(PersonRepository repository,
+                             PersonMapper mapper,
+                             ApplicationEventPublisher publisher) {
+        super(repository, mapper, DBConstants.PERSON_DOCUMENT, publisher);
     }
 
     @Override

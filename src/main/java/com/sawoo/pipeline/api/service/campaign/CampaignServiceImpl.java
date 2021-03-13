@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -27,9 +28,9 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     @Autowired
     public CampaignServiceImpl(CampaignRepository repository,
                                CampaignMapper mapper,
-                               CampaignServiceEventListener eventListener,
+                               ApplicationEventPublisher publisher,
                                CampaignAccountService campaignAccountService) {
-        super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, eventListener);
+        super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, publisher);
         this.campaignAccountService = campaignAccountService;
     }
 
