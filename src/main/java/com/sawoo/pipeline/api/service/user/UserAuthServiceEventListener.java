@@ -22,7 +22,7 @@ public class UserAuthServiceEventListener {
 
     @EventListener
     public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<UserAuthDTO, User> event) {
-        log.debug("User before insert listener");
+        log.debug("UserAuth before insert listener");
         User entity = event.getModel();
         UserAuthDTO dto = event.getDto();
         if (entity != null) {
