@@ -36,11 +36,10 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     @Autowired
     public SequenceServiceImpl(SequenceRepository repository,
                                SequenceMapper mapper,
-                               SequenceServiceEventListener eventListener,
                                ApplicationEventPublisher eventPublisher,
                                SequenceAccountService sequenceAccountService,
                                SequenceStepsService sequenceStepService) {
-        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener, eventPublisher);
+        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventPublisher);
         this.sequenceAccountService = sequenceAccountService;
         this.sequenceStepService = sequenceStepService;
     }

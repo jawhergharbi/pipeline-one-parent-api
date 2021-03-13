@@ -65,7 +65,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
 
     @Override
     protected void mockedEntityExists(Sequence entity) {
-        doReturn(Optional.of(entity)).when(repository).findById(anyString());
+        doReturn(Optional.of(entity)).when(repository).findByComponentIdAndName(anyString(), anyString());
     }
 
     @BeforeAll

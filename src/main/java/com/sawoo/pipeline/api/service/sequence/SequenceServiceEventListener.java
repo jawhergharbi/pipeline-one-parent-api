@@ -10,8 +10,9 @@ import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceUser;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
-import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
-import com.sawoo.pipeline.api.service.base.BeforeInsertEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeUpdateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -24,15 +25,13 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Component
-public class SequenceServiceEventListener implements BaseServiceEventListener<SequenceDTO, Sequence> {
+public class SequenceServiceEventListener {
 
     @EventListener
-    public void handleBeforeInsertEvent(BeforeInsertEvent<SequenceDTO, Sequence> event) {
-        System.out.println(event.toString());
-    }
-
-    @Override
-    public void onBeforeInsert(SequenceDTO dto, Sequence entity) {
+    public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<SequenceDTO, Sequence> event) {
+        log.debug("Sequence  before insert lister");
+        Sequence entity = event.getModel();
+        SequenceDTO dto = event.getDto();
         // status
         if (entity.getStatus() == null) {
             entity.setStatus(SequenceStatus.IN_PROGRESS);
@@ -53,8 +52,10 @@ public class SequenceServiceEventListener implements BaseServiceEventListener<Se
         }
     }
 
-    @Override
-    public void onBeforeSave(SequenceDTO dto, Sequence entity) {
+    @EventListener
+    public void handleBeforeSaveEvent(BaseServiceBeforeSaveEvent<SequenceDTO, Sequence> event) {
+        log.debug("Sequence  before save listener");
+        SequenceDTO dto = event.getDto();
         Set<SequenceUserDTO> users = dto.getUsers();
         if (users != null && users.size() > 0) {
             Consumer<SequenceUserDTO> setTimeStamps = u -> {
@@ -67,8 +68,11 @@ public class SequenceServiceEventListener implements BaseServiceEventListener<Se
         }
     }
 
-    @Override
-    public void onBeforeUpdate(SequenceDTO dto, Sequence entity) {
+    @EventListener
+    public void handleBeforeUpdateEvent(BaseServiceBeforeUpdateEvent<SequenceDTO, Sequence> event) {
+        log.debug("Sequence before update listener");
+        Sequence entity = event.getModel();
+        SequenceDTO dto = event.getDto();
         Set<SequenceUserDTO> users = dto.getUsers();
         if (CommonUtils.isNotEmptyNorNull(users)) {
             validateUsers(users, entity.getId(), entity.getUsers());

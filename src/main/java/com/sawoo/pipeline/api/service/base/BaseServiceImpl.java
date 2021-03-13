@@ -5,6 +5,9 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeUpdateEvent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +45,10 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         this(repository, mapper, entityType, eventListener, null);
     }
 
+    public BaseServiceImpl(R repository,OM mapper, String entityType, ApplicationEventPublisher eventPublisher) {
+        this(repository, mapper, entityType, null, eventPublisher);
+    }
+
     public BaseServiceImpl(R repository,OM mapper, String entityType) {
         this(repository, mapper, entityType, null, null);
     }
@@ -66,7 +73,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
             eventListener.onBeforeInsert(dto, entity);
         }
         if (eventPublisher != null) {
-            eventPublisher.publishEvent(new BeforeInsertEvent<>(dto, entity));
+            eventPublisher.publishEvent(new BaseServiceBeforeInsertEvent<>(dto, entity));
         }
         entity = repository.insert(entity);
 
@@ -129,6 +136,9 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                     if (eventListener != null) {
                         eventListener.onBeforeUpdate(dto, entity);
                     }
+                    if (eventPublisher != null) {
+                        eventPublisher.publishEvent(new BaseServiceBeforeUpdateEvent<>(dto, entity));
+                    }
                     entity = getMapper().getMapperIn()
                             .getDestination(
                                     entity,
@@ -138,6 +148,9 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                     entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     if (eventListener != null) {
                         eventListener.onBeforeSave(dto, entity);
+                    }
+                    if (eventPublisher != null) {
+                        eventPublisher.publishEvent(new BaseServiceBeforeSaveEvent<>(dto, entity));
                     }
                     getRepository().save(entity);
 
