@@ -1,14 +1,14 @@
 package com.sawoo.pipeline.api.repository.account;
 
 import com.sawoo.pipeline.api.model.account.Account;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@JaversSpringDataAuditable
 public interface AccountRepository extends MongoRepository<Account, String>, AccountRepositoryCustom {
 
     Optional<Account> findByEmail(String email);

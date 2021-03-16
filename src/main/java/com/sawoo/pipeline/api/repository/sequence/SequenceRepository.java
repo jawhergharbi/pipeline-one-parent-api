@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.repository.sequence;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import com.sawoo.pipeline.api.model.sequence.SequenceUserType;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@JaversSpringDataAuditable
 public interface SequenceRepository extends MongoRepository<Sequence, String>, SequenceRepositoryCustom {
 
     List<Sequence> findByStatus(SequenceStatus status);

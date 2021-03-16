@@ -74,6 +74,11 @@ spring:
       uri: mongodb://localhost:27017/pipeline-core?readPreference=primary&ssl=false
       auto-index-creation: false
 
+javers:
+  mongodb:
+    uri: mongodb://localhost:27017/pipeline-core-audit?readPreference=primary&ssl=false
+
+
 app:
   server: http://localhost:8080
   web-server: http://localhost:4200
