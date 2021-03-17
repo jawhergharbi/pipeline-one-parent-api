@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.infra.audit;
 import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.javers.core.Javers;
 import org.javers.repository.jql.QueryBuilder;
 import org.javers.shadow.Shadow;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuditServiceImpl implements AuditService {
@@ -21,9 +23,10 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public <D, M> List<VersionDTO<D>> getVersions(M currentVersion, String id, JMapper<D, M> mapper) {
+        log.debug("Querying versions for component {} with id {}", currentVersion.getClass(), id);
         List<Shadow<M>> ds = getShadows(currentVersion.getClass(), id);
         AtomicInteger index = new AtomicInteger();
-        return ds.stream().map(d -> {
+        List<VersionDTO<D>> versions = ds.stream().map(d -> {
             VersionDTO<D> version = new VersionDTO<>();
             version.setEntity(mapper.getDestination(d.get()));
             version.setVersion(index.getAndIncrement());
@@ -34,6 +37,14 @@ public class AuditServiceImpl implements AuditService {
             }
             return version;
         }).collect(Collectors.toList());
+
+        log.debug(
+                "{} versions has/have been found for component {} with id {}",
+                versions.size(),
+                currentVersion.getClass(),
+                id);
+
+        return versions;
     }
 
     private <T> List<Shadow<T>> getShadows(Class<?> entity, String id) {
