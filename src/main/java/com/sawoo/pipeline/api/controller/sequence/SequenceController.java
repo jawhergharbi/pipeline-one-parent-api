@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.sequence;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,14 @@ public class SequenceController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<SequenceDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

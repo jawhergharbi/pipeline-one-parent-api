@@ -25,4 +25,7 @@ public interface ControllerDelegation<D> {
             D dto);
 
     String getComponentId(D dto);
+
+    ResponseEntity<List<VersionDTO<D>>> getVersions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id);
 }

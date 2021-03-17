@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.interaction;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,14 @@ public class InteractionController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<InteractionDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<InteractionDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

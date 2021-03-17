@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.account;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
@@ -55,6 +56,14 @@ public class AccountController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<AccountDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

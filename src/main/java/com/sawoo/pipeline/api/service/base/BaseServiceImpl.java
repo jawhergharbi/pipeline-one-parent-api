@@ -4,10 +4,12 @@ import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeUpdateEvent;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +33,18 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     private R repository;
     private String entityType;
     private ApplicationEventPublisher eventPublisher;
+    private AuditService audit;
 
-    public BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher) {
+    public BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher, AuditService audit) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
         this.eventPublisher = eventPublisher;
+        this.audit = audit;
     }
 
-    public BaseServiceImpl(R repository,OM mapper, String entityType) {
-        this(repository, mapper, entityType, null);
+    public BaseServiceImpl(R repository,OM mapper, String entityType, AuditService audit) {
+        this(repository, mapper, entityType, null, audit);
     }
 
     public abstract Optional<M> entityExists(D entityToCreate);
@@ -146,5 +150,13 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ getEntityType(), id }));
+    }
+
+    @Override
+    public List<VersionDTO<D>> getVersions(String id) {
+        return getRepository()
+                .findById(id)
+                .map( (entity) -> audit.getVersions(entity, id, getMapper().getMapperOut()))
+                .orElse(null);
     }
 }

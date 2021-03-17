@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class CompanyServiceImpl extends BaseServiceImpl<CompanyDTO, Company, CompanyRepository, CompanyMapper> implements CompanyService {
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository repository, CompanyMapper mapper) {
-        super(repository, mapper, DBConstants.COMPANY_DOCUMENT);
+    public CompanyServiceImpl(CompanyRepository repository, CompanyMapper mapper, AuditService audit) {
+        super(repository, mapper, DBConstants.COMPANY_DOCUMENT, audit);
     }
 
     @Override

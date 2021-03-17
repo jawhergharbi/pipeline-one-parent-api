@@ -12,6 +12,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -37,8 +38,9 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
                            LeadReportService reportService,
-                           LeadInteractionService interactionService) {
-        super(repository, mapper, DBConstants.LEAD_DOCUMENT);
+                           LeadInteractionService interactionService,
+                           AuditService audit) {
+        super(repository, mapper, DBConstants.LEAD_DOCUMENT, audit);
         this.reportService = reportService;
         this.interactionService = interactionService;
     }

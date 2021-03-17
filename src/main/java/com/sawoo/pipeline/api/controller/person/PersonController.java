@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.person;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,14 @@ public class PersonController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PersonDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<PersonDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

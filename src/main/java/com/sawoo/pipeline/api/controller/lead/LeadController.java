@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
 import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
@@ -67,6 +68,14 @@ public class LeadController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> findById(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<LeadDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

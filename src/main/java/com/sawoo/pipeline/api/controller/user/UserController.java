@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.controller.user;
 
 import com.sawoo.pipeline.api.common.exceptions.RestException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthJwtTokenResponse;
 import com.sawoo.pipeline.api.dto.user.UserAuthLogin;
@@ -50,6 +51,14 @@ public class UserController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserAuthDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<UserAuthDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

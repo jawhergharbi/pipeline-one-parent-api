@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,8 +39,9 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
                                SequenceMapper mapper,
                                ApplicationEventPublisher eventPublisher,
                                SequenceAccountService sequenceAccountService,
-                               SequenceStepsService sequenceStepService) {
-        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventPublisher);
+                               SequenceStepsService sequenceStepService,
+                               AuditService audit) {
+        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventPublisher, audit);
         this.sequenceAccountService = sequenceAccountService;
         this.sequenceStepService = sequenceStepService;
     }

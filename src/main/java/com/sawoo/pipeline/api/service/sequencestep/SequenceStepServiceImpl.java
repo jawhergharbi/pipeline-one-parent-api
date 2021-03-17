@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.repository.sequencestep.SequenceStepRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class SequenceStepServiceImpl extends BaseServiceImpl<SequenceStepDTO, SequenceStep, SequenceStepRepository, SequenceStepMapper> implements SequenceStepService{
 
     @Autowired
-    public SequenceStepServiceImpl(SequenceStepRepository repository, SequenceStepMapper mapper) {
-        super(repository, mapper, DBConstants.SEQUENCE_STEP_DOCUMENT);
+    public SequenceStepServiceImpl(SequenceStepRepository repository, SequenceStepMapper mapper, AuditService audit) {
+        super(repository, mapper, DBConstants.SEQUENCE_STEP_DOCUMENT, audit);
     }
 
     @Override

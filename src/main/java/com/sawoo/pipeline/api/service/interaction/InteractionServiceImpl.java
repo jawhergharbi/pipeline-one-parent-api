@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.interaction.Interaction;
 import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ import java.util.stream.Collectors;
 public class InteractionServiceImpl extends BaseServiceImpl<InteractionDTO, Interaction, InteractionRepository, InteractionMapper> implements InteractionService {
 
     @Autowired
-    public InteractionServiceImpl(InteractionRepository repository, InteractionMapper mapper) {
-        super(repository, mapper, DBConstants.INTERACTION_DOCUMENT);
+    public InteractionServiceImpl(InteractionRepository repository, InteractionMapper mapper, AuditService audit) {
+        super(repository, mapper, DBConstants.INTERACTION_DOCUMENT, audit);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import com.sawoo.pipeline.api.service.user.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,10 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
             AccountRepository repository,
             AccountMapper mapper,
             ApplicationEventPublisher publisher,
+            AuditService audit,
             AccountLeadService leadService,
             UserAuthService userService) {
-        super(repository, mapper, DBConstants.ACCOUNT_DOCUMENT, publisher);
+        super(repository, mapper, DBConstants.ACCOUNT_DOCUMENT, publisher, audit);
         this.userService = new AccountUserServiceDecorator(userService, this);
         this.leadService = leadService;
     }

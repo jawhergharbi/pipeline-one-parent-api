@@ -15,6 +15,7 @@ import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.repository.user.UserRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,10 +57,11 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserAuthDTO, User, User
     public UserAuthServiceImpl(UserRepository repository,
                                UserAuthMapper mapper,
                                ApplicationEventPublisher publisher,
+                               AuditService audit,
                                AuthenticationManager authenticationManager,
                                PasswordEncoder passwordEncoder,
                                UserTokenService tokenService) {
-        super(repository, mapper, DBConstants.USER_DOCUMENT, publisher);
+        super(repository, mapper, DBConstants.USER_DOCUMENT, publisher, audit);
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
