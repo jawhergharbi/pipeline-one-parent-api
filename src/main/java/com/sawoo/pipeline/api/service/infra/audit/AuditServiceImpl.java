@@ -1,5 +1,6 @@
-package com.sawoo.pipeline.api.service.audit;
+package com.sawoo.pipeline.api.service.infra.audit;
 
+import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import lombok.RequiredArgsConstructor;
 import org.javers.core.Javers;
@@ -19,12 +20,12 @@ public class AuditServiceImpl implements AuditService {
     private final Javers javers;
 
     @Override
-    public <D> List<VersionDTO<D>> getVersions(D currentVersion, String id) {
-        List<Shadow<D>> ds = getShadows(currentVersion.getClass(), id);
+    public <D, M> List<VersionDTO<D>> getVersions(M currentVersion, String id, JMapper<D, M> mapper) {
+        List<Shadow<M>> ds = getShadows(currentVersion.getClass(), id);
         AtomicInteger index = new AtomicInteger();
         return ds.stream().map(d -> {
             VersionDTO<D> version = new VersionDTO<>();
-            version.setEntity(d.get());
+            version.setEntity(mapper.getDestination(d.get()));
             version.setVersion(index.getAndIncrement());
             version.setAuthor(d.getCommitMetadata().getAuthor());
             version.setCreated(d.getCommitMetadata().getCommitDate());

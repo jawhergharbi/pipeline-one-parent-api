@@ -1,10 +1,12 @@
 package com.sawoo.pipeline.api.service.campaign;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,17 @@ import java.util.Set;
 public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, CampaignRepository, CampaignMapper> implements CampaignService {
 
     private final CampaignAccountService campaignAccountService;
+    private final AuditService audit;
 
     @Autowired
     public CampaignServiceImpl(CampaignRepository repository,
                                CampaignMapper mapper,
                                ApplicationEventPublisher publisher,
-                               CampaignAccountService campaignAccountService) {
+                               CampaignAccountService campaignAccountService,
+                               AuditService audit) {
         super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, publisher);
         this.campaignAccountService = campaignAccountService;
+        this.audit = audit;
     }
 
     @Override
@@ -47,5 +52,13 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     @Override
     public List<CampaignDTO> findByAccountIds(Set<String> accountIds) throws CommonServiceException {
         return campaignAccountService.findByAccountIds(accountIds);
+    }
+
+    @Override
+    public List<VersionDTO<CampaignDTO>> getVersions(String id) {
+        return getRepository()
+                .findById(id)
+                .map( (entity) -> audit.getVersions(entity, id, getMapper().getMapperOut()))
+                .orElse(null);
     }
 }

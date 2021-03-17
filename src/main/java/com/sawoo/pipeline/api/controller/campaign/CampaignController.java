@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.controller.campaign;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -45,6 +45,14 @@ public class CampaignController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignDTO> get(@PathVariable String id) {
         return delegator.findById(id);
+    }
+
+    @RequestMapping(
+            value = "/{id}/versions",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<CampaignDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
     }
 
     @RequestMapping(

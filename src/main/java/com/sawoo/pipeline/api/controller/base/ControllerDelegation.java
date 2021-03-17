@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.base;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
