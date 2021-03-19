@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.dto.sequence;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +33,8 @@ public class SequenceDTO extends SequenceBaseDTO {
     private Set<SequenceUserDTO> users;
 
     private String ownerId;
+
+    private AccountFieldDTO account;
 
     @JMapConversion(from = {"status"}, to = {"status"})
     public Integer statusConversion(SequenceStatus status) {

@@ -16,6 +16,8 @@ import lombok.ToString;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -56,7 +58,16 @@ public class CampaignDTO extends BaseEntityDTO {
     @JMap
     private LocalDateTime actualEndDate;
 
+    private List<CampaignLeadDTO> leads;
+
     private AccountFieldDTO account;
+
+    public List<CampaignLeadDTO> getLeads() {
+        if (leads == null) {
+            leads = new ArrayList<>();
+        }
+        return leads;
+    }
 
     @JMapConversion(from = {"status"}, to = {"status"})
     public Integer statusConversion(CampaignStatus status) {

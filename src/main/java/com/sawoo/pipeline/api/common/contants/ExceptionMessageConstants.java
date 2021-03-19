@@ -56,6 +56,8 @@ public interface ExceptionMessageConstants {
     String SEQUENCE_STEP_UPDATE_STEP_NOT_FOUND_IN_THE_SEQUENCE_EXCEPTION = "sequence.step.update-step-not-found-in-the-sequence.exception";
     String SEQUENCE_STEP_UPDATE_STEP_POSITION_OR_PERSONALITY_CANT_CHANGE_EXCEPTION = "sequence.step.update-step-position-or-personality-cant-change.exception";
 
+    String CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION = "campaign.campaign-lead.lead-already-added.exception";
+
 
     String REPOSITORY_EXCEPTION_DATA_CONVERSATION_ERROR_EXCEPTION = "repository.data-conversation.exception";
 

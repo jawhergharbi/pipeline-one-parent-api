@@ -14,6 +14,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -53,6 +54,13 @@ public class Campaign extends BaseEntity  {
     private LocalDateTime actualEndDate;
 
     private List<CampaignLead> leads;
+
+    public List<CampaignLead> getLeads() {
+        if (leads == null) {
+            leads = new ArrayList<>();
+        }
+        return leads;
+    }
 
     @JMapConversion(from = {"status"}, to = {"status"})
     public CampaignStatus statusConversion(Integer status) {
