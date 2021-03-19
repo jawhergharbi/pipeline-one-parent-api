@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @Component
 @Qualifier("campaignLeadController")
@@ -26,10 +27,10 @@ public class CampaignControllerLeadDelegatorImpl implements CampaignControllerLe
     private final CampaignService service;
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> addCampaignLead(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
+    public ResponseEntity<CampaignLeadDTO> addLead(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @Valid CampaignLeadAddDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
-        CampaignLeadDTO newEntity = service.addCampaignLead(campaignId, campaignLead);
+        CampaignLeadDTO newEntity = service.addLead(campaignId, campaignLead);
         try {
             return ResponseEntity
                     .created(new URI(ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI + "/" + campaignId + "/leads/" + newEntity.getLead().getId()))
@@ -40,10 +41,17 @@ public class CampaignControllerLeadDelegatorImpl implements CampaignControllerLe
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> removeCampaignLead(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
+    public ResponseEntity<CampaignLeadDTO> removeLead(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
             throws ResourceNotFoundException, CommonServiceException {
-        return ResponseEntity.ok().body(service.removeCampaignLead(campaignId, leadId));
+        return ResponseEntity.ok().body(service.removeLead(campaignId, leadId));
+    }
+
+    @Override
+    public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return ResponseEntity.ok().body(service.findAllLeads(campaignId));
     }
 }

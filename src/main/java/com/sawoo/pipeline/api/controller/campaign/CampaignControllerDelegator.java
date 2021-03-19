@@ -45,14 +45,20 @@ public class CampaignControllerDelegator extends BaseControllerDelegator<Campaig
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> addCampaignLead(String campaignId, CampaignLeadAddDTO campaignLead)
+    public ResponseEntity<CampaignLeadDTO> addLead(String campaignId, CampaignLeadAddDTO campaignLead)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.addCampaignLead(campaignId, campaignLead);
+        return leadDelegator.addLead(campaignId, campaignLead);
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> removeCampaignLead(String campaignId, String leadId)
+    public ResponseEntity<CampaignLeadDTO> removeLead(String campaignId, String leadId)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.removeCampaignLead(campaignId, leadId);
+        return leadDelegator.removeLead(campaignId, leadId);
+    }
+
+    @Override
+    public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(String campaignId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadDelegator.findAllLeads(campaignId);
     }
 }

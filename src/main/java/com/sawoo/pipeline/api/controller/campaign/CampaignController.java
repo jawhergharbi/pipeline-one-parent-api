@@ -93,7 +93,7 @@ public class CampaignController {
     public ResponseEntity<CampaignLeadDTO> addCampaignLead(
             @PathVariable("id") String id,
             @RequestBody CampaignLeadAddDTO dto) {
-        return delegator.addCampaignLead(id, dto);
+        return delegator.addLead(id, dto);
     }
 
     @RequestMapping(
@@ -104,6 +104,15 @@ public class CampaignController {
     public ResponseEntity<CampaignLeadDTO> removeCampaignLead(
             @PathVariable("id") String id,
             @PathVariable("leadId") String leadId) {
-        return delegator.removeCampaignLead(id, leadId);
+        return delegator.removeLead(id, leadId);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leads",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(
+            @PathVariable(value = "id") String id) {
+        return delegator.findAllLeads(id);
     }
 }

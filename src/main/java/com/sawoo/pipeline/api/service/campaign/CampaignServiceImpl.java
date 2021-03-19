@@ -58,13 +58,20 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     }
 
     @Override
-    public CampaignLeadDTO addCampaignLead(String campaignId, CampaignLeadAddDTO campaignLead)
+    public CampaignLeadDTO addLead(String campaignId, CampaignLeadAddDTO campaignLead)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.addCampaignLead(campaignId, campaignLead);
+        return campaignLeadService.addLead(campaignId, campaignLead);
     }
 
     @Override
-    public CampaignLeadDTO removeCampaignLead(String campaignId, String leadId) {
-        return campaignLeadService.removeCampaignLead(campaignId, leadId);
+    public CampaignLeadDTO removeLead(String campaignId, String leadId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return campaignLeadService.removeLead(campaignId, leadId);
+    }
+
+    @Override
+    public List<CampaignLeadDTO> findAllLeads(String campaignId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return campaignLeadService.findAllLeads(campaignId);
     }
 }
