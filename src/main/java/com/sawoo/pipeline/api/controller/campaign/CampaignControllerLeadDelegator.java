@@ -14,7 +14,11 @@ import javax.validation.constraints.NotBlank;
 @Validated
 public interface CampaignControllerLeadDelegator {
 
-    ResponseEntity<CampaignLeadDTO> addCampaignLead(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaigId,
+    ResponseEntity<CampaignLeadDTO> addCampaignLead(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
                                                     @Valid CampaignLeadAddDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException;
+
+    ResponseEntity<CampaignLeadDTO> removeCampaignLead(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
+                                                       @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException, CommonServiceException;
 }

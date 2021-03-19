@@ -55,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
+public class LeadControllerInteractionTest extends BaseLightControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,7 +64,7 @@ public class LeadInteractionControllerTest extends BaseLightControllerTest<LeadD
     private LeadService service;
 
     @Autowired
-    public LeadInteractionControllerTest(LeadMockFactory mockFactory, LeadService service) {
+    public LeadControllerInteractionTest(LeadMockFactory mockFactory, LeadService service) {
         super(mockFactory,
                 ControllerConstants.LEAD_CONTROLLER_API_BASE_URI,
                 DBConstants.LEAD_DOCUMENT,

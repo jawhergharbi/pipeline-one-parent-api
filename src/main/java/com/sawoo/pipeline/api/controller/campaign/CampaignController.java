@@ -3,6 +3,8 @@ package com.sawoo.pipeline.api.controller.campaign;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -81,5 +83,27 @@ public class CampaignController {
     public ResponseEntity<List<CampaignDTO>> findByAccountIds(
             @PathVariable(value = "accountIds") Set<String> accountIds) {
         return delegator.findByAccounts(accountIds);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leads",
+            method = RequestMethod.POST,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<CampaignLeadDTO> addCampaignLead(
+            @PathVariable("id") String id,
+            @RequestBody CampaignLeadAddDTO dto) {
+        return delegator.addCampaignLead(id, dto);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leads/{leadId}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<CampaignLeadDTO> removeCampaignLead(
+            @PathVariable("id") String id,
+            @PathVariable("leadId") String leadId) {
+        return delegator.removeCampaignLead(id, leadId);
     }
 }

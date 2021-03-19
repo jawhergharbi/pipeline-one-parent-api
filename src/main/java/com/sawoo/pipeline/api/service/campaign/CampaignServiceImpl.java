@@ -1,7 +1,10 @@
 package com.sawoo.pipeline.api.service.campaign;
 
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
+import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
@@ -25,15 +28,18 @@ import java.util.Set;
 public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, CampaignRepository, CampaignMapper> implements CampaignService {
 
     private final CampaignAccountService campaignAccountService;
+    private final CampaignLeadService campaignLeadService;
 
     @Autowired
     public CampaignServiceImpl(CampaignRepository repository,
                                CampaignMapper mapper,
                                ApplicationEventPublisher publisher,
                                CampaignAccountService campaignAccountService,
+                               CampaignLeadService campaignLeadService,
                                AuditService audit) {
         super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, publisher, audit);
         this.campaignAccountService = campaignAccountService;
+        this.campaignLeadService = campaignLeadService;
     }
 
     @Override
@@ -49,5 +55,16 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     @Override
     public List<CampaignDTO> findByAccountIds(Set<String> accountIds) throws CommonServiceException {
         return campaignAccountService.findByAccountIds(accountIds);
+    }
+
+    @Override
+    public CampaignLeadDTO addCampaignLead(String campaignId, CampaignLeadAddDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return campaignLeadService.addCampaignLead(campaignId, campaignLead);
+    }
+
+    @Override
+    public CampaignLeadDTO removeCampaignLead(String campaignId, String leadId) {
+        return campaignLeadService.removeCampaignLead(campaignId, leadId);
     }
 }
