@@ -90,7 +90,7 @@ public class CampaignController {
             method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> addCampaignLead(
+    public ResponseEntity<CampaignLeadDTO> addLead(
             @PathVariable("id") String id,
             @RequestBody CampaignLeadAddDTO dto) {
         return delegator.addLead(id, dto);
@@ -99,9 +99,8 @@ public class CampaignController {
     @RequestMapping(
             value = "/{id}/leads/{leadId}",
             method = RequestMethod.DELETE,
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> removeCampaignLead(
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<CampaignLeadDTO> removeLead(
             @PathVariable("id") String id,
             @PathVariable("leadId") String leadId) {
         return delegator.removeLead(id, leadId);
