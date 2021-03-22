@@ -1,8 +1,6 @@
 package com.sawoo.pipeline.api.model.campaign;
 
 import com.googlecode.jmapper.annotations.JMap;
-import com.googlecode.jmapper.annotations.JMapConversion;
-import com.sawoo.pipeline.api.dto.sequence.SequenceBaseDTO;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
@@ -36,5 +34,8 @@ public class CampaignLead extends BaseEntity {
 
     @JMap
     private LocalDateTime endDate;
+
+    @JMap
+    private CampaignLeadStatus status;
 
 }

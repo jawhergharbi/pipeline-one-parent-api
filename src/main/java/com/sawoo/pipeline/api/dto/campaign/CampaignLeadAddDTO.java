@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.dto.campaign;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,6 @@ public class CampaignLeadAddDTO {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    private CampaignLeadStatus status;
 }

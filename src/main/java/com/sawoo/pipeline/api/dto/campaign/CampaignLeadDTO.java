@@ -5,6 +5,7 @@ import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceBaseDTO;
+import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,9 @@ public class CampaignLeadDTO extends BaseEntityDTO {
 
     @JMap
     private LocalDateTime endDate;
+
+    @JMap
+    private CampaignLeadStatus status;
 
     @JMapConversion(from = {"sequence"}, to = {"sequence"})
     public SequenceBaseDTO sequenceConversion(Sequence sequence) {
