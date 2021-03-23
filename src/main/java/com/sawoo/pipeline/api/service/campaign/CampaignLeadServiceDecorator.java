@@ -100,12 +100,10 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
                 .stream()
                 .filter(l -> leadId.equals(l.getLead().getId()))
                 .findFirst()
-                .map((lead) -> {
+                .map(lead -> {
                     log.debug("Lead id [{}] for campaign id [{}] has been found", leadId, campaignId);
 
-                    BiConsumer<Campaign, CampaignLead> f = (c, l) -> c.getLeads().remove(l);
-                    f.accept(campaign, lead);
-
+                    removeCampaignLead(campaign, lead);
                     campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     campaignService.getRepository().save(campaign);
 
@@ -129,22 +127,17 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
                 .stream()
                 .filter(l -> leadId.equals(l.getLead().getId()))
                 .findFirst()
-                .map((cl) -> {
+                .map(lead -> {
                     log.debug("Lead id [{}] for campaign id [{}] has been found", leadId, campaignId);
 
-                    cl =  new JMapper<>(CampaignLead.class, CampaignLeadBaseDTO.class)
-                            .getDestination(
-                                    cl,
-                                    campaignLead,
-                                    MappingType.ALL_FIELDS,
-                                    MappingType.ONLY_VALUED_FIELDS);
+                    updateCampaignLead(campaignLead, lead);
                     campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     campaignService.getRepository().save(campaign);
 
-                    return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(cl);
+                    return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(lead);
                 })
                 .orElseThrow(() -> new CommonServiceException(
-                        ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION,
+                        ExceptionMessageConstants.CAMPAIGN_UPDATE_LEAD_NOT_PRESENT_EXCEPTION,
                         new Object[] {leadId, campaignId}));
     }
 
@@ -158,8 +151,19 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
         return campaign
                 .getLeads()
                 .stream()
-                .map((l) -> campaignService.getMapper().getMapperLeadCampaignOut().getDestination(l))
+                .map(l -> campaignService.getMapper().getMapperLeadCampaignOut().getDestination(l))
                 .collect(Collectors.toList());
+    }
+
+    private void updateCampaignLead(CampaignLeadBaseDTO campaignLead, CampaignLead lead) {
+        BiConsumer<CampaignLeadBaseDTO, CampaignLead> f = (d, m) -> new JMapper<>(CampaignLead.class, CampaignLeadBaseDTO.class)
+                .getDestination(m, d, MappingType.ALL_FIELDS, MappingType.ONLY_VALUED_FIELDS);
+        f.accept(campaignLead, lead);
+    }
+
+    private void removeCampaignLead(Campaign campaign, CampaignLead lead) {
+        BiConsumer<Campaign, CampaignLead> f = (c, l) -> c.getLeads().remove(l);
+        f.accept(campaign, lead);
     }
 
     private Campaign findCampaignById(String campaignId) throws ResourceNotFoundException {

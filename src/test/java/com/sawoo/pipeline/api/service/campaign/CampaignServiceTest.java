@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
+class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
 
     @MockBean
     private CampaignRepository repository;
@@ -110,9 +110,10 @@ public class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, 
         doReturn(Optional.empty()).when(repository).findByComponentIdAndName(anyString(), anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().create(postDTO),
+                () -> service.create(postDTO),
                 "create must throw a ConstraintViolationException");
 
         // Assertions
@@ -137,9 +138,10 @@ public class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, 
         doReturn(Optional.empty()).when(repository).findByComponentIdAndName(anyString(), anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().create(postDTO),
+                () -> service.create(postDTO),
                 "create must throw a ConstraintViolationException");
 
         // Assertions

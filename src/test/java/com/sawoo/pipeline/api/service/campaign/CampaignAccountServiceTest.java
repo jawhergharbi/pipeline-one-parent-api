@@ -36,7 +36,7 @@ import static org.mockito.Mockito.doReturn;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CampaignAccountServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
+class CampaignAccountServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
 
     @MockBean
     private CampaignRepository repository;
@@ -86,9 +86,10 @@ public class CampaignAccountServiceTest extends BaseLightServiceTest<CampaignDTO
     @DisplayName("findByAccountIds: account ids is empty - Failure")
     void findByAccountIdsWhenAccountIdsListIsEmptyReturnsFailure() {
 
+        CampaignService service = getService();
         Exception exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().findByAccountIds(new HashSet<>()),
+                () -> service.findByAccountIds(new HashSet<>()),
                 "findByAccountIds must throw ConstraintViolationException");
 
         Assertions.assertTrue(

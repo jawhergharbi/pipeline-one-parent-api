@@ -31,7 +31,7 @@ public class CampaignServiceMapperTest {
 
     @Test
     @DisplayName("updateLead: mapping only new status - Success")
-    void updateLeadWhenMappingOnlyStatusSuccess() {
+    void updateLeadWhenMappingOnlyStatusReturnsSuccess() {
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
         CampaignLead campaignLead = getMockFactory().newCampaignLeadEntity(LEAD_ID, SEQUENCE_ID);

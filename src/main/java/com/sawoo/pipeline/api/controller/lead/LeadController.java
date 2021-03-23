@@ -13,12 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -32,9 +27,8 @@ public class LeadController {
 
     private final LeadControllerDelegator delegator;
 
-   @RequestMapping(
+   @PostMapping(
             value = { "", "/{type}"},
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> save(
@@ -55,64 +49,55 @@ public class LeadController {
         return delegator.create(lead);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> getAll() {
         return delegator.findAll();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> findById(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/versions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<VersionDTO<LeadDTO>>> getVersions(@PathVariable String id) {
         return delegator.getVersions(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/summary",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadSummary(@PathVariable String id) {
         return delegator.deleteLeadSummary(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/company-summary",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadCompanyComments(@PathVariable String id) {
         return delegator.deleteLeadCompanyComments(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/qualification-notes",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadQualificationNotes(@PathVariable String id) {
         return delegator.deleteLeadQualificationComments(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -121,9 +106,8 @@ public class LeadController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/report",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_PDF_VALUE})
     public ResponseEntity<InputStreamResource> getReport(
             @PathVariable("id") String id,
@@ -132,9 +116,8 @@ public class LeadController {
         return delegator.getReport(id, template, lan);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/{id}/interactions",
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<InteractionDTO> addInteraction(
@@ -143,9 +126,8 @@ public class LeadController {
         return delegator.addInteraction(leadId, interaction);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/interactions/{interactionId}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<InteractionDTO> removeInteraction(
             @PathVariable("id") String leadId,
@@ -153,18 +135,16 @@ public class LeadController {
         return delegator.removeInteraction(leadId, interactionId);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/interactions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
             @PathVariable("id") String leadId) {
         return delegator.getInteractions(leadId);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/interactions/{interactionId}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<InteractionAssigneeDTO> getInteraction(
             @PathVariable("id") String leadId,

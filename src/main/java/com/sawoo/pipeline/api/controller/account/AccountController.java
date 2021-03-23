@@ -13,10 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,8 +35,7 @@ public class AccountController {
 
     private final AccountControllerDelegator delegator;
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> create(@RequestBody AccountDTO dto) {
@@ -43,40 +45,34 @@ public class AccountController {
         return delegator.create(dto);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<AccountDTO>> getAll() {
         return delegator.findAll();
     }
 
-   @RequestMapping(
+   @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/versions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<VersionDTO<AccountDTO>>> getVersions(@PathVariable String id) {
         return delegator.getVersions(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -85,34 +81,30 @@ public class AccountController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/notes",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> deleteAccountNotes(@PathVariable String id) {
         return delegator.deleteAccountNotes(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/company-notes",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDTO> deleteLeadCompanyComments(@PathVariable String id) {
         return delegator.deleteAccountCompanyNotes(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/user/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<AccountDTO>> findByUserId(
             @PathVariable("id") String userId) {
         return delegator.findByUserId(userId);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}/user/{userId}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> updateUser(
             @PathVariable("id") String id,
@@ -120,9 +112,8 @@ public class AccountController {
         return delegator.updateUser(id, userId);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/leads/{leadId}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> removeLead(
             @PathVariable("id") String accountId,
@@ -130,18 +121,16 @@ public class AccountController {
         return delegator.removeLead(accountId, leadId);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/leads",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> findAllLeads(
             @PathVariable("id") String accountId) {
         return delegator.findAllLeads(accountId);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{ids}/leads/main",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> findAllLeads(
             @NotNull
@@ -150,9 +139,8 @@ public class AccountController {
         return delegator.findAllLeads(ids, leadStatus);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = {"/{id}/leads", "/{id}/leads/{type}"},
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
@@ -174,9 +162,8 @@ public class AccountController {
         return delegator.createLead(accountId, lead);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{ids}/interactions/main",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
             @NotNull

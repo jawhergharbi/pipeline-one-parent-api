@@ -4,12 +4,14 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.mock.CampaignMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
+import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
@@ -48,7 +50,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
+class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign, CampaignRepository, CampaignService, CampaignMockFactory> {
 
     @MockBean
     private CampaignRepository repository;
@@ -109,7 +111,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("addLead: campaign not found - Failure")
-    void addLeadWhenCampaignNotFoundFailure() {
+    void addLeadWhenCampaignNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         CampaignLeadAddDTO addLeadCampaignEntity = getMockFactory().newCampaignLeadAddDTO();
@@ -118,16 +120,17 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().addLead(CAMPAIGN_ID, addLeadCampaignEntity),
+                () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
                 "addCampaignLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
                 () -> Assertions.assertEquals(
-                        exception.getMessage(),
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION),
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
                 () -> Assertions.assertEquals(2, exception.getArgs().length),
                 () -> Assertions.assertTrue(
                         Arrays.asList(exception.getArgs()).contains(DBConstants.CAMPAIGN_DOCUMENT),
@@ -138,7 +141,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("addLead: lead not found - Failure")
-    void addLeadWhenLeadNotFoundFailure() {
+    void addLeadWhenLeadNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         CampaignLeadAddDTO addLeadCampaignEntity = getMockFactory().newCampaignLeadAddDTO();
@@ -149,16 +152,17 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.empty()).when(leadRepository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().addLead(CAMPAIGN_ID, addLeadCampaignEntity),
+                () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
                 "addCampaignLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
                 () -> Assertions.assertEquals(
-                        exception.getMessage(),
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION),
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
                 () -> Assertions.assertEquals(2, exception.getArgs().length),
                 () -> Assertions.assertTrue(
                         Arrays.asList(exception.getArgs()).contains(DBConstants.LEAD_DOCUMENT),
@@ -171,7 +175,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("addLead: lead added already - Failure")
-    void addLeadWhenLeadAlreadyAddedFailure() {
+    void addLeadWhenLeadAlreadyAddedReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
@@ -185,14 +189,15 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().addLead(CAMPAIGN_ID, addLeadCampaignEntity),
+                () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
                 "addCampaignLead must throw CommonServiceException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION);
+                ExceptionMessageConstants.CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, atMostOnce()).findById(anyString());
@@ -202,7 +207,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("addLead: sequence not found - Failure")
-    void addLeadWhenSequenceNotFoundFailure() {
+    void addLeadWhenSequenceNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
@@ -216,16 +221,17 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.empty()).when(sequenceRepository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().addLead(CAMPAIGN_ID, addLeadCampaignEntity),
+                () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
                 "addCampaignLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
                 () -> Assertions.assertEquals(
-                        exception.getMessage(),
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION),
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
                 () -> Assertions.assertEquals(2, exception.getArgs().length),
                 () -> Assertions.assertTrue(
                         Arrays.asList(exception.getArgs()).contains(DBConstants.SEQUENCE_DOCUMENT),
@@ -270,7 +276,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("removeLead: campaign not found - Failure")
-    void removeLeadWhenCampaignNotFoundFailure() {
+    void removeLeadWhenCampaignNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
@@ -279,16 +285,17 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().removeLead(CAMPAIGN_ID, LEAD_ID),
+                () -> service.removeLead(CAMPAIGN_ID, LEAD_ID),
                 "removeCampaignLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
                 () -> Assertions.assertEquals(
-                        exception.getMessage(),
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION),
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
                 () -> Assertions.assertEquals(2, exception.getArgs().length),
                 () -> Assertions.assertTrue(
                         Arrays.asList(exception.getArgs()).contains(DBConstants.CAMPAIGN_DOCUMENT),
@@ -299,7 +306,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("removeLead: lead not present - Failure")
-    void removeLeadWhenLeadNotPresentFailure() {
+    void removeLeadWhenLeadNotPresentReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
@@ -309,14 +316,77 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().removeLead(CAMPAIGN_ID, LEAD_ID),
+                () -> service.removeLead(CAMPAIGN_ID, LEAD_ID),
                 "removeCampaignLead must throw CommonServiceException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION);
+                ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION,
+                exception.getMessage());
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Campaign.class));
+    }
+
+    @Test
+    @DisplayName("updateLead: lead not present - Failure")
+    void updateLeadWhenLeadNotPresentReturnsFailure() {
+        // Set up mocked entities
+        String CAMPAIGN_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        Campaign campaignEntity = getMockFactory().newEntity(CAMPAIGN_ID);
+        CampaignLead campaignLeadEntity = getMockFactory().newCampaignLeadEntity(LEAD_ID, SEQUENCE_ID);
+        campaignEntity.getLeads().add(campaignLeadEntity);
+        CampaignLeadBaseDTO postEntity = CampaignLeadBaseDTO
+                .builder()
+                .leadId(LEAD_ID)
+                .status(CampaignLeadStatus.PAUSED.getValue())
+                .build();
+
+        // Set up the mocked repository and services
+        doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        CampaignLeadDTO returnedDTO = getService().updateLead(CAMPAIGN_ID, LEAD_ID, postEntity);
+
+        Assertions.assertNotNull(returnedDTO, "CampaignLead can not be null");
+        Assertions.assertNotNull(returnedDTO.getLead(), "Lead can not be null");
+        Assertions.assertEquals(LEAD_ID, returnedDTO.getLead().getId(), String.format("Lead id must be [%s]", LEAD_ID));
+
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, atMostOnce()).save(any(Campaign.class));
+    }
+
+    @Test
+    @DisplayName("updateLead: campaign lead valid - Success")
+    void updateLeadWhenCampaignLeadValidReturnsSuccess() {
+        // Set up mocked entities
+        String CAMPAIGN_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        Campaign campaignEntity = getMockFactory().newEntity(CAMPAIGN_ID);
+        CampaignLeadBaseDTO postEntity = CampaignLeadBaseDTO
+                .builder()
+                .leadId(LEAD_ID)
+                .status(CampaignLeadStatus.PAUSED.getValue())
+                .build();
+
+        // Set up the mocked repository and services
+        doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+
+        // Execute the service call
+        CampaignService service = getService();
+        CommonServiceException exception = Assertions.assertThrows(
+                CommonServiceException.class,
+                () -> service.updateLead(CAMPAIGN_ID, LEAD_ID, postEntity),
+                "removeCampaignLead must throw CommonServiceException");
+
+        Assertions.assertEquals(
+                ExceptionMessageConstants.CAMPAIGN_UPDATE_LEAD_NOT_PRESENT_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, atMostOnce()).findById(anyString());
@@ -325,7 +395,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("findAllLeads: campaign not found - Failure")
-    void findAllLeadsWhenCampaignNotFoundFailure() {
+    void findAllLeadsWhenCampaignNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
 
@@ -333,16 +403,17 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().findAllLeads(CAMPAIGN_ID),
+                () -> service.findAllLeads(CAMPAIGN_ID),
                 "findAllLeads must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
                 () -> Assertions.assertEquals(
-                        exception.getMessage(),
-                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION),
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
                 () -> Assertions.assertEquals(2, exception.getArgs().length),
                 () -> Assertions.assertTrue(
                         Arrays.asList(exception.getArgs()).contains(DBConstants.CAMPAIGN_DOCUMENT),
@@ -353,7 +424,7 @@ public class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, C
 
     @Test
     @DisplayName("findAllLeads: campaign found - Success")
-    void findAllLeadsWhenCampaignNotFoundSuccess() {
+    void findAllLeadsWhenCampaignNotFoundReturnsSuccess() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         Campaign campaignEntity = getMockFactory().newEntity(CAMPAIGN_ID);

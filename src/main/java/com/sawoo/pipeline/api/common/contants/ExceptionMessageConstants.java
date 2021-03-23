@@ -57,7 +57,8 @@ public interface ExceptionMessageConstants {
     String SEQUENCE_STEP_UPDATE_STEP_POSITION_OR_PERSONALITY_CANT_CHANGE_EXCEPTION = "sequence.step.update-step-position-or-personality-cant-change.exception";
 
     String CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION = "campaign.campaign-lead.lead-already-added.exception";
-    String CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION = "campaign.campaign-lead.lead-not-present.exception";
+    String CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION = "campaign.campaign-lead.remove-lead-not-present.exception";
+    String CAMPAIGN_UPDATE_LEAD_NOT_PRESENT_EXCEPTION = "campaign.campaign-lead.update-lead-not-present.exception";
 
 
     String REPOSITORY_EXCEPTION_DATA_CONVERSATION_ERROR_EXCEPTION = "repository.data-conversation.exception";

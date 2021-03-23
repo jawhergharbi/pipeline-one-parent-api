@@ -7,10 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,48 +26,41 @@ public class CompanyController {
 
     private final CompanyControllerDelegator delegator;
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CompanyDTO> create(@RequestBody CompanyDTO dto) {
         return delegator.create(dto);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CompanyDTO>> getAll() {
         return delegator.findAll();
     }
 
-   @RequestMapping(
+   @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CompanyDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/versions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<VersionDTO<CompanyDTO>>> getVersions(@PathVariable String id) {
         return delegator.getVersions(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CompanyDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
