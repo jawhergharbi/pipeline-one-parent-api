@@ -108,12 +108,13 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
                 .build();
     }
 
-    public CampaignLeadCreateDTO newCampaignLeadCreateDTO(String sequenceId) {
+    public CampaignLeadCreateDTO newCampaignLeadCreateDTO(String accountId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         String LEAD_ID = getFAKER().internet().uuid();
         return CampaignLeadCreateDTO.builder()
                 .lead(leadMockFactory.newDTO(LEAD_ID))
                 .sequenceId(sequenceId)
+                .accountId(accountId)
                 .startDate(now)
                 .endDate(now.plusDays(10))
                 .build();

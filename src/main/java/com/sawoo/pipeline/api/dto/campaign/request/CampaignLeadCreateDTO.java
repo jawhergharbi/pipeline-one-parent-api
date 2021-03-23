@@ -21,6 +21,9 @@ public class CampaignLeadCreateDTO {
     private LeadDTO lead;
 
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
+    private String accountId;
+
+    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String sequenceId;
 
     private LocalDateTime startDate;

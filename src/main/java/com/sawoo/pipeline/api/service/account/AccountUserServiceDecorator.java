@@ -42,7 +42,7 @@ public class AccountUserServiceDecorator implements AccountUserService {
         return userService
                 .getRepository()
                 .findById(userId)
-                .map((user) -> {
+                .map(user -> {
                     List<Account> accounts;
                     if (user.getRoles().contains(UserRole.ADMIN.name())) {
                         accounts = service.getRepository().findAll();
@@ -69,7 +69,7 @@ public class AccountUserServiceDecorator implements AccountUserService {
         return userService
                 .getRepository()
                 .findById(userId)
-                .map((user) -> {
+                .map(user -> {
                     AccountDTO accountToBeUpdated = new AccountDTO();
                     accountToBeUpdated.getUsers().add(service.getMapper().getUserMapperOut().getDestination(user));
                     AccountDTO updatedAccount = service.update(id, accountToBeUpdated);

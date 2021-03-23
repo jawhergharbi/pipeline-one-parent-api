@@ -81,8 +81,9 @@ class CampaignControllerLeadTest {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        String ACCOUNT_ID = getMockFactory().getFAKER().internet().uuid();
         String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
-        CampaignLeadCreateDTO postEntity = getMockFactory().newCampaignLeadCreateDTO(SEQUENCE_ID);
+        CampaignLeadCreateDTO postEntity = getMockFactory().newCampaignLeadCreateDTO(ACCOUNT_ID, SEQUENCE_ID);
         postEntity.getLead().setId(null);
         CampaignLeadDTO mockedEntity = getMockFactory().newCampaignLeadDTO(LEAD_ID, SEQUENCE_ID);
 
@@ -109,7 +110,29 @@ class CampaignControllerLeadTest {
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/leads: campaign id and campaign lead valid - Success")
+    @DisplayName("POST /api/campaigns/{id}/leads: account id and sequence id not informed - Failure")
+    void createLeadWhenCampaignLeadNotValidLeadIdAndSequenceIdNotInformedReturnsFailure() throws Exception {
+        // setup the mocked entities
+        String COMPONENT_ID = getMockFactory().getComponentId();
+        CampaignLeadCreateDTO postEntity = getMockFactory().newCampaignLeadCreateDTO(null, null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(2)))
+                .andExpect(jsonPath("$.messages",
+                        hasItem(stringContainsInOrder("Field or param", "in component", "can not be empty or null"))));
+    }
+
+    @Test
+    @DisplayName("POST /api/campaigns/{id}/leads/{leadId}: campaign id and campaign lead valid - Success")
     void addLeadWhenCampaignIdAndCampaignLeadValidReturnsSuccess() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -141,16 +164,16 @@ class CampaignControllerLeadTest {
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/leads: lead id and sequence id not informed - Failure")
+    @DisplayName("POST /api/campaigns/{id}/leads/{leadId}: lead id and sequence id not informed - Failure")
     void addLeadWhenCampaignLeadNotValidLeadIdAndSequenceIdNotInformedReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
         CampaignLeadAddDTO postEntity = getMockFactory().newCampaignLeadAddDTO();
-        postEntity.setLeadId(null);
         postEntity.setSequenceId(null);
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{LeadId}", COMPONENT_ID, LEAD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -159,13 +182,13 @@ class CampaignControllerLeadTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.messages", hasSize(2)))
+                .andExpect(jsonPath("$.messages", hasSize(1)))
                 .andExpect(jsonPath("$.messages",
                         hasItem(stringContainsInOrder("Field or param", "in component", "can not be empty or null"))));
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/leads: campaign not found - Failure")
+    @DisplayName("POST /api/campaigns/{id}/leads/{leadId}: campaign not found - Failure")
     void addLeadWhenCampaignNotFoundReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();

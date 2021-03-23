@@ -24,9 +24,9 @@ public class AccountServiceEventListener {
         log.debug("Account before update listener");
         AccountDTO dto = event.getDto();
         Account entity = event.getModel();
-        if (dto.getUsers().size() > 0) {
+        if (!dto.getUsers().isEmpty()) {
             Set<User> users = entity.getUsers();
-            dto.getUsers().forEach((user) -> {
+            dto.getUsers().forEach(user -> {
                 if (users.stream().anyMatch(u -> u.getId().equals(user.getId()))) {
                     log.info("User [id: {}, username:{}] was already part of the account's [id: {}, fullName: {}] users",
                             user.getId(),
@@ -35,7 +35,7 @@ public class AccountServiceEventListener {
                             entity.getFullName());
                 } else {
                     UserRole userRole = UserRole.getUserManagementRole(user.getRoles());
-                    users.removeIf(u -> u.getRoles().contains(userRole.name()));
+                    users.removeIf(u -> userRole != null && u.getRoles().contains(userRole.name()));
                     users.add(mapper.getUserMapperIn().getDestination(user));
                 }
             });

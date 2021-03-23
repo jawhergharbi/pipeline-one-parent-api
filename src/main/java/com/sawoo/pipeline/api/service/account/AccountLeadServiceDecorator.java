@@ -69,7 +69,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         AccountFieldDTO accountLead = accountMapper.getDestination(account);
         return account.getLeads()
                 .stream()
-                .map( (l) -> {
+                .map( l -> {
                     LeadDTO lead = leadService.getMapper().getMapperOut().getDestination(l);
                     lead.setAccount(accountLead);
                     return lead;
@@ -100,7 +100,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                 l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
                 l -> true;
         List<LeadDTO> leads = accounts
-                .stream().flatMap( (account) -> {
+                .stream().flatMap( account -> {
                     AccountFieldDTO leadAccount = accountMapper.getDestination(account);
                     return account.getLeads()
                             .stream()
@@ -133,7 +133,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                 .stream()
                 .filter(lead -> leadId.equals(lead.getId()))
                 .findAny()
-                .map((l) -> {
+                .map(l -> {
                     account.getLeads().remove(l);
                     account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(account);

@@ -15,8 +15,9 @@ import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
-import com.sawoo.pipeline.api.service.lead.LeadService;
+import com.sawoo.pipeline.api.service.account.AccountLeadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -35,16 +36,19 @@ import java.util.stream.Collectors;
 public class CampaignLeadServiceDecorator implements CampaignLeadService {
 
     private final CampaignService campaignService;
-    private final LeadService leadService;
+    private final LeadRepository leadRepository;
+    private final AccountLeadService accountLeadService;
     private final SequenceRepository sequenceRepository;
 
     @Autowired
     public CampaignLeadServiceDecorator(
             @Lazy CampaignService campaignService,
-            LeadService leadService,
+            AccountLeadService accountLeadService,
+            LeadRepository leadRepository,
             SequenceRepository sequenceRepository) {
         this.campaignService = campaignService;
-        this.leadService = leadService;
+        this.accountLeadService = accountLeadService;
+        this.leadRepository = leadRepository;
         this.sequenceRepository = sequenceRepository;
     }
 
@@ -58,7 +62,7 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
                 campaignLead.getSequenceId());
 
         Campaign campaign = findCampaignById(campaignId);
-        LeadDTO leadCreated = leadService.create(campaignLead.getLead());
+        LeadDTO leadCreated = accountLeadService.createLead(campaignLead.getAccountId(), campaignLead.getLead());
 
         CampaignLeadAddDTO addCampaignLead = CampaignLeadAddDTO.builder()
                 .leadId(leadCreated.getId())
@@ -217,8 +221,7 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
     }
 
     private Lead findLeadById(String leadId) throws ResourceNotFoundException {
-        return leadService
-                .getRepository()
+        return leadRepository
                 .findById(leadId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(

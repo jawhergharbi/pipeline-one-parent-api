@@ -77,28 +77,13 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
     }
 
     @Test
-    @DisplayName("createLead: campaign, lead and sequence found - Success")
-    void createLeadWhenCampaignAndSequenceFoundAndLeadCreatedReturnsSuccess() {
-        // Set up mocked entities
-        String CAMPAIGN_ID = getMockFactory().getComponentId();
-        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
-        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        CampaignLeadCreateDTO createLeadCampaignEntity = getMockFactory().newCampaignLeadCreateDTO(SEQUENCE_ID);
-        Campaign campaignEntity = getMockFactory().newEntity(CAMPAIGN_ID);
-        Lead leadEntity = getMockFactory().getLeadMockFactory().newEntity(LEAD_ID);
-        Sequence sequenceEntity = getMockFactory().getSequenceMockFactory().newEntity(SEQUENCE_ID);
-
-        // Set up the mocked repository and services
-        doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
-    }
-
-    @Test
     @DisplayName("createLead: campaign not found - Failure")
     void createLeadWhenCampaignNotFoundReturnsFailure() {
         // Set up mocked entities
         String CAMPAIGN_ID = getMockFactory().getComponentId();
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        CampaignLeadCreateDTO createLeadCampaignEntity = getMockFactory().newCampaignLeadCreateDTO(SEQUENCE_ID);
+        String ACCOUNT_ID = getMockFactory().getFAKER().internet().uuid();
+        CampaignLeadCreateDTO createLeadCampaignEntity = getMockFactory().newCampaignLeadCreateDTO(ACCOUNT_ID, SEQUENCE_ID);
 
         // Set up the mocked repository and services
         doReturn(Optional.empty()).when(repository).findById(anyString());
