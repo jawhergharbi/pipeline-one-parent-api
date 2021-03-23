@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
@@ -44,6 +45,13 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
         this.campaignService = campaignService;
         this.leadRepository = leadRepository;
         this.sequenceRepository = sequenceRepository;
+    }
+
+    @Override
+    public CampaignLeadDTO createLead(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @Valid CampaignLeadCreateDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
+        return null;
     }
 
     @Override

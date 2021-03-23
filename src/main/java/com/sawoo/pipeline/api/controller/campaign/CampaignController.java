@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -86,9 +87,21 @@ public class CampaignController {
             value = "/{id}/leads",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<CampaignLeadDTO> createLead(
+            @PathVariable("id") String id,
+            @RequestBody CampaignLeadCreateDTO dto) {
+        return delegator.createLead(id, dto);
+    }
+
+    @PostMapping(
+            value = "/{id}/leads/{leadId}",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> addLead(
             @PathVariable("id") String id,
+            @PathVariable("leadId") String leadId,
             @RequestBody CampaignLeadAddDTO dto) {
+        dto.setLeadId(leadId);
         return delegator.addLead(id, dto);
     }
 

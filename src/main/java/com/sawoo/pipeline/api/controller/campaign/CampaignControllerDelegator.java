@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +44,12 @@ public class CampaignControllerDelegator extends BaseControllerDelegator<Campaig
     @Override
     public ResponseEntity<List<CampaignDTO>> findByAccounts(Set<String> accountIds) throws CommonServiceException {
         return accountDelegator.findByAccounts(accountIds);
+    }
+
+    @Override
+    public ResponseEntity<CampaignLeadDTO> createLead(String campaignId, CampaignLeadCreateDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadDelegator.createLead(campaignId, campaignLead);
     }
 
     @Override

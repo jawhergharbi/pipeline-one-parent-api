@@ -12,12 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,49 +24,42 @@ public class UserController {
 
     private final UserControllerDelegator delegator;
 
-    @RequestMapping(
+    @PostMapping(
             value = "/register",
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserAuthDTO> create(@RequestBody UserAuthDTO dto) {
         return delegator.create(dto);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<UserAuthDTO>> getAll() {
         return delegator.findAll();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserAuthDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/versions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<VersionDTO<UserAuthDTO>>> getVersions(@PathVariable String id) {
         return delegator.getVersions(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserAuthDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -80,48 +68,42 @@ public class UserController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/login",
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserAuthJwtTokenResponse> login(@RequestBody UserAuthLogin authRequest) {
         return delegator.login(authRequest);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/reset-password",
-            method = RequestMethod.POST)
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> resetPassword(@RequestParam("email") String userEmail) {
         return delegator.resetPassword(userEmail);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = {"/confirm-reset-password", "/account-password-activation"},
-            method = RequestMethod.POST)
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> confirmResetPassword(@RequestBody UserAuthResetPasswordRequest resetPassword) {
         return delegator.confirmResetPassword(resetPassword);
     }
 
-    @RequestMapping(
-            value = "/is-token-valid",
-            method = RequestMethod.POST)
+    @PostMapping(value = "/is-token-valid")
     public ResponseEntity<Boolean> isValidToken(
             @RequestParam("token") String token) {
         return delegator.isTokenValid(token);
     }
 
-    @RequestMapping(
-            value = "/logout/{id}",
-            method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/logout/{id}")
     public ResponseEntity<Void> logout(
             @PathVariable("id") String id) {
         return delegator.logout(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/role",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<UserAuthDTO>> findByRole(
             @RequestParam(name = "roles") String[] roles) throws RestException {

@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
@@ -56,6 +57,12 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     @Override
     public List<CampaignDTO> findByAccountIds(Set<String> accountIds) throws CommonServiceException {
         return campaignAccountService.findByAccountIds(accountIds);
+    }
+
+    @Override
+    public CampaignLeadDTO createLead(String campaignId, CampaignLeadCreateDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return campaignLeadService.createLead(campaignId, campaignLead);
     }
 
     @Override

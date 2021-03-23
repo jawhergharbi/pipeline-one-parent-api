@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
@@ -88,6 +89,15 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
                 .build();
     }
 
+    public CampaignLeadAddDTO newCampaignLeadAddDTO(String sequenceId) {
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        return CampaignLeadAddDTO.builder()
+                .sequenceId(sequenceId)
+                .startDate(now)
+                .endDate(now.plusDays(20))
+                .build();
+    }
+
     public CampaignLeadDTO newCampaignLeadDTO(String leadId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         return CampaignLeadDTO.builder()
@@ -98,15 +108,20 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
                 .build();
     }
 
-    public CampaignLeadDTO newCampaignLeadDTO() {
-        String leadId = getComponentId();
-        String sequenceId = getComponentId();
-        return newCampaignLeadDTO(leadId, sequenceId);
+    public CampaignLeadCreateDTO newCampaignLeadCreateDTO(String sequenceId) {
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        String LEAD_ID = getFAKER().internet().uuid();
+        return CampaignLeadCreateDTO.builder()
+                .lead(leadMockFactory.newDTO(LEAD_ID))
+                .sequenceId(sequenceId)
+                .startDate(now)
+                .endDate(now.plusDays(10))
+                .build();
     }
 
     public CampaignLead newCampaignLeadEntity() {
-        String leadId = getComponentId();
-        String sequenceId = getComponentId();
+        String leadId = getFAKER().internet().uuid();
+        String sequenceId = getFAKER().internet().uuid();
         return newCampaignLeadEntity(leadId, sequenceId);
     }
 
