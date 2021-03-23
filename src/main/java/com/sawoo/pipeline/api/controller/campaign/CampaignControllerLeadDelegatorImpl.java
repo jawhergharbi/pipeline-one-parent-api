@@ -8,6 +8,8 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.model.common.Status;
+import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -32,6 +35,13 @@ public class CampaignControllerLeadDelegatorImpl implements CampaignControllerLe
     public ResponseEntity<CampaignLeadDTO> createLead(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @Valid CampaignLeadCreateDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
+        if (campaignLead.getLead().getStatus() == null) {
+            campaignLead.getLead().setStatus(Status
+                    .builder()
+                    .value(LeadStatusList.FUNNEL_ON_GOING.getStatus())
+                    .updated(LocalDateTime.now())
+                    .build());
+        }
         CampaignLeadDTO newEntity = service.createLead(campaignId, campaignLead);
         return newOrAddLead(campaignId, newEntity);
     }

@@ -97,7 +97,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         }
         JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
         Predicate<Lead> statusFilter = (leadStatus != null && leadStatus.length > 0) ?
-                l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
+                (l -> l.getStatus() == null || Arrays.asList(leadStatus).contains(l.getStatus().getValue())) :
                 l -> true;
         List<LeadDTO> leads = accounts
                 .stream().flatMap( account -> {
