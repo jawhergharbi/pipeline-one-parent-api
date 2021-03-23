@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CampaignControllerTest extends BaseControllerTest<CampaignDTO, Campaign, CampaignService, CampaignMockFactory> {
+class CampaignControllerTest extends BaseControllerTest<CampaignDTO, Campaign, CampaignService, CampaignMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;

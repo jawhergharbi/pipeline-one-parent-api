@@ -4,8 +4,9 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,7 +34,12 @@ public class CampaignControllerLeadDelegatorImpl implements CampaignControllerLe
         CampaignLeadDTO newEntity = service.addLead(campaignId, campaignLead);
         try {
             return ResponseEntity
-                    .created(new URI(ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI + "/" + campaignId + "/leads/" + newEntity.getLead().getId()))
+                    .created(new URI(
+                            ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI +
+                                    "/" +
+                                    campaignId +
+                                    "/leads/" +
+                                    newEntity.getLead().getId()))
                     .body(newEntity);
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -46,6 +52,14 @@ public class CampaignControllerLeadDelegatorImpl implements CampaignControllerLe
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
             throws ResourceNotFoundException, CommonServiceException {
         return ResponseEntity.ok().body(service.removeLead(campaignId, leadId));
+    }
+
+    @Override
+    public ResponseEntity<CampaignLeadDTO> updateLead(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId,
+            @Valid CampaignLeadBaseDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
+        return ResponseEntity.ok().body(service.updateLead(campaignId, leadId, campaignLead));
     }
 
     @Override

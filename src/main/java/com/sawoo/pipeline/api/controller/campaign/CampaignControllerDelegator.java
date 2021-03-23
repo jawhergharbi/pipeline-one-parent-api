@@ -5,8 +5,9 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,6 +55,12 @@ public class CampaignControllerDelegator extends BaseControllerDelegator<Campaig
     public ResponseEntity<CampaignLeadDTO> removeLead(String campaignId, String leadId)
             throws ResourceNotFoundException, CommonServiceException {
         return leadDelegator.removeLead(campaignId, leadId);
+    }
+
+    @Override
+    public ResponseEntity<CampaignLeadDTO> updateLead(String campaignId, String leadId, CampaignLeadBaseDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadDelegator.updateLead(campaignId, leadId, campaignLead);
     }
 
     @Override

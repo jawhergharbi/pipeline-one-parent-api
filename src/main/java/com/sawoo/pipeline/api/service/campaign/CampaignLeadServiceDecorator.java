@@ -1,10 +1,13 @@
 package com.sawoo.pipeline.api.service.campaign;
 
+import com.googlecode.jmapper.JMapper;
+import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
@@ -22,6 +25,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -99,11 +103,45 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
                 .map((lead) -> {
                     log.debug("Lead id [{}] for campaign id [{}] has been found", leadId, campaignId);
 
-                    campaign.getLeads().remove(lead);
+                    BiConsumer<Campaign, CampaignLead> f = (c, l) -> c.getLeads().remove(l);
+                    f.accept(campaign, lead);
+
                     campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     campaignService.getRepository().save(campaign);
 
                     return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(lead);
+                })
+                .orElseThrow(() -> new CommonServiceException(
+                        ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION,
+                        new Object[] {leadId, campaignId}));
+    }
+
+    @Override
+    public CampaignLeadDTO updateLead(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId,
+            @Valid CampaignLeadBaseDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Update lead with id [{}] to campaign id [{}]", campaignId, leadId);
+
+        Campaign campaign = findCampaignById(campaignId);
+
+        return campaign.getLeads()
+                .stream()
+                .filter(l -> leadId.equals(l.getLead().getId()))
+                .findFirst()
+                .map((cl) -> {
+                    log.debug("Lead id [{}] for campaign id [{}] has been found", leadId, campaignId);
+
+                    cl =  new JMapper<>(CampaignLead.class, CampaignLeadBaseDTO.class)
+                            .getDestination(
+                                    cl,
+                                    campaignLead,
+                                    MappingType.ALL_FIELDS,
+                                    MappingType.ONLY_VALUED_FIELDS);
+                    campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+                    campaignService.getRepository().save(campaign);
+
+                    return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(cl);
                 })
                 .orElseThrow(() -> new CommonServiceException(
                         ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION,

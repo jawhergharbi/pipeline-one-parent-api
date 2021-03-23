@@ -3,16 +3,20 @@ package com.sawoo.pipeline.api.controller.campaign;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,48 +30,42 @@ public class CampaignController {
 
     private final CampaignControllerDelegator delegator;
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignDTO> create(@RequestBody CampaignDTO dto) {
         return delegator.create(dto);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
+    @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CampaignDTO>> getAll() {
         return delegator.findAll();
     }
 
-   @RequestMapping(
+   @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/versions",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<VersionDTO<CampaignDTO>>> getVersions(@PathVariable String id) {
         return delegator.getVersions(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -76,18 +74,16 @@ public class CampaignController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/accounts/{accountIds}/main",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CampaignDTO>> findByAccountIds(
             @PathVariable(value = "accountIds") Set<String> accountIds) {
         return delegator.findByAccounts(accountIds);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/{id}/leads",
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> addLead(
@@ -96,9 +92,20 @@ public class CampaignController {
         return delegator.addLead(id, dto);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}/leads/{leadId}",
-            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<CampaignLeadDTO> updateLead(
+            @PathVariable("id") String id,
+            @PathVariable("leadId") String leadId,
+            @RequestBody CampaignLeadBaseDTO dto) {
+        dto.setLeadId(leadId);
+        return delegator.updateLead(id, leadId, dto);
+    }
+
+    @DeleteMapping(
+            value = "/{id}/leads/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> removeLead(
             @PathVariable("id") String id,
@@ -106,9 +113,8 @@ public class CampaignController {
         return delegator.removeLead(id, leadId);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/leads",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(
             @PathVariable(value = "id") String id) {

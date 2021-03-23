@@ -1,11 +1,13 @@
-package com.sawoo.pipeline.api.dto.campaign;
+package com.sawoo.pipeline.api.dto.campaign.request;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
+import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -13,18 +15,17 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class CampaignLeadAddDTO {
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class CampaignLeadBaseDTO extends BaseEntityDTO {
 
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String leadId;
-
-    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
-    private String sequenceId;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
-    private CampaignLeadStatus status;
+    private Integer status;
 }

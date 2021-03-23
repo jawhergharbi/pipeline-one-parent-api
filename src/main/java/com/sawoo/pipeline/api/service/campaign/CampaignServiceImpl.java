@@ -3,8 +3,9 @@ package com.sawoo.pipeline.api.service.campaign;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
@@ -67,6 +68,12 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     public CampaignLeadDTO removeLead(String campaignId, String leadId)
             throws ResourceNotFoundException, CommonServiceException {
         return campaignLeadService.removeLead(campaignId, leadId);
+    }
+
+    @Override
+    public CampaignLeadDTO updateLead(String campaignId, String campaignLeadId, CampaignLeadBaseDTO campaignLead)
+            throws ResourceNotFoundException, CommonServiceException {
+        return campaignLeadService.updateLead(campaignId, campaignLeadId, campaignLead);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.model.campaign;
 
 import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
@@ -22,7 +23,6 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class CampaignLead extends BaseEntity {
 
-    @JMap
     @DBRef(lazy = true)
     private Lead lead;
 
@@ -38,4 +38,8 @@ public class CampaignLead extends BaseEntity {
     @JMap
     private CampaignLeadStatus status;
 
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public CampaignLeadStatus statusConversion(Integer status) {
+        return CampaignLeadStatus.fromValue(status);
+    }
 }

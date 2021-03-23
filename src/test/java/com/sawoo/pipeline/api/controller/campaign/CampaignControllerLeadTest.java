@@ -3,10 +3,12 @@ package com.sawoo.pipeline.api.controller.campaign;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.mock.CampaignMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import com.sawoo.pipeline.api.utils.JacksonObjectMapperUtils;
 import lombok.Getter;
@@ -24,6 +26,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,6 +43,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -226,6 +231,68 @@ public class CampaignControllerLeadTest {
                 .andExpect(jsonPath("$.message", stringContainsInOrder(
                         String.format("GET operation. Component type [%s]", DBConstants.CAMPAIGN_DOCUMENT),
                         COMPONENT_ID)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/campaigns/{id}/leads/{leadId}: campaign not found - Failure")
+    void updateLeadWhenCampaignNotFoundReturnsFailure() throws Exception {
+        // setup the mocked entities
+        String COMPONENT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        CampaignLeadBaseDTO postEntity = CampaignLeadBaseDTO
+                .builder()
+                .leadId(LEAD_ID)
+                .status(CampaignLeadStatus.ARCHIVED.getValue()).build();
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[]{ DBConstants.CAMPAIGN_DOCUMENT, COMPONENT_ID });
+        doThrow(exception).when(service).updateLead(anyString(), anyString(), any(CampaignLeadBaseDTO.class));
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                .andExpect(jsonPath("$.message", stringContainsInOrder(
+                        String.format("GET operation. Component type [%s]", DBConstants.CAMPAIGN_DOCUMENT),
+                        COMPONENT_ID)));
+    }
+
+    @Test
+    @DisplayName("PUT /api/campaigns/{id}/leads/{leadId}: campaign lead valid - Failure")
+    void updateLeadWhenCampaignLeadNotValidReturnsSuccess() throws Exception {
+        // setup the mocked entities
+        String COMPONENT_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        CampaignLeadBaseDTO postEntity = CampaignLeadBaseDTO
+                .builder()
+                .startDate(LocalDateTime.now(ZoneOffset.UTC).plusDays(20))
+                .status(CampaignLeadStatus.ARCHIVED.getValue())
+                .build();
+        CampaignLeadDTO mockedEntity = getMockFactory().newCampaignLeadDTO(LEAD_ID, SEQUENCE_ID);
+
+        // setup the mocked service
+        doReturn(mockedEntity).when(service).updateLead(anyString(), anyString(), any(CampaignLeadBaseDTO.class));
+
+        // Execute the PUT request
+        mockMvc.perform(put(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, LEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.lead").exists())
+                .andExpect(jsonPath("$.lead.id", is(LEAD_ID)));
     }
 
     @Test

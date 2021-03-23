@@ -37,7 +37,7 @@ public class CampaignLeadDTO extends BaseEntityDTO {
     private LocalDateTime endDate;
 
     @JMap
-    private CampaignLeadStatus status;
+    private Integer status;
 
     @JMapConversion(from = {"sequence"}, to = {"sequence"})
     public SequenceBaseDTO sequenceConversion(Sequence sequence) {
@@ -49,5 +49,10 @@ public class CampaignLeadDTO extends BaseEntityDTO {
                 .name(sequence.getName())
                 .description(sequence.getDescription())
                 .build();
+    }
+
+    @JMapConversion(from = {"status"}, to = {"status"})
+    public Integer statusConversion(CampaignLeadStatus status) {
+        return status != null ? status.getValue() : -1;
     }
 }
