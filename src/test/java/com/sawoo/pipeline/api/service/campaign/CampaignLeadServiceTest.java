@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
 import com.sawoo.pipeline.api.mock.CampaignMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
@@ -76,6 +77,53 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
     }
 
     @Test
+    @DisplayName("createLead: campaign, lead and sequence found - Success")
+    void createLeadWhenCampaignAndSequenceFoundAndLeadCreatedReturnsSuccess() {
+        // Set up mocked entities
+        String CAMPAIGN_ID = getMockFactory().getComponentId();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        CampaignLeadCreateDTO createLeadCampaignEntity = getMockFactory().newCampaignLeadCreateDTO(SEQUENCE_ID);
+        Campaign campaignEntity = getMockFactory().newEntity(CAMPAIGN_ID);
+        Lead leadEntity = getMockFactory().getLeadMockFactory().newEntity(LEAD_ID);
+        Sequence sequenceEntity = getMockFactory().getSequenceMockFactory().newEntity(SEQUENCE_ID);
+
+        // Set up the mocked repository and services
+        doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("createLead: campaign not found - Failure")
+    void createLeadWhenCampaignNotFoundReturnsFailure() {
+        // Set up mocked entities
+        String CAMPAIGN_ID = getMockFactory().getComponentId();
+        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        CampaignLeadCreateDTO createLeadCampaignEntity = getMockFactory().newCampaignLeadCreateDTO(SEQUENCE_ID);
+
+        // Set up the mocked repository and services
+        doReturn(Optional.empty()).when(repository).findById(anyString());
+
+        // Execute the service call
+        CampaignService service = getService();
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> service.createLead(CAMPAIGN_ID, createLeadCampaignEntity),
+                "createLead must throw ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertAll("Exception must be correct informed",
+                () -> Assertions.assertEquals(
+                        ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                        exception.getMessage()),
+                () -> Assertions.assertEquals(2, exception.getArgs().length),
+                () -> Assertions.assertTrue(
+                        Arrays.asList(exception.getArgs()).contains(DBConstants.CAMPAIGN_DOCUMENT),
+                        String.format("Exception arguments must contain [%s]", DBConstants.CAMPAIGN_DOCUMENT)));
+        verify(repository, atMostOnce()).findById(anyString());
+        verify(repository, never()).save(any(Campaign.class));
+    }
+
+    @Test
     @DisplayName("addLead: campaign, lead and sequence found - Success")
     void addLeadWhenCampaignAndLeadAndSequenceFoundReturnsSuccess() {
         // Set up mocked entities
@@ -124,7 +172,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
-                "addCampaignLead must throw ResourceNotFoundException");
+                "addLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
@@ -156,7 +204,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
-                "addCampaignLead must throw ResourceNotFoundException");
+                "addLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
@@ -193,7 +241,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
                 () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
-                "addCampaignLead must throw CommonServiceException");
+                "addLead must throw CommonServiceException");
 
         Assertions.assertEquals(
                 ExceptionMessageConstants.CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION,
@@ -225,7 +273,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.addLead(CAMPAIGN_ID, addLeadCampaignEntity),
-                "addCampaignLead must throw ResourceNotFoundException");
+                "addLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
@@ -289,7 +337,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.removeLead(CAMPAIGN_ID, LEAD_ID),
-                "removeCampaignLead must throw ResourceNotFoundException");
+                "removeLead must throw ResourceNotFoundException");
 
         // Assertions
         Assertions.assertAll("Exception must be correct informed",
@@ -320,7 +368,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
                 () -> service.removeLead(CAMPAIGN_ID, LEAD_ID),
-                "removeCampaignLead must throw CommonServiceException");
+                "removeLead must throw CommonServiceException");
 
         Assertions.assertEquals(
                 ExceptionMessageConstants.CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION,
@@ -382,7 +430,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
                 () -> service.updateLead(CAMPAIGN_ID, LEAD_ID, postEntity),
-                "removeCampaignLead must throw CommonServiceException");
+                "removeLead must throw CommonServiceException");
 
         Assertions.assertEquals(
                 ExceptionMessageConstants.CAMPAIGN_UPDATE_LEAD_NOT_PRESENT_EXCEPTION,

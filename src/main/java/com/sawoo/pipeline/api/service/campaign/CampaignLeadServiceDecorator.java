@@ -9,13 +9,14 @@ import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignLead;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
-import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
+import com.sawoo.pipeline.api.service.lead.LeadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -34,16 +35,16 @@ import java.util.stream.Collectors;
 public class CampaignLeadServiceDecorator implements CampaignLeadService {
 
     private final CampaignService campaignService;
-    private final LeadRepository leadRepository;
+    private final LeadService leadService;
     private final SequenceRepository sequenceRepository;
 
     @Autowired
     public CampaignLeadServiceDecorator(
             @Lazy CampaignService campaignService,
-            LeadRepository leadRepository,
+            LeadService leadService,
             SequenceRepository sequenceRepository) {
         this.campaignService = campaignService;
-        this.leadRepository = leadRepository;
+        this.leadService = leadService;
         this.sequenceRepository = sequenceRepository;
     }
 
@@ -51,7 +52,23 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
     public CampaignLeadDTO createLead(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @Valid CampaignLeadCreateDTO campaignLead) throws ResourceNotFoundException, CommonServiceException {
-        return null;
+        log.debug("Create lead with person [{}] to campaign id [{}] and using the sequence id [{}]",
+                campaignId,
+                campaignLead.getLead().getPerson().getFullName(),
+                campaignLead.getSequenceId());
+
+        Campaign campaign = findCampaignById(campaignId);
+        LeadDTO leadCreated = leadService.create(campaignLead.getLead());
+
+        CampaignLeadAddDTO addCampaignLead = CampaignLeadAddDTO.builder()
+                .leadId(leadCreated.getId())
+                .sequenceId(campaignLead.getSequenceId())
+                .status(campaignLead.getStatus())
+                .startDate(campaignLead.getStartDate())
+                .endDate(campaignLead.getEndDate())
+                .build();
+
+        return addLead(campaign, addCampaignLead);
     }
 
     @Override
@@ -65,35 +82,7 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
 
         Campaign campaign = findCampaignById(campaignId);
 
-        // Check whether lead is already added to the campaign
-        if (campaign.getLeads()
-                .stream()
-                .anyMatch(l -> campaignLead.getLeadId().equals(l.getLead().getId()))) {
-            throw new CommonServiceException(
-                    ExceptionMessageConstants.CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION,
-                    new Object[] {campaignLead.getLeadId(), campaignId});
-        }
-
-        Lead lead = findLeadById(campaignLead.getLeadId());
-        Sequence sequence = findSequenceById(campaignLead.getSequenceId());
-
-        log.debug("Lead id [{}] and sequence id [{}] correctly found", campaignLead.getLeadId(), campaignLead.getSequenceId());
-
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        CampaignLead campaignLeadEntity = CampaignLead.builder()
-                .lead(lead)
-                .sequence(sequence)
-                .startDate(campaignLead.getStartDate())
-                .endDate(campaignLead.getEndDate())
-                .created(now)
-                .updated(now)
-                .build();
-
-        campaign.getLeads().add(campaignLeadEntity);
-        campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-        campaignService.getRepository().save(campaign);
-
-        return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(campaignLeadEntity);
+        return addLead(campaign, campaignLead);
     }
 
     @Override
@@ -163,6 +152,40 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
                 .collect(Collectors.toList());
     }
 
+
+    private CampaignLeadDTO addLead(Campaign campaign, CampaignLeadAddDTO campaignLead) {
+
+        // Check whether lead is already added to the campaign
+        if (campaign.getLeads()
+                .stream()
+                .anyMatch(l -> campaignLead.getLeadId().equals(l.getLead().getId()))) {
+            throw new CommonServiceException(
+                    ExceptionMessageConstants.CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION,
+                    new Object[] {campaignLead.getLeadId(), campaign.getId()});
+        }
+
+        Lead lead = findLeadById(campaignLead.getLeadId());
+        Sequence sequence = findSequenceById(campaignLead.getSequenceId());
+
+        log.debug("Lead id [{}] and sequence id [{}] correctly found", campaignLead.getLeadId(), campaignLead.getSequenceId());
+
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        CampaignLead campaignLeadEntity = CampaignLead.builder()
+                .lead(lead)
+                .sequence(sequence)
+                .startDate(campaignLead.getStartDate())
+                .endDate(campaignLead.getEndDate())
+                .created(now)
+                .updated(now)
+                .build();
+
+        campaign.getLeads().add(campaignLeadEntity);
+        campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        campaignService.getRepository().save(campaign);
+
+        return campaignService.getMapper().getMapperLeadCampaignOut().getDestination(campaignLeadEntity);
+    }
+
     private void updateCampaignLead(CampaignLeadBaseDTO campaignLead, CampaignLead lead) {
         BiConsumer<CampaignLeadBaseDTO, CampaignLead> f = (d, m) -> new JMapper<>(CampaignLead.class, CampaignLeadBaseDTO.class)
                 .getDestination(m, d, MappingType.ALL_FIELDS, MappingType.ONLY_VALUED_FIELDS);
@@ -194,7 +217,8 @@ public class CampaignLeadServiceDecorator implements CampaignLeadService {
     }
 
     private Lead findLeadById(String leadId) throws ResourceNotFoundException {
-        return leadRepository
+        return leadService
+                .getRepository()
                 .findById(leadId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
