@@ -107,4 +107,9 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     public List<SequenceStepDTO> getSteps(String sequenceId) throws ResourceNotFoundException {
         return sequenceStepService.getSteps(sequenceId);
     }
+
+    @Override
+    public List<SequenceStepDTO> getStepsByPersonality(String sequenceId, Integer personality) throws ResourceNotFoundException {
+        return sequenceStepService.getStepsByPersonality(sequenceId, personality);
+    }
 }

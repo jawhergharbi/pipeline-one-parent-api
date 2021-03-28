@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
+class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
 
     @MockBean
     private SequenceRepository repository;
@@ -82,6 +82,7 @@ public class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, 
         // Execute the service call
         SequenceStepDTO step = getService().addStep(SEQUENCE_ID, mockedStep);
 
+        // Assertions
         Assertions.assertAll(String.format("Add step for sequence id [%s]", SEQUENCE_ID),
                 () -> Assertions.assertNotNull(step, "Step can not be null"),
                 () -> Assertions.assertEquals(
@@ -110,17 +111,19 @@ public class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, 
         // Set up the mocked repository and services
         doReturn(Optional.of(mockedEntity)).when(getService().getRepository()).findById(anyString());
 
+        SequenceService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().addStep(SEQUENCE_ID, mockedStep),
+                () -> service.addStep(SEQUENCE_ID, mockedStep),
                 "addStep must throw CommonServiceException");
 
+        // Assertions
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_STEP_ADD_STEP_POSITION_AND_PERSONALITY_ALREADY_FILLED_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_STEP_ADD_STEP_POSITION_AND_PERSONALITY_ALREADY_FILLED_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(3, exception.getArgs().length);
 
-        verify(getService().getRepository(), times(1)).findById(anyString());
+        verify(service.getRepository(), times(1)).findById(anyString());
         verify(sequenceStepService, never()).create(any(SequenceStepDTO.class));
     }
 
@@ -136,18 +139,101 @@ public class SequenceStepsServiceTest extends BaseLightServiceTest<SequenceDTO, 
         // Set up the mocked repository and services
         doReturn(Optional.empty()).when(getService().getRepository()).findById(anyString());
 
+        // Execute the service
+        SequenceService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().addStep(SEQUENCE_ID, mockedStep),
+                () -> service.addStep(SEQUENCE_ID, mockedStep),
                 "addStep must throw ResourceNotFoundException");
 
+        // Assertions
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
-        verify(getService().getRepository(), times(1)).findById(anyString());
+        verify(service.getRepository(), times(1)).findById(anyString());
         verify(sequenceStepService, never()).create(any(SequenceStepDTO.class));
+    }
+
+    @Test
+    @DisplayName("getSteps:sequence not found - Failure")
+    void getStepsWhenSequenceNotFoundReturnsFailure() {
+        // Set up mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+
+        // Set up the mocked repository and services
+        doReturn(Optional.empty()).when(getService().getRepository()).findById(anyString());
+
+        // Execute the service
+        SequenceService service = getService();
+        ResourceNotFoundException exception = Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> service.getSteps(SEQUENCE_ID),
+                "getSteps must throw ResourceNotFoundException");
+
+        // Assertions
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(service.getRepository(), times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("getSteps: sequence found - Success")
+    void getStepsWhenSequenceNotFoundReturnsSuccess() {
+        // Set up mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        int STEPS_SIZE = 3;
+        Sequence mockedSequence = newSequenceWithSteps(SEQUENCE_ID, STEPS_SIZE);
+
+        // Set up the mocked repository and services
+        doReturn(Optional.of(mockedSequence)).when(getService().getRepository()).findById(anyString());
+        doReturn(new SequenceStepMapper()).when(sequenceStepService).getMapper();
+
+        // Execute the service
+        List<SequenceStepDTO> steps = getService().getSteps(SEQUENCE_ID);
+
+        // Assertions
+        Assertions.assertFalse(steps.isEmpty(), "Step list can not be empty");
+        Assertions.assertEquals(STEPS_SIZE, steps.size(), String.format("Step list size must be [%d]", STEPS_SIZE));
+
+        verify(getService().getRepository(), times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("getStepsByPersonality: sequence found - Success")
+    void getStepsByPersonalityWhenSequenceNotFoundReturnsSuccess() {
+        // Set up mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        int STEPS_SIZE = 3;
+        int PERSONALITY_OUTGOING = 2;
+        Sequence mockedSequence = newSequenceWithSteps(SEQUENCE_ID, STEPS_SIZE);
+        SequenceStep stepNoPersonality = getMockFactory()
+                .getSequenceStepMockFactory()
+                .newSequenceStepEntity(getMockFactory().getFAKER().internet().uuid(), STEPS_SIZE + 1);
+        stepNoPersonality.setPersonality(null);
+        mockedSequence.getSteps().add(stepNoPersonality);
+        SequenceStep stepPersonalityOutgoing = getMockFactory()
+                .getSequenceStepMockFactory()
+                .newSequenceStepEntity(getMockFactory().getFAKER().internet().uuid(), STEPS_SIZE + 1);
+        stepPersonalityOutgoing.setPersonality(PERSONALITY_OUTGOING);
+        mockedSequence.getSteps().add(stepPersonalityOutgoing);
+
+        // Set up the mocked repository and services
+        doReturn(Optional.of(mockedSequence)).when(getService().getRepository()).findById(anyString());
+        doReturn(new SequenceStepMapper()).when(sequenceStepService).getMapper();
+
+        // Execute the service
+        List<SequenceStepDTO> steps = getService().getStepsByPersonality(SEQUENCE_ID, PERSONALITY_OUTGOING);
+
+        // Assertions
+        Assertions.assertFalse(steps.isEmpty(), "Step list can not be empty");
+        Assertions.assertEquals(2, steps.size(), String.format("Step list size must be [%d]", 2));
+
+        verify(getService().getRepository(), times(1)).findById(anyString());
     }
 
 

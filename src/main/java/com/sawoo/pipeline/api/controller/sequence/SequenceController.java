@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -125,5 +126,14 @@ public class SequenceController {
     public ResponseEntity<List<SequenceStepDTO>> getSteps(
             @PathVariable("id") String sequenceId) {
         return delegator.getSteps(sequenceId);
+    }
+
+    @GetMapping(
+            value = "/{id}/steps/search-personality",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<SequenceStepDTO>> getStepsByPersonality(
+            @PathVariable("id") String sequenceId,
+            @RequestParam(value = "personality", required = false) Integer personality) {
+        return delegator.getStepsByPersonality(sequenceId, personality);
     }
 }
