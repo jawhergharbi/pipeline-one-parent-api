@@ -21,7 +21,7 @@ public class SequenceUserTypeDeserializer extends StdDeserializer<SequenceUserTy
     }
 
     @Override
-    public SequenceUserType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public SequenceUserType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         int type = node.asInt();
         return Arrays

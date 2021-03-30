@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AuditService {
 
-    public <D, M> List<VersionDTO<D>> getVersions(M currentVersion, String id, JMapper<D, M> mapper);
+    <D, M> List<VersionDTO<D>> getVersions(M currentVersion, String id, JMapper<D, M> mapper);
 }

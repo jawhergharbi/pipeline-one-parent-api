@@ -9,7 +9,7 @@ public enum InteractionStatusList {
 
     private final int status;
 
-    private InteractionStatusList(int status) {
+    InteractionStatusList(int status) {
         this.status = status;
     }
 

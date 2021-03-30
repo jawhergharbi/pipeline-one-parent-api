@@ -15,7 +15,7 @@ public enum LeadStatusList {
 
     private final int status;
 
-    private LeadStatusList(int status) {
+    LeadStatusList(int status) {
         this.status = status;
     }
 
