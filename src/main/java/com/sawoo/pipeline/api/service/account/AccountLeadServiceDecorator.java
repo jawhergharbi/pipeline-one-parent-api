@@ -43,13 +43,18 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         log.debug("Creating new lead for account id: [{}]. Person id: [{}]", accountId, lead.getPerson().getId());
 
         Account account = findAccountById(accountId);
+        List<Lead> leads = account.getLeads();
 
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        if (leads.stream().anyMatch(l -> l.getPerson().getLinkedInUrl().equals(lead.getPerson().getLinkedInUrl()))) {
+            throw new CommonServiceException(
+                    ExceptionMessageConstants.ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION,
+                    new String[] {accountId, lead.getPerson().getLinkedInUrl()});
+        }
 
         LeadDTO createdLead = leadService.create(lead);
 
-        account.getLeads().add(leadService.getMapper().getMapperIn().getDestination(createdLead));
-        account.setUpdated(now);
+        leads.add(leadService.getMapper().getMapperIn().getDestination(createdLead));
+        account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
         repository.save(account);
 
         return createdLead;

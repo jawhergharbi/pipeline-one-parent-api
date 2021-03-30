@@ -24,7 +24,7 @@ import java.util.HashSet;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class AccountServiceEventListenerTest {
+class AccountServiceEventListenerTest {
 
     @Autowired
     private AccountServiceEventListener listener;

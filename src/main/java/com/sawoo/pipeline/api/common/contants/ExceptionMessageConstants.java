@@ -16,6 +16,7 @@ public interface ExceptionMessageConstants {
     String AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.token.email-not-found-error.exception";
 
     String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
+    String ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION = "account.lead.create-lead-already-added.exception";
 
     String COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION = "common.create.entity-already-exists.exception";
 

@@ -40,6 +40,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -49,7 +50,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Account, AccountRepository, AccountService, AccountMockFactory> {
+class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Account, AccountRepository, AccountService, AccountMockFactory> {
 
     @MockBean
     private AccountRepository repository;
@@ -110,9 +111,10 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Assertions
+        AccountService service = getService();
         Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().findAllLeads(ACCOUNT_ID),
+                () -> service.findAllLeads(ACCOUNT_ID),
                 String.format("Must throw ResourceNotFoundException for account id [%s]", ACCOUNT_ID));
 
         verify(repository, times(1)).findById(anyString());
@@ -266,9 +268,10 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Assertions
+        AccountService service = getService();
         Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().removeLead(LEAD_ID, ACCOUNT_ID),
+                () -> service.removeLead(LEAD_ID, ACCOUNT_ID),
                 String.format("Must throw ResourceNotFoundException for account id [%s]", ACCOUNT_ID));
 
         verify(repository, times(1)).findById(anyString());
@@ -294,9 +297,10 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
 
         // Assertions
+        AccountService service = getService();
         Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().removeLead(LEAD_ID, ACCOUNT_ID),
+                () -> service.removeLead(LEAD_ID, ACCOUNT_ID),
                 String.format("Must throw CommonServiceException for account id [%s] and lead id [%s]", ACCOUNT_ID, LEAD_ID));
 
         verify(repository, times(1)).findById(anyString());
@@ -336,9 +340,10 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
 
         // Assertions
+        AccountService service = getService();
         Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                () -> service.createLead(ACCOUNT_ID, mockedLeadToCreate),
                 "Must throw ConstraintViolationException");
     }
 
@@ -354,9 +359,10 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.of(mockedAccount)).when(repository).findById(anyString());
 
         // Assertions
+        AccountService service = getService();
         Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                () -> service.createLead(ACCOUNT_ID, mockedLeadToCreate),
                 "Must throw ConstraintViolationException");
     }
 
@@ -385,22 +391,33 @@ public class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Acc
     @Test
     void createLeadWhenAccountEntityFoundLeadAlreadyAddedLeadReturnsFailure() {
         // Set up mocked entities
+        String LINKED_IN_URL = getMockFactory().getFAKER().internet().url();
+        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
         String ACCOUNT_ID = getMockFactory().getComponentId();
         Account spyAccount = spy(getMockFactory().newEntity(ACCOUNT_ID));
+        Lead lead = getMockFactory().getLeadMockFactory().newEntity(LEAD_ID);
+        lead.getPerson().setLinkedInUrl(LINKED_IN_URL);
+        spyAccount.getLeads().add(lead);
         LeadDTO mockedLeadToCreate = getMockFactory().getLeadMockFactory().newDTO(null);
+        mockedLeadToCreate.getPerson().setLinkedInUrl(LINKED_IN_URL);
 
         // Set up the mocked repository
         doReturn(Optional.of(spyAccount)).when(repository).findById(anyString());
-        doThrow(new CommonServiceException(
-                ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
-                new String[]{ DBConstants.LEAD_DOCUMENT, mockedLeadToCreate.toString()})).when(leadService).create(any(LeadDTO.class));
 
         // Assertions
-        // Assertions
-        Assertions.assertThrows(
+        AccountService service = getService();
+        CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().createLead(ACCOUNT_ID, mockedLeadToCreate),
+                () -> service.createLead(ACCOUNT_ID, mockedLeadToCreate),
                 "Must throw CommonServiceException");
+
+        Assertions.assertEquals(
+                ExceptionMessageConstants.ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION,
+                exception.getMessage());
+        Assertions.assertEquals(2, exception.getArgs().length);
+
+        verify(repository, times(1)).findById(anyString());
+        verify(leadService, never()).create(any(LeadDTO.class));
     }
 
     private void assertCreatedLead(Account spyAccount, LeadDTO returnedLead, String accountId, String leadId) {
