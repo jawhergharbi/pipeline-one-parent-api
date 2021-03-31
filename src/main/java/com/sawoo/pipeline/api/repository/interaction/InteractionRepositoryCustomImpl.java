@@ -26,7 +26,7 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
         if (type != null) {
             andCriteria.add(Criteria.where("type").is(type));
         }
-        if (componentIds != null && componentIds.size() > 0) {
+        if (componentIds != null && !componentIds.isEmpty()) {
             andCriteria.add(Criteria.where("componentId").in(componentIds));
         }
         criteria.andOperator(andCriteria.toArray(new Criteria[0]));
@@ -36,13 +36,13 @@ public class InteractionRepositoryCustomImpl implements InteractionRepositoryCus
     public List<Interaction> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> componentIds) {
         Criteria criteria = new Criteria();
         List<Criteria> andCriteria = new ArrayList<>();
-        if (status != null && status.size() > 0) {
+        if (status != null && !status.isEmpty()) {
             andCriteria.add(Criteria.where("status").in(status));
         }
-        if (type != null && type.size() > 0) {
+        if (type != null && !type.isEmpty()) {
             andCriteria.add(Criteria.where("type").in(type));
         }
-        if (componentIds != null && componentIds.size() > 0) {
+        if (componentIds != null && !componentIds.isEmpty()) {
             andCriteria.add(Criteria.where("componentId").in(componentIds));
         }
         criteria.andOperator(andCriteria.toArray(new Criteria[0]));

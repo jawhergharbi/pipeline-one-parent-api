@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.interaction.InteractionSource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,4 +52,7 @@ public class InteractionDTO extends BaseEntityDTO {
 
     @JMap
     private String assigneeId;
+
+    @JMap
+    private InteractionSource source;
 }

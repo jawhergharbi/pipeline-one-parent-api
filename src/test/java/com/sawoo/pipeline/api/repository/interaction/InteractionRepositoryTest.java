@@ -22,10 +22,10 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, InteractionRepository, InteractionMockFactory> {
+class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, InteractionRepository, InteractionMockFactory> {
 
     private static final String INTERACTION_JSON_DATA_FILE_NAME = "interaction-test-data.json";
-    private static final String INTERACTION_ID = "5f4d6a36545bd64a36";
+    private static final String INTERACTION_ID = "60647db4559c7e603cd1a0f5";
     private static final String COMPONENT_ID_1 = "5fa3c963da6ra335fa2s323d45b";
     private static final String COMPONENT_ID_2 = "a335f5236ra2fda33s323c96d45b";
 
@@ -79,7 +79,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findByLeadId: entities found - Success")
     void findByLeadIdInWhenEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 5;
+        int INTERACTIONS_SIZE = 7;
         List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -143,7 +143,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 5;
+        int INTERACTIONS_SIZE = 7;
         List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -157,7 +157,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListNullTypeListNullAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 5;
+        int INTERACTIONS_SIZE = 7;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -171,7 +171,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 3;
+        int INTERACTIONS_SIZE = 5;
         List<Integer> types = Collections.singletonList(1);
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
@@ -186,7 +186,7 @@ public class InteractionRepositoryTest extends BaseRepositoryTest<Interaction, I
     @DisplayName("findByAssigneeId: filter interactions by userId - Success")
     void findByAssigneeIdWhenUserIdDoesExistReturnsSuccess() {
         // Assign
-        int INTERACTIONS_SIZE = 3;
+        int INTERACTIONS_SIZE = 5;
         String ASSIGNEE_ID = "5fa317cd0efe4d20ad3edd13";
 
         // Execute query

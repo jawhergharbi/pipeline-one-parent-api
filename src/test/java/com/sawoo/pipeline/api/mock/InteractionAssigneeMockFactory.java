@@ -29,9 +29,9 @@ public class InteractionAssigneeMockFactory extends InteractionMockBaseFactory<I
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
                         .build())
-                .status(0)
+                .status(InteractionStatusList.RESCHEDULED.getStatus())
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(InteractionStatusList.DONE.getStatus())
+                .type(0)
                 .note(Note
                         .builder()
                         .text(getFAKER().lorem().sentence(25))

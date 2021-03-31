@@ -21,19 +21,23 @@ import java.util.List;
 
 @Component
 @Primary
-public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements LeadControllerReportDelegator, LeadControllerInteractionDelegator, LeadControllerCustomDelegator {
+public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements
+        LeadControllerReportDelegator, LeadControllerInteractionDelegator, LeadControllerSequenceInteractionDelegator, LeadControllerCustomDelegator {
 
     private final LeadControllerReportDelegator reportDelegator;
     private final LeadControllerInteractionDelegator leadInteractionDelegator;
+    private final LeadControllerSequenceInteractionDelegator leadSequenceInteractionDelegator;
 
     @Autowired
     public LeadControllerDelegator(
             LeadService service,
             @Qualifier("leadControllerReport") LeadControllerReportDelegator reportDelegator,
-            @Qualifier("leadControllerInteraction") LeadControllerInteractionDelegator leadInteractionDelegator) {
+            @Qualifier("leadControllerInteraction") LeadControllerInteractionDelegator leadInteractionDelegator,
+            @Qualifier("leadControllerSequence") LeadControllerSequenceInteractionDelegator leadSequenceInteractionDelegator) {
         super(service, ControllerConstants.LEAD_CONTROLLER_API_BASE_URI);
         this.reportDelegator = reportDelegator;
         this.leadInteractionDelegator = leadInteractionDelegator;
+        this.leadSequenceInteractionDelegator = leadSequenceInteractionDelegator;
     }
 
     @Override
@@ -85,5 +89,13 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(getService().deleteLeadCompanyComments(leadId));
+    }
+
+    @Override
+    public ResponseEntity<List<InteractionAssigneeDTO>> evalInteractions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadSequenceInteractionDelegator.evalInteractions(leadId, sequenceId);
     }
 }

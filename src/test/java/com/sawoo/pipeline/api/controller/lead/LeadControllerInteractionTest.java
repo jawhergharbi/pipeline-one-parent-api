@@ -55,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class LeadControllerInteractionTest extends BaseLightControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
+class LeadControllerInteractionTest extends BaseLightControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
@@ -308,7 +308,7 @@ public class LeadControllerInteractionTest extends BaseLightControllerTest<LeadD
         String LEAD_ID = getMockFactory().getComponentId();
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ getEntityType(), String.valueOf(LEAD_ID) });
+                new String[]{ getEntityType(), LEAD_ID });
 
         // setup the mocked service
         doThrow(exception).when(service).getInteractions(anyString());
@@ -318,6 +318,8 @@ public class LeadControllerInteractionTest extends BaseLightControllerTest<LeadD
 
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
                 .andExpect(jsonPath("$.message", stringContainsInOrder(
                         String.format("GET operation. Component type [%s]", getEntityType()),
                         LEAD_ID)));

@@ -50,4 +50,7 @@ public class Interaction extends BaseEntity {
 
     @JMap
     private String assigneeId;
+
+    @JMap
+    private InteractionSource source;
 }

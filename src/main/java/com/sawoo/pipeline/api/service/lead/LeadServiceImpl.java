@@ -34,15 +34,18 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
 
     private final LeadReportService reportService;
     private final LeadInteractionService interactionService;
+    private final LeadSequenceInteractionService sequenceInteractionService;
 
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
                            LeadReportService reportService,
                            LeadInteractionService interactionService,
+                           LeadSequenceInteractionService sequenceInteractionService,
                            AuditService audit) {
         super(repository, mapper, DBConstants.LEAD_DOCUMENT, audit);
         this.reportService = reportService;
         this.interactionService = interactionService;
+        this.sequenceInteractionService = sequenceInteractionService;
     }
 
     @Override
@@ -132,5 +135,11 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
         getRepository().save(lead);
         log.debug("Lead with id [{}] has been correctly updated", leadId);
         return getMapper().getMapperOut().getDestination(lead);
+    }
+
+    @Override
+    public List<InteractionAssigneeDTO> evalInteractions(String leadId, String sequenceId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceInteractionService.evalInteractions(leadId, sequenceId);
     }
 }
