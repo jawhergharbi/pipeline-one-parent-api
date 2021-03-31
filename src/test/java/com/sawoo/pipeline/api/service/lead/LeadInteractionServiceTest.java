@@ -53,7 +53,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadRepository, LeadService, LeadMockFactory> {
+class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadRepository, LeadService, LeadMockFactory> {
 
     @MockBean
     private LeadRepository repository;
@@ -62,7 +62,7 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
     private InteractionService interactionService;
 
     @MockBean
-    private LeadInteractionServiceDecoratorHelper helper;
+    private LeadServiceDecoratorHelper helper;
 
     @Autowired
     public LeadInteractionServiceTest(LeadMockFactory mockFactory, LeadService service) {
@@ -120,13 +120,14 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().addInteraction(LEAD_ID, interactionToBeCreated),
+                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
                 "addInteraction must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -141,9 +142,10 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         interactionToBeCreated.setScheduled(null);
 
         // Asserts
+        LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().addInteraction(LEAD_ID, interactionToBeCreated),
+                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
                 "addInteraction must throw a ConstraintViolationException");
         Assertions.assertTrue(
                 containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
@@ -169,9 +171,10 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(Optional.of(spyLeadEntity)).when(repository).findById(anyString());
 
         // Asserts
+        LeadService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().addInteraction(LEAD_ID, interactionToBeCreated),
+                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
                 "addInteraction must throw a CommonServiceException");
         Assertions.assertTrue(
                 containsString(ExceptionMessageConstants.LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION)
@@ -225,13 +228,14 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().removeInteraction(LEAD_ID, INTERACTION_ID),
+                () -> service.removeInteraction(LEAD_ID, INTERACTION_ID),
                 "removeInteraction must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -244,9 +248,10 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         String LEAD_ID = getMockFactory().getComponentId();
 
         // Asserts
+        LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().removeInteraction(LEAD_ID, null),
+                () -> service.removeInteraction(LEAD_ID, null),
                 "removeInteraction must throw a ConstraintViolationException");
 
         String exceptionMessage = exception.getMessage();
@@ -353,13 +358,14 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().getInteractions(LEAD_ID),
+                () -> service.getInteractions(LEAD_ID),
                 "getInteractions must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -409,13 +415,14 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Asserts
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().getInteraction(LEAD_ID, INTERACTION_ID),
+                () -> service.getInteraction(LEAD_ID, INTERACTION_ID),
                 "getInteraction must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -442,13 +449,14 @@ public class LeadInteractionServiceTest extends BaseLightServiceTest<LeadDTO, Le
         doReturn(new InteractionMapper()).when(interactionService).getMapper();
 
         // Asserts
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().getInteraction(LEAD_ID, TARGET_INTERACTION_ID),
+                () -> service.getInteraction(LEAD_ID, TARGET_INTERACTION_ID),
                 "getInteraction must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());

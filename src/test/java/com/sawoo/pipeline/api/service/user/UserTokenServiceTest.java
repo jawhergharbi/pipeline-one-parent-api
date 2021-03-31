@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserTokenServiceTest extends BaseServiceTest<UserTokenDTO, UserToken, UserTokenRepository, UserTokenService, UserTokenMockFactory> {
+class UserTokenServiceTest extends BaseServiceTest<UserTokenDTO, UserToken, UserTokenRepository, UserTokenService, UserTokenMockFactory> {
 
     @MockBean
     private UserTokenRepository repository;

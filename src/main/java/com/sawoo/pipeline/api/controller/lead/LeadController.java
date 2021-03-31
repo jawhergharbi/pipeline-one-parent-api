@@ -163,9 +163,10 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/sequences/{sequenceId}/interactions/eval",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
+    public ResponseEntity<List<InteractionAssigneeDTO>> evalInteractions(
             @PathVariable("id") String leadId,
-            @PathVariable("sequenceId") String sequenceId) {
-        return delegator.evalInteractions(leadId, sequenceId);
+            @PathVariable("sequenceId") String sequenceId,
+            @RequestParam(value = "assigneeId", required = false) String assigneeId) {
+        return delegator.evalInteractions(leadId, sequenceId, assigneeId);
     }
 }

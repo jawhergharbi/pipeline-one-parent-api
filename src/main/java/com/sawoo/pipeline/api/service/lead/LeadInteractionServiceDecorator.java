@@ -32,7 +32,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
 
     private final InteractionService interactionService;
     private final LeadRepository repository;
-    private final LeadInteractionServiceDecoratorHelper helper;
+    private final LeadServiceDecoratorHelper helper;
     private final LeadMapper mapper;
 
     @Override
@@ -99,7 +99,7 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
         Lead lead = findLeadById(leadId);
         List<Interaction> interactions = lead.getInteractions();
         List<InteractionAssigneeDTO> assigneeInteractions = Collections.emptyList();
-        if (interactions.size() > 0 ) {
+        if (!interactions.isEmpty()) {
             final List<UserCommon> users = helper.getUsers(leadId);
             assigneeInteractions = interactions
                     .stream()

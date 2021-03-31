@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadRepository, LeadService, LeadMockFactory> {
+class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadRepository, LeadService, LeadMockFactory> {
 
     @MockBean
     private LeadRepository repository;
@@ -164,13 +164,16 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().deleteLeadSummary(LEAD_ID),
+                () -> service.deleteLeadSummary(LEAD_ID),
                 "deleteLeadSummary must throw a ResourceNotFoundException");
 
         // Assertions
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
         verify(repository, atMostOnce()).findById(anyString());
         verify(repository, never()).save(any(Lead.class));
@@ -186,9 +189,10 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().deleteLeadSummary(LEAD_ID),
+                () -> service.deleteLeadSummary(LEAD_ID),
                 "deleteLeadSummary must throw a ConstraintViolationException");
 
         // Assertions
@@ -229,14 +233,18 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().deleteLeadCompanyComments(LEAD_ID),
+                () -> service.deleteLeadCompanyComments(LEAD_ID),
                 "deleteLeadCompanyComments must throw a ResourceNotFoundException");
 
         // Assertions
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
+
         verify(repository, atMostOnce()).findById(anyString());
         verify(repository, never()).save(any(Lead.class));
     }
@@ -251,9 +259,10 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().deleteLeadCompanyComments(LEAD_ID),
+                () -> service.deleteLeadCompanyComments(LEAD_ID),
                 "deleteLeadCompanyComments must throw a ConstraintViolationException");
 
         // Assertions
@@ -295,13 +304,16 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().deleteLeadQualificationComments(LEAD_ID),
+                () -> service.deleteLeadQualificationComments(LEAD_ID),
                 "deleteLeadQualificationComments must throw a ResourceNotFoundException");
 
         // Assertions
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
         verify(repository, atMostOnce()).findById(anyString());
         verify(repository, never()).save(any(Lead.class));
@@ -329,5 +341,4 @@ public class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadReposito
         verify(repository, never()).findById(anyString());
         verify(repository, never()).save(any(Lead.class));
     }
-
 }

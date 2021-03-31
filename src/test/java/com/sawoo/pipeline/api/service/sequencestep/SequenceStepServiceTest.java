@@ -26,7 +26,7 @@ import static org.mockito.Mockito.doReturn;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SequenceStepServiceTest extends BaseServiceTest<SequenceStepDTO, SequenceStep, SequenceStepRepository, SequenceStepService, SequenceStepMockFactory> {
+class SequenceStepServiceTest extends BaseServiceTest<SequenceStepDTO, SequenceStep, SequenceStepRepository, SequenceStepService, SequenceStepMockFactory> {
 
     @MockBean
     private SequenceStepRepository repository;

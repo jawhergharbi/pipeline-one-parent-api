@@ -138,8 +138,8 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public List<InteractionAssigneeDTO> evalInteractions(String leadId, String sequenceId)
+    public List<InteractionAssigneeDTO> evalInteractions(String leadId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return sequenceInteractionService.evalInteractions(leadId, sequenceId);
+        return sequenceInteractionService.evalInteractions(leadId, sequenceId, assigneeId);
     }
 }

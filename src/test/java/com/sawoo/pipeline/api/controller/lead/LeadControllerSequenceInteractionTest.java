@@ -31,7 +31,6 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -70,7 +69,7 @@ class LeadControllerSequenceInteractionTest extends BaseLightControllerTest<Lead
         List<InteractionAssigneeDTO> interactions = getInteractions(INTERACTIONS_SIZE);
 
         // setup the mocked service
-        doReturn(interactions).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID);
+        doReturn(interactions).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
@@ -94,7 +93,7 @@ class LeadControllerSequenceInteractionTest extends BaseLightControllerTest<Lead
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ getEntityType(), LEAD_ID });
-        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID);
+        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
@@ -120,7 +119,7 @@ class LeadControllerSequenceInteractionTest extends BaseLightControllerTest<Lead
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ DBConstants.SEQUENCE_DOCUMENT, SEQUENCE_ID });
-        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID);
+        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))

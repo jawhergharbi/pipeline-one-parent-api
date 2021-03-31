@@ -23,12 +23,13 @@ public class LeadControllerSequenceInteractionDelegatorImpl implements LeadContr
     public LeadControllerSequenceInteractionDelegatorImpl(LeadService service) {
         this.service = service;
     }
+
     @Override
     public ResponseEntity<List<InteractionAssigneeDTO>> evalInteractions(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
+            String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        List<InteractionAssigneeDTO> interactions = service.evalInteractions(leadId, sequenceId);
-        return ResponseEntity.ok().body(interactions);
+        return ResponseEntity.ok().body(service.evalInteractions(leadId, sequenceId, assigneeId));
     }
 }
