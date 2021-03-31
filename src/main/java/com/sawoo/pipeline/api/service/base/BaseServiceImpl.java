@@ -35,7 +35,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     private ApplicationEventPublisher eventPublisher;
     private AuditService audit;
 
-    public BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher, AuditService audit) {
+    protected BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher, AuditService audit) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
@@ -43,7 +43,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         this.audit = audit;
     }
 
-    public BaseServiceImpl(R repository,OM mapper, String entityType, AuditService audit) {
+    protected BaseServiceImpl(R repository,OM mapper, String entityType, AuditService audit) {
         this(repository, mapper, entityType, null, audit);
     }
 
@@ -54,7 +54,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         log.debug("Creating new entity type: [{}]", getEntityType());
 
         entityExists(dto)
-                .ifPresent((entity) -> {
+                .ifPresent(entity -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
                             new String[]{ getEntityType(), dto.toString()});
@@ -80,7 +80,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return repository
                 .findById(id)
-                .map((entity) -> mapper.getMapperOut().getDestination(entity))
+                .map(entity -> mapper.getMapperOut().getDestination(entity))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -105,7 +105,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return repository
                 .findById(id)
-                .map((entity) -> {
+                .map(entity -> {
                     repository.deleteById(id);
                     log.debug("[{}] entity with id: [{}] has been deleted", entityType, id);
                     return mapper.getMapperOut().getDestination(entity);
@@ -123,7 +123,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return getRepository()
                 .findById(id)
-                .map((entity) -> {
+                .map(entity -> {
                     if (eventPublisher != null) {
                         eventPublisher.publishEvent(new BaseServiceBeforeUpdateEvent<>(dto, entity));
                     }
@@ -156,7 +156,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     public List<VersionDTO<D>> getVersions(String id) {
         return getRepository()
                 .findById(id)
-                .map( (entity) -> audit.getVersions(entity, id, getMapper().getMapperOut()))
+                .map( entity -> audit.getVersions(entity, id, getMapper().getMapperOut()))
                 .orElse(null);
     }
 }
