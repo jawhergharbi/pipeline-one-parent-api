@@ -40,7 +40,7 @@ import static org.mockito.Mockito.doReturn;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SequenceAccountServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
+class SequenceAccountServiceTest extends BaseLightServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
 
     @MockBean
     private SequenceRepository repository;
@@ -92,9 +92,10 @@ public class SequenceAccountServiceTest extends BaseLightServiceTest<SequenceDTO
     @DisplayName("findByAccountIds: account ids is empty - Failure")
     void findByAccountIdsWhenAccountIdsListIsEmptyReturnsFailure() {
 
+        SequenceService service = getService();
         Exception exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().findByAccountIds(new HashSet<>()),
+                () -> service.findByAccountIds(new HashSet<>()),
                 "findByAccountIds must throw ConstraintViolationException");
 
         Assertions.assertTrue(

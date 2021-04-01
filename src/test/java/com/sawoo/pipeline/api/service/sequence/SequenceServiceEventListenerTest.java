@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.containsString;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class SequenceServiceEventListenerTest {
+class SequenceServiceEventListenerTest {
 
     @Autowired
     private SequenceServiceEventListener listener;
@@ -81,10 +81,10 @@ public class SequenceServiceEventListenerTest {
         Sequence entity = mapper.getMapperIn().getDestination(postDTO);
 
         // Execute the service call
+        BaseServiceBeforeInsertEvent<SequenceDTO, Sequence> beforeInsertEvent = new BaseServiceBeforeInsertEvent<>(postDTO, entity);
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () ->  listener.handleBeforeInsertEvent(
-                        new BaseServiceBeforeInsertEvent<>(postDTO, entity)),
+                () ->  listener.handleBeforeInsertEvent(beforeInsertEvent),
                 "create must throw a CommonServiceException");
 
         // Assertions
@@ -174,13 +174,14 @@ public class SequenceServiceEventListenerTest {
         postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
 
         // Execute the service call
+        BaseServiceBeforeUpdateEvent<SequenceDTO, Sequence> beforeUpdateEvent = new BaseServiceBeforeUpdateEvent<>(postDTO, entity);
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity)),
+                () -> listener.handleBeforeUpdateEvent(beforeUpdateEvent),
                 "onBeforeUpdate must throw an update must throw an CommonServiceException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(1, exception.getArgs().length);
     }
 
@@ -235,13 +236,14 @@ public class SequenceServiceEventListenerTest {
         postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
 
         // Execute the service call
+        BaseServiceBeforeUpdateEvent<SequenceDTO, Sequence> beforeUpdateEvent = new BaseServiceBeforeUpdateEvent<>(postDTO, entity);
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity)),
+                () -> listener.handleBeforeUpdateEvent(beforeUpdateEvent),
                 "onBeforeUpdate must throw an update must throw an CommonServiceException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
     }
 
@@ -261,13 +263,14 @@ public class SequenceServiceEventListenerTest {
         postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
 
         // Execute the service call
+        BaseServiceBeforeUpdateEvent<SequenceDTO, Sequence> beforeUpdateEvent = new BaseServiceBeforeUpdateEvent<>(postDTO, entity);
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity)),
+                () -> listener.handleBeforeUpdateEvent(beforeUpdateEvent),
                 "onBeforeUpdate must throw an update must throw an CommonServiceException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
     }
 
@@ -286,13 +289,14 @@ public class SequenceServiceEventListenerTest {
         postDTO.setUsers(new HashSet<>(Collections.singleton(newUser)));
 
         // Execute the service call
+        BaseServiceBeforeUpdateEvent<SequenceDTO, Sequence> beforeUpdateEvent = new BaseServiceBeforeUpdateEvent<>(postDTO, entity);
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> listener.handleBeforeUpdateEvent(new BaseServiceBeforeUpdateEvent<>(postDTO, entity)),
+                () -> listener.handleBeforeUpdateEvent(beforeUpdateEvent),
                 "onBeforeUpdate must throw an update must throw an CommonServiceException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_LIST_EMPTY_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(1, exception.getArgs().length);
     }
 
