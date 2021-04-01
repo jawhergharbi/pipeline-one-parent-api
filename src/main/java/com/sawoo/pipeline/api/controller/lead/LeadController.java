@@ -146,7 +146,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/interactions",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @PathVariable("id") String leadId) {
         return delegator.getTODOs(leadId);
     }
@@ -154,7 +154,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/interactions/{interactionId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoAssigneeDTO> getInteraction(
+    public ResponseEntity<TodoAssigneeDTO> getTODO(
             @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) {
         return delegator.getTODO(leadId, interactionId);
@@ -163,7 +163,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/sequences/{sequenceId}/interactions/eval",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
             @PathVariable("id") String leadId,
             @PathVariable("sequenceId") String sequenceId,
             @RequestParam(value = "assigneeId", required = false) String assigneeId) {

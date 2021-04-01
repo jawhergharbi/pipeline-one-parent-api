@@ -60,16 +60,16 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
     }
 
     @Test
-    @DisplayName("GET /api/leads/{id}/sequences/{sequenceId}/todos/eval: evaluate interaction to be created based on a sequence and a lead - Success")
-    void evalInteractionsWhenLeadAndSequenceFoundReturnsSuccess() throws Exception {
+    @DisplayName("GET /api/leads/{id}/sequences/{sequenceId}/todos/eval: evaluate todo to be created based on a sequence and a lead - Success")
+    void evalTODOsWhenLeadAndSequenceFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        int INTERACTIONS_SIZE = 2;
-        List<TodoAssigneeDTO> interactions = getInteractions(INTERACTIONS_SIZE);
+        int TODO_SIZE = 2;
+        List<TodoAssigneeDTO> todos = getTODOs(TODO_SIZE);
 
         // setup the mocked service
-        doReturn(interactions).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
+        doReturn(todos).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
@@ -79,12 +79,12 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(INTERACTIONS_SIZE)));
+                .andExpect(jsonPath("$", hasSize(TODO_SIZE)));
     }
 
     @Test
     @DisplayName("GET /api/leads/{id}/sequences/{sequenceId}/todos/eval: lead not found - Failure")
-    void evalInteractionsWhenLeadNotFoundReturnsFailure() throws Exception {
+    void evalTODOsWhenLeadNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = "wrong_lead_id";
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
@@ -93,7 +93,7 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ getEntityType(), LEAD_ID });
-        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
+        doThrow(exception).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
@@ -110,7 +110,7 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
 
     @Test
     @DisplayName("GET /api/leads/{id}/sequences/{sequenceId}/todos/eval: lead not found - Failure")
-    void evalInteractionsWhenSequenceNotFoundReturnsFailure() throws Exception {
+    void evalTODOsWhenSequenceNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
         String SEQUENCE_ID = "wrong_sequence_id";
@@ -119,7 +119,7 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ DBConstants.SEQUENCE_DOCUMENT, SEQUENCE_ID });
-        doThrow(exception).when(service).evalInteractions(LEAD_ID, SEQUENCE_ID, null);
+        doThrow(exception).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
@@ -134,7 +134,7 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
                         SEQUENCE_ID)));
     }
 
-    private List<TodoAssigneeDTO> getInteractions(int interactionSize) {
+    private List<TodoAssigneeDTO> getTODOs(int todoSize) {
         String USER_FULL_NAME = getMockFactory().getFAKER().name().fullName();
         String USER_ID = getMockFactory().getFAKER().internet().uuid();
         UserCommon user = UserCommon.builder()
@@ -142,12 +142,12 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
                 .id(USER_ID)
                 .type(UserCommonType.USER).build();
         return IntStream
-                .range(0, interactionSize)
+                .range(0, todoSize)
                 .mapToObj( (i) -> {
-                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    TodoAssigneeDTO interaction = getMockFactory().getInteractionAssigneeMockFactory().newDTO(INTERACTION_ID);
-                    interaction.setAssignee(user);
-                    return interaction;
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    TodoAssigneeDTO todo = getMockFactory().getTodoAssigneeMockFactory().newDTO(TODO_ID);
+                    todo.setAssignee(user);
+                    return todo;
                 }).collect(Collectors.toList());
     }
 }

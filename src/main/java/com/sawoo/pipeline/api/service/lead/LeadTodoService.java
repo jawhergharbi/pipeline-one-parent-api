@@ -11,23 +11,23 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-public interface LeadInteractionService {
+public interface LeadTodoService {
 
-    TodoDTO addInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-                           @Valid TodoDTO interaction)
+    TodoDTO addTODO(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+                    @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException;
 
-    TodoDTO removeInteraction(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-                              @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+    TodoDTO removeTODO(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+                       @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException;
 
-    List<TodoAssigneeDTO> getInteractions(
+    List<TodoAssigneeDTO> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException;
 
-    TodoAssigneeDTO getInteraction(
+    TodoAssigneeDTO getTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException;
 
     List<LeadTodoDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types);

@@ -35,10 +35,16 @@ public class LeadControllerTodoDelegatorImpl implements LeadControllerTodoDelega
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException {
-        TodoDTO newEntity = service.addInteraction(leadId, todo);
+        TodoDTO newEntity = service.addTODO(leadId, todo);
         try {
             return ResponseEntity
-                    .created(new URI(ControllerConstants.LEAD_CONTROLLER_API_BASE_URI + "/" + leadId + "/interactions/" + newEntity.getId()))
+                    .created(new URI(ControllerConstants.LEAD_CONTROLLER_API_BASE_URI
+                            + "/"
+                            + leadId
+                            + "/"
+                            + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME
+                            + "/"
+                            + newEntity.getId()))
                     .body(newEntity);
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -50,14 +56,14 @@ public class LeadControllerTodoDelegatorImpl implements LeadControllerTodoDelega
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.removeInteraction(leadId, todoId));
+        return ResponseEntity.ok().body(service.removeTODO(leadId, todoId));
     }
 
     @Override
     public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.getInteractions(leadId));
+        return ResponseEntity.ok().body(service.getTODOs(leadId));
     }
 
     @Override
@@ -65,6 +71,6 @@ public class LeadControllerTodoDelegatorImpl implements LeadControllerTodoDelega
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.getInteraction(leadId, todoId));
+        return ResponseEntity.ok().body(service.getTODO(leadId, todoId));
     }
 }

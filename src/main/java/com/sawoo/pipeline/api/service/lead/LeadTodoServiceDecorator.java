@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LeadInteractionServiceDecorator implements LeadInteractionService {
+public class LeadTodoServiceDecorator implements LeadTodoService {
 
     private final TodoService todoService;
     private final LeadRepository repository;
@@ -36,121 +36,121 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
     private final LeadMapper mapper;
 
     @Override
-    public TodoDTO addInteraction(
+    public TodoDTO addTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @Valid TodoDTO interaction)
+            @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Add new interaction for lead id: [{}].", leadId);
+        log.debug("Add new todo for lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         List<Todo> todos = lead.getTodos();
         todos.stream()
-                .filter(i -> i.getScheduled().equals(interaction.getScheduled()))
+                .filter(t -> t.getScheduled().equals(todo.getScheduled()))
                 .findAny()
-                .ifPresent( (i) -> {
+                .ifPresent(t -> {
                     throw new CommonServiceException(
-                            ExceptionMessageConstants.LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION,
-                            new String[]{leadId, interaction.getScheduled().toString()});
+                            ExceptionMessageConstants.LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION,
+                            new String[]{leadId, todo.getScheduled().toString()});
                 });
 
-        interaction.setComponentId(leadId);
-        final TodoDTO savedInteraction = todoService.create(interaction);
+        todo.setComponentId(leadId);
+        final TodoDTO savedTODO = todoService.create(todo);
 
-        log.debug("Lead interaction has been created for lead id: [{}]. Todo id [{}]", leadId, interaction.getId());
+        log.debug("Lead todo has been created for lead id: [{}]. Todo id [{}]", leadId, todo.getId());
 
-        todos.add(todoService.getMapper().getMapperIn().getDestination(savedInteraction));
+        todos.add(todoService.getMapper().getMapperIn().getDestination(savedTODO));
         lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
         repository.save(lead);
 
-        return savedInteraction;
+        return savedTODO;
     }
 
     @Override
-    public TodoDTO removeInteraction(
+    public TodoDTO removeTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        log.debug("Remove interaction from lead id: [{}].", leadId);
+        log.debug("Remove todo from lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         return lead.getTodos()
                 .stream()
-                .filter(i -> i.getId().equals(interactionId))
+                .filter(i -> i.getId().equals(todoId))
                 .findAny()
                 .map( i -> {
                     lead.getTodos().remove(i);
                     lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(lead);
-                    log.debug("Todo with id [{}] for lead id [{}] has been deleted.", interactionId, leadId);
+                    log.debug("Todo with id [{}] for lead id [{}] has been deleted.", todoId, leadId);
                     return todoService.delete(i.getId());
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{ DBConstants.TODO_DOCUMENT, interactionId }));
+                                new String[]{ DBConstants.TODO_DOCUMENT, todoId}));
     }
 
     @Override
-    public List<TodoAssigneeDTO> getInteractions(
+    public List<TodoAssigneeDTO> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException {
         log.debug("Get todos from lead id: [{}].", leadId);
 
         Lead lead = findLeadById(leadId);
         List<Todo> todos = lead.getTodos();
-        List<TodoAssigneeDTO> assigneeInteractions = Collections.emptyList();
+        List<TodoAssigneeDTO> assigneeTODOs = Collections.emptyList();
         if (!todos.isEmpty()) {
             final List<UserCommon> users = helper.getUsers(leadId);
-            assigneeInteractions = todos
+            assigneeTODOs = todos
                     .stream()
-                    .map(i -> mapInteraction(i, users))
+                    .map(i -> mapTODO(i, users))
                     .collect(Collectors.toList());
         }
         log.debug("[{}] todos has been found for lead id [{}]", leadId, todos.size());
 
-        return  assigneeInteractions;
+        return  assigneeTODOs;
     }
 
     @Override
-    public TodoAssigneeDTO getInteraction(
+    public TodoAssigneeDTO getTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        log.debug("Get interaction id [{}] from lead id: [{}].", interactionId, leadId);
+        log.debug("Get todo id [{}] from lead id: [{}].", todoId, leadId);
         Lead lead = findLeadById(leadId);
         return lead
                 .getTodos()
                 .stream()
-                .filter(i -> interactionId.equals(i.getId()))
+                .filter(i -> todoId.equals(i.getId()))
                 .findAny()
                 .map(i -> {
-                    log.debug("Todo id [{}] for lead id [{}] has been found. \nTodo: [{}]", interactionId, leadId, i);
+                    log.debug("Todo id [{}] for lead id [{}] has been found. \nTodo: [{}]", todoId, leadId, i);
                     List<UserCommon> users = helper.getUsers(leadId);
-                    return mapInteraction(i, users);
+                    return mapTODO(i, users);
                 })
                 .orElseThrow( () ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                                new String[]{ DBConstants.LEAD_DOCUMENT, interactionId }) );
+                                new String[]{ DBConstants.LEAD_DOCUMENT, todoId}) );
     }
 
     @Override
     public List<LeadTodoDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
         log.debug("Get todos from leads [{}] with status [{}] and types[{}]", leadIds, status, types);
 
-        List<TodoDTO> interactions = todoService.findBy(leadIds, status, types);
-        if (interactions.size() > 0) {
-            List<Lead> leads = leadIds.size() > 0 ? repository.findAllByIdIn(leadIds) : Collections.emptyList();
+        List<TodoDTO> todos = todoService.findBy(leadIds, status, types);
+        if (!todos.isEmpty()) {
+            List<Lead> leads = leadIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(leadIds);
 
             // throw exception if leads.size < leadIds.size
 
-            return interactions
+            return todos
                     .stream()
-                    .map((i) -> {
-                        LeadTodoDTO interaction = mapper.getInteractionMapperOut().getDestination(i);
-                        Optional<Lead> lead = leads.stream().filter(l -> l.getId().equals(interaction.getComponentId())).findAny();
-                        lead.ifPresent(value -> interaction.setLead(mapper.getLeadInteractionMapperOut().getDestination(value)));
-                        return interaction;
+                    .map(t -> {
+                        LeadTodoDTO todo = mapper.getTodoMapperOut().getDestination(t);
+                        Optional<Lead> lead = leads.stream().filter(l -> l.getId().equals(todo.getComponentId())).findAny();
+                        lead.ifPresent(value -> todo.setLead(mapper.getLeadTodoMapperOut().getDestination(value)));
+                        return todo;
                     }).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
@@ -166,10 +166,10 @@ public class LeadInteractionServiceDecorator implements LeadInteractionService {
                                 new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
     }
 
-    private TodoAssigneeDTO mapInteraction(Todo i, List<UserCommon> users) {
-        TodoAssigneeDTO interaction = todoService.getMapper().getAssigneeMapperOut().getDestination(i);
-        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
-        user.ifPresent(interaction::setAssignee);
-        return interaction;
+    private TodoAssigneeDTO mapTODO(Todo t, List<UserCommon> users) {
+        TodoAssigneeDTO todo = todoService.getMapper().getAssigneeMapperOut().getDestination(t);
+        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
+        user.ifPresent(todo::setAssignee);
+        return todo;
     }
 }

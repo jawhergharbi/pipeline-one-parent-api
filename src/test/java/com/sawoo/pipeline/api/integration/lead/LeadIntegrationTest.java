@@ -43,23 +43,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         collectionNames = {DBConstants.LEAD_DOCUMENT})
 @MongoDataFileList(
         files = {
-                @MongoTestFile(fileName = "lead-interaction-integration-test-data.json", classType = Todo.class),
+                @MongoTestFile(fileName = "lead-todo-integration-test-data.json", classType = Todo.class),
                 @MongoTestFile(fileName = "lead-integration-test-data.json", classType = Lead.class)},
         collectionNames = {
+                DBConstants.ACCOUNT_DOCUMENT,
+                DBConstants.USER_DOCUMENT,
                 DBConstants.LEAD_DOCUMENT,
                 DBConstants.PERSON_DOCUMENT,
                 DBConstants.COMPANY_DOCUMENT,
                 DBConstants.TODO_DOCUMENT})
-public class LeadIntegrationTest extends BaseIntegrationTest<LeadDTO, Lead, LeadMockFactory> {
+class LeadIntegrationTest extends BaseIntegrationTest<LeadDTO, Lead, LeadMockFactory> {
 
-    private static final String LEAD_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "lead-integration-expected-results.json";
+    private static final String TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "lead-integration-expected-results.json";
 
     @Autowired
     public LeadIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, LeadMockFactory mockFactory) {
         super(mockMvc, mongoTemplate,
                 ControllerConstants.LEAD_CONTROLLER_API_BASE_URI,
                 DBConstants.LEAD_DOCUMENT,
-                LEAD_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
+                TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
                 mockFactory);
     }
 
@@ -71,18 +73,18 @@ public class LeadIntegrationTest extends BaseIntegrationTest<LeadDTO, Lead, Lead
     @Test
     @Order(10)
     @DisplayName("GET /api/leads/{id}/todos: get todos for a lead - Success")
-    void getInteractionsWhenEntityNotFoundReturnsSuccess() throws Exception {
+    void getTODOsWhenEntityFoundReturnsSuccess() throws Exception {
         String LEAD_ID = "601c2aa7cb7a517712ad6be3";
-        int INTERACTION_LIST_SIZE = 3;
+        int TODO_LIST_SIZE = 3;
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/{id}/interactions", LEAD_ID))
+        getMockMvc().perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, LEAD_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(INTERACTION_LIST_SIZE)));
+                .andExpect(jsonPath("$", hasSize(TODO_LIST_SIZE)));
     }
 }

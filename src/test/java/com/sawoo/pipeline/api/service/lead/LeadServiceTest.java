@@ -329,10 +329,11 @@ class LeadServiceTest extends BaseServiceTest<LeadDTO, Lead, LeadRepository, Lea
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().deleteLeadQualificationComments(LEAD_ID),
-                "v must throw a ConstraintViolationException");
+                () -> service.deleteLeadQualificationComments(LEAD_ID),
+                "deleteLeadQualificationComments must throw a ConstraintViolationException");
 
         // Assertions
         Assertions.assertTrue(

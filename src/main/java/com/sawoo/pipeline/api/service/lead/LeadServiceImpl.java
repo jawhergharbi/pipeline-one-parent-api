@@ -33,19 +33,19 @@ import java.util.function.Consumer;
 public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadRepository, LeadMapper> implements LeadService {
 
     private final LeadReportService reportService;
-    private final LeadInteractionService interactionService;
-    private final LeadSequenceInteractionService sequenceInteractionService;
+    private final LeadTodoService todoService;
+    private final LeadSequenceTodoService sequenceTodoService;
 
     @Autowired
     public LeadServiceImpl(LeadRepository repository, LeadMapper mapper,
                            LeadReportService reportService,
-                           LeadInteractionService interactionService,
-                           LeadSequenceInteractionService sequenceInteractionService,
+                           LeadTodoService todoService,
+                           LeadSequenceTodoService sequenceTodoService,
                            AuditService audit) {
         super(repository, mapper, DBConstants.LEAD_DOCUMENT, audit);
         this.reportService = reportService;
-        this.interactionService = interactionService;
-        this.sequenceInteractionService = sequenceInteractionService;
+        this.todoService = todoService;
+        this.sequenceTodoService = sequenceTodoService;
     }
 
     @Override
@@ -64,28 +64,28 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public TodoDTO addInteraction(String leadId, TodoDTO interaction) throws ResourceNotFoundException, CommonServiceException {
-        return interactionService.addInteraction(leadId, interaction);
+    public TodoDTO addTODO(String leadId, TodoDTO todo) throws ResourceNotFoundException, CommonServiceException {
+        return todoService.addTODO(leadId, todo);
     }
 
     @Override
-    public TodoDTO removeInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        return interactionService.removeInteraction(leadId, interactionId);
+    public TodoDTO removeTODO(String leadId, String todoId) throws ResourceNotFoundException {
+        return todoService.removeTODO(leadId, todoId);
     }
 
     @Override
-    public List<TodoAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
-        return interactionService.getInteractions(leadId);
+    public List<TodoAssigneeDTO> getTODOs(String leadId) throws ResourceNotFoundException {
+        return todoService.getTODOs(leadId);
     }
 
     @Override
-    public TodoAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        return interactionService.getInteraction(leadId, interactionId);
+    public TodoAssigneeDTO getTODO(String leadId, String todoId) throws ResourceNotFoundException {
+        return todoService.getTODO(leadId, todoId);
     }
 
     @Override
     public List<LeadTodoDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        return interactionService.findBy(leadIds, status, types);
+        return todoService.findBy(leadIds, status, types);
     }
 
     @Override
@@ -138,8 +138,8 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public List<TodoAssigneeDTO> evalInteractions(String leadId, String sequenceId, String assigneeId)
+    public List<TodoAssigneeDTO> evalTODOs(String leadId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return sequenceInteractionService.evalInteractions(leadId, sequenceId, assigneeId);
+        return sequenceTodoService.evalTODOs(leadId, sequenceId, assigneeId);
     }
 }

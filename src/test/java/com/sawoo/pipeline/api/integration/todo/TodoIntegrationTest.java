@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
         value = "todo-integration-test-data.json",
         classType = Todo.class,
         collectionNames = {DBConstants.TODO_DOCUMENT})
-public class TodoIntegrationTest extends BaseIntegrationTest<TodoDTO, Todo, TodoMockFactory> {
+class TodoIntegrationTest extends BaseIntegrationTest<TodoDTO, Todo, TodoMockFactory> {
 
     private static final String TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "todo-integration-expected-results.json";
 

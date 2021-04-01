@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInteractionService {
+public class LeadSequenceTodoServiceDecorator implements LeadSequenceTodoService {
 
     private final LeadRepository leadRepository;
     private final SequenceService sequenceService;
     private final LeadServiceDecoratorHelper helper;
 
     @Override
-    public List<TodoAssigneeDTO> evalInteractions(
+    public List<TodoAssigneeDTO> evalTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
@@ -46,7 +46,7 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
         Personality personality = lead.getPerson().getPersonality();
         if (personality == null || personality.getType() == null) {
                 throw new CommonServiceException(
-                        ExceptionMessageConstants.LEAD_SEQUENCE_INTERACTION_PERSONALITY_NOT_ASSIGNED_EXCEPTION,
+                        ExceptionMessageConstants.LEAD_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION,
                         new String[]{sequenceId, leadId});
         }
 
@@ -63,7 +63,7 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
         UserCommon assignee = helper.getAssignee(leadId, assigneeId);
         return steps
                 .stream()
-                .map(s -> mapSequenceStepToInteraction(s, assignee, leadId, startDate))
+                .map(s -> mapSequenceStepToTODO(s, assignee, leadId, startDate))
                 .collect(Collectors.toList());
     }
 
@@ -76,7 +76,7 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
                                 new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
     }
 
-    private TodoAssigneeDTO mapSequenceStepToInteraction(SequenceStepDTO step, UserCommon assignee, String leadId, LocalDateTime startDate) {
+    private TodoAssigneeDTO mapSequenceStepToTODO(SequenceStepDTO step, UserCommon assignee, String leadId, LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))

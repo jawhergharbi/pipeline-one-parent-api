@@ -137,7 +137,7 @@ class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Account, A
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.findAllByUser(USER_ID),
-                "findAll must throw a ResourceNotFoundException");
+                "findAllByUser must throw a ResourceNotFoundException");
 
         // Assertions
         Assertions.assertEquals(ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION, exception.getMessage());
@@ -237,7 +237,7 @@ class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Account, A
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.updateUser(ACCOUNT_ID, USER_ID),
-                "update must throw an ResourceNotFoundException");
+                "updateUser must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,

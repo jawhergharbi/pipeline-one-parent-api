@@ -43,8 +43,8 @@ class LeadSequenceTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, Le
     }
 
     @Test
-    @DisplayName("addInteraction: lead and sequence found - Success")
-    void evalInteractionsWhenLeadAndSequenceFoundReturnsSuccess() {
+    @DisplayName("evalTODOs: lead and sequence found - Success")
+    void evalTODOsWhenLeadAndSequenceFoundReturnsSuccess() {
 
     }
 }

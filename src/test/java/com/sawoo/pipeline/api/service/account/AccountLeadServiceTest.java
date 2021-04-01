@@ -362,7 +362,7 @@ class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Account, A
         Assertions.assertThrows(
                 ConstraintViolationException.class,
                 () -> service.createLead(ACCOUNT_ID, mockedLeadToCreate),
-                "Must throw ConstraintViolationException");
+                "createLead must throw ConstraintViolationException");
     }
 
     @Test
@@ -408,7 +408,7 @@ class AccountLeadServiceTest extends BaseLightServiceTest<AccountDTO, Account, A
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
                 () -> service.createLead(ACCOUNT_ID, mockedLeadToCreate),
-                "Must throw CommonServiceException");
+                " createLead must throw CommonServiceException");
 
         Assertions.assertEquals(
                 ExceptionMessageConstants.ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION,

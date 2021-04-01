@@ -30,6 +30,6 @@ public class LeadControllerSequenceTodoDelegatorImpl implements LeadControllerSe
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return ResponseEntity.ok().body(service.evalInteractions(leadId, sequenceId, assigneeId));
+        return ResponseEntity.ok().body(service.evalTODOs(leadId, sequenceId, assigneeId));
     }
 }

@@ -37,8 +37,8 @@ public interface ExceptionMessageConstants {
 
     String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
     String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
-    String LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION = "lead.interaction-add-interaction-already-scheduled.exception";
-    String LEAD_SEQUENCE_INTERACTION_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "lead.sequence-interaction-personality-not-assigned.exception";
+    String LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION = "lead.todo-add-todo-already-scheduled.exception";
+    String LEAD_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "lead.sequence-todo-personality-not-assigned.exception";
     String LEAD_LEAD_ACCOUNT_NOT_FOUND_EXCEPTION = "lead.lead-account-not-found.exception";
     String LEAD_LEAD_ACCOUNT_ASSIGNEE_NOT_FOUND_EXCEPTION = "lead.lead-account-assignee-not-found.exception";
     String LEAD_LEAD_ACCOUNT_NO_ASSIGNEE_FOUND_EXCEPTION = "lead.lead-account-no-assignee-found.exception";

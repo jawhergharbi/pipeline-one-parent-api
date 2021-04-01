@@ -19,6 +19,6 @@ public class LeadMapper implements BaseMapper<LeadDTO, Lead> {
     private final JMapper<LeadDTO, Lead> mapperOut = new JMapper<>(LeadDTO.class, Lead.class);
     private final JMapper<Lead, LeadDTO> mapperIn = new JMapper<>(Lead.class, LeadDTO.class);
 
-    private final JMapper<LeadTodoDTO, TodoDTO> interactionMapperOut = new JMapper<>(LeadTodoDTO.class, TodoDTO.class);
-    private final JMapper<LeadInteractionLeadDTO, Lead> leadInteractionMapperOut = new JMapper<>(LeadInteractionLeadDTO.class, Lead.class);
+    private final JMapper<LeadTodoDTO, TodoDTO> todoMapperOut = new JMapper<>(LeadTodoDTO.class, TodoDTO.class);
+    private final JMapper<LeadInteractionLeadDTO, Lead> leadTodoMapperOut = new JMapper<>(LeadInteractionLeadDTO.class, Lead.class);
 }

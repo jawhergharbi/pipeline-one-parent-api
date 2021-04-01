@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.service.base.BaseService;
 import javax.validation.constraints.NotBlank;
 
 public interface LeadService extends BaseService<LeadDTO>, BaseProxyService<LeadRepository, LeadMapper>,
-        LeadReportService, LeadInteractionService, LeadSequenceInteractionService {
+        LeadReportService, LeadTodoService, LeadSequenceTodoService {
 
     LeadDTO deleteLeadSummary(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String leadId)

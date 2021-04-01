@@ -76,29 +76,29 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("addInteraction: lead does exist and lead interaction is valid - Success")
-    void addInteractionWhenLeadExistsAndLeadInteractionValidReturnsSuccess() {
+    @DisplayName("addTODO: lead does exist and lead todo is valid - Success")
+    void addTODOWhenLeadExistsAndLeadTODOValidReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        String INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
         Lead spyLeadEntity = spy(getMockFactory().newEntity(LEAD_ID));
-        TodoDTO interactionMock = getMockFactory().getTodoMockFactory().newDTO(null);
-        TodoDTO interactionCreated = getMockFactory().getTodoMockFactory().newDTO(INTERACTION_ID, interactionMock);
+        TodoDTO todoMock = getMockFactory().getTodoMockFactory().newDTO(null);
+        TodoDTO todoCreated = getMockFactory().getTodoMockFactory().newDTO(TODO_ID, todoMock);
 
         // Set up the mocked repository
         doReturn(Optional.of(spyLeadEntity)).when(repository).findById(anyString());
-        doReturn(interactionCreated).when(todoService).create(any(TodoDTO.class));
+        doReturn(todoCreated).when(todoService).create(any(TodoDTO.class));
         doReturn(new TodoMapper()).when(todoService).getMapper();
 
         // Execute the service call
-        TodoDTO returnedDTO = getService().addInteraction(LEAD_ID, interactionCreated);
+        TodoDTO returnedDTO = getService().addTODO(LEAD_ID, todoCreated);
 
-        Assertions.assertAll(String.format("Lead id [%s] must be updated with a new interaction", LEAD_ID),
-                () -> Assertions.assertNotNull(returnedDTO, "Lead interaction can not be null"),
+        Assertions.assertAll(String.format("Lead id [%s] must be updated with a new todo", LEAD_ID),
+                () -> Assertions.assertNotNull(returnedDTO, "Lead todo can not be null"),
                 () -> Assertions.assertEquals(
-                        INTERACTION_ID,
+                        TODO_ID,
                         returnedDTO.getId(),
-                        String.format("Todo id must be [%s]", INTERACTION_ID)));
+                        String.format("Todo id must be [%s]", TODO_ID)));
 
         Assertions.assertFalse(
                 spyLeadEntity.getTodos().isEmpty(),
@@ -110,11 +110,11 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("addInteraction: lead does not exist and interaction on is valid - Failure")
-    void addInteractionWhenLeadDoesNotExistAndInteractionValidReturnsFailure() {
+    @DisplayName("addTODO: lead does not exist and TODO on is valid - Failure")
+    void addTODOWhenLeadDoesNotExistAndTODOValidReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        TodoDTO interactionToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
+        TodoDTO todoToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findById(anyString());
@@ -123,8 +123,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
-                "addInteraction must throw a ResourceNotFoundException");
+                () -> service.addTODO(LEAD_ID, todoToBeCreated),
+                "addTODO must throw a ResourceNotFoundException");
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 exception.getMessage());
@@ -134,19 +134,19 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("addInteraction: lead does exist and interaction not valid - Failure")
-    void addInteractionWhenLeadDoesExistAndInteractionNotValidReturnsFailure() {
+    @DisplayName("addTODO: lead does exist and todo not valid - Failure")
+    void addTODOWhenLeadDoesExistAndTODONotValidReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        TodoDTO interactionToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
-        interactionToBeCreated.setScheduled(null);
+        TodoDTO todoToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
+        todoToBeCreated.setScheduled(null);
 
         // Asserts
         LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
-                "addInteraction must throw a ConstraintViolationException");
+                () -> service.addTODO(LEAD_ID, todoToBeCreated),
+                "addTODO must throw a ConstraintViolationException");
         Assertions.assertTrue(
                 containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
                         .matches(exception.getMessage()));
@@ -156,15 +156,15 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("addInteraction: lead does exist and interaction is valid - Failure")
-    void addInteractionWhenLeadDoesExistAndInteractionAlreadyScheduledReturnsFailure() {
+    @DisplayName("addTODO: lead does exist and todo is valid - Failure")
+    void addTODOWhenLeadDoesExistAndTODOAlreadyScheduledReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        String LEAD_INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
-        TodoDTO interactionToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
+        String LEAD_TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        TodoDTO todoToBeCreated = getMockFactory().getTodoMockFactory().newDTO(null);
         Lead spyLeadEntity = spy(getMockFactory().newEntity(LEAD_ID));
-        Todo todo = getMockFactory().getTodoMockFactory().newEntity(LEAD_INTERACTION_ID);
-        todo.setScheduled(interactionToBeCreated.getScheduled());
+        Todo todo = getMockFactory().getTodoMockFactory().newEntity(LEAD_TODO_ID);
+        todo.setScheduled(todoToBeCreated.getScheduled());
         spyLeadEntity.getTodos().add(todo);
 
         // Set up the mocked repository
@@ -174,10 +174,10 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.addInteraction(LEAD_ID, interactionToBeCreated),
-                "addInteraction must throw a CommonServiceException");
+                () -> service.addTODO(LEAD_ID, todoToBeCreated),
+                "addTODO must throw a CommonServiceException");
         Assertions.assertTrue(
-                containsString(ExceptionMessageConstants.LEAD_INTERACTION_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION)
+                containsString(ExceptionMessageConstants.LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION)
                         .matches(exception.getMessage()));
 
         verify(repository, times(1)).findById(anyString());
@@ -185,13 +185,13 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("removeInteraction: lead does exist and lead interaction found - Success")
-    void removeInteractionWhenLeadExistsAndLeadInteractionFoundReturnsSuccess() {
+    @DisplayName("removeTODO: lead does exist and lead todo found - Success")
+    void removeTODOWhenLeadExistsAndLeadTODOFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        String INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
         Lead spyLeadEntity = spy(getMockFactory().newEntity(LEAD_ID));
-        Todo todo = getMockFactory().getTodoMockFactory().newEntity(INTERACTION_ID);
+        Todo todo = getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
         spyLeadEntity.getTodos().add(todo);
         TodoDTO todoDTO = (new TodoMapper()).getMapperOut().getDestination(todo);
 
@@ -200,14 +200,14 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         doReturn(todoDTO).when(todoService).delete(anyString());
 
         // Execute the service call
-        TodoDTO returnedDTO = getService().removeInteraction(LEAD_ID, INTERACTION_ID);
+        TodoDTO returnedDTO = getService().removeTODO(LEAD_ID, TODO_ID);
 
         Assertions.assertAll(String.format("Lead id [%s] must be updated with a new todo", LEAD_ID),
                 () -> Assertions.assertNotNull(returnedDTO, "Lead todo can not be null"),
                 () -> Assertions.assertEquals(
-                        INTERACTION_ID,
+                        TODO_ID,
                         returnedDTO.getId(),
-                        String.format("Todo id must be [%s]", INTERACTION_ID)));
+                        String.format("Todo id must be [%s]", TODO_ID)));
 
         Assertions.assertTrue(
                 spyLeadEntity.getTodos().isEmpty(),
@@ -218,11 +218,11 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("removeInteraction: lead does not exist - Failure")
-    void removeInteractionWhenLeadDoesNotExistReturnsFailure() {
+    @DisplayName("removeTODO: lead does not exist - Failure")
+    void removeTODOWhenLeadDoesNotExistReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        String INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findById(anyString());
@@ -231,8 +231,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.removeInteraction(LEAD_ID, INTERACTION_ID),
-                "removeInteraction must throw a ResourceNotFoundException");
+                () -> service.removeTODO(LEAD_ID, TODO_ID),
+                "removeTODO must throw a ResourceNotFoundException");
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 exception.getMessage());
@@ -242,8 +242,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("removeInteraction: interaction id is null - Failure")
-    void removeInteractionWhenInteractionIdNullReturnsFailure() {
+    @DisplayName("removeTODO: todo id is null - Failure")
+    void removeTODOWhenTODOIdNullReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
 
@@ -251,8 +251,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> service.removeInteraction(LEAD_ID, null),
-                "removeInteraction must throw a ConstraintViolationException");
+                () -> service.removeTODO(LEAD_ID, null),
+                "removeTODO must throw a ConstraintViolationException");
 
         String exceptionMessage = exception.getMessage();
         Assertions.assertTrue(
@@ -264,17 +264,17 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("getTodos: lead found - Success")
-    void getInteractionsWhenLeadFoundReturnsSuccess() {
+    @DisplayName("getTODOs: lead found - Success")
+    void getTODOsWhenLeadFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        int INTERACTION_LIST_SIZE = 3;
+        int TODO_LIST_SIZE = 3;
         Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
         List<Todo> todoList = IntStream
-                .range(0, INTERACTION_LIST_SIZE)
+                .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
-                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getTodoMockFactory().newEntity(INTERACTION_ID);
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
                 }).collect(Collectors.toList());
         leadEntity.setTodos(todoList);
 
@@ -284,26 +284,26 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         doReturn(Collections.emptyList()).when(helper).getUsers(anyString());
 
         // Execute the service call
-        List<TodoAssigneeDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+        List<TodoAssigneeDTO> returnedListDTO = getService().getTODOs(LEAD_ID);
 
         // Assertions
         Assertions.assertAll(String.format("Lead with id [%s] has a list of todos", LEAD_ID),
                 () -> Assertions.assertFalse(returnedListDTO.isEmpty(), "Todo list can not be empty"),
                 () -> Assertions.assertEquals(
-                        INTERACTION_LIST_SIZE,
+                        TODO_LIST_SIZE,
                         returnedListDTO.size(),
-                        String.format("Todo list size must be [%d]", INTERACTION_LIST_SIZE)));
+                        String.format("Todo list size must be [%d]", TODO_LIST_SIZE)));
 
         verify(repository, atMostOnce()).findById(anyString());
         verify(helper, atMostOnce()).getUsers(anyString());
     }
 
     @Test
-    @DisplayName("getTodos: lead found - Success")
-    void getInteractionsWhenLeadFoundAndAccountFoundReturnsSuccess() {
+    @DisplayName("getTODOs: lead found - Success")
+    void getTODOsWhenLeadFoundAndAccountFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        int INTERACTION_LIST_SIZE = 10;
+        int TODO_LIST_SIZE = 10;
         Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
         List<UserCommon> mockedUsers = IntStream
                 .range(0, 2)
@@ -314,10 +314,10 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
                 }).collect(Collectors.toList());
 
         List<Todo> todoList = IntStream
-                .range(0, INTERACTION_LIST_SIZE)
+                .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
-                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    Todo todo = getMockFactory().getTodoMockFactory().newEntity(INTERACTION_ID);
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    Todo todo = getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
                     todo.setAssigneeId(mockedUsers
                             .get(getMockFactory()
                                     .getFAKER()
@@ -333,15 +333,15 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         doReturn(mockedUsers).when(helper).getUsers(anyString());
 
         // Execute the service call
-        List<TodoAssigneeDTO> returnedListDTO = getService().getInteractions(LEAD_ID);
+        List<TodoAssigneeDTO> returnedListDTO = getService().getTODOs(LEAD_ID);
 
         // Assertions
         Assertions.assertAll(String.format("Lead with id [%s] has a list of todos", LEAD_ID),
                 () -> Assertions.assertFalse(returnedListDTO.isEmpty(), "Todo list can not be empty"),
                 () -> Assertions.assertEquals(
-                        INTERACTION_LIST_SIZE,
+                        TODO_LIST_SIZE,
                         returnedListDTO.size(),
-                        String.format("Todo list size must be [%d]", INTERACTION_LIST_SIZE)),
+                        String.format("Todo list size must be [%d]", TODO_LIST_SIZE)),
                 () -> Assertions.assertNotNull(returnedListDTO.get(0).getAssignee(), "Assignee can not be null"));
 
         verify(repository, atMostOnce()).findById(anyString());
@@ -349,8 +349,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("getTodos: lead found - Failure")
-    void getInteractionsWhenLeadNotFoundReturnsFailure() {
+    @DisplayName("getTODOs: lead found - Failure")
+    void getTODOsWhenLeadNotFoundReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
 
@@ -361,7 +361,7 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.getInteractions(LEAD_ID),
+                () -> service.getTODOs(LEAD_ID),
                 "getTodos must throw a ResourceNotFoundException");
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -372,44 +372,44 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("getTodos: lead and interaction found - Success")
-    void getInteractionWhenLeadAndInteractionFoundReturnsSuccess() {
+    @DisplayName("getTODO: lead and todo found - Success")
+    void getTODOWhenLeadAndTODOFoundReturnsSuccess() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        int INTERACTION_LIST_SIZE = 3;
+        int TODO_LIST_SIZE = 3;
         Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
         List<Todo> todoList = IntStream
-                .range(0, INTERACTION_LIST_SIZE)
+                .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
-                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getTodoMockFactory().newEntity(INTERACTION_ID);
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
                 }).collect(Collectors.toList());
         leadEntity.setTodos(todoList);
-        int INTERACTION_IDX = new Random().nextInt(3);
-        String TARGET_INTERACTION_ID = todoList.get(INTERACTION_IDX).getId();
+        int TODO_IDX = new Random().nextInt(3);
+        String TARGET_TODO_ID = todoList.get(TODO_IDX).getId();
 
         // Set up the mocked repository
         doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
         doReturn(new TodoMapper()).when(todoService).getMapper();
 
         // Execute the service call
-        TodoDTO returnedDTO = getService().getInteraction(LEAD_ID, TARGET_INTERACTION_ID);
+        TodoDTO returnedDTO = getService().getTODO(LEAD_ID, TARGET_TODO_ID);
 
         // Assertions
-        Assertions.assertAll(String.format("Lead with id [%s] contains the searched interaction", LEAD_ID),
+        Assertions.assertAll(String.format("Lead with id [%s] contains the searched todo", LEAD_ID),
                 () -> Assertions.assertNotNull(returnedDTO, "Todo can not be null"),
                 () -> Assertions.assertEquals(
-                        TARGET_INTERACTION_ID,
+                        TARGET_TODO_ID,
                         returnedDTO.getId(),
-                        String.format("Todo id must be [%s]", TARGET_INTERACTION_ID)));
+                        String.format("Todo id must be [%s]", TARGET_TODO_ID)));
     }
 
     @Test
-    @DisplayName("getInteraction: lead not found - Success")
-    void getInteractionWhenLeadNotFoundReturnsFailure() {
+    @DisplayName("getTODO: lead not found - Success")
+    void getTODOWhenLeadNotFoundReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        String INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
 
         // Set up the mocked repository
         doReturn(Optional.empty()).when(repository).findById(anyString());
@@ -418,8 +418,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.getInteraction(LEAD_ID, INTERACTION_ID),
-                "getInteraction must throw a ResourceNotFoundException");
+                () -> service.getTODO(LEAD_ID, TODO_ID),
+                "getTODO must throw a ResourceNotFoundException");
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 exception.getMessage());
@@ -429,20 +429,20 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
-    @DisplayName("getInteraction: lead found and interaction not found - Success")
-    void getInteractionWhenLeadFoundAndInteractionNotFoundReturnsFailure() {
+    @DisplayName("getTODO: lead found and todo not found - Success")
+    void getTODOWhenLeadFoundAndTODONotFoundReturnsFailure() {
         // Set up mocked entities
         String LEAD_ID = getMockFactory().getComponentId();
-        int INTERACTION_LIST_SIZE = 3;
+        int TODO_LIST_SIZE = 3;
         Lead leadEntity = getMockFactory().newEntity(LEAD_ID);
         List<Todo> todoList = IntStream
-                .range(0, INTERACTION_LIST_SIZE)
+                .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
-                    String INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getTodoMockFactory().newEntity(INTERACTION_ID);
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    return getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
                 }).collect(Collectors.toList());
         leadEntity.setTodos(todoList);
-        String TARGET_INTERACTION_ID = getMockFactory().getTodoMockFactory().getComponentId();
+        String TARGET_TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
 
         // Set up the mocked repository
         doReturn(Optional.of(leadEntity)).when(repository).findById(anyString());
@@ -452,8 +452,8 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
         LeadService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.getInteraction(LEAD_ID, TARGET_INTERACTION_ID),
-                "getInteraction must throw a ResourceNotFoundException");
+                () -> service.getTODO(LEAD_ID, TARGET_TODO_ID),
+                "getTODO must throw a ResourceNotFoundException");
         Assertions.assertEquals(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 exception.getMessage());
