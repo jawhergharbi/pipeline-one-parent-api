@@ -8,7 +8,7 @@ import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.service.account.AccountService;
@@ -148,7 +148,7 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
-    public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
             List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException {
         return interactionDelegator.findAllInteractions(accountIds, status, types);

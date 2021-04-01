@@ -5,8 +5,8 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
-import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,23 +51,23 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> addInteraction(String leadId, InteractionDTO interaction)
+    public ResponseEntity<TodoDTO> addInteraction(String leadId, TodoDTO interaction)
             throws ResourceNotFoundException, CommonServiceException {
         return leadInteractionDelegator.addInteraction(leadId, interaction);
     }
 
     @Override
-    public ResponseEntity<InteractionDTO> removeInteraction(String leadId, String interactionId) {
+    public ResponseEntity<TodoDTO> removeInteraction(String leadId, String interactionId) {
         return leadInteractionDelegator.removeInteraction(leadId, interactionId);
     }
 
     @Override
-    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
+    public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteractions(leadId);
     }
 
     @Override
-    public ResponseEntity<InteractionAssigneeDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public ResponseEntity<TodoAssigneeDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return leadInteractionDelegator.getInteraction(leadId, interactionId);
     }
 
@@ -92,7 +92,7 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<List<InteractionAssigneeDTO>> evalInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)

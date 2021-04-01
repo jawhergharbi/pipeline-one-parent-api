@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.integration.MongoTestFile;
 import com.sawoo.pipeline.api.integration.base.BaseIntegrationTest;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -43,13 +43,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         collectionNames = {DBConstants.LEAD_DOCUMENT})
 @MongoDataFileList(
         files = {
-                @MongoTestFile(fileName = "lead-interaction-integration-test-data.json", classType = Interaction.class),
+                @MongoTestFile(fileName = "lead-interaction-integration-test-data.json", classType = Todo.class),
                 @MongoTestFile(fileName = "lead-integration-test-data.json", classType = Lead.class)},
         collectionNames = {
                 DBConstants.LEAD_DOCUMENT,
                 DBConstants.PERSON_DOCUMENT,
                 DBConstants.COMPANY_DOCUMENT,
-                DBConstants.INTERACTION_DOCUMENT})
+                DBConstants.TODO_DOCUMENT})
 public class LeadIntegrationTest extends BaseIntegrationTest<LeadDTO, Lead, LeadMockFactory> {
 
     private static final String LEAD_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "lead-integration-expected-results.json";
@@ -70,7 +70,7 @@ public class LeadIntegrationTest extends BaseIntegrationTest<LeadDTO, Lead, Lead
 
     @Test
     @Order(10)
-    @DisplayName("GET /api/leads/{id}/interactions: get interactions for a lead - Success")
+    @DisplayName("GET /api/leads/{id}/todos: get todos for a lead - Success")
     void getInteractionsWhenEntityNotFoundReturnsSuccess() throws Exception {
         String LEAD_ID = "601c2aa7cb7a517712ad6be3";
         int INTERACTION_LIST_SIZE = 3;

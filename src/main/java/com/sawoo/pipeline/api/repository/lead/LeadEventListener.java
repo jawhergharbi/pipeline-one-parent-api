@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.repository.lead;
 
-import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.listener.InteractionCascadeOperationDelegator;
 import com.sawoo.pipeline.api.repository.listener.PersonCascadeOperationDelegator;
@@ -28,9 +28,9 @@ public class LeadEventListener extends AbstractMongoEventListener<Lead> {
         Lead lead = event.getSource();
         personCascadeOperationDelegator.onSave(lead.getPerson(), lead::setPerson);
         if (leadInteractionCascading) {
-            List<Interaction> interactions = Arrays.asList(lead.getInteractions().toArray(new Interaction[0]));
-            lead.getInteractions().clear();
-            interactions.forEach(i -> interactionCascadeOperationDelegator.onSave(i, lead.getInteractions()::add));
+            List<Todo> todos = Arrays.asList(lead.getTodos().toArray(new Todo[0]));
+            lead.getTodos().clear();
+            todos.forEach(i -> interactionCascadeOperationDelegator.onSave(i, lead.getTodos()::add));
         }
         super.onBeforeConvert(event);
     }

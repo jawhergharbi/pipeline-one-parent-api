@@ -4,10 +4,10 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
@@ -64,27 +64,27 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public InteractionDTO addInteraction(String leadId, InteractionDTO interaction) throws ResourceNotFoundException, CommonServiceException {
+    public TodoDTO addInteraction(String leadId, TodoDTO interaction) throws ResourceNotFoundException, CommonServiceException {
         return interactionService.addInteraction(leadId, interaction);
     }
 
     @Override
-    public InteractionDTO removeInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public TodoDTO removeInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return interactionService.removeInteraction(leadId, interactionId);
     }
 
     @Override
-    public List<InteractionAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
+    public List<TodoAssigneeDTO> getInteractions(String leadId) throws ResourceNotFoundException {
         return interactionService.getInteractions(leadId);
     }
 
     @Override
-    public InteractionAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
+    public TodoAssigneeDTO getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
         return interactionService.getInteraction(leadId, interactionId);
     }
 
     @Override
-    public List<LeadInteractionDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
+    public List<LeadTodoDTO> findBy(List<String> leadIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
         return interactionService.findBy(leadIds, status, types);
     }
 
@@ -138,7 +138,7 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     }
 
     @Override
-    public List<InteractionAssigneeDTO> evalInteractions(String leadId, String sequenceId, String assigneeId)
+    public List<TodoAssigneeDTO> evalInteractions(String leadId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
         return sequenceInteractionService.evalInteractions(leadId, sequenceId, assigneeId);
     }

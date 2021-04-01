@@ -4,12 +4,12 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
-import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
-import com.sawoo.pipeline.api.model.interaction.InteractionStatusList;
+import com.sawoo.pipeline.api.model.todo.TodoStatusList;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.sequence.SequenceService;
@@ -34,12 +34,12 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
     private final LeadServiceDecoratorHelper helper;
 
     @Override
-    public List<InteractionAssigneeDTO> evalInteractions(
+    public List<TodoAssigneeDTO> evalInteractions(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Evaluating interactions to be created based on sequence id: [{}] and lead id [{}]", leadId, sequenceId);
+        log.debug("Evaluating todos to be created based on sequence id: [{}] and lead id [{}]", leadId, sequenceId);
         Lead lead = findLeadById(leadId);
 
         // Check prospect personality
@@ -58,7 +58,7 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
             s.setTimespan(lastStepTimespan.get());
         });
 
-        // Map steps into interactions
+        // Map steps into todos
         LocalDateTime startDate = LocalDateTime.now(ZoneOffset.UTC).plusDays(1);
         UserCommon assignee = helper.getAssignee(leadId, assigneeId);
         return steps
@@ -76,12 +76,12 @@ public class LeadSequenceInteractionServiceDecorator implements LeadSequenceInte
                                 new String[]{ DBConstants.LEAD_DOCUMENT, leadId }));
     }
 
-    private InteractionAssigneeDTO mapSequenceStepToInteraction(SequenceStepDTO step, UserCommon assignee, String leadId, LocalDateTime startDate) {
+    private TodoAssigneeDTO mapSequenceStepToInteraction(SequenceStepDTO step, UserCommon assignee, String leadId, LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return InteractionAssigneeDTO.builder()
+        return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))
                 .type(step.getChannel())
-                .status(InteractionStatusList.SCHEDULED.getStatus())
+                .status(TodoStatusList.SCHEDULED.getValue())
                 .link(step.getAttachment())
                 .note(Note.builder()
                         .text(step.getMessage())

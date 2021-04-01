@@ -2,8 +2,8 @@ package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -128,16 +128,16 @@ public class LeadController {
             value = "/{id}/interactions",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionDTO> addInteraction(
+    public ResponseEntity<TodoDTO> addInteraction(
             @PathVariable("id") String leadId,
-            @NotNull @RequestBody InteractionDTO interaction) {
+            @NotNull @RequestBody TodoDTO interaction) {
         return delegator.addInteraction(leadId, interaction);
     }
 
     @DeleteMapping(
             value = "/{id}/interactions/{interactionId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionDTO> removeInteraction(
+    public ResponseEntity<TodoDTO> removeInteraction(
             @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) throws ResourceNotFoundException {
         return delegator.removeInteraction(leadId, interactionId);
@@ -146,7 +146,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/interactions",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(
             @PathVariable("id") String leadId) {
         return delegator.getInteractions(leadId);
     }
@@ -154,7 +154,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/interactions/{interactionId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionAssigneeDTO> getInteraction(
+    public ResponseEntity<TodoAssigneeDTO> getInteraction(
             @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) {
         return delegator.getInteraction(leadId, interactionId);
@@ -163,7 +163,7 @@ public class LeadController {
     @GetMapping(
             value = "/{id}/sequences/{sequenceId}/interactions/eval",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionAssigneeDTO>> evalInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
             @PathVariable("id") String leadId,
             @PathVariable("sequenceId") String sequenceId,
             @RequestParam(value = "assigneeId", required = false) String assigneeId) {

@@ -1,7 +1,7 @@
 package com.sawoo.pipeline.api.repository.listener;
 
-import com.sawoo.pipeline.api.model.interaction.Interaction;
-import com.sawoo.pipeline.api.repository.interaction.InteractionRepository;
+import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.repository.todo.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,25 +10,25 @@ import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-public class InteractionCascadeOperationDelegator implements CascadeOperationDelegation<Interaction> {
+public class InteractionCascadeOperationDelegator implements CascadeOperationDelegation<Todo> {
 
-    private final InteractionRepository repository;
+    private final TodoRepository repository;
 
     @Override
-    public void onSave(Interaction child, Consumer<Interaction> parentFunction) {
+    public void onSave(Todo child, Consumer<Todo> parentFunction) {
         if (child != null) {
             if (child.getId() == null) {
-                Interaction interaction = repository.insert(child);
-                parentFunction.accept(interaction);
+                Todo todo = repository.insert(child);
+                parentFunction.accept(todo);
             } else {
-                Optional<Interaction> interaction = repository.findById(child.getId());
+                Optional<Todo> interaction = repository.findById(child.getId());
                 interaction.ifPresent(parentFunction);
             }
         }
     }
 
     @Override
-    public void onDelete(Interaction child) {
+    public void onDelete(Todo child) {
         // nothing to do atm
     }
 }

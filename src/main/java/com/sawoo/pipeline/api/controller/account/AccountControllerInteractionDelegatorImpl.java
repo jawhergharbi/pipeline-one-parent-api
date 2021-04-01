@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
 import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.service.account.AccountService;
 import com.sawoo.pipeline.api.service.lead.LeadService;
@@ -33,12 +33,12 @@ public class AccountControllerInteractionDelegatorImpl implements AccountControl
     }
 
     @Override
-    public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
             List<String> accountIds,
             List<Integer> status,
             List<Integer> types) throws CommonServiceException {
         List<LeadDTO> leads = accountService.findAllLeads(accountIds.toArray(new String[0]), null);
-        List<LeadInteractionDTO> interactions = Collections.emptyList();
+        List<LeadTodoDTO> interactions = Collections.emptyList();
         if (leads.size() > 0) {
             List<String> leadIds = leads.stream().map(LeadDTO::getId).collect(Collectors.toList());
             interactions = leadService.findBy(leadIds, status, types);
@@ -50,7 +50,7 @@ public class AccountControllerInteractionDelegatorImpl implements AccountControl
         return ResponseEntity.ok().body(interactions);
     }
 
-    private void mapAccountData(List<LeadDTO> leads, LeadInteractionDTO interaction) {
+    private void mapAccountData(List<LeadDTO> leads, LeadTodoDTO interaction) {
         Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(interaction.getLead().getLeadId())).findAny();
         lead.ifPresent(l -> {
             AccountFieldDTO account = l.getAccount();

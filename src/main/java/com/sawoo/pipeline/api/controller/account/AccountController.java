@@ -4,7 +4,7 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadInteractionDTO;
+import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -165,7 +165,7 @@ public class AccountController {
     @GetMapping(
             value = "/{ids}/interactions/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadInteractionDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
             @NotNull
             @PathVariable("ids") List<String> ids,
             @RequestParam(value = "status", required = false) List<Integer> status,

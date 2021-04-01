@@ -6,7 +6,7 @@ import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.interaction.Interaction;
+import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.person.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,12 +51,12 @@ public class Lead extends BaseEntity {
     private Status status;
 
     @DBRef
-    private List<Interaction> interactions;
-    public List<Interaction> getInteractions() {
-        if (interactions == null) {
-            interactions = new ArrayList<>();
+    private List<Todo> todos;
+    public List<Todo> getTodos() {
+        if (todos == null) {
+            todos = new ArrayList<>();
         }
-        return interactions;
+        return todos;
     }
 
     @JMapConversion(from = {"companyNotes"}, to = {"reportCompanyNotes"})
