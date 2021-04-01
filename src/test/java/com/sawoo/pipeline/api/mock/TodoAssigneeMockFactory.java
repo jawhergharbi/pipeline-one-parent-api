@@ -21,7 +21,7 @@ public class TodoAssigneeMockFactory extends TodoMockBaseFactory<TodoAssigneeDTO
     @Override
     public TodoAssigneeDTO newDTO(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        TodoAssigneeDTO interaction = TodoAssigneeDTO
+        TodoAssigneeDTO todo = TodoAssigneeDTO
                 .builder()
                 .id(id)
                 .link(UrlTitle
@@ -38,15 +38,15 @@ public class TodoAssigneeMockFactory extends TodoMockBaseFactory<TodoAssigneeDTO
                         .updated(now)
                         .build())
                 .build();
-        interaction.setCreated(now);
-        interaction.setUpdated(now);
-        return interaction;
+        todo.setCreated(now);
+        todo.setUpdated(now);
+        return todo;
     }
 
     @Override
     public TodoAssigneeDTO newDTO(String id, TodoAssigneeDTO dto) {
-        TodoAssigneeDTO interaction = dto.withAssignee(dto.getAssignee());
-        interaction.setId(id);
-        return interaction;
+        TodoAssigneeDTO todo = dto.withAssignee(dto.getAssignee());
+        todo.setId(id);
+        return todo;
     }
 }

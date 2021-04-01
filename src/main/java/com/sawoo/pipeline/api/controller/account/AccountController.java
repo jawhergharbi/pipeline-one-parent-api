@@ -163,7 +163,7 @@ public class AccountController {
     }
 
     @GetMapping(
-            value = "/{ids}/interactions/main",
+            value = "/{ids}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
             @NotNull

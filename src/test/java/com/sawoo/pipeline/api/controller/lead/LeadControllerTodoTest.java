@@ -173,7 +173,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{id}/todos/{interactionId}: lead and TODO found - Success")
+    @DisplayName("DELETE /api/leads/{id}/todos/{todoId}: lead and TODO found - Success")
     void removeTODOWhenLeadFoundAndTODOFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -185,7 +185,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
         doReturn(todoToBeDeleted).when(service).removeTODO(anyString(), anyString());
 
         // Execute the DELETE request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{interactionId}", LEAD_ID, TODO_ID))
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}", LEAD_ID, TODO_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -196,7 +196,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{id}/todos/{interactionId}: lead not found - Success")
+    @DisplayName("DELETE /api/leads/{id}/todos/{todoId}: lead not found - Success")
     void removeTODOWhenLeadNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -209,7 +209,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
         doThrow(exception).when(service).removeTODO(anyString(), anyString());
 
         // Execute the POST request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{interactionId}", LEAD_ID, TODO_ID))
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}", LEAD_ID, TODO_ID))
 
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
@@ -219,7 +219,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
     }
 
     @Test
-    @DisplayName("DELETE /api/leads/{id}/todos/{interactionId}: lead not found and TODO found - Success")
+    @DisplayName("DELETE /api/leads/{id}/todos/{todoId}: lead not found and TODO found - Success")
     void removeTODOWhenTODONotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -232,7 +232,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
         doThrow(exception).when(service).removeTODO(anyString(), anyString());
 
         // Execute the POST request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{interactionId}", LEAD_ID, TODO_ID))
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}", LEAD_ID, TODO_ID))
 
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
@@ -326,7 +326,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
     }
 
     @Test
-    @DisplayName("GET /api/leads/{id}/todos/{interactionId}: lead and TODO found - Success")
+    @DisplayName("GET /api/leads/{id}/todos/{todoId}: lead and TODO found - Success")
     void getTODOWhenLeadFoundAndTODOFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -347,7 +347,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
         doReturn(todoMock).when(service).getTODO(anyString(), anyString());
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{interactionId}", LEAD_ID, TODO_ID))
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}", LEAD_ID, TODO_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -362,7 +362,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
     }
 
     @Test
-    @DisplayName("GET /api/leads/{id}/todos/{interactionId}: lead not found - Failure")
+    @DisplayName("GET /api/leads/{id}/todos/{todoId}: lead not found - Failure")
     void getTODOWhenLeadNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String LEAD_ID = getMockFactory().getComponentId();
@@ -375,7 +375,7 @@ class LeadControllerTodoTest extends BaseLightControllerTest<LeadDTO, Lead, Lead
         doThrow(exception).when(service).getTODO(anyString(), anyString());
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{interactionId}", LEAD_ID, TODO_ID))
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}", LEAD_ID, TODO_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isNotFound())

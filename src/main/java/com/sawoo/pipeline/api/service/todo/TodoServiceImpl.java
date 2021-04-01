@@ -42,16 +42,16 @@ public class TodoServiceImpl extends BaseServiceImpl<TodoDTO, Todo, TodoReposito
     @Override
     public List<TodoDTO> findBy(List<String> componentIds, List<Integer> status, List<Integer> types) {
         log.debug("Getting todos from components with ids [{}] and status [{}] and types[{}]", componentIds, status, types);
-        List<TodoDTO> interactions = getRepository()
+        List<TodoDTO> todos = getRepository()
                 .findByStatusAndType(status, types, componentIds)
                 .stream()
                 .map(getMapper().getMapperOut()::getDestination)
                 .collect(Collectors.toList());
-        log.debug("[{}] interaction/s has/have been found from components with ids [{}] and status [{}] and types [{}]",
-                interactions.size(),
+        log.debug("[{}] todo/s has/have been found from components with ids [{}] and status [{}] and types [{}]",
+                todos.size(),
                 componentIds,
                 status,
                 types);
-        return interactions;
+        return todos;
     }
 }

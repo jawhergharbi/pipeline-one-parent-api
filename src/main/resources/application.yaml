@@ -63,7 +63,7 @@ app:
       confirmation-url: auth/account-password-activation
       user-key: user
   mongo:
-    lead-interaction:
+    lead-todo:
       cascading: false
 
 ---
@@ -125,9 +125,6 @@ app:
   auth:
     activation-token:
       active: false
-  mongo:
-    lead-interaction:
-      cascading: false
 
 ---
 spring:
@@ -148,9 +145,6 @@ app:
   auth:
     activation-token:
       active: false
-  mongo:
-    lead-interaction:
-      cascading: false
   version: ${version}
 
 ---

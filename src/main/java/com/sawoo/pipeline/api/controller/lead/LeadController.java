@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
@@ -125,7 +126,7 @@ public class LeadController {
     }
 
     @PostMapping(
-            value = "/{id}/interactions",
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TodoDTO> addTODO(
@@ -135,16 +136,16 @@ public class LeadController {
     }
 
     @DeleteMapping(
-            value = "/{id}/interactions/{interactionId}",
+            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TodoDTO> removeTODO(
             @PathVariable("id") String leadId,
-            @PathVariable("interactionId") String todoId) throws ResourceNotFoundException {
+            @PathVariable("todoId") String todoId) throws ResourceNotFoundException {
         return delegator.removeTODO(leadId, todoId);
     }
 
     @GetMapping(
-            value = "/{id}/interactions",
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @PathVariable("id") String leadId) {
@@ -152,16 +153,16 @@ public class LeadController {
     }
 
     @GetMapping(
-            value = "/{id}/interactions/{interactionId}",
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TodoAssigneeDTO> getTODO(
             @PathVariable("id") String leadId,
-            @PathVariable("interactionId") String interactionId) {
-        return delegator.getTODO(leadId, interactionId);
+            @PathVariable("todoId") String todoId) {
+        return delegator.getTODO(leadId, todoId);
     }
 
     @GetMapping(
-            value = "/{id}/sequences/{sequenceId}/interactions/eval",
+            value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/eval",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
             @PathVariable("id") String leadId,

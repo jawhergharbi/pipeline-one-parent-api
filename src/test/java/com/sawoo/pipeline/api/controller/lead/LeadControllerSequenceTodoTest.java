@@ -72,7 +72,13 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
         doReturn(todos).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
+        mockMvc.perform(get(getResourceURI() +
+                "/{id}/" +
+                ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
+                "/{sequenceId}/" +
+                ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
+                "/eval",
+                LEAD_ID, SEQUENCE_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -96,7 +102,13 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
         doThrow(exception).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
+        mockMvc.perform(get(getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
+                        "/{sequenceId}/" +
+                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
+                        "/eval",
+                LEAD_ID, SEQUENCE_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isNotFound())
@@ -122,7 +134,13 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
         doThrow(exception).when(service).evalTODOs(LEAD_ID, SEQUENCE_ID, null);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/sequences/{sequenceId}/interactions/eval", LEAD_ID, SEQUENCE_ID))
+        mockMvc.perform(get(getResourceURI() +
+                "/{id}/" +
+                ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
+                "/{sequenceId}/" +
+                ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
+                "/eval",
+                LEAD_ID, SEQUENCE_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isNotFound())

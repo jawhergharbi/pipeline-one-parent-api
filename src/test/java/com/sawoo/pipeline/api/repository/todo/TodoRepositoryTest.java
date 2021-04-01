@@ -49,8 +49,8 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
 
     @Override
     protected Todo getNewEntity() {
-        String LEAD_INTERACTION_ID = getMockFactory().getFAKER().internet().uuid();
-        return getMockFactory().newEntity(LEAD_INTERACTION_ID);
+        String LEAD_TODO_ID = getMockFactory().getFAKER().internet().uuid();
+        return getMockFactory().newEntity(LEAD_TODO_ID);
     }
 
     @Test

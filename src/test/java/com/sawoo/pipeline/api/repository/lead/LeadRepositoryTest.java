@@ -94,20 +94,20 @@ public class LeadRepositoryTest extends BaseRepositoryTest<Lead, LeadRepository,
 
     @Test
     @DisplayName("save: lead cascade saving - Success")
-    void findByIdWhenLeadExistsAndHaveInteractionsReturnsSuccess() {
+    void findByIdWhenLeadExistsAndHaveTodosReturnsSuccess() {
         Optional<Lead> lead =  getRepository().findById(LEAD_ID);
         // There is no cascading saving with todos in the lead entity
-        int INTERACTIONS = 0;
+        int TODO_SIZE = 0;
 
         Assertions.assertAll(
                 String.format(
                         "Lead with id [%s] must be found and must have [%d] todos",
                         LEAD_ID,
-                        INTERACTIONS),
+                        TODO_SIZE),
                 () -> Assertions.assertTrue(lead.isPresent(), "Lead can not be null"),
                 () -> lead.ifPresent(l -> Assertions.assertTrue(
                         l.getTodos().isEmpty(),
-                        "Interactions list can not be null")));
+                        "Todo list can not be null")));
     }
 
     @Test

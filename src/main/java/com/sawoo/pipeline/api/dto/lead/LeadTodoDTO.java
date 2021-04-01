@@ -17,5 +17,5 @@ public class LeadTodoDTO extends TodoAssigneeDTO {
 
     private AccountFieldDTO account;
 
-    private LeadInteractionLeadDTO lead;
+    private LeadTodoLeadDTO lead;
 }

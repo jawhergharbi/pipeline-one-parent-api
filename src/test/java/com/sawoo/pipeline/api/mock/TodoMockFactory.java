@@ -21,7 +21,7 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
     @Override
     public TodoDTO newDTO(String id) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        TodoDTO interaction = TodoDTO
+        TodoDTO todo = TodoDTO
                 .builder()
                 .id(id)
                 .link(UrlTitle
@@ -38,9 +38,9 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
                         .updated(now)
                         .build())
                 .build();
-        interaction.setCreated(now);
-        interaction.setUpdated(now);
-        return interaction;
+        todo.setCreated(now);
+        todo.setUpdated(now);
+        return todo;
     }
 
     @Override

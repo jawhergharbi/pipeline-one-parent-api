@@ -24,9 +24,9 @@ public class SequenceEventListener extends AbstractMongoEventListener<Sequence> 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Sequence> event) {
         Sequence sequence = event.getSource();
-        List<SequenceStep> interactions = Arrays.asList(sequence.getSteps().toArray(new SequenceStep[0]));
+        List<SequenceStep> todos = Arrays.asList(sequence.getSteps().toArray(new SequenceStep[0]));
         sequence.getSteps().clear();
-        interactions.forEach(i -> sequenceStepCascadeOperationDelegator.onSave(i, sequence.getSteps()::add));
+        todos.forEach(i -> sequenceStepCascadeOperationDelegator.onSave(i, sequence.getSteps()::add));
         super.onBeforeConvert(event);
     }
 

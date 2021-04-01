@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeadInteractionLeadDTO {
+public class LeadTodoLeadDTO {
 
     @JMap("${id}")
     private String leadId;

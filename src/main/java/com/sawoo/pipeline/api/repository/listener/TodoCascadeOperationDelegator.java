@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-public class InteractionCascadeOperationDelegator implements CascadeOperationDelegation<Todo> {
+public class TodoCascadeOperationDelegator implements CascadeOperationDelegation<Todo> {
 
     private final TodoRepository repository;
 
@@ -21,8 +21,8 @@ public class InteractionCascadeOperationDelegator implements CascadeOperationDel
                 Todo todo = repository.insert(child);
                 parentFunction.accept(todo);
             } else {
-                Optional<Todo> interaction = repository.findById(child.getId());
-                interaction.ifPresent(parentFunction);
+                Optional<Todo> todo = repository.findById(child.getId());
+                todo.ifPresent(parentFunction);
             }
         }
     }
