@@ -15,17 +15,17 @@ import java.util.List;
 
 @Component
 @Qualifier("leadControllerSequence")
-public class LeadControllerSequenceInteractionDelegatorImpl implements LeadControllerSequenceInteractionDelegator {
+public class LeadControllerSequenceTodoDelegatorImpl implements LeadControllerSequenceTodoDelegator {
 
     private final LeadService service;
 
     @Autowired
-    public LeadControllerSequenceInteractionDelegatorImpl(LeadService service) {
+    public LeadControllerSequenceTodoDelegatorImpl(LeadService service) {
         this.service = service;
     }
 
     @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)

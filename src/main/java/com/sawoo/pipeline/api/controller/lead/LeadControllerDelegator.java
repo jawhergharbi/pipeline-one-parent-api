@@ -22,22 +22,22 @@ import java.util.List;
 @Component
 @Primary
 public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, LeadService> implements
-        LeadControllerReportDelegator, LeadControllerInteractionDelegator, LeadControllerSequenceInteractionDelegator, LeadControllerCustomDelegator {
+        LeadControllerReportDelegator, LeadControllerTodoDelegator, LeadControllerSequenceTodoDelegator, LeadControllerCustomDelegator {
 
     private final LeadControllerReportDelegator reportDelegator;
-    private final LeadControllerInteractionDelegator leadInteractionDelegator;
-    private final LeadControllerSequenceInteractionDelegator leadSequenceInteractionDelegator;
+    private final LeadControllerTodoDelegator leadTODODelegator;
+    private final LeadControllerSequenceTodoDelegator leadSequenceTODODelegator;
 
     @Autowired
     public LeadControllerDelegator(
             LeadService service,
             @Qualifier("leadControllerReport") LeadControllerReportDelegator reportDelegator,
-            @Qualifier("leadControllerInteraction") LeadControllerInteractionDelegator leadInteractionDelegator,
-            @Qualifier("leadControllerSequence") LeadControllerSequenceInteractionDelegator leadSequenceInteractionDelegator) {
+            @Qualifier("leadControllerTODO") LeadControllerTodoDelegator leadTODODelegator,
+            @Qualifier("leadControllerSequence") LeadControllerSequenceTodoDelegator leadSequenceTODODelegator) {
         super(service, ControllerConstants.LEAD_CONTROLLER_API_BASE_URI);
         this.reportDelegator = reportDelegator;
-        this.leadInteractionDelegator = leadInteractionDelegator;
-        this.leadSequenceInteractionDelegator = leadSequenceInteractionDelegator;
+        this.leadTODODelegator = leadTODODelegator;
+        this.leadSequenceTODODelegator = leadSequenceTODODelegator;
     }
 
     @Override
@@ -51,24 +51,24 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<TodoDTO> addInteraction(String leadId, TodoDTO interaction)
+    public ResponseEntity<TodoDTO> addTODO(String leadId, TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadInteractionDelegator.addInteraction(leadId, interaction);
+        return leadTODODelegator.addTODO(leadId, todo);
     }
 
     @Override
-    public ResponseEntity<TodoDTO> removeInteraction(String leadId, String interactionId) {
-        return leadInteractionDelegator.removeInteraction(leadId, interactionId);
+    public ResponseEntity<TodoDTO> removeTODO(String leadId, String todoId) {
+        return leadTODODelegator.removeTODO(leadId, todoId);
     }
 
     @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(String leadId) throws ResourceNotFoundException {
-        return leadInteractionDelegator.getInteractions(leadId);
+    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(String leadId) throws ResourceNotFoundException {
+        return leadTODODelegator.getTODOs(leadId);
     }
 
     @Override
-    public ResponseEntity<TodoAssigneeDTO> getInteraction(String leadId, String interactionId) throws ResourceNotFoundException {
-        return leadInteractionDelegator.getInteraction(leadId, interactionId);
+    public ResponseEntity<TodoAssigneeDTO> getTODO(String leadId, String todoId) throws ResourceNotFoundException {
+        return leadTODODelegator.getTODO(leadId, todoId);
     }
 
     @Override
@@ -92,11 +92,11 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
     }
 
     @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadSequenceInteractionDelegator.evalInteractions(leadId, sequenceId, assigneeId);
+        return leadSequenceTODODelegator.evalTODOs(leadId, sequenceId, assigneeId);
     }
 }

@@ -20,46 +20,46 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@Qualifier("accountControllerInteraction")
-public class AccountControllerInteractionDelegatorImpl implements AccountControllerInteractionDelegator {
+@Qualifier("accountControllerTODO")
+public class AccountControllerTodoDelegatorImpl implements AccountControllerTodoDelegator {
 
     private final LeadService leadService;
     private final AccountService accountService;
 
     @Autowired
-    public AccountControllerInteractionDelegatorImpl(LeadService leadService, AccountService accountService) {
+    public AccountControllerTodoDelegatorImpl(LeadService leadService, AccountService accountService) {
         this.leadService = leadService;
         this.accountService = accountService;
     }
 
     @Override
-    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
             List<String> accountIds,
             List<Integer> status,
             List<Integer> types) throws CommonServiceException {
         List<LeadDTO> leads = accountService.findAllLeads(accountIds.toArray(new String[0]), null);
-        List<LeadTodoDTO> interactions = Collections.emptyList();
-        if (leads.size() > 0) {
+        List<LeadTodoDTO> todos = Collections.emptyList();
+        if (!leads.isEmpty()) {
             List<String> leadIds = leads.stream().map(LeadDTO::getId).collect(Collectors.toList());
-            interactions = leadService.findBy(leadIds, status, types);
-            interactions = interactions
+            todos = leadService.findBy(leadIds, status, types);
+            todos = todos
                     .stream()
-                    .peek( (i) -> mapAccountData(leads, i))
+                    .peek(i -> mapAccountData(leads, i))
                     .collect(Collectors.toList());
         }
-        return ResponseEntity.ok().body(interactions);
+        return ResponseEntity.ok().body(todos);
     }
 
-    private void mapAccountData(List<LeadDTO> leads, LeadTodoDTO interaction) {
-        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(interaction.getLead().getLeadId())).findAny();
+    private void mapAccountData(List<LeadDTO> leads, LeadTodoDTO todo) {
+        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(todo.getLead().getLeadId())).findAny();
         lead.ifPresent(l -> {
             AccountFieldDTO account = l.getAccount();
-            interaction.setAccount(account);
-            if (interaction.getAssigneeId() != null) {
+            todo.setAccount(account);
+            if (todo.getAssigneeId() != null) {
                 Optional<UserAuthDTO> assignee = account.getUsers()
                         .stream()
-                        .filter(u -> u.getId().equals(interaction.getAssigneeId())).findAny();
-                assignee.ifPresent(a -> interaction.setAssignee(UserCommon.builder()
+                        .filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
+                assignee.ifPresent(a -> todo.setAssignee(UserCommon.builder()
                         .fullName(a.getFullName())
                         .id(a.getId())
                         .type(UserCommonType.USER)

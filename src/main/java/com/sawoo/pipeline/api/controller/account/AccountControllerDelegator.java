@@ -30,11 +30,11 @@ import java.util.Map;
 @Component
 @Primary
 public class AccountControllerDelegator extends BaseControllerDelegator<AccountDTO, AccountService>
-        implements AccountControllerUserDelegator, AccountControllerLeadDelegator, AccountControllerInteractionDelegator, AccountControllerCustomDelegator {
+        implements AccountControllerUserDelegator, AccountControllerLeadDelegator, AccountControllerTodoDelegator, AccountControllerCustomDelegator {
 
     private final AccountControllerUserDelegator userDelegator;
     private final AccountControllerLeadDelegator leadDelegator;
-    private final AccountControllerInteractionDelegator interactionDelegator;
+    private final AccountControllerTodoDelegator todoDelegator;
     private final UserAuthService userService;
     private final EmailService emailService;
 
@@ -64,13 +64,13 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
             AccountService service,
             @Qualifier("accountControllerUser") AccountControllerUserDelegator userDelegator,
             @Qualifier("accountControllerLead") AccountControllerLeadDelegator leadDelegator,
-            @Qualifier("accountControllerInteraction") AccountControllerInteractionDelegator interactionDelegator,
+            @Qualifier("accountControllerTODO") AccountControllerTodoDelegator todoDelegator,
             UserAuthService userService,
             EmailService emailService) {
         super(service, ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI);
         this.userDelegator = userDelegator;
         this.leadDelegator = leadDelegator;
-        this.interactionDelegator = interactionDelegator;
+        this.todoDelegator = todoDelegator;
         this.userService = userService;
         this.emailService = emailService;
     }
@@ -148,10 +148,10 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
-    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
             List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException {
-        return interactionDelegator.findAllInteractions(accountIds, status, types);
+        return todoDelegator.findAllTODOs(accountIds, status, types);
     }
 
     @Override

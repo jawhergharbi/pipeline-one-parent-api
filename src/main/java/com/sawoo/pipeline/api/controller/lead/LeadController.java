@@ -128,19 +128,19 @@ public class LeadController {
             value = "/{id}/interactions",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> addInteraction(
+    public ResponseEntity<TodoDTO> addTODO(
             @PathVariable("id") String leadId,
-            @NotNull @RequestBody TodoDTO interaction) {
-        return delegator.addInteraction(leadId, interaction);
+            @NotNull @RequestBody TodoDTO todo) {
+        return delegator.addTODO(leadId, todo);
     }
 
     @DeleteMapping(
             value = "/{id}/interactions/{interactionId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> removeInteraction(
+    public ResponseEntity<TodoDTO> removeTODO(
             @PathVariable("id") String leadId,
-            @PathVariable("interactionId") String interactionId) throws ResourceNotFoundException {
-        return delegator.removeInteraction(leadId, interactionId);
+            @PathVariable("interactionId") String todoId) throws ResourceNotFoundException {
+        return delegator.removeTODO(leadId, todoId);
     }
 
     @GetMapping(
@@ -148,7 +148,7 @@ public class LeadController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(
             @PathVariable("id") String leadId) {
-        return delegator.getInteractions(leadId);
+        return delegator.getTODOs(leadId);
     }
 
     @GetMapping(
@@ -157,7 +157,7 @@ public class LeadController {
     public ResponseEntity<TodoAssigneeDTO> getInteraction(
             @PathVariable("id") String leadId,
             @PathVariable("interactionId") String interactionId) {
-        return delegator.getInteraction(leadId, interactionId);
+        return delegator.getTODO(leadId, interactionId);
     }
 
     @GetMapping(
@@ -167,6 +167,6 @@ public class LeadController {
             @PathVariable("id") String leadId,
             @PathVariable("sequenceId") String sequenceId,
             @RequestParam(value = "assigneeId", required = false) String assigneeId) {
-        return delegator.evalInteractions(leadId, sequenceId, assigneeId);
+        return delegator.evalTODOs(leadId, sequenceId, assigneeId);
     }
 }

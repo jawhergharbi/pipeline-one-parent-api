@@ -165,11 +165,11 @@ public class AccountController {
     @GetMapping(
             value = "/{ids}/interactions/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadTodoDTO>> findAllInteractions(
+    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
             @NotNull
             @PathVariable("ids") List<String> ids,
             @RequestParam(value = "status", required = false) List<Integer> status,
             @RequestParam(value = "types", required = false) List<Integer> types) {
-        return delegator.findAllInteractions(ids, status, types);
+        return delegator.findAllTODOs(ids, status, types);
     }
 }

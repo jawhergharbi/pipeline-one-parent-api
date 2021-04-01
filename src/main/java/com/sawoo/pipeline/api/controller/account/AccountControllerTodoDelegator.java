@@ -8,8 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import java.util.List;
 
 @Validated
-public interface AccountControllerInteractionDelegator {
+public interface AccountControllerTodoDelegator {
 
-    ResponseEntity<List<LeadTodoDTO>> findAllInteractions(List<String> accountIds, List<Integer> status, List<Integer> types)
+    ResponseEntity<List<LeadTodoDTO>> findAllTODOs(List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException;
 }

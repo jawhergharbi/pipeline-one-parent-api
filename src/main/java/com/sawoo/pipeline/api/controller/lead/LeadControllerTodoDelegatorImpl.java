@@ -20,22 +20,22 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @Component
-@Qualifier("leadControllerInteraction")
-public class LeadControllerInteractionDelegatorImpl implements LeadControllerInteractionDelegator {
+@Qualifier("leadControllerTODO")
+public class LeadControllerTodoDelegatorImpl implements LeadControllerTodoDelegator {
 
     private final LeadService service;
 
     @Autowired
-    public LeadControllerInteractionDelegatorImpl(LeadService service) {
+    public LeadControllerTodoDelegatorImpl(LeadService service) {
         this.service = service;
     }
 
     @Override
-    public ResponseEntity<TodoDTO> addInteraction(
+    public ResponseEntity<TodoDTO> addTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @Valid TodoDTO interaction)
+            @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException {
-        TodoDTO newEntity = service.addInteraction(leadId, interaction);
+        TodoDTO newEntity = service.addInteraction(leadId, todo);
         try {
             return ResponseEntity
                     .created(new URI(ControllerConstants.LEAD_CONTROLLER_API_BASE_URI + "/" + leadId + "/interactions/" + newEntity.getId()))
@@ -46,25 +46,25 @@ public class LeadControllerInteractionDelegatorImpl implements LeadControllerInt
     }
 
     @Override
-    public ResponseEntity<TodoDTO> removeInteraction(
+    public ResponseEntity<TodoDTO> removeTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.removeInteraction(leadId, interactionId));
+        return ResponseEntity.ok().body(service.removeInteraction(leadId, todoId));
     }
 
     @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> getInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.getInteractions(leadId));
     }
 
     @Override
-    public ResponseEntity<TodoAssigneeDTO> getInteraction(
+    public ResponseEntity<TodoAssigneeDTO> getTODO(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String interactionId)
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.getInteraction(leadId, interactionId));
+        return ResponseEntity.ok().body(service.getInteraction(leadId, todoId));
     }
 }

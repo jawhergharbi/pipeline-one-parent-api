@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Validated
-public interface LeadControllerSequenceInteractionDelegator {
+public interface LeadControllerSequenceTodoDelegator {
 
-    ResponseEntity<List<TodoAssigneeDTO>> evalInteractions(
+    ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
