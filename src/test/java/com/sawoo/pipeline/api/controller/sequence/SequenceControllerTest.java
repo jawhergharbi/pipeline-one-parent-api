@@ -320,7 +320,8 @@ class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequence, S
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())));
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedEntity.getMessageTemplate().getText())));
     }
 
     @Test
@@ -436,7 +437,8 @@ class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequence, S
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedStep.getMessage())));
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedStep.getMessageTemplate().getText())));
     }
 
     @Test
@@ -493,7 +495,8 @@ class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequence, S
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())))
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedEntity.getMessageTemplate().getText())))
                 .andExpect(jsonPath("$.position", is(STEP_POSITION)));
     }
 

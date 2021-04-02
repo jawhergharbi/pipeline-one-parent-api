@@ -16,7 +16,9 @@
         "position": 0,
         "timespan": 7,
         "personality": 1,
-        "message": "this is one reach out message",
+        "messageTemplate": {
+          "text": "this is one reach out message"
+        },
         "attachment": {
           "description": "link1",
           "url": "http://content.com/link1"
@@ -30,7 +32,9 @@
         "position": 1,
         "timespan": 7,
         "personality": 1,
-        "message": "this is another reach out message",
+        "messageTemplate": {
+          "text":"this is another reach out message"
+        },
         "attachment": {
           "description": "link2",
           "url": "http://content.com/link2"
@@ -44,7 +48,9 @@
         "position": 3,
         "timespan": 7,
         "personality": 1,
-        "message": "a different reach message",
+        "messageTemplate": {
+          "text": "a different reach message"
+        },
         "attachment": {
           "description": "link3",
           "url": "http://content.com/link3"
@@ -69,7 +75,9 @@
         "position": 0,
         "timespan": 7,
         "personality": 1,
-        "message": "this is one reach out message",
+        "messageTemplate": {
+          "text": "this is one reach out message"
+        },
         "attachment": {
           "description": "link1",
           "url": "http://content.com/link1"

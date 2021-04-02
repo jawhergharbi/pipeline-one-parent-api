@@ -31,10 +31,10 @@ import java.util.function.Function;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceRepository, SequenceMockFactory> {
+class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceRepository, SequenceMockFactory> {
 
-    private static final String SEQUENCE_JSON_DATA_FILE_NAME = "sequence-test-data.json";
-    private static final String SEQUENCE_ID = "60278c364334846b8d167131";
+    private static final String TEST_JSON_DATA_FILE_NAME = "sequence-test-data.json";
+    private static final String ENTITY_ID = "60278c364334846b8d167131";
 
     private final SequenceStepRepository sequenceStepRepository;
 
@@ -44,7 +44,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
             SequenceRepository repository,
             SequenceMockFactory mockFactory,
             SequenceStepRepository sequenceStepRepository) {
-        super(repository, SEQUENCE_JSON_DATA_FILE_NAME, SEQUENCE_ID, Sequence.class.getSimpleName(), mockFactory);
+        super(repository, TEST_JSON_DATA_FILE_NAME, ENTITY_ID, Sequence.class.getSimpleName(), mockFactory);
         this.sequenceStepRepository = sequenceStepRepository;
     }
 
@@ -77,14 +77,14 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         int SEQUENCE_STEPS_SIZE = 3;
 
         // Act
-        Optional<Sequence> sequence = getRepository().findById(SEQUENCE_ID);
+        Optional<Sequence> sequence = getRepository().findById(ENTITY_ID);
 
         // Assert
-        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated ", SEQUENCE_ID),
+        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated ", ENTITY_ID),
                 () -> Assertions.assertTrue(sequence.isPresent(), "Sequence can not be null"),
                 () -> sequence.ifPresent((s) -> Assertions.assertEquals(
-                        SEQUENCE_ID, s.getId(),
-                        String.format("Sequence id must be equal to [%s]", SEQUENCE_ID))),
+                        ENTITY_ID, s.getId(),
+                        String.format("Sequence id must be equal to [%s]", ENTITY_ID))),
                 () -> sequence.ifPresent((s) -> Assertions.assertFalse(
                         s.getSteps().isEmpty(),
                         "Steps can not be empty")),

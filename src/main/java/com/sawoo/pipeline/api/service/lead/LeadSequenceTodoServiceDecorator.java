@@ -89,7 +89,7 @@ public class LeadSequenceTodoServiceDecorator implements LeadSequenceTodoService
                         .url(step.getAttachment().getUrl())
                         .build())
                 .note(Note.builder()
-                        .text(step.getMessage())
+                        .text(step.getMessageTemplate().getText())
                         .updated(now)
                         .build())
                 .componentId(leadId)

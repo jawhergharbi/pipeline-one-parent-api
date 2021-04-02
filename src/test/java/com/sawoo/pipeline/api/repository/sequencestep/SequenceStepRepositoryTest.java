@@ -15,17 +15,17 @@ import org.springframework.context.annotation.Profile;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class SequenceStepRepositoryTest extends BaseRepositoryTest<SequenceStep, SequenceStepRepository, SequenceStepMockFactory> {
+class SequenceStepRepositoryTest extends BaseRepositoryTest<SequenceStep, SequenceStepRepository, SequenceStepMockFactory> {
 
-    private static final String SEQUENCE_STEP_JSON_DATA_FILE_NAME = "sequence-step-test-data.json";
-    private static final String SEQUENCE_STEP_ID = "6028dbeab5b9825f6bcb3e41";
+    private static final String TEST_STEP_JSON_DATA_FILE_NAME = "sequence-step-test-data.json";
+    private static final String ENTITY_ID = "6028dbeab5b9825f6bcb3e41";
 
 
     @Autowired
     public SequenceStepRepositoryTest(
             SequenceStepRepository repository,
             SequenceStepMockFactory mockFactory) {
-        super(repository, SEQUENCE_STEP_JSON_DATA_FILE_NAME, SEQUENCE_STEP_ID, SequenceStep.class.getSimpleName(), mockFactory);
+        super(repository, TEST_STEP_JSON_DATA_FILE_NAME, ENTITY_ID, SequenceStep.class.getSimpleName(), mockFactory);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Link;
+import com.sawoo.pipeline.api.model.common.MessageTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,7 +41,7 @@ public class SequenceStep extends BaseEntity {
     private Integer personality;
 
     @JMap
-    private String message;
+    private MessageTemplate messageTemplate;
 
     @JMap
     private Link attachment;
