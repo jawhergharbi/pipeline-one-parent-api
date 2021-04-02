@@ -36,6 +36,7 @@ public class SequenceServiceEventListener {
         if (entity.getStatus() == null) {
             entity.setStatus(SequenceStatus.IN_PROGRESS);
         }
+
         // users
         Set<SequenceUser> users = entity.getUsers();
         if (CommonUtils.isNotEmptyNorNull(users)) {

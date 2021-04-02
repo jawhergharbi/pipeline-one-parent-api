@@ -3,8 +3,8 @@ package com.sawoo.pipeline.api.dto.todo;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
+import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.model.common.Note;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +14,7 @@ import lombok.ToString;
 import lombok.With;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -38,7 +39,8 @@ public class TodoDTO extends BaseEntityDTO {
     private Integer status;
 
     @JMap
-    private UrlTitle link;
+    @Valid
+    private LinkDTO link;
 
     @JMap
     private Note note;

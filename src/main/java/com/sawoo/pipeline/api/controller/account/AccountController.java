@@ -113,7 +113,7 @@ public class AccountController {
     }
 
     @DeleteMapping(
-            value = "/{id}/leads/{leadId}",
+            value = "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> removeLead(
             @PathVariable("id") String accountId,
@@ -122,7 +122,7 @@ public class AccountController {
     }
 
     @GetMapping(
-            value = "/{id}/leads",
+            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> findAllLeads(
             @PathVariable("id") String accountId) {
@@ -130,7 +130,7 @@ public class AccountController {
     }
 
     @GetMapping(
-            value = "/{ids}/leads/main",
+            value = "/{ids}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> findAllLeads(
             @NotNull
@@ -140,7 +140,8 @@ public class AccountController {
     }
 
     @PostMapping(
-            value = {"/{id}/leads", "/{id}/leads/{type}"},
+            value = {"/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
+                    "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{type}"},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(

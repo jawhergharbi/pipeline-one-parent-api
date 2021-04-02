@@ -9,6 +9,7 @@ import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,8 +23,8 @@ import java.util.stream.Collectors;
 public class TodoServiceImpl extends BaseServiceImpl<TodoDTO, Todo, TodoRepository, TodoMapper> implements TodoService {
 
     @Autowired
-    public TodoServiceImpl(TodoRepository repository, TodoMapper mapper, AuditService audit) {
-        super(repository, mapper, DBConstants.TODO_DOCUMENT, audit);
+    public TodoServiceImpl(TodoRepository repository, TodoMapper mapper, ApplicationEventPublisher eventPublisher, AuditService audit) {
+        super(repository, mapper, DBConstants.TODO_DOCUMENT, eventPublisher, audit);
     }
 
     @Override

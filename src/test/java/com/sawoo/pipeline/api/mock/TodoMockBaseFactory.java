@@ -2,9 +2,9 @@ package com.sawoo.pipeline.api.mock;
 
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.common.Note;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.todo.Todo;
-import com.sawoo.pipeline.api.model.todo.TodoStatusList;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +28,12 @@ public abstract class TodoMockBaseFactory<D extends TodoDTO> extends BaseMockFac
         return Todo
                 .builder()
                 .id(id)
-                .link(UrlTitle
+                .link(Link
                         .builder()
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
                         .build())
-                .status(TodoStatusList.RESCHEDULED.getValue())
+                .status(TodoStatus.RESCHEDULED.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(2)
                 .note(Note

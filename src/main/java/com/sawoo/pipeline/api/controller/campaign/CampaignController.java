@@ -84,7 +84,7 @@ public class CampaignController {
     }
 
     @PostMapping(
-            value = "/{id}/leads",
+            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> createLead(
@@ -94,7 +94,7 @@ public class CampaignController {
     }
 
     @PostMapping(
-            value = "/{id}/leads/{leadId}",
+            value = "/{id}"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> addLead(
@@ -106,7 +106,7 @@ public class CampaignController {
     }
 
     @PutMapping(
-            value = "/{id}/leads/{leadId}",
+            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> updateLead(
@@ -118,7 +118,7 @@ public class CampaignController {
     }
 
     @DeleteMapping(
-            value = "/{id}/leads/{leadId}",
+            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> removeLead(
             @PathVariable("id") String id,
@@ -127,7 +127,7 @@ public class CampaignController {
     }
 
     @GetMapping(
-            value = "/{id}/leads",
+            value = "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(
             @PathVariable(value = "id") String id) {

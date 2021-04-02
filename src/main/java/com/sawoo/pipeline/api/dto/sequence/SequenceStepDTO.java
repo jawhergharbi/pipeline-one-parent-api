@@ -4,7 +4,7 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.model.BaseEntity;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +53,7 @@ public class SequenceStepDTO extends BaseEntity {
     private String message;
 
     @JMap
-    private UrlTitle attachment;
+    private Link attachment;
 
     @JMap
     private String version;

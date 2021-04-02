@@ -1,9 +1,9 @@
 package com.sawoo.pipeline.api.mock;
 
+import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.model.common.Note;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
-import com.sawoo.pipeline.api.model.todo.TodoStatusList;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +24,12 @@ public class TodoAssigneeMockFactory extends TodoMockBaseFactory<TodoAssigneeDTO
         TodoAssigneeDTO todo = TodoAssigneeDTO
                 .builder()
                 .id(id)
-                .link(UrlTitle
+                .link(LinkDTO
                         .builder()
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
                         .build())
-                .status(TodoStatusList.RESCHEDULED.getValue())
+                .status(TodoStatus.RESCHEDULED.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(0)
                 .note(Note

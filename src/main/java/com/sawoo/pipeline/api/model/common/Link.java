@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UrlTitle {
+@Builder(toBuilder = true)
+public class Link {
 
     @JMap
     private String description;
 
     @JMap
     private String url;
+
+    @JMap
+    private LinkType type;
 }

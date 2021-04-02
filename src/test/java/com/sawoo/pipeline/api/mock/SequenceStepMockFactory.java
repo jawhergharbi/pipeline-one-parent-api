@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
                 .timespan(FAKER.random().nextInt(10))
                 .personality(1)
                 .message(FAKER.lebowski().quote())
-                .attachment(UrlTitle.builder()
+                .attachment(Link.builder()
                         .description(FAKER.lebowski().character())
                         .url(FAKER.internet().url())
                         .build())
@@ -58,7 +58,7 @@ public class SequenceStepMockFactory extends BaseMockFactory<SequenceStepDTO, Se
                 .personality(1)
                 .timespan(FAKER.random().nextInt(10))
                 .message(FAKER.lebowski().quote())
-                .attachment(UrlTitle.builder()
+                .attachment(Link.builder()
                         .description(FAKER.lebowski().character())
                         .url(FAKER.internet().url())
                         .build())

@@ -389,7 +389,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doReturn(leadList).when(service).findAllLeads(ACCOUNT_ID);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME, ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -410,7 +410,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doReturn(Collections.EMPTY_LIST).when(service).findAllLeads(ACCOUNT_ID);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME, ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -458,7 +458,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .findAllLeads(ACCOUNT_IDS.toArray(String[]::new), null);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{ids}/leads/main", String.join(",", ACCOUNT_IDS))
+        mockMvc.perform(get(getResourceURI() + "/{ids}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/main", String.join(",", ACCOUNT_IDS))
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -499,7 +499,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .findAllLeads(ACCOUNT_IDS.toArray(String[]::new), null);
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{ids}/leads/main", String.join(",", ACCOUNT_IDS))
+        mockMvc.perform(get(getResourceURI() + "/{ids}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/main", String.join(",", ACCOUNT_IDS))
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and the content type
@@ -543,7 +543,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .findAllLeads(ACCOUNT_IDS.toArray(String[]::new), new Integer[] {LeadStatusList.DEAD.getStatus()});
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{ids}/leads/main", String.join(",", ACCOUNT_IDS))
+        mockMvc.perform(get(getResourceURI() + "/{ids}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/main", String.join(",", ACCOUNT_IDS))
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("status", String.valueOf(LeadStatusList.DEAD.getStatus())))
 
@@ -570,7 +570,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doReturn(mockedLead).when(service).removeLead(anyString(), anyString());
 
         // Execute the GET request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}", ACCOUNT_ID, LEAD_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -596,7 +596,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doThrow(exception).when(service).removeLead(anyString(), anyString());
 
         // Execute the GET request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}", ACCOUNT_ID, LEAD_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -618,7 +618,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doThrow(exception).when(service).removeLead(anyString(), anyString());
 
         // Execute the GET request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", ACCOUNT_ID, LEAD_ID)
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}", ACCOUNT_ID, LEAD_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -641,7 +641,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doReturn(mockedEntity).when(service).createLead(anyString(), any(LeadDTO.class));
 
         // Execute the GET request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME, ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -667,7 +667,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doReturn(mockedEntity).when(service).createLead(anyString(), any(LeadDTO.class));
 
         // Execute the GET request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{type}", ACCOUNT_ID, LeadTypeRequestParam.LEAD)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{type}", ACCOUNT_ID, LeadTypeRequestParam.LEAD)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -701,7 +701,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         doThrow(exception).when(service).createLead(anyString(), any(LeadDTO.class));
 
         // Execute the GET request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME, ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -721,7 +721,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         postEntity.getPerson().setLastName(null);
 
         // Execute the GET request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", ACCOUNT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME, ACCOUNT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 

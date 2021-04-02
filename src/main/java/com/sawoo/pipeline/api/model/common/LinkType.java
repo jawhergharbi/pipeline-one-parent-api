@@ -1,20 +1,21 @@
-package com.sawoo.pipeline.api.model.todo;
+package com.sawoo.pipeline.api.model.common;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.IllegalArgumentException;
 
 import java.util.Arrays;
 
-public enum TodoStatusList {
+public enum LinkType {
 
-    SCHEDULED(0),
-    CANCELLED(1),
-    DONE(2),
-    RESCHEDULED(3);
+    MEETING(0),
+    ATTACHMENT(1),
+    PLAIN_LINK(2),
+    EMBEDDED_LINK(3),
+    OTHER(10);
 
     private final int value;
 
-    TodoStatusList(int value) {
+    LinkType(int value) {
         this.value = value;
     }
 
@@ -22,13 +23,13 @@ public enum TodoStatusList {
         return this.value;
     }
 
-    public static TodoStatusList fromValue(int value) {
+    public static LinkType fromValue(int value) {
         return Arrays
-                .stream(TodoStatusList.values())
+                .stream(LinkType.values())
                 .filter(s -> s.getValue() == value)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         ExceptionMessageConstants.COMMON_ENUM_WRONG_VALUE_ILLEGAL_ARGUMENT_EXCEPTION,
-                        new Object[] {TodoStatusList.class.getSimpleName(), TodoStatusList.values(), value}));
+                        new Object[] {LinkType.class.getSimpleName(), LinkType.values(), value}));
     }
 }
