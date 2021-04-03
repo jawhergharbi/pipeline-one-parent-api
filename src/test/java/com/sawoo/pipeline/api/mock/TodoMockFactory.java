@@ -33,7 +33,7 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
                 .status(TodoStatus.SCHEDULED.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(0)
-                .note(Note
+                .message(Note
                         .builder()
                         .text(getFAKER().lorem().sentence(25))
                         .updated(now)

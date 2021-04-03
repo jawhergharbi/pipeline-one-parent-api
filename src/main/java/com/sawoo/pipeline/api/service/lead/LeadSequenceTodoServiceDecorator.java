@@ -88,7 +88,7 @@ public class LeadSequenceTodoServiceDecorator implements LeadSequenceTodoService
                         .type(step.getAttachment().getType())
                         .url(step.getAttachment().getUrl())
                         .build())
-                .note(Note.builder()
+                .message(Note.builder()
                         .text(step.getMessageTemplate().getText())
                         .updated(now)
                         .build())

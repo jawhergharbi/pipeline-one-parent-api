@@ -40,7 +40,7 @@ public class Todo extends BaseEntity {
     private Link link;
 
     @JMap
-    private Note note;
+    private Note message;
 
     @JMap
     private LocalDateTime scheduled;

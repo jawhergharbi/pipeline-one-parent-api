@@ -43,7 +43,7 @@ public class TodoDTO extends BaseEntityDTO {
     private LinkDTO link;
 
     @JMap
-    private Note note;
+    private Note message;
 
     @JMap
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)

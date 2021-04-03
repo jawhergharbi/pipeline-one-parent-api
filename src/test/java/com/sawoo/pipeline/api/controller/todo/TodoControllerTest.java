@@ -108,10 +108,10 @@ class TodoControllerTest extends BaseControllerTest<TodoDTO, Todo, TodoService, 
                 .build();
         TodoDTO postEntity = TodoDTO
                 .builder()
-                .note(note)
+                .message(note)
                 .build();
         TodoDTO mockedDTOEntity = getMockFactory().newDTO(ENTITY_ID);
-        mockedDTOEntity.setNote(note);
+        mockedDTOEntity.setMessage(note);
 
 
         // setup the mocked service
@@ -132,6 +132,6 @@ class TodoControllerTest extends BaseControllerTest<TodoDTO, Todo, TodoService, 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(ENTITY_ID)))
                 .andExpect(jsonPath("$.scheduled").exists())
-                .andExpect(jsonPath("$.note.text", is(TODO_MESSAGE_TEXT)));
+                .andExpect(jsonPath("$.message.text", is(TODO_MESSAGE_TEXT)));
     }
 }
