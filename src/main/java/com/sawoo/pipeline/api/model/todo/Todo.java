@@ -4,7 +4,6 @@ package com.sawoo.pipeline.api.model.todo;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.model.BaseEntity;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Link;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,7 +39,7 @@ public class Todo extends BaseEntity {
     private Link link;
 
     @JMap
-    private Note message;
+    private TodoMessage message;
 
     @JMap
     private LocalDateTime scheduled;

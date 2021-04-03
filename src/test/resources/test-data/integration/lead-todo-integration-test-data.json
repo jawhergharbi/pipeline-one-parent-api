@@ -7,9 +7,8 @@
       "url": "http://google.com/calendy/link1",
       "description": "calendly1"
     },
-    "note": {
-      "text": "text text text",
-      "updated": "2020-06-02T09:59:49.494"
+    "message": {
+      "text": "text text text"
     },
     "scheduled": "2020-06-24T18:59:49.494",
     "created": "2020-06-02T10:59:49.494",
@@ -24,9 +23,8 @@
       "url": "http://google.com/calendy/link2",
       "description": "calendly2"
     },
-    "note": {
-      "text": "text2 tex2t text2",
-      "updated": "2020-05-02T09:59:49.494"
+    "message": {
+      "text": "text2 tex2t text2"
     },
     "scheduled": "2020-05-24T18:59:49.494",
     "created": "2020-05-02T10:59:49.494",
@@ -41,9 +39,8 @@
       "url": "http://google.com/calendy/link3",
       "description": "calendly3"
     },
-    "note": {
-      "text": "text3 text3 text4",
-      "updated": "2020-05-02T09:59:49.494"
+    "message": {
+      "text": "text3 text3 text4"
     },
     "scheduled": "2020-05-24T18:59:49.494",
     "created": "2020-05-02T10:59:49.494",

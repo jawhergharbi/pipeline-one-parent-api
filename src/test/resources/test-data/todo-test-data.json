@@ -8,8 +8,7 @@
       "description": "calendly1"
     },
     "message": {
-      "text": "text text text",
-      "updated": "2020-06-02T09:59:49.494472"
+      "text": "text text text"
     },
     "scheduled": "2020-06-24T18:59:49.494472",
     "created": "2020-06-02T10:59:49.494472",
@@ -26,8 +25,7 @@
       "description": "calendly2"
     },
     "message": {
-      "text": "text2 tex2t text2",
-      "updated": "2020-05-02T09:59:49.494472"
+      "text": "text2 tex2t text2"
     },
     "scheduled": "2020-05-24T18:59:49.494472",
     "created": "2020-05-02T10:59:49.494472",
@@ -44,8 +42,7 @@
       "description": "calendly3"
     },
     "message": {
-      "text": "text3 text3 text4",
-      "updated": "2020-05-02T09:59:49.494472"
+      "text": "text3 text3 text4"
     },
     "scheduled": "2020-05-24T18:59:49.494472",
     "created": "2020-05-02T10:59:49.494472",
@@ -62,8 +59,7 @@
       "description": "calendly3"
     },
     "message": {
-      "text": "text1 text2 text4",
-      "updated": "2020-05-03T09:59:49.494472"
+      "text": "text1 text2 text4"
     },
     "scheduled": "2020-05-15T18:59:49.494472",
     "created": "2020-05-03T10:59:49.494472",
@@ -80,8 +76,7 @@
       "description": "calendly6"
     },
     "message": {
-      "text": "text1 text2 text4 text6",
-      "updated": "2021-01-01T01:59:49.494472"
+      "text": "text1 text2 text4 text6"
     },
     "scheduled": "2021-03-15T10:00:00",
     "created": "2021-01-01T01:59:49.494472",
@@ -98,8 +93,7 @@
       "description": "calendly7"
     },
     "message": {
-      "text": "text1 text2 text4 text6 text7",
-      "updated": "2021-01-01T01:59:49.494472"
+      "text": "text1 text2 text4 text6 text7"
     },
     "scheduled": "2021-03-15T10:00:00",
     "created": "2021-01-01T01:59:49.494472",
@@ -120,8 +114,7 @@
       "description": "calendly8"
     },
     "message": {
-      "text": "text1 text2 text4 text6 text7 text8",
-      "updated": "2021-01-01T01:59:49.494472"
+      "text": "text1 text2 text4 text6 text7 text8"
     },
     "scheduled": "2021-03-15T10:00:00",
     "created": "2021-01-01T01:59:49.494472",

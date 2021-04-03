@@ -4,7 +4,6 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
-import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +42,7 @@ public class TodoDTO extends BaseEntityDTO {
     private LinkDTO link;
 
     @JMap
-    private Note message;
+    private TodoMessageDTO message;
 
     @JMap
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)

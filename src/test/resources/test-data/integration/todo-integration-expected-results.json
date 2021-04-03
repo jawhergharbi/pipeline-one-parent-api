@@ -11,8 +11,7 @@
           "description": "calendly1"
         },
         "message": {
-          "text": "text text text",
-          "updated": "2020-06-02T09:59:49.494"
+          "text": "text text text"
         },
         "scheduled": "2020-06-24T18:59:49.494",
         "created": "2020-06-02T10:59:49.494",

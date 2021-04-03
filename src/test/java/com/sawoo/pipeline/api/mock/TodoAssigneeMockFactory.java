@@ -2,6 +2,7 @@ package com.sawoo.pipeline.api.mock;
 
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,9 @@ public class TodoAssigneeMockFactory extends TodoMockBaseFactory<TodoAssigneeDTO
                 .status(TodoStatus.RESCHEDULED.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(0)
-                .message(Note
+                .message(TodoMessageDTO
                         .builder()
                         .text(getFAKER().lorem().sentence(25))
-                        .updated(now)
                         .build())
                 .build();
         todo.setCreated(now);

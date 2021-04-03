@@ -3,9 +3,9 @@ package com.sawoo.pipeline.api.controller.todo;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.service.todo.TodoService;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -102,16 +100,13 @@ class TodoControllerTest extends BaseControllerTest<TodoDTO, Todo, TodoService, 
         // Setup the mocked entities
         String ENTITY_ID = getMockFactory().getComponentId();
         String TODO_MESSAGE_TEXT = getMockFactory().getFAKER().lorem().sentence(10);
-        Note note = Note.builder()
-                .text(TODO_MESSAGE_TEXT)
-                .updated(LocalDateTime.now(ZoneOffset.UTC))
-                .build();
+        TodoMessageDTO message = TodoMessageDTO.builder().text(TODO_MESSAGE_TEXT).build();
         TodoDTO postEntity = TodoDTO
                 .builder()
-                .message(note)
+                .message(message)
                 .build();
         TodoDTO mockedDTOEntity = getMockFactory().newDTO(ENTITY_ID);
-        mockedDTOEntity.setMessage(note);
+        mockedDTOEntity.setMessage(message);
 
 
         // setup the mocked service

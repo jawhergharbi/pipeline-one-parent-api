@@ -5,13 +5,13 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
-import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
-import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
-import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.sequence.SequenceService;
 import lombok.RequiredArgsConstructor;
@@ -88,9 +88,8 @@ public class LeadSequenceTodoServiceDecorator implements LeadSequenceTodoService
                         .type(step.getAttachment().getType())
                         .url(step.getAttachment().getUrl())
                         .build())
-                .message(Note.builder()
+                .message(TodoMessageDTO.builder()
                         .text(step.getMessageTemplate().getText())
-                        .updated(now)
                         .build())
                 .componentId(leadId)
                 .assignee(assignee)
