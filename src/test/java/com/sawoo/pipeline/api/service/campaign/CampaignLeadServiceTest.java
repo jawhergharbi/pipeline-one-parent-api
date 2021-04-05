@@ -19,6 +19,7 @@ import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
+import com.sawoo.pipeline.api.service.lead.LeadService;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,6 +35,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,6 +57,9 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
 
     @MockBean
     private CampaignRepository repository;
+
+    @MockBean
+    private LeadService leadService;
 
     @MockBean
     private LeadRepository leadRepository;
@@ -122,7 +127,9 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
 
         // Set up the mocked repository and services
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+        doReturn(leadRepository).when(leadService).getRepository();
         doReturn(Optional.of(leadEntity)).when(leadRepository).findById(anyString());
+        doReturn(Collections.emptyList()).when(leadService).createTODOs(anyString(), anyString(), anyString());
         doReturn(Optional.of(sequenceEntity)).when(sequenceRepository).findById(anyString());
 
         // Execute the service call
@@ -182,6 +189,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
 
         // Set up the mocked repository and services
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+        doReturn(leadRepository).when(leadService).getRepository();
         doReturn(Optional.empty()).when(leadRepository).findById(anyString());
 
         // Execute the service call
@@ -250,6 +258,7 @@ class CampaignLeadServiceTest extends BaseLightServiceTest<CampaignDTO, Campaign
 
         // Set up the mocked repository and services
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
+        doReturn(leadRepository).when(leadService).getRepository();
         doReturn(Optional.of(leadEntity)).when(leadRepository).findById(anyString());
         doReturn(Optional.empty()).when(sequenceRepository).findById(anyString());
 

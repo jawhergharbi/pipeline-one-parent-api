@@ -171,6 +171,7 @@ public class LeadController {
         return delegator.evalTODOs(leadId, sequenceId, assigneeId);
     }
 
+    // TODO remove and move tests to CampaignController
     @PostMapping(
             value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})

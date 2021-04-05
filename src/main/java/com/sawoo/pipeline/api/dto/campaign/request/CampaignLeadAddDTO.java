@@ -20,4 +20,6 @@ public class CampaignLeadAddDTO extends CampaignLeadBaseDTO {
 
     @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
     private String sequenceId;
+
+    private String assigneeId;
 }

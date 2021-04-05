@@ -94,7 +94,7 @@ public class CampaignController {
     }
 
     @PostMapping(
-            value = "/{id}"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignLeadDTO> addLead(
