@@ -99,4 +99,12 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
             throws ResourceNotFoundException, CommonServiceException {
         return leadSequenceTODODelegator.evalTODOs(leadId, sequenceId, assigneeId);
     }
+
+    @Override
+    public ResponseEntity<List<TodoAssigneeDTO>> createTODOs(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId, String assigneeId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return leadSequenceTODODelegator.createTODOs(leadId, sequenceId, assigneeId);
+    }
 }

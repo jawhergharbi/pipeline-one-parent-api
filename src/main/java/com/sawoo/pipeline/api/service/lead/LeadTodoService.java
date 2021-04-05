@@ -17,6 +17,10 @@ public interface LeadTodoService {
                     @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException;
 
+    <T extends TodoDTO> List<TodoDTO> addTODOList(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+                    @Valid List<T> todoList)
+            throws ResourceNotFoundException, CommonServiceException;
+
     TodoDTO removeTODO(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
                        @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException;

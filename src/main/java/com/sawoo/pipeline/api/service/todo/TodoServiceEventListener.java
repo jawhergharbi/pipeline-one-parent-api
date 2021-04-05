@@ -43,13 +43,13 @@ public class TodoServiceEventListener {
             UserAuthDetails user = getUserDetails();
             if (user != null) {
                 entity.getSource().setSourceId(user.getId());
-                entity.getSource().setSourceId(user.getFullName());
+                entity.getSource().setSourceDescription(user.getFullName());
             }
         }
     }
 
     private UserAuthDetails getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (UserAuthDetails) auth.getPrincipal();
+        return auth != null ? (UserAuthDetails) auth.getPrincipal() : null;
     }
 }

@@ -185,6 +185,16 @@ class LeadTodoServiceTest extends BaseLightServiceTest<LeadDTO, Lead, LeadReposi
     }
 
     @Test
+    @DisplayName("addTODO: lead does exist and each lead todo is valid - Success")
+    void addTODOListWhenLeadExistsAndLeadTODOValidReturnsSuccess() {
+        // Set up mocked entities
+        String LEAD_ID = getMockFactory().getComponentId();
+
+        // Execute the service call
+        /*List<TodoDTO> returnedDTOList = getService().addTODOList(LEAD_ID, null);*/
+    }
+
+    @Test
     @DisplayName("removeTODO: lead does exist and lead todo found - Success")
     void removeTODOWhenLeadExistsAndLeadTODOFoundReturnsSuccess() {
         // Set up mocked entities

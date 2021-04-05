@@ -32,4 +32,13 @@ public class LeadControllerSequenceTodoDelegatorImpl implements LeadControllerSe
             throws ResourceNotFoundException, CommonServiceException {
         return ResponseEntity.ok().body(service.evalTODOs(leadId, sequenceId, assigneeId));
     }
+
+    @Override
+    public ResponseEntity<List<TodoAssigneeDTO>> createTODOs(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
+            String assigneeId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return ResponseEntity.ok().body(service.createTODOs(leadId, sequenceId, assigneeId));
+    }
 }

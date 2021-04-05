@@ -10,11 +10,13 @@ import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
 import com.sawoo.pipeline.api.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -23,11 +25,13 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Validated
 public class LeadTodoServiceDecorator implements LeadTodoService {
 
     private final TodoService todoService;
@@ -44,14 +48,9 @@ public class LeadTodoServiceDecorator implements LeadTodoService {
 
         Lead lead = findLeadById(leadId);
         List<Todo> todos = lead.getTodos();
-        todos.stream()
-                .filter(t -> t.getScheduled().equals(todo.getScheduled()))
-                .findAny()
-                .ifPresent(t -> {
-                    throw new CommonServiceException(
-                            ExceptionMessageConstants.LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION,
-                            new String[]{leadId, todo.getScheduled().toString()});
-                });
+
+        // Validate schedule
+        validateTodoScheduled(todos, todo, leadId);
 
         todo.setComponentId(leadId);
         final TodoDTO savedTODO = todoService.create(todo);
@@ -63,6 +62,34 @@ public class LeadTodoServiceDecorator implements LeadTodoService {
         repository.save(lead);
 
         return savedTODO;
+    }
+
+    @Override
+    public <T extends TodoDTO> List<TodoDTO> addTODOList(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
+            @Valid List<T> todoList) throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Add a list of Todos for lead id: [{}]. List size [{}]", leadId, todoList.size());
+
+        Lead lead = findLeadById(leadId);
+        List<Todo> todos = lead.getTodos();
+
+        // TODO add signature to create multiple todos in one single insert
+        List<TodoDTO> newTodoList = todoList.stream().map(t -> {
+            validateTodoScheduled(todos, t, leadId);
+            t.setComponentId(leadId);
+            TodoDTO savedTODO = todoService.create(t);
+            log.debug("Lead todo has been created for lead id: [{}]. Todo id [{}]", leadId, savedTODO.getId());
+            return savedTODO;
+        }).collect(Collectors.toList());
+
+        todos.addAll(newTodoList
+                        .stream()
+                        .map(todoService.getMapper().getMapperIn()::getDestination)
+                .collect(Collectors.toList()));
+        lead.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        repository.save(lead);
+
+        return newTodoList;
     }
 
     @Override
@@ -171,5 +198,18 @@ public class LeadTodoServiceDecorator implements LeadTodoService {
         Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
         user.ifPresent(todo::setAssignee);
         return todo;
+    }
+
+    private void validateTodoScheduled(List<Todo> currentTodos, TodoDTO newTodo, String leadId) {
+        Predicate<Todo> filter  = t -> t.getScheduled().equals(newTodo.getScheduled())
+                && (newTodo.getSource() == null || newTodo.getSource().getType().equals(TodoSourceType.MANUAL));
+        currentTodos.stream()
+                .filter(filter)
+                .findAny()
+                .ifPresent(t -> {
+                    throw new CommonServiceException(
+                            ExceptionMessageConstants.LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION,
+                            new String[]{leadId, newTodo.getScheduled().toString()});
+                });
     }
 }

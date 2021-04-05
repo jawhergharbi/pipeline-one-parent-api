@@ -170,4 +170,14 @@ public class LeadController {
             @RequestParam(value = "assigneeId", required = false) String assigneeId) {
         return delegator.evalTODOs(leadId, sequenceId, assigneeId);
     }
+
+    @PostMapping(
+            value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<TodoAssigneeDTO>> createCampaignLead(
+            @PathVariable("id") String leadId,
+            @PathVariable("sequenceId") String sequenceId,
+            @RequestParam(value = "assigneeId", required = false) String assigneeId) {
+        return delegator.createTODOs(leadId, sequenceId, assigneeId);
+    }
 }

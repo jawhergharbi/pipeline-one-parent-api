@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.dto.todo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuperBuilder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TodoDTO extends BaseEntityDTO {
 
     @JMap

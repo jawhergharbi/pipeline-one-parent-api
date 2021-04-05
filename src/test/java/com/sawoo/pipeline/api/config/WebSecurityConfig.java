@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,5 +47,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         log.debug("Configuring new authentication manager. Default bean is being used");
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    @Primary
+    public UserDetailsService userDetailsService() {
+        /*UserDetails basicUser = UserAuthDetails("my-id", "asdasd", "asdasd");
+        UserAuthDTO.builder().
+
+        return new InMemoryUserDetailsManager(Collections.singletonList(basicUser));*/
+        return super.userDetailsService();
     }
 }

@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.dto.sequence;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
@@ -22,6 +23,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuperBuilder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SequenceDTO extends SequenceBaseDTO {
 
     @JMap

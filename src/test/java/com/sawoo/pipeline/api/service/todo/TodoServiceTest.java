@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.repository.todo.TodoRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
+import com.sawoo.pipeline.api.service.user.UserAuthJwtUserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

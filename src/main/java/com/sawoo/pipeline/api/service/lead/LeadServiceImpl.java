@@ -4,10 +4,10 @@ package com.sawoo.pipeline.api.service.lead;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
-import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
 import com.sawoo.pipeline.api.repository.lead.LeadRepository;
@@ -66,6 +66,12 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     @Override
     public TodoDTO addTODO(String leadId, TodoDTO todo) throws ResourceNotFoundException, CommonServiceException {
         return todoService.addTODO(leadId, todo);
+    }
+
+    @Override
+    public <T extends TodoDTO> List<TodoDTO> addTODOList(String leadId, List<T> todoList)
+            throws ResourceNotFoundException, CommonServiceException {
+        return todoService.addTODOList(leadId, todoList);
     }
 
     @Override
@@ -141,5 +147,11 @@ public class LeadServiceImpl extends BaseServiceImpl<LeadDTO, Lead, LeadReposito
     public List<TodoAssigneeDTO> evalTODOs(String leadId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
         return sequenceTodoService.evalTODOs(leadId, sequenceId, assigneeId);
+    }
+
+    @Override
+    public List<TodoAssigneeDTO> createTODOs(String leadId, String sequenceId, String assigneeId)
+            throws ResourceNotFoundException, CommonServiceException {
+        return sequenceTodoService.createTODOs(leadId, sequenceId, assigneeId);
     }
 }
