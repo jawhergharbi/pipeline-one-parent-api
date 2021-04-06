@@ -17,6 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <junit-jupiter.version>5.6.2</junit-jupiter.version>
+        <junit.platform.version>1.5.2</junit.platform.version>
         <google-cloud-bom.version>0.120.2-alpha</google-cloud-bom.version>
         <jmapper-core.version>1.6.1.CR2</jmapper-core.version>
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
@@ -161,19 +162,25 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit-jupiter.version}</version>
+            <!--<version>${junit-jupiter.version}</version>-->
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter.version}</version>
+            <!--<version>${junit-jupiter.version}</version>-->
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit-jupiter.version}</version>
+            <!--<version>${junit-jupiter.version}</version>-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <!--<version>${junit.platform.version}</version>-->
             <scope>test</scope>
         </dependency>
         <dependency>

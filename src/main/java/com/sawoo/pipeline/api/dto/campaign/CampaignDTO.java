@@ -58,15 +58,15 @@ public class CampaignDTO extends BaseEntityDTO {
     @JMap
     private LocalDateTime actualEndDate;
 
-    private List<CampaignLeadDTO> leads;
+    private List<CampaignProspectDTO> prospects;
 
     private AccountFieldDTO account;
 
-    public List<CampaignLeadDTO> getLeads() {
-        if (leads == null) {
-            leads = new ArrayList<>();
+    public List<CampaignProspectDTO> getProspects() {
+        if (prospects == null) {
+            prospects = new ArrayList<>();
         }
-        return leads;
+        return prospects;
     }
 
     @JMapConversion(from = {"status"}, to = {"status"})

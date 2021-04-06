@@ -2,10 +2,10 @@ package com.sawoo.pipeline.api.service.campaign;
 
 import com.googlecode.jmapper.JMapper;
 import com.googlecode.jmapper.api.enums.MappingType;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
 import com.sawoo.pipeline.api.mock.CampaignMockFactory;
-import com.sawoo.pipeline.api.model.campaign.CampaignLead;
-import com.sawoo.pipeline.api.model.campaign.CampaignLeadStatus;
+import com.sawoo.pipeline.api.model.campaign.CampaignProspect;
+import com.sawoo.pipeline.api.model.campaign.CampaignProspectStatus;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -23,34 +23,34 @@ import org.springframework.context.annotation.Profile;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CampaignServiceMapperTest {
+class CampaignServiceMapperTest {
 
     @Getter
     @Autowired
     private CampaignMockFactory mockFactory;
 
     @Test
-    @DisplayName("updateLead: mapping only new status - Success")
-    void updateLeadWhenMappingOnlyStatusReturnsSuccess() {
-        String LEAD_ID = getMockFactory().getFAKER().internet().uuid();
+    @DisplayName("updateProspect: mapping only new status - Success")
+    void updateProspectWhenMappingOnlyStatusReturnsSuccess() {
+        String PROSPECT_ID = getMockFactory().getFAKER().internet().uuid();
         String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        CampaignLead campaignLead = getMockFactory().newCampaignLeadEntity(LEAD_ID, SEQUENCE_ID);
+        CampaignProspect campaignProspect = getMockFactory().newCampaignProspectEntity(PROSPECT_ID, SEQUENCE_ID);
 
-        CampaignLeadBaseDTO campaignLeadBase = CampaignLeadBaseDTO
+        CampaignProspectBaseDTO campaignProspectBase = CampaignProspectBaseDTO
                 .builder()
-                .status(CampaignLeadStatus.ARCHIVED.getValue())
+                .status(CampaignProspectStatus.ARCHIVED.getValue())
                 .build();
 
-        JMapper<CampaignLead, CampaignLeadBaseDTO> mapper = new JMapper<>(CampaignLead.class, CampaignLeadBaseDTO.class);
-        campaignLead = mapper.getDestination(
-                campaignLead,
-                campaignLeadBase,
+        JMapper<CampaignProspect, CampaignProspectBaseDTO> mapper = new JMapper<>(CampaignProspect.class, CampaignProspectBaseDTO.class);
+        campaignProspect = mapper.getDestination(
+                campaignProspect,
+                campaignProspectBase,
                 MappingType.ALL_FIELDS,
                 MappingType.ONLY_VALUED_FIELDS);
 
         Assertions.assertEquals(
-                CampaignLeadStatus.ARCHIVED,
-                campaignLead.getStatus(),
-                String.format("Campaign Lead status must be [%s]", CampaignLeadStatus.ARCHIVED));
+                CampaignProspectStatus.ARCHIVED,
+                campaignProspect.getStatus(),
+                String.format("Campaign Prospect status must be [%s]", CampaignProspectStatus.ARCHIVED));
     }
 }

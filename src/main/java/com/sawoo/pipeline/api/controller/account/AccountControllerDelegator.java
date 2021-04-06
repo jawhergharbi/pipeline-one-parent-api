@@ -7,8 +7,8 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.email.EmailWithTemplateDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.user.UserTokenDTO;
 import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.service.account.AccountService;
@@ -30,10 +30,10 @@ import java.util.Map;
 @Component
 @Primary
 public class AccountControllerDelegator extends BaseControllerDelegator<AccountDTO, AccountService>
-        implements AccountControllerUserDelegator, AccountControllerLeadDelegator, AccountControllerTodoDelegator, AccountControllerCustomDelegator {
+        implements AccountControllerUserDelegator, AccountControllerProspectDelegator, AccountControllerTodoDelegator, AccountControllerCustomDelegator {
 
     private final AccountControllerUserDelegator userDelegator;
-    private final AccountControllerLeadDelegator leadDelegator;
+    private final AccountControllerProspectDelegator prospectDelegator;
     private final AccountControllerTodoDelegator todoDelegator;
     private final UserAuthService userService;
     private final EmailService emailService;
@@ -63,13 +63,13 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     public AccountControllerDelegator(
             AccountService service,
             @Qualifier("accountControllerUser") AccountControllerUserDelegator userDelegator,
-            @Qualifier("accountControllerLead") AccountControllerLeadDelegator leadDelegator,
+            @Qualifier("accountControllerProspect") AccountControllerProspectDelegator prospectDelegator,
             @Qualifier("accountControllerTODO") AccountControllerTodoDelegator todoDelegator,
             UserAuthService userService,
             EmailService emailService) {
         super(service, ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI);
         this.userDelegator = userDelegator;
-        this.leadDelegator = leadDelegator;
+        this.prospectDelegator = prospectDelegator;
         this.todoDelegator = todoDelegator;
         this.userService = userService;
         this.emailService = emailService;
@@ -126,29 +126,29 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
-    public ResponseEntity<LeadDTO> createLead(String accountId, LeadDTO lead)
+    public ResponseEntity<ProspectDTO> createProspect(String accountId, ProspectDTO prospect)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.createLead(accountId, lead);
+        return prospectDelegator.createProspect(accountId, prospect);
     }
 
     @Override
-    public ResponseEntity<List<LeadDTO>> findAllLeads(String accountId) throws ResourceNotFoundException {
-        return leadDelegator.findAllLeads(accountId);
+    public ResponseEntity<List<ProspectDTO>> findAllProspects(String accountId) throws ResourceNotFoundException {
+        return prospectDelegator.findAllProspects(accountId);
     }
 
     @Override
-    public ResponseEntity<List<LeadDTO>> findAllLeads(
-            String[] accountIds, Integer[] leadStatus) throws ResourceNotFoundException {
-        return leadDelegator.findAllLeads(accountIds, leadStatus);
+    public ResponseEntity<List<ProspectDTO>> findAllProspects(
+            String[] accountIds, Integer[] prospectStatus) throws ResourceNotFoundException {
+        return prospectDelegator.findAllProspects(accountIds, prospectStatus);
     }
 
     @Override
-    public ResponseEntity<LeadDTO> removeLead(String accountId, String leadId) throws ResourceNotFoundException {
-        return leadDelegator.removeLead(accountId, leadId);
+    public ResponseEntity<ProspectDTO> removeProspect(String accountId, String prospectId) throws ResourceNotFoundException {
+        return prospectDelegator.removeProspect(accountId, prospectId);
     }
 
     @Override
-    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
             List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException {
         return todoDelegator.findAllTODOs(accountIds, status, types);

@@ -69,9 +69,9 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
     @DisplayName("create: when entity does not exist - Success")
     void createWhenEntityDoesNotExistReturnsSuccess() {
         // Set up mocked entities
-        String LEAD_TODO_ID = getMockFactory().getComponentId();
+        String PROSPECT_TODO_ID = getMockFactory().getComponentId();
         TodoDTO mockedDTO = getMockFactory().newDTO(null);
-        Todo todo = getMockFactory().newEntity(LEAD_TODO_ID);
+        Todo todo = getMockFactory().newEntity(PROSPECT_TODO_ID);
 
         // Set up the mocked repository
         doReturn(todo).when(repository).insert(any(Todo.class));
@@ -80,12 +80,12 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
         TodoDTO returnedEntity = getService().create(mockedDTO);
 
         // Assert the response
-        Assertions.assertAll(String.format("Creating lead todo with id [[%s] must return the proper entity", LEAD_TODO_ID),
+        Assertions.assertAll(String.format("Creating prospect todo with id [[%s] must return the proper entity", PROSPECT_TODO_ID),
                 () -> Assertions.assertNotNull(returnedEntity, "Entity can not be null"),
                 () -> Assertions.assertEquals(
-                        LEAD_TODO_ID,
+                        PROSPECT_TODO_ID,
                         returnedEntity.getId(),
-                        String.format("Lead todo id must be [%s]", LEAD_TODO_ID)));
+                        String.format("Prospect todo id must be [%s]", PROSPECT_TODO_ID)));
 
         verify(repository, never()).findById(anyString());
         verify(repository, times(1)).insert(any(Todo.class));
@@ -95,19 +95,19 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
     @DisplayName("update: entity does exist - Success")
     void updateWhenEntityFoundReturnsSuccess() {
         // Set up mocked entities
-        String LEAD_TODO_ID = getMockFactory().getComponentId();
+        String PROSPECT_TODO_ID = getMockFactory().getComponentId();
         TodoDTO mockedDTOTOUpdate = new TodoDTO();
         mockedDTOTOUpdate.setScheduled(LocalDateTime.now(ZoneOffset.UTC));
-        Todo todoEntity = getMockFactory().newEntity(LEAD_TODO_ID);
+        Todo todoEntity = getMockFactory().newEntity(PROSPECT_TODO_ID);
 
         // Set up the mocked repository
-        doReturn(Optional.of(todoEntity)).when(repository).findById(LEAD_TODO_ID);
+        doReturn(Optional.of(todoEntity)).when(repository).findById(PROSPECT_TODO_ID);
 
         // Execute the service call
-        TodoDTO returnedDTO = getService().update(LEAD_TODO_ID, mockedDTOTOUpdate);
+        TodoDTO returnedDTO = getService().update(PROSPECT_TODO_ID, mockedDTOTOUpdate);
 
-        Assertions.assertAll(String.format("Lead todo entity with id [%s] must be properly updated", LEAD_TODO_ID),
-                () -> Assertions.assertNotNull(returnedDTO, "Lead todo entity can not be null"),
+        Assertions.assertAll(String.format("Prospect todo entity with id [%s] must be properly updated", PROSPECT_TODO_ID),
+                () -> Assertions.assertNotNull(returnedDTO, "Prospect todo entity can not be null"),
                 () -> Assertions.assertEquals(
                         LocalDateTime.now(ZoneOffset.UTC).getDayOfMonth(),
                         returnedDTO.getScheduled().getDayOfMonth(),

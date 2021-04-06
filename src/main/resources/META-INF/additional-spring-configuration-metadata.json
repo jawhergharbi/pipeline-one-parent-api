@@ -101,9 +101,9 @@
       "description": "Default token expiration time."
     },
     {
-      "name": "app.mongo.lead-todo.cascading",
+      "name": "app.mongo.prospect-todo.cascading",
       "type": "java.lang.String",
-      "description": "Cascading for Lead todo document activated."
+      "description": "Cascading for Prospect todo document activated."
     },
     {
       "name": "javers.mongodb.uri",

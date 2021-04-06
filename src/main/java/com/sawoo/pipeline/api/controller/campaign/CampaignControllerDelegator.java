@@ -5,10 +5,10 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignProspectDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,19 +21,19 @@ import java.util.Set;
 
 @Component
 @Primary
-public class CampaignControllerDelegator extends BaseControllerDelegator<CampaignDTO, CampaignService> implements CampaignControllerAccountDelegator, CampaignControllerLeadDelegator {
+public class CampaignControllerDelegator extends BaseControllerDelegator<CampaignDTO, CampaignService> implements CampaignControllerAccountDelegator, CampaignControllerProspectDelegator {
 
     private final CampaignControllerAccountDelegator accountDelegator;
-    private final CampaignControllerLeadDelegator leadDelegator;
+    private final CampaignControllerProspectDelegator prospectDelegator;
 
     @Autowired
     public CampaignControllerDelegator(
             CampaignService service,
             @Qualifier("campaignAccountController") CampaignControllerAccountDelegator accountDelegator,
-            @Qualifier("campaignLeadController") CampaignControllerLeadDelegator leadDelegator) {
+            @Qualifier("campaignProspectController") CampaignControllerProspectDelegator prospectDelegator) {
         super(service, ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI);
         this.accountDelegator = accountDelegator;
-        this.leadDelegator = leadDelegator;
+        this.prospectDelegator = prospectDelegator;
     }
 
     @Override
@@ -47,32 +47,32 @@ public class CampaignControllerDelegator extends BaseControllerDelegator<Campaig
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> createLead(String campaignId, CampaignLeadCreateDTO campaignLead)
+    public ResponseEntity<CampaignProspectDTO> createProspect(String campaignId, CampaignProspectCreateDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.createLead(campaignId, campaignLead);
+        return prospectDelegator.createProspect(campaignId, campaignProspect);
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> addLead(String campaignId, CampaignLeadAddDTO campaignLead)
+    public ResponseEntity<CampaignProspectDTO> addProspect(String campaignId, CampaignProspectAddDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.addLead(campaignId, campaignLead);
+        return prospectDelegator.addProspect(campaignId, campaignProspect);
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> removeLead(String campaignId, String leadId)
+    public ResponseEntity<CampaignProspectDTO> removeProspect(String campaignId, String prospectId)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.removeLead(campaignId, leadId);
+        return prospectDelegator.removeProspect(campaignId, prospectId);
     }
 
     @Override
-    public ResponseEntity<CampaignLeadDTO> updateLead(String campaignId, String leadId, CampaignLeadBaseDTO campaignLead)
+    public ResponseEntity<CampaignProspectDTO> updateProspect(String campaignId, String prospectId, CampaignProspectBaseDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.updateLead(campaignId, leadId, campaignLead);
+        return prospectDelegator.updateProspect(campaignId, prospectId, campaignProspect);
     }
 
     @Override
-    public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(String campaignId)
+    public ResponseEntity<List<CampaignProspectDTO>> findAllProspects(String campaignId)
             throws ResourceNotFoundException, CommonServiceException {
-        return leadDelegator.findAllLeads(campaignId);
+        return prospectDelegator.findAllProspects(campaignId);
     }
 }

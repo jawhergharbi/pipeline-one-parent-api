@@ -23,7 +23,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserRepository, UserMockFactory> {
+class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserRepository, UserMockFactory> {
 
     private static final String AUTHENTICATION_JSON_DATA_FILE_NAME = "user-auth-test-data.json";
     private static final int ADMIN_USERS = 1;

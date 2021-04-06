@@ -63,7 +63,7 @@ app:
       confirmation-url: auth/account-password-activation
       user-key: user
   mongo:
-    lead-todo:
+    prospect-todo:
       cascading: false
 
 ---

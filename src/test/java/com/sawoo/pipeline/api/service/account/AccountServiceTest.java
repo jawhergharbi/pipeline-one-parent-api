@@ -139,7 +139,7 @@ class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRep
 
     @Test
     @DisplayName("deleteAccountNotes: account id invalid (empty string) - Failure")
-    void deleteAccountNotesWhenLeadIdInvalidReturnsFailure() {
+    void deleteAccountNotesWhenProspectIdInvalidReturnsFailure() {
         // Set up mocked entities
         String ACCOUNT_ID = "";
 
@@ -147,9 +147,10 @@ class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRep
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        AccountService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().deleteAccountNotes(ACCOUNT_ID),
+                () -> service.deleteAccountNotes(ACCOUNT_ID),
                 "deleteAccountNotes must throw a ConstraintViolationException");
 
         // Assertions
@@ -204,7 +205,7 @@ class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRep
 
     @Test
     @DisplayName("deleteAccountCompanyNotes: account id invalid (empty string) - Failure")
-    void deleteAccountCompanyNotesWhenLeadIdInvalidReturnsFailure() {
+    void deleteAccountCompanyNotesWhenProspectIdInvalidReturnsFailure() {
         // Set up mocked entities
         String ACCOUNT_ID = "";
 
@@ -212,9 +213,10 @@ class AccountServiceTest extends BaseServiceTest<AccountDTO, Account, AccountRep
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        AccountService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().deleteAccountCompanyNotes(ACCOUNT_ID),
+                () -> service.deleteAccountCompanyNotes(ACCOUNT_ID),
                 "deleteAccountCompanyNotes must throw a ConstraintViolationException");
 
         // Assertions

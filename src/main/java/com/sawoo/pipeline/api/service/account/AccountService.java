@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.service.base.BaseService;
 import javax.validation.constraints.NotBlank;
 
 public interface AccountService extends BaseService<AccountDTO>, BaseProxyService<AccountRepository, AccountMapper>,
-        AccountUserService, AccountLeadService {
+        AccountUserService, AccountProspectService {
 
     AccountDTO deleteAccountNotes(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId)

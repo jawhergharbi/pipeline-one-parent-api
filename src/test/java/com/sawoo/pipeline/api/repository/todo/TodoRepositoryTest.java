@@ -49,13 +49,13 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
 
     @Override
     protected Todo getNewEntity() {
-        String LEAD_TODO_ID = getMockFactory().getFAKER().internet().uuid();
-        return getMockFactory().newEntity(LEAD_TODO_ID);
+        String PROSPECT_TODO_ID = getMockFactory().getFAKER().internet().uuid();
+        return getMockFactory().newEntity(PROSPECT_TODO_ID);
     }
 
     @Test
-    @DisplayName("findByLeadId: entities found - Success")
-    void findByLeadIdWhenEntitiesFoundReturnsSuccess() {
+    @DisplayName("findByComponentId: entities found - Success")
+    void findByComponentIdWhenEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 3;
 
@@ -63,40 +63,40 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
         List<Todo> todos = getRepository().findByComponentId(COMPONENT_ID_1);
 
         // Assertions
-        Assertions.assertAll(String.format("TODOs for lead with [%s]", COMPONENT_ID_1),
+        Assertions.assertAll(String.format("TODOs for prospect with [%s]", COMPONENT_ID_1),
                 () -> Assertions.assertFalse(todos.isEmpty(), "List of todos can not be null"),
                 () -> Assertions.assertEquals(
                         ENTITY_SIZE,
                         todos.size(),
-                        String.format("TODOs with lead id [%s] must be [%d]", COMPONENT_ID_1, ENTITY_SIZE)),
+                        String.format("TODOs with prospect id [%s] must be [%d]", COMPONENT_ID_1, ENTITY_SIZE)),
                 () -> Assertions.assertEquals(
                         COMPONENT_ID_1,
                         todos.get(0).getComponentId(),
-                        String.format("Lead id must be [%s]", COMPONENT_ID_1)));
+                        String.format("Prospect id must be [%s]", COMPONENT_ID_1)));
     }
 
     @Test
-    @DisplayName("findByLeadId: entities found - Success")
-    void findByLeadIdInWhenEntitiesFoundReturnsSuccess() {
+    @DisplayName("findByComponentIdIn: entities found - Success")
+    void findByComponentIdInWhenEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 7;
-        List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        List<String> COMPONENTS_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Todo> todos = getRepository().findByComponentIdIn(LEAD_IDS);
+        List<Todo> todos = getRepository().findByComponentIdIn(COMPONENTS_IDS);
 
         // Assertions
-        Assertions.assertAll(String.format("TODOs for lead with ids [%s]", LEAD_IDS.toArray()),
+        Assertions.assertAll(String.format("TODOs for prospect with ids [%s]", COMPONENTS_IDS.toArray()),
                 () -> Assertions.assertFalse(todos.isEmpty(), "List of todos can not be null"),
                 () -> Assertions.assertEquals(
                         ENTITY_SIZE,
                         todos.size(),
-                        String.format("TODOs with lead id [%s] must be [%d]", COMPONENT_ID_1, ENTITY_SIZE)));
+                        String.format("TODOs with prospect id [%s] must be [%d]", COMPONENT_ID_1, ENTITY_SIZE)));
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByWhenStatusTypeAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByWhenStatusTypeAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 1;
         int STATUS = 1;
@@ -110,8 +110,8 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByWhenStatusTypeAndLeadIdsEmptyAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByWhenStatusTypeAndComponentIdsEmptyAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 2;
         int STATUS = 1;
@@ -125,8 +125,8 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByWhenStatusTypeAndLeadIdsNullAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByWhenStatusTypeAndComponentIdsNullAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 2;
         int STATUS = 1;
@@ -140,22 +140,22 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByWhenStatusListTypeListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 7;
-        List<String> LEAD_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Todo> todos = getRepository().findBy(null, null, LEAD_IDS);
+        List<Todo> todos = getRepository().findBy(null, null, COMPONENT_IDS);
 
         Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty");
         Assertions.assertEquals(ENTITY_SIZE, todos.size(), String.format("TODOs size must be [%d]", ENTITY_SIZE));
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByStatusAndTypeWhenStatusListNullTypeListNullAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByStatusAndTypeWhenStatusListNullTypeListNullAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 7;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
@@ -168,8 +168,8 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, leadIds and entities found - Success")
-    void findByStatusAndTypeWhenStatusListTypeListAndLeadIdsAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
+    void findByStatusAndTypeWhenStatusListTypeListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 5;
         List<Integer> types = Collections.singletonList(1);

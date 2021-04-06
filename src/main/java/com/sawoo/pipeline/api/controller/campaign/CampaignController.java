@@ -3,10 +3,10 @@ package com.sawoo.pipeline.api.controller.campaign;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignProspectDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -84,53 +84,53 @@ public class CampaignController {
     }
 
     @PostMapping(
-            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> createLead(
+    public ResponseEntity<CampaignProspectDTO> createProspect(
             @PathVariable("id") String id,
-            @RequestBody CampaignLeadCreateDTO dto) {
-        return delegator.createLead(id, dto);
+            @RequestBody CampaignProspectCreateDTO dto) {
+        return delegator.createProspect(id, dto);
     }
 
     @PostMapping(
-            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> addLead(
+    public ResponseEntity<CampaignProspectDTO> addProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String leadId,
-            @RequestBody CampaignLeadAddDTO dto) {
-        dto.setLeadId(leadId);
-        return delegator.addLead(id, dto);
+            @PathVariable("leadId") String prospectId,
+            @RequestBody CampaignProspectAddDTO dto) {
+        dto.setProspectId(prospectId);
+        return delegator.addProspect(id, dto);
     }
 
     @PutMapping(
-            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> updateLead(
+    public ResponseEntity<CampaignProspectDTO> updateProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String leadId,
-            @RequestBody CampaignLeadBaseDTO dto) {
-        dto.setLeadId(leadId);
-        return delegator.updateLead(id, leadId, dto);
+            @PathVariable("leadId") String prospectId,
+            @RequestBody CampaignProspectBaseDTO dto) {
+        dto.setProspectId(prospectId);
+        return delegator.updateProspect(id, prospectId, dto);
     }
 
     @DeleteMapping(
-            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CampaignLeadDTO> removeLead(
+    public ResponseEntity<CampaignProspectDTO> removeProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String leadId) {
-        return delegator.removeLead(id, leadId);
+            @PathVariable("leadId") String prospectId) {
+        return delegator.removeProspect(id, prospectId);
     }
 
     @GetMapping(
-            value = "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
+            value = "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<CampaignLeadDTO>> findAllLeads(
+    public ResponseEntity<List<CampaignProspectDTO>> findAllProspects(
             @PathVariable(value = "id") String id) {
-        return delegator.findAllLeads(id);
+        return delegator.findAllProspects(id);
     }
 }
