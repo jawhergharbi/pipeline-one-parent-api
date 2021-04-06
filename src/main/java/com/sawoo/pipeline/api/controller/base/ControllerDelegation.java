@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.base;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
@@ -24,4 +25,7 @@ public interface ControllerDelegation<D> {
             D dto);
 
     String getComponentId(D dto);
+
+    ResponseEntity<List<VersionDTO<D>>> getVersions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id);
 }

@@ -29,6 +29,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class PersonControllerTest extends BaseControllerTest<PersonDTO, Person, PersonService, PersonMockFactory> {
+class PersonControllerTest extends BaseControllerTest<PersonDTO, Person, PersonService, PersonMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,8 +96,8 @@ public class PersonControllerTest extends BaseControllerTest<PersonDTO, Person, 
     }
 
     @Test
-    @DisplayName("POST /api/persons: company id and company name not informed - Failure")
-    void createWhenCompanyIdAndCompanyNameNotInformedReturnsFailure() throws Exception {
+    @DisplayName("POST /api/persons: company name not informed - Failure")
+    void createWhenCompanyNameNotInformedReturnsFailure() throws Exception {
         String PERSON_LAST_NAME = getMockFactory().getFAKER().name().lastName();
         String PERSON_FIRST_NAME = getMockFactory().getFAKER().name().firstName();
         PersonDTO postEntity = getMockFactory().newDTO(null, PERSON_FIRST_NAME, PERSON_LAST_NAME);
@@ -115,6 +116,29 @@ public class PersonControllerTest extends BaseControllerTest<PersonDTO, Person, 
                 .andExpect(jsonPath("$.messages", hasSize(1)))
                 .andExpect(jsonPath("$.messages[0]",
                         containsString("Field [company] must include either the [id] field or both [name and url] fields")));
+    }
+
+    @Test
+    @DisplayName("POST /api/persons: company name not informed - Failure")
+    void createWhenPersonalityNotInformedReturnsFailure() throws Exception {
+        String PERSON_LAST_NAME = getMockFactory().getFAKER().name().lastName();
+        String PERSON_FIRST_NAME = getMockFactory().getFAKER().name().firstName();
+        PersonDTO postEntity = getMockFactory().newDTO(null, PERSON_FIRST_NAME, PERSON_LAST_NAME);
+        postEntity.setPersonality(null);
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntity)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.messages", hasSize(1)))
+                .andExpect(jsonPath("$.messages[0]",
+                        stringContainsInOrder("Field or param", "personality", "can not be null")));
     }
 
     @Test

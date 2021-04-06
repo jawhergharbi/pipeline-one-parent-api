@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.controller.base;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.service.base.BaseService;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -67,5 +68,11 @@ public abstract class BaseControllerDelegator<D, S extends BaseService<D>> imple
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @Override
+    public ResponseEntity<List<VersionDTO<D>>> getVersions(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String id) {
+        return ResponseEntity.ok().body(getService().getVersions(id));
     }
 }

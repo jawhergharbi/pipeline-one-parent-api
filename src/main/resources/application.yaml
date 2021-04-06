@@ -63,7 +63,7 @@ app:
       confirmation-url: auth/account-password-activation
       user-key: user
   mongo:
-    lead-interaction:
+    lead-todo:
       cascading: false
 
 ---
@@ -73,6 +73,11 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/pipeline-core?readPreference=primary&ssl=false
       auto-index-creation: false
+
+javers:
+  mongodb:
+    uri: mongodb://localhost:27017/pipeline-core-audit?readPreference=primary&ssl=false
+
 
 app:
   server: http://localhost:8080
@@ -120,9 +125,6 @@ app:
   auth:
     activation-token:
       active: false
-  mongo:
-    lead-interaction:
-      cascading: false
 
 ---
 spring:
@@ -143,9 +145,6 @@ app:
   auth:
     activation-token:
       active: false
-  mongo:
-    lead-interaction:
-      cascading: false
   version: ${version}
 
 ---

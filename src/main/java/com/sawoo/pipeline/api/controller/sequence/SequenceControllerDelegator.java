@@ -73,4 +73,9 @@ public class SequenceControllerDelegator extends BaseControllerDelegator<Sequenc
     public ResponseEntity<List<SequenceStepDTO>> getSteps(String sequenceId) throws ResourceNotFoundException {
         return stepDelegator.getSteps(sequenceId);
     }
+
+    @Override
+    public ResponseEntity<List<SequenceStepDTO>> getStepsByPersonality(String sequenceId, Integer personality) throws ResourceNotFoundException {
+        return stepDelegator.getStepsByPersonality(sequenceId, personality);
+    }
 }

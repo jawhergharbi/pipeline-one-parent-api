@@ -51,7 +51,7 @@ public class LeadReportServiceDecorator implements LeadReportService {
 
         LeadReportDTO leadReport = repository
                 .findById(id)
-                .map( (lead) -> mapperOut.getDestination(lead, NullPointerControl.SOURCE, MappingType.ONLY_VALUED_FIELDS))
+                .map( lead -> mapperOut.getDestination(lead, NullPointerControl.SOURCE, MappingType.ONLY_VALUED_FIELDS))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -96,12 +96,13 @@ public class LeadReportServiceDecorator implements LeadReportService {
             URI uri = new URI(baseUrl);
             ResponseEntity<byte[]> result = restTemplate.postForEntity(uri, request, byte[].class);
 
-            if (result.getBody() == null || result.getBody().length == 0) {
+            if (result.getBody() != null && result.getBody().length > 0) {
+                return result.getBody();
+            } else {
                 throw new CommonServiceException(
                         ExceptionMessageConstants.LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR,
                         new String[]{baseUrl, reportBody.toString()});
             }
-            return result.getBody();
         } catch (URISyntaxException | HttpClientErrorException error) {
             throw new CommonServiceException(
                     ExceptionMessageConstants.LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION,

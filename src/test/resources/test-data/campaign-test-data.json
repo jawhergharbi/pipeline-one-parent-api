@@ -1,0 +1,38 @@
+[
+  {
+    "id": "60488a88959ceb1ce1e518fa",
+    "name": "Campaign for CTOs",
+    "description": "Use this campaign to reach out only CTO",
+    "status": 3,
+    "componentId": "6030d640f3022dc07d72d786",
+    "startDate": "2021-03-23T08:08:00.000Z",
+    "endDate": "2021-06-23T08:08:00.000Z",
+    "actualStartDate": "2021-03-30T08:08:00.000Z",
+    "actualEndDate": "2021-07-23T08:08:00.000Z",
+    "created": "2021-06-04T16:41:25.130Z",
+    "updated": "2020-11-05T07:31:47.545Z"
+  },
+  {
+    "id": "60488a914281bac3387007f6",
+    "name": "Campaign for CIOs",
+    "description": "Use this campaign to reach out only CIO",
+    "status": 1,
+    "componentId": "6030d640f3022dc07d72d786",
+    "startDate": "2021-02-23T08:08:00.000Z",
+    "endDate": "2021-05-13T08:08:00.000Z",
+    "actualStartDate": "2021-02-28T08:08:00.000Z",
+    "created": "2020-11-06T16:41:25.130Z",
+    "updated": "2020-11-07T07:31:47.545Z"
+  },
+  {
+    "id": "60488a963657dc04809c0cfd",
+    "name": "Campaign for CEOs",
+    "description": "Use this campaign to reach out only CEOs",
+    "status": 0,
+    "componentId": "6030d65af796188aabff390b",
+    "startDate": "2021-06-01T08:08:00.000Z",
+    "endDate": "2021-08-01T08:08:00.000Z",
+    "created": "2020-11-10T16:41:25.130Z",
+    "updated": "2020-11-11T07:31:47.545Z"
+  }
+]

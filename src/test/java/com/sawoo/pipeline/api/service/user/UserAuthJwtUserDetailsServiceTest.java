@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserAuthJwtUserDetailsServiceTest {
+class UserAuthJwtUserDetailsServiceTest {
 
     private final Faker FAKER;
     private final UserMockFactory mockFactory;

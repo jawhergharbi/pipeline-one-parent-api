@@ -37,6 +37,7 @@ import java.util.stream.IntStream;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -56,7 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequence, SequenceService, SequenceMockFactory> {
+class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequence, SequenceService, SequenceMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
@@ -319,7 +320,8 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())));
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedEntity.getMessageTemplate().getText())));
     }
 
     @Test
@@ -435,7 +437,8 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedStep.getMessage())));
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedStep.getMessageTemplate().getText())));
     }
 
     @Test
@@ -492,7 +495,8 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(SEQUENCE_STEP_ID)))
-                .andExpect(jsonPath("$.message", is(mockedEntity.getMessage())))
+                .andExpect(jsonPath("$.messageTemplate").exists())
+                .andExpect(jsonPath("$.messageTemplate.text", is(mockedEntity.getMessageTemplate().getText())))
                 .andExpect(jsonPath("$.position", is(STEP_POSITION)));
     }
 
@@ -577,5 +581,87 @@ public class SequenceControllerTest extends BaseControllerTest<SequenceDTO, Sequ
                                 String.format("GET operation. Component type [%s] and id [%s] was not found",
                                         getEntityType(),
                                         SEQUENCE_ID))));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps/search-personality: sequence found - Success")
+    void getStepsByPersonalityWhenSequenceFoundReturnsSuccess() throws Exception {
+        // Setup the mocked entities
+        int ID_LIST_SIZE = 3;
+        int PERSONALITY = 1;
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        List<SequenceStepDTO> stepList = IntStream.range(0, ID_LIST_SIZE)
+                .mapToObj((step) -> {
+                    String COMPONENT_ID = getMockFactory().getSequenceStepMockFactory().getComponentId();
+                    return getMockFactory().getSequenceStepMockFactory().newDTO(COMPONENT_ID);
+                }).collect(Collectors.toList());
+
+        // setup the mocked service
+        doReturn(stepList).when(service).getStepsByPersonality(anyString(), any(Integer.class));
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps/search-personality", SEQUENCE_ID)
+                .param("personality", String.valueOf(PERSONALITY)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(ID_LIST_SIZE)));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps/search-personality: sequence not found - Success")
+    void getStepsByPersonalityWhenSequenceNotFoundReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        int PERSONALITY = 2;
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).getStepsByPersonality(anyString(), any(Integer.class));
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps/search-personality", SEQUENCE_ID)
+                .param("personality", String.valueOf(PERSONALITY)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(
+                        "$.message",
+                        containsString(
+                                String.format("GET operation. Component type [%s] and id [%s] was not found",
+                                        getEntityType(),
+                                        SEQUENCE_ID))));
+    }
+
+    @Test
+    @DisplayName("GET /api/sequences/{id}/steps/search-personality: personality wrong - Failure")
+    void getStepsByPersonalityWhenPersonalityInvalidReturnsFailure() throws Exception {
+        // Setup the mocked entities
+        String SEQUENCE_ID = getMockFactory().getComponentId();
+        int PERSONALITY = 5;
+
+        // setup the mocked service
+        ResourceNotFoundException exception = new  ResourceNotFoundException(
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                new String[] {getEntityType(), SEQUENCE_ID});
+        doThrow(exception).when(service).getStepsByPersonality(anyString(), any(Integer.class));
+
+        // Execute the GET request
+        mockMvc.perform(get(getResourceURI() + "/{id}/steps/search-personality", SEQUENCE_ID)
+                .param("personality", String.valueOf(PERSONALITY)))
+
+                // Validate the response code and content type
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(jsonPath("$.messages", hasSize(1)))
+                .andExpect(jsonPath(
+                        "$.messages[0]",
+                        stringContainsInOrder("Field or param", "in component", "has exceeded its max size")));
     }
 }

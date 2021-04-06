@@ -40,16 +40,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = "sequence-integration-test-data.json",
         classType = Sequence.class,
         collectionNames = {DBConstants.SEQUENCE_DOCUMENT})
-public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Sequence, SequenceMockFactory> {
+class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Sequence, SequenceMockFactory> {
 
-    private static final String SEQUENCE_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "sequence-integration-expected-results.json";
+    private static final String TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "sequence-integration-expected-results.json";
 
     @Autowired
     public SequenceIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, SequenceMockFactory mockFactory) {
         super(mockMvc, mongoTemplate,
                 ControllerConstants.SEQUENCE_CONTROLLER_API_BASE_URI,
                 DBConstants.SEQUENCE_DOCUMENT,
-                SEQUENCE_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
+                TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
                 mockFactory);
     }
 
@@ -66,7 +66,11 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
         String ACCOUNT_ID = "6030d6600c296a3a3c071293";
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", ACCOUNT_ID))
+        getMockMvc().perform(get(getResourceURI() +
+                "/" +
+                ControllerConstants.ACCOUNT_CONTROLLER_RESOURCE_NAME +
+                "/{accountIds}/main",
+                ACCOUNT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -86,7 +90,11 @@ public class SequenceIntegrationTest extends BaseIntegrationTest<SequenceDTO, Se
         String ACCOUNT_IDS = String.join(",", Arrays.asList(ACCOUNT_ID_1, ACCOUNT_ID_2));
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/accounts/{accountIds}/main", ACCOUNT_IDS))
+        getMockMvc().perform(get(getResourceURI() +
+                "/" +
+                ControllerConstants.ACCOUNT_CONTROLLER_RESOURCE_NAME +
+                "/{accountIds}/main",
+                ACCOUNT_IDS))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())

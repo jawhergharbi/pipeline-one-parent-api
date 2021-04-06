@@ -3,8 +3,9 @@ package com.sawoo.pipeline.api.dto.sequence;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.dto.common.MessageTemplateDTO;
 import com.sawoo.pipeline.api.model.BaseEntity;
-import com.sawoo.pipeline.api.model.common.UrlTitle;
+import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,6 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -49,11 +49,11 @@ public class SequenceStepDTO extends BaseEntity {
     private Integer personality;
 
     @JMap
-    @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR)
-    private String message;
+    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    private MessageTemplateDTO messageTemplate;
 
     @JMap
-    private UrlTitle attachment;
+    private Link attachment;
 
     @JMap
     private String version;

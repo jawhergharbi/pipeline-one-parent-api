@@ -10,7 +10,7 @@ public enum UserRole {
     MNG(3),
     CLIENT(4);
 
-    private int roleValue;
+    private final int roleValue;
 
     UserRole(int roleValue) {
         this.roleValue = roleValue;

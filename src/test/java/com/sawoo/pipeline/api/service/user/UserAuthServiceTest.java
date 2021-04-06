@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, UserRepository, UserAuthService, UserMockFactory> {
+class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, UserRepository, UserAuthService, UserMockFactory> {
 
     @MockBean
     private UserRepository repository;
@@ -158,11 +158,14 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.of(mockedEntity)).when(repository).findById(anyString());
 
         // Assertions
+        UserAuthService service = getService();
         AuthException exception = Assertions.assertThrows(
                 AuthException.class,
-                () -> getService().update(userUpdate),
+                () -> service.update(userUpdate),
                 "update password must throw an AuthException");
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.AUTH_COMMON_PASSWORD_MATCH_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -185,11 +188,14 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.of(mockedEntity)).when(repository).findById(anyString());
 
         // Assertions
+        UserAuthService service = getService();
         AuthException exception = Assertions.assertThrows(
                 AuthException.class,
-                () -> getService().update(userUpdate),
+                () -> service.update(userUpdate),
                 "update password must throw an AuthException");
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -240,14 +246,15 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         doReturn(Optional.empty()).when(repository).findById(USER_AUTH_ID);
 
         // Assertions
+        UserAuthService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().update(userUpdate),
+                () -> service.update(userUpdate),
                 "update must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -262,12 +269,15 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
         userUpdate.setEmail(USER_AUTH_EMAIL);
 
         // Assertions
+        UserAuthService service = getService();
         AuthException exception = Assertions.assertThrows(
                 AuthException.class,
-                () -> getService().update(userUpdate),
+                () -> service.update(userUpdate),
                 "update must throw an AuthException");
 
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
     }
 
@@ -306,9 +316,10 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
     void findAllByRolesWhenListOfRolesIsNullReturnsConstraintViolationException() {
 
         // Assertions
+        UserAuthService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().findAllByRole(null),
+                () -> service.findAllByRole(null),
                 "update must throw an ConstraintViolationException");
 
         // Asserts
@@ -319,10 +330,11 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
     @DisplayName("findAllByRole: list of roles is empty - Failure")
     void findAllByRolesWhenListOfRolesIsEmptyReturnsConstraintViolationException() {
         // Assertions
+        UserAuthService service = getService();
         ConstraintViolationException exception = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> getService().findAllByRole(Collections.emptyList()),
-                "update must throw an ConstraintViolationException");
+                () -> service.findAllByRole(Collections.emptyList()),
+                "findAllByRole must throw an ConstraintViolationException");
 
         // Asserts
         Assertions.assertEquals(1, exception.getConstraintViolations().size());
@@ -388,12 +400,15 @@ public class UserAuthServiceTest extends BaseServiceTest<UserAuthDTO, User, User
 
         // Execute the service
         // Assertions
+        UserAuthService service = getService();
         AuthException exception = Assertions.assertThrows(
                 AuthException.class,
-                () -> getService().createToken(USER_EMAIL, UserTokenType.RESET_PASSWORD, 500),
+                () -> service.createToken(USER_EMAIL, UserTokenType.RESET_PASSWORD, 500),
                 "createToken must throw an AuthException");
 
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION);
+        Assertions.assertEquals(
+                ExceptionMessageConstants.AUTH_RESET_PASSWORD_USER_EMAIL_NOT_FOUND_ERROR_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
     }
 

@@ -43,13 +43,18 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         log.debug("Creating new lead for account id: [{}]. Person id: [{}]", accountId, lead.getPerson().getId());
 
         Account account = findAccountById(accountId);
+        List<Lead> leads = account.getLeads();
 
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        if (leads.stream().anyMatch(l -> l.getPerson().getLinkedInUrl().equals(lead.getPerson().getLinkedInUrl()))) {
+            throw new CommonServiceException(
+                    ExceptionMessageConstants.ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION,
+                    new String[] {accountId, lead.getPerson().getLinkedInUrl()});
+        }
 
         LeadDTO createdLead = leadService.create(lead);
 
-        account.getLeads().add(leadService.getMapper().getMapperIn().getDestination(createdLead));
-        account.setUpdated(now);
+        leads.add(leadService.getMapper().getMapperIn().getDestination(createdLead));
+        account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
         repository.save(account);
 
         return createdLead;
@@ -69,7 +74,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         AccountFieldDTO accountLead = accountMapper.getDestination(account);
         return account.getLeads()
                 .stream()
-                .map( (l) -> {
+                .map( l -> {
                     LeadDTO lead = leadService.getMapper().getMapperOut().getDestination(l);
                     lead.setAccount(accountLead);
                     return lead;
@@ -97,10 +102,10 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
         }
         JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
         Predicate<Lead> statusFilter = (leadStatus != null && leadStatus.length > 0) ?
-                l -> Arrays.asList(leadStatus).contains(l.getStatus().getValue()) :
+                (l -> l.getStatus() == null || Arrays.asList(leadStatus).contains(l.getStatus().getValue())) :
                 l -> true;
         List<LeadDTO> leads = accounts
-                .stream().flatMap( (account) -> {
+                .stream().flatMap( account -> {
                     AccountFieldDTO leadAccount = accountMapper.getDestination(account);
                     return account.getLeads()
                             .stream()
@@ -133,7 +138,7 @@ public class AccountLeadServiceDecorator implements AccountLeadService {
                 .stream()
                 .filter(lead -> leadId.equals(lead.getId()))
                 .findAny()
-                .map((l) -> {
+                .map(l -> {
                     account.getLeads().remove(l);
                     account.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     repository.save(account);

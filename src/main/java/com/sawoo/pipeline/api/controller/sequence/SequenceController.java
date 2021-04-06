@@ -1,16 +1,21 @@
 package com.sawoo.pipeline.api.controller.sequence;
 
 import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,49 +29,49 @@ public class SequenceController {
 
     private final SequenceControllerDelegator delegator;
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> create(@RequestBody SequenceDTO dto) {
         return delegator.create(dto);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<SequenceDTO>> getAll() {
         return delegator.findAll();
     }
 
-   @RequestMapping(
+   @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> get(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
+            value = "/{id}/versions",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<SequenceDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
+    }
+
+    @GetMapping(
             value = "/accounts/{accountIds}/main",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<SequenceDTO>> findByAccountIds(
             @PathVariable(value = "accountIds") Set<String> accountIds) {
         return delegator.findByAccounts(accountIds);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/user/{userId}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceDTO> deleteUser(
             @PathVariable String id,
@@ -74,9 +79,8 @@ public class SequenceController {
         return delegator.deleteUser(id, userId);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -85,9 +89,8 @@ public class SequenceController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/{id}/steps",
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceStepDTO> addStep(
@@ -96,9 +99,8 @@ public class SequenceController {
         return delegator.addStep(sequenceId, step);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/steps/{stepId}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceStepDTO> removeStep(
             @PathVariable("id") String sequenceId,
@@ -106,9 +108,8 @@ public class SequenceController {
         return delegator.removeStep(sequenceId, sequenceStepId);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}/steps/{stepId}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SequenceStepDTO> updateStep(
@@ -119,12 +120,20 @@ public class SequenceController {
         return delegator.updateStep(sequenceId, step);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/steps",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<SequenceStepDTO>> getSteps(
             @PathVariable("id") String sequenceId) {
         return delegator.getSteps(sequenceId);
+    }
+
+    @GetMapping(
+            value = "/{id}/steps/search-personality",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<SequenceStepDTO>> getStepsByPersonality(
+            @PathVariable("id") String sequenceId,
+            @RequestParam(value = "personality", required = false) Integer personality) {
+        return delegator.getStepsByPersonality(sequenceId, personality);
     }
 }

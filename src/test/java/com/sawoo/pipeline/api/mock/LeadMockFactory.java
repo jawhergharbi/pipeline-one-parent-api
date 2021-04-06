@@ -24,10 +24,10 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
     private final PersonMockFactory personMockFactory;
 
     @Getter
-    private final InteractionMockFactory interactionMockFactory;
+    private final TodoMockFactory todoMockFactory;
 
     @Getter
-    private final InteractionAssigneeMockFactory interactionAssigneeMockFactory;
+    private final TodoAssigneeMockFactory todoAssigneeMockFactory;
 
     @Override
     public String getComponentId() {
@@ -127,13 +127,13 @@ public class LeadMockFactory extends BaseMockFactory<LeadDTO, Lead> {
 
     @Override
     public LeadDTO newDTO(String id, LeadDTO dto) {
-        LeadDTO newDTO = new LeadDTO();
-        newDTO.setId(id);
-        newDTO.setPerson(dto.getPerson());
-        newDTO.setLeadNotes(dto.getLeadNotes());
-        newDTO.setCompanyNotes(dto.getCompanyNotes());
-        newDTO.setLinkedInThread(dto.getLinkedInThread());
-        newDTO.setStatus(dto.getStatus());
-        return newDTO;
+        return LeadDTO.builder()
+                .id(id)
+                .person(dto.getPerson())
+                .leadNotes(dto.getLeadNotes())
+                .companyNotes(dto.getCompanyNotes())
+                .linkedInThread(dto.getLinkedInThread())
+                .status(dto.getStatus())
+                .build();
     }
 }

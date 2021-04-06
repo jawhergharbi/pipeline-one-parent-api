@@ -2,29 +2,25 @@ package com.sawoo.pipeline.api.service.person;
 
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.model.person.Person;
-import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
-public class PersonServiceEventListener implements BaseServiceEventListener<PersonDTO, Person> {
+public class PersonServiceEventListener {
 
-    @Override
-    public void onBeforeInsert(PersonDTO dto, Person entity) {
-        // nothing to do atm
-    }
-
-    @Override
-    public void onBeforeSave(PersonDTO dto, Person entity) {
+    @EventListener
+    public void handleBeforeSaveEvent(BaseServiceBeforeSaveEvent<PersonDTO, Person> event) {
+        log.debug("Person before save listener");
+        Person entity = event.getModel();
+        PersonDTO dto = event.getDto();
         // Consolidate firstName and lastName
         if (entity != null && (dto.getFirstName() != null || dto.getLastName() != null)) {
             String firstName = dto.getFirstName() != null ? dto.getFirstName() : entity.getFirstName();
             String lastName = dto.getLastName() != null ? dto.getLastName() : entity.getLastName();
             entity.setFullName(String.join(" ", firstName, lastName));
         }
-    }
-
-    @Override
-    public void onBeforeUpdate(PersonDTO dto, Person entity) {
-        // nothing to do atm
     }
 }

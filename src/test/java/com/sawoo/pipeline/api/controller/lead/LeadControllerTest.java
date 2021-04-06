@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -52,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
+class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadService, LeadMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;
@@ -87,6 +88,7 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     @Test
     @DisplayName("POST /api/leads: person not informed - Failure")
     void createWhenPersonNotInformedReturnsFailure() throws Exception {
+        // Set up mock entities
         LeadDTO postEntity = getMockFactory().newDTO(null);
         postEntity.setPerson(null);
 
@@ -108,6 +110,7 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
     @Test
     @DisplayName("POST /api/leads: person informed but only person id - Failure")
     void createWhenPersonNotProperlyInformedReturnsFailure() throws Exception {
+        // Set up mock entities
         LeadDTO postEntity = getMockFactory().newDTO(null);
         postEntity.getPerson().setFirstName(null);
 
@@ -135,7 +138,7 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
         LeadDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
+        doReturn(mockedEntity).when(service).create(any(getDTOClass()));
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI())
@@ -281,8 +284,6 @@ public class LeadControllerTest extends BaseControllerTest<LeadDTO, Lead, LeadSe
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ DBConstants.LEAD_DOCUMENT, LEAD_ID });
-
-        // setup the mocked service
         doThrow(exception).when(service).deleteLeadSummary(anyString());
 
         // Execute the DELETE request

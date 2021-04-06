@@ -31,10 +31,10 @@ import java.util.function.Function;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceRepository, SequenceMockFactory> {
+class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceRepository, SequenceMockFactory> {
 
-    private static final String SEQUENCE_JSON_DATA_FILE_NAME = "sequence-test-data.json";
-    private static final String SEQUENCE_ID = "60278c364334846b8d167131";
+    private static final String TEST_JSON_DATA_FILE_NAME = "sequence-test-data.json";
+    private static final String ENTITY_ID = "60278c364334846b8d167131";
 
     private final SequenceStepRepository sequenceStepRepository;
 
@@ -44,7 +44,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
             SequenceRepository repository,
             SequenceMockFactory mockFactory,
             SequenceStepRepository sequenceStepRepository) {
-        super(repository, SEQUENCE_JSON_DATA_FILE_NAME, SEQUENCE_ID, Sequence.class.getSimpleName(), mockFactory);
+        super(repository, TEST_JSON_DATA_FILE_NAME, ENTITY_ID, Sequence.class.getSimpleName(), mockFactory);
         this.sequenceStepRepository = sequenceStepRepository;
     }
 
@@ -77,14 +77,14 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         int SEQUENCE_STEPS_SIZE = 3;
 
         // Act
-        Optional<Sequence> sequence = getRepository().findById(SEQUENCE_ID);
+        Optional<Sequence> sequence = getRepository().findById(ENTITY_ID);
 
         // Assert
-        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated ", SEQUENCE_ID),
+        Assertions.assertAll(String.format("Sequence with id [%s] must be correctly validated ", ENTITY_ID),
                 () -> Assertions.assertTrue(sequence.isPresent(), "Sequence can not be null"),
                 () -> sequence.ifPresent((s) -> Assertions.assertEquals(
-                        SEQUENCE_ID, s.getId(),
-                        String.format("Sequence id must be equal to [%s]", SEQUENCE_ID))),
+                        ENTITY_ID, s.getId(),
+                        String.format("Sequence id must be equal to [%s]", ENTITY_ID))),
                 () -> sequence.ifPresent((s) -> Assertions.assertFalse(
                         s.getSteps().isEmpty(),
                         "Steps can not be empty")),
@@ -362,13 +362,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
         String COMPONENT_ID_2 = "6030d65af796188aabff390b";
-        int SEQUENCES_FOUND = 3;
+        int ENTITIES_FOUND = 3;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
 
         // Assert
-        assertListOfSequence(sequences, SEQUENCES_FOUND);
+        assertListOfSequence(sequences, ENTITIES_FOUND);
     }
 
     @Test
@@ -377,13 +377,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "wrong_id_1";
         String COMPONENT_ID_2 = "wrong_id_2";
-        int SEQUENCES_FOUND = 0;
+        int ENTITIES_FOUND = 0;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdIn(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
 
         // Assert
-        assertListOfSequence(sequences, SEQUENCES_FOUND);
+        assertListOfSequence(sequences, ENTITIES_FOUND);
     }
 
     @Test
@@ -391,13 +391,13 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
     void findByComponentIdAndStatusWhenEntitiesFoundReturnsSuccess() {
         // Arrange
         String COMPONENT_ID = "6030d640f3022dc07d72d786";
-        int SEQUENCES_FOUND = 1;
+        int ENTITIES_FOUND = 1;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdAndStatus(COMPONENT_ID, SequenceStatus.IN_PROGRESS);
 
         // Assert
-        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+        assertListOfSequenceWithStatus(sequences, ENTITIES_FOUND, SequenceStatus.IN_PROGRESS);
     }
 
     @Test
@@ -406,7 +406,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
         // Arrange
         String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
         String COMPONENT_ID_2 = "6030d65af796188aabff390b";
-        int SEQUENCES_FOUND = 2;
+        int ENTITIES_FOUND = 2;
 
         // Act
         List<Sequence> sequences = getRepository().findByComponentIdInAndStatus(
@@ -414,7 +414,35 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
                 SequenceStatus.IN_PROGRESS);
 
         // Assert
-        assertListOfSequenceWithStatus(sequences, SEQUENCES_FOUND, SequenceStatus.IN_PROGRESS);
+        assertListOfSequenceWithStatus(sequences, ENTITIES_FOUND, SequenceStatus.IN_PROGRESS);
+    }
+
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity found - Success")
+    void findByComponentIdAndNameWhenEntityFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d640f3022dc07d72d786";
+        String NAME = "sequence for CTOs";
+
+        // Act
+        Optional<Sequence> sequence = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(sequence.isPresent(), String.format("Sequence with id: [%s] must be found", COMPONENT_ID));
+    }
+
+    @Test
+    @DisplayName("findByComponentIdAndName: campaign by component id and name when entity not found - Failure")
+    void findByComponentIdAndNameWhenEntityNotFoundReturnsFailure() {
+        // Arrange
+        String COMPONENT_ID = "60278c364334846b8d167131";
+        String NAME = "Sequence for CTO";
+
+        // Act
+        Optional<Sequence> sequence = getRepository().findByComponentIdAndName(COMPONENT_ID, NAME);
+
+        // Assert
+        Assertions.assertTrue(sequence.isEmpty(), String.format("Sequence with id: [%s] can not be found", COMPONENT_ID));
     }
 
     private void assertListOfSequence(List<Sequence> sequences, int expectedSize) {
@@ -434,7 +462,7 @@ public class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, Sequenc
             Assertions.assertEquals(
                     expectedSize,
                     sequences.size(),
-                    String.format("\"Sequence list size for status [%s] must be [%d]", status, expectedSize));
+                    String.format("Sequence list size for status [%s] must be [%d]", status, expectedSize));
         } else {
             Assertions.assertTrue(
                     sequences.isEmpty(),

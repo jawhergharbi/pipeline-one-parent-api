@@ -68,6 +68,16 @@ public class SequenceMockFactory extends BaseMockFactory<SequenceDTO, Sequence> 
 
     @Override
     public SequenceDTO newDTO(String id, SequenceDTO dto) {
-        return dto.toBuilder().id(id).build();
+        return SequenceDTO.builder()
+                .id(id)
+                .componentId(dto.getComponentId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .status(dto.getStatus())
+                .users(dto.getUsers())
+                .account(dto.getAccount())
+                .created(dto.getCreated())
+                .updated(dto.getUpdated())
+                .build();
     }
 }

@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.dto;
 public enum UserCommonType {
 
     USER(0),
-    LEAD(1);
+    PROSPECT(1);
 
     private final int type;
 

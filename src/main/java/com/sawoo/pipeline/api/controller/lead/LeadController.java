@@ -1,8 +1,10 @@
 package com.sawoo.pipeline.api.controller.lead;
 
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.interaction.InteractionAssigneeDTO;
-import com.sawoo.pipeline.api.dto.interaction.InteractionDTO;
+import com.sawoo.pipeline.api.controller.ControllerConstants;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
 import com.sawoo.pipeline.api.model.common.Status;
@@ -12,10 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,9 +36,8 @@ public class LeadController {
 
     private final LeadControllerDelegator delegator;
 
-   @RequestMapping(
+   @PostMapping(
             value = { "", "/{type}"},
-            method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> save(
@@ -54,56 +58,55 @@ public class LeadController {
         return delegator.create(lead);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<LeadDTO>> getAll() {
         return delegator.findAll();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> findById(@PathVariable String id) {
         return delegator.findById(id);
     }
 
-    @RequestMapping(
+    @GetMapping(
+            value = "/{id}/versions",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<VersionDTO<LeadDTO>>> getVersions(@PathVariable String id) {
+        return delegator.getVersions(id);
+    }
+
+    @DeleteMapping(
             value = "/{id}",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> delete(@PathVariable String id) {
         return delegator.deleteById(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/summary",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadSummary(@PathVariable String id) {
         return delegator.deleteLeadSummary(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/company-summary",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadCompanyComments(@PathVariable String id) {
         return delegator.deleteLeadCompanyComments(id);
     }
 
-    @RequestMapping(
+    @DeleteMapping(
             value = "/{id}/qualification-notes",
-            method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LeadDTO> deleteLeadQualificationNotes(@PathVariable String id) {
         return delegator.deleteLeadQualificationComments(id);
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/{id}",
-            method = RequestMethod.PUT,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
@@ -112,9 +115,8 @@ public class LeadController {
         return delegator.update(id, dto);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/{id}/report",
-            method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_PDF_VALUE})
     public ResponseEntity<InputStreamResource> getReport(
             @PathVariable("id") String id,
@@ -123,43 +125,60 @@ public class LeadController {
         return delegator.getReport(id, template, lan);
     }
 
-    @RequestMapping(
-            value = "/{id}/interactions",
-            method = RequestMethod.POST,
+    @PostMapping(
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionDTO> addInteraction(
+    public ResponseEntity<TodoDTO> addTODO(
             @PathVariable("id") String leadId,
-            @NotNull @RequestBody InteractionDTO interaction) {
-        return delegator.addInteraction(leadId, interaction);
+            @NotNull @RequestBody TodoDTO todo) {
+        return delegator.addTODO(leadId, todo);
     }
 
-    @RequestMapping(
-            value = "/{id}/interactions/{interactionId}",
-            method = RequestMethod.DELETE,
+    @DeleteMapping(
+            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionDTO> removeInteraction(
+    public ResponseEntity<TodoDTO> removeTODO(
             @PathVariable("id") String leadId,
-            @PathVariable("interactionId") String interactionId) throws ResourceNotFoundException {
-        return delegator.removeInteraction(leadId, interactionId);
+            @PathVariable("todoId") String todoId) throws ResourceNotFoundException {
+        return delegator.removeTODO(leadId, todoId);
     }
 
-    @RequestMapping(
-            value = "/{id}/interactions",
-            method = RequestMethod.GET,
+    @GetMapping(
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<InteractionAssigneeDTO>> getInteractions(
+    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @PathVariable("id") String leadId) {
-        return delegator.getInteractions(leadId);
+        return delegator.getTODOs(leadId);
     }
 
-    @RequestMapping(
-            value = "/{id}/interactions/{interactionId}",
-            method = RequestMethod.GET,
+    @GetMapping(
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<InteractionAssigneeDTO> getInteraction(
+    public ResponseEntity<TodoAssigneeDTO> getTODO(
             @PathVariable("id") String leadId,
-            @PathVariable("interactionId") String interactionId) {
-        return delegator.getInteraction(leadId, interactionId);
+            @PathVariable("todoId") String todoId) {
+        return delegator.getTODO(leadId, todoId);
+    }
+
+    @GetMapping(
+            value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/eval",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<TodoAssigneeDTO>> evalTODOs(
+            @PathVariable("id") String leadId,
+            @PathVariable("sequenceId") String sequenceId,
+            @RequestParam(value = "assigneeId", required = false) String assigneeId) {
+        return delegator.evalTODOs(leadId, sequenceId, assigneeId);
+    }
+
+    // TODO remove and move tests to CampaignController
+    @PostMapping(
+            value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<TodoAssigneeDTO>> createCampaignLead(
+            @PathVariable("id") String leadId,
+            @PathVariable("sequenceId") String sequenceId,
+            @RequestParam(value = "assigneeId", required = false) String assigneeId) {
+        return delegator.createTODOs(leadId, sequenceId, assigneeId);
     }
 }

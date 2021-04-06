@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
+class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, SequenceRepository, SequenceService, SequenceMockFactory> {
 
     @MockBean
     private SequenceRepository repository;
@@ -65,7 +65,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
 
     @Override
     protected void mockedEntityExists(Sequence entity) {
-        doReturn(Optional.of(entity)).when(repository).findById(anyString());
+        doReturn(Optional.of(entity)).when(repository).findByComponentIdAndName(anyString(), anyString());
     }
 
     @BeforeAll
@@ -74,7 +74,7 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
     }
 
     @Test
-    @DisplayName("update: user id not informed - Failure")
+    @DisplayName("create: user id not informed - Failure")
     void createWhenUserOwnerNotInformedReturnsFailure() {
         // Set up mock entities
         String USER_ID = getMockFactory().getFAKER().internet().uuid();
@@ -90,9 +90,10 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
         doReturn(Optional.empty()).when(repository).findById(anyString());
 
         // Execute the service call
+        SequenceService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () ->  getService().create(mockedDTO),
+                () ->  service.create(mockedDTO),
                 "create must throw a CommonServiceException");
         Assertions.assertTrue(
                 containsString(ExceptionMessageConstants.SEQUENCE_CREATE_USER_OWNER_NOT_SPECIFIED_EXCEPTION)
@@ -120,9 +121,10 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
         doReturn(Optional.of(mockedEntity)).when(repository).findById(anyString());
 
         // Execute the service call
+        SequenceService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () ->  getService().update(SEQUENCE_ID, mockedDTO),
+                () ->  service.update(SEQUENCE_ID, mockedDTO),
                 "update must throw a CommonServiceException");
         Assertions.assertTrue(
                 containsString(ExceptionMessageConstants.SEQUENCE_UPDATE_USER_ID_NOT_INFORMED_EXCEPTION)
@@ -189,15 +191,16 @@ public class SequenceServiceTest extends BaseServiceTest<SequenceDTO, Sequence, 
         doReturn(Optional.of(mockedEntity)).when(repository).findById(anyString());
 
         // Execute the service call
+        SequenceService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> getService().deleteUser(SEQUENCE_ID, USER_OWNER_ID),
+                () -> service.deleteUser(SEQUENCE_ID, USER_OWNER_ID),
                 "deleteUser must throw CommonServiceException"
                 );
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION);
+                ExceptionMessageConstants.SEQUENCE_UPDATE_DELETE_USER_OWNER_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(2)).findById(anyString());

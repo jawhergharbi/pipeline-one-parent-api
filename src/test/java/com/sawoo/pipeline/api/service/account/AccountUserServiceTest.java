@@ -45,7 +45,7 @@ import static org.mockito.Mockito.verify;
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Account, AccountRepository, AccountService, AccountMockFactory> {
+class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Account, AccountRepository, AccountService, AccountMockFactory> {
 
     @MockBean
     private AccountRepository repository;
@@ -133,13 +133,14 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.empty()).when(userRepository).findById(anyString());
 
         // Execute the service call
+        AccountService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().findAllByUser(USER_ID),
-                "findAll must throw a ResourceNotFoundException");
+                () -> service.findAllByUser(USER_ID),
+                "findAllByUser must throw a ResourceNotFoundException");
 
         // Assertions
-        Assertions.assertEquals(exception.getMessage(), ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+        Assertions.assertEquals(ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION, exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
@@ -232,14 +233,15 @@ public class AccountUserServiceTest extends BaseLightServiceTest<AccountDTO, Acc
         doReturn(Optional.empty()).when(userRepository).findById(anyString());
 
         // Execute and assert
+        AccountService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> getService().updateUser(ACCOUNT_ID, USER_ID),
-                "update must throw an ResourceNotFoundException");
+                () -> service.updateUser(ACCOUNT_ID, USER_ID),
+                "updateUser must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(userRepository, times(1)).findById(USER_ID);

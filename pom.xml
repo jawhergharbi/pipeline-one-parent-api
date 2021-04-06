@@ -22,6 +22,7 @@
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
         <spring-cloud-gcp.version>2.0.0</spring-cloud-gcp.version>
         <mongock.version>4.1.19</mongock.version>
+        <mongock.version>4.1.19</mongock.version>
         <hamcrest.version>2.2</hamcrest.version>
         <javafaker.version>1.0.2</javafaker.version>
         <greenmail.version>1.6.1</greenmail.version>
@@ -29,6 +30,7 @@
         <powermock.version>2.0.7</powermock.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
+        <javers.version>5.14.0</javers.version>
         <!-- Plugin versions -->
         <appengine-maven-plugin.version>2.1.0</appengine-maven-plugin.version>
     </properties>
@@ -100,6 +102,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.javers</groupId>
+            <artifactId>javers-spring-boot-starter-mongo</artifactId>
+            <version>${javers.version}</version>
         </dependency>
 
         <dependency>

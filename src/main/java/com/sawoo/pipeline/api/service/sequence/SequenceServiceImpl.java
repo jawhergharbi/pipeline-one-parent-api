@@ -10,8 +10,10 @@ import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -35,22 +37,23 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     @Autowired
     public SequenceServiceImpl(SequenceRepository repository,
                                SequenceMapper mapper,
-                               SequenceServiceEventListener eventListener,
+                               ApplicationEventPublisher eventPublisher,
                                SequenceAccountService sequenceAccountService,
-                               SequenceStepsService sequenceStepService) {
-        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventListener);
+                               SequenceStepsService sequenceStepService,
+                               AuditService audit) {
+        super(repository, mapper, DBConstants.SEQUENCE_DOCUMENT, eventPublisher, audit);
         this.sequenceAccountService = sequenceAccountService;
         this.sequenceStepService = sequenceStepService;
     }
 
     @Override
     public Optional<Sequence> entityExists(SequenceDTO entityToCreate) {
-        String entityId = entityToCreate.getId();
         log.debug(
-                "Checking entity existence. [type: {}, id: {}]",
-                DBConstants.SEQUENCE_DOCUMENT,
-                entityId);
-        return entityId == null ? Optional.empty() : getRepository().findById(entityToCreate.getId());
+                "Checking entity existence. [type: {}, name: {}, componentId: {}]",
+                DBConstants.CAMPAIGN_DOCUMENT,
+                entityToCreate.getName(),
+                entityToCreate.getComponentId());
+        return getRepository().findByComponentIdAndName(entityToCreate.getComponentId(), entityToCreate.getName());
     }
 
     @Override
@@ -103,5 +106,10 @@ public class SequenceServiceImpl extends BaseServiceImpl<SequenceDTO, Sequence, 
     @Override
     public List<SequenceStepDTO> getSteps(String sequenceId) throws ResourceNotFoundException {
         return sequenceStepService.getSteps(sequenceId);
+    }
+
+    @Override
+    public List<SequenceStepDTO> getStepsByPersonality(String sequenceId, Integer personality) throws ResourceNotFoundException {
+        return sequenceStepService.getStepsByPersonality(sequenceId, personality);
     }
 }

@@ -1,8 +1,10 @@
 package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
+import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.person.Person;
 import lombok.Getter;
@@ -40,6 +42,10 @@ public class PersonMockFactory extends BaseMockFactory<PersonDTO, Person> {
         entity.setEmail(FAKER.internet().emailAddress());
         entity.setPhoneNumber(FAKER.phoneNumber().phoneNumber());
         entity.setPosition(FAKER.company().profession());
+        entity.setPersonality(Personality
+                .builder()
+                .type(1)
+                .build());
         if (addCompany) {
             entity.setCompany(Company.builder()
                     .name(FAKER.company().name())
@@ -70,6 +76,10 @@ public class PersonMockFactory extends BaseMockFactory<PersonDTO, Person> {
                 .url(FAKER.company().url())
                 .build());
         dto.setLinkedInUrl(FAKER.internet().url());
+        dto.setPersonality(PersonalityDTO
+                .builder()
+                .type(1)
+                .build());
         dto.setPosition(FAKER.company().profession());
         dto.setProfilePicture(FAKER.internet().url());
         dto.setSalutation(0);
@@ -88,6 +98,7 @@ public class PersonMockFactory extends BaseMockFactory<PersonDTO, Person> {
         newDTO.setProfilePicture(dto.getProfilePicture());
         newDTO.setPosition(dto.getPosition());
         newDTO.setCompany(dto.getCompany());
+        newDTO.setPersonality(dto.getPersonality());
         return newDTO;
     }
 }

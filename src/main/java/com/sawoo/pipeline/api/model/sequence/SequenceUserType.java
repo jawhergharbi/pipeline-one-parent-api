@@ -11,7 +11,7 @@ public enum SequenceUserType {
 
     private final int type;
 
-    private SequenceUserType(int type) {
+    SequenceUserType(int type) {
         this.type = type;
     }
 

@@ -7,7 +7,7 @@ public enum AccountStatus {
     PAUSED(2),
     ENDED(3);
 
-    private int value;
+    private final int value;
 
     AccountStatus(int value) {
         this.value = value;

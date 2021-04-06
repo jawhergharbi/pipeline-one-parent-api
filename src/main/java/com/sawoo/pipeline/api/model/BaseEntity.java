@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import java.time.LocalDateTime;
 
@@ -14,9 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public abstract class BaseEntity {
 
+    @DiffIgnore
     @JMap
     private LocalDateTime created;
 
+    @DiffIgnore
     @JMap
     private LocalDateTime updated;
 }

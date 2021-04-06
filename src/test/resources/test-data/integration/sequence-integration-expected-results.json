@@ -6,7 +6,7 @@
         "id": "1",
         "name": "sequence for CTOs",
         "description": "Use this sequence to reach out only CTO",
-        "status": 0,
+        "status": "IN_PROGRESS",
         "users": [
           {
             "userId": "6027a2ff4542c0de858d2936",
@@ -17,6 +17,6 @@
         "updated": "2020-11-05T07:31:47.545Z"
       }
     ],
-    "fieldsToBeChecked": ["name", "description", "created", "updated", "status"]
+    "fieldsToBeChecked": ["name", "description", "created", "updated", "id"]
   }
 ]

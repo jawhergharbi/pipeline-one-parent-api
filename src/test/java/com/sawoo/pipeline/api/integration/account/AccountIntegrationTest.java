@@ -44,16 +44,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = "account-integration-test-data.json",
         classType = Account.class,
         collectionNames = { DBConstants.ACCOUNT_DOCUMENT, DBConstants.COMPANY_DOCUMENT })
-public class AccountIntegrationTest extends BaseIntegrationTest<AccountDTO, Account, AccountMockFactory> {
+class AccountIntegrationTest extends BaseIntegrationTest<AccountDTO, Account, AccountMockFactory> {
 
-    private static final String ACCOUNT_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "account-integration-expected-results.json";
+    private static final String TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME = "account-integration-expected-results.json";
 
     @Autowired
     public AccountIntegrationTest(MockMvc mockMvc, MongoTemplate mongoTemplate, AccountMockFactory mockFactory) {
         super(mockMvc, mongoTemplate,
                 ControllerConstants.ACCOUNT_CONTROLLER_API_BASE_URI,
                 DBConstants.ACCOUNT_DOCUMENT,
-                ACCOUNT_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
+                TEST_INTEGRATION_EXPECTED_RESULTS_FILE_NAME,
                 mockFactory);
     }
 

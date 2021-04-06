@@ -4,10 +4,16 @@ import com.googlecode.jmapper.api.enums.MappingType;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
+import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeUpdateEvent;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import javax.validation.Valid;
@@ -26,17 +32,19 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
     private OM mapper;
     private R repository;
     private String entityType;
-    private BaseServiceEventListener<D, M> eventListener;
+    private ApplicationEventPublisher eventPublisher;
+    private AuditService audit;
 
-    public BaseServiceImpl(R repository, OM mapper, String entityType, BaseServiceEventListener<D, M> eventListener) {
+    protected BaseServiceImpl(R repository, OM mapper, String entityType, ApplicationEventPublisher eventPublisher, AuditService audit) {
         this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
-        this.eventListener = eventListener;
+        this.eventPublisher = eventPublisher;
+        this.audit = audit;
     }
 
-    public BaseServiceImpl(R repository,OM mapper, String entityType) {
-        this(repository, mapper, entityType, null);
+    protected BaseServiceImpl(R repository,OM mapper, String entityType, AuditService audit) {
+        this(repository, mapper, entityType, null, audit);
     }
 
     public abstract Optional<M> entityExists(D entityToCreate);
@@ -46,7 +54,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         log.debug("Creating new entity type: [{}]", getEntityType());
 
         entityExists(dto)
-                .ifPresent((entity) -> {
+                .ifPresent(entity -> {
                     throw new CommonServiceException(
                             ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
                             new String[]{ getEntityType(), dto.toString()});
@@ -55,8 +63,8 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         entity.setCreated(now);
         entity.setUpdated(now);
-        if (eventListener != null) {
-            eventListener.onBeforeInsert(dto, entity);
+        if (eventPublisher != null) {
+            eventPublisher.publishEvent(new BaseServiceBeforeInsertEvent<>(dto, entity));
         }
         entity = repository.insert(entity);
 
@@ -72,7 +80,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return repository
                 .findById(id)
-                .map((entity) -> mapper.getMapperOut().getDestination(entity))
+                .map(entity -> mapper.getMapperOut().getDestination(entity))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
@@ -97,7 +105,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return repository
                 .findById(id)
-                .map((entity) -> {
+                .map(entity -> {
                     repository.deleteById(id);
                     log.debug("[{}] entity with id: [{}] has been deleted", entityType, id);
                     return mapper.getMapperOut().getDestination(entity);
@@ -115,9 +123,9 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
 
         return getRepository()
                 .findById(id)
-                .map((entity) -> {
-                    if (eventListener != null) {
-                        eventListener.onBeforeUpdate(dto, entity);
+                .map(entity -> {
+                    if (eventPublisher != null) {
+                        eventPublisher.publishEvent(new BaseServiceBeforeUpdateEvent<>(dto, entity));
                     }
                     entity = getMapper().getMapperIn()
                             .getDestination(
@@ -126,8 +134,8 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                                     MappingType.ALL_FIELDS,
                                     MappingType.ONLY_VALUED_FIELDS);
                     entity.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
-                    if (eventListener != null) {
-                        eventListener.onBeforeSave(dto, entity);
+                    if (eventPublisher != null) {
+                        eventPublisher.publishEvent(new BaseServiceBeforeSaveEvent<>(dto, entity));
                     }
                     getRepository().save(entity);
 
@@ -142,5 +150,13 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends MongoRe
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ getEntityType(), id }));
+    }
+
+    @Override
+    public List<VersionDTO<D>> getVersions(String id) {
+        return getRepository()
+                .findById(id)
+                .map( entity -> audit.getVersions(entity, id, getMapper().getMapperOut()))
+                .orElse(null);
     }
 }

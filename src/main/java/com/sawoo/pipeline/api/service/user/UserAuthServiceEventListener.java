@@ -3,22 +3,28 @@ package com.sawoo.pipeline.api.service.user;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.model.user.User;
 import com.sawoo.pipeline.api.model.user.UserRole;
-import com.sawoo.pipeline.api.service.base.BaseServiceEventListener;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashSet;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserAuthServiceEventListener implements BaseServiceEventListener<UserAuthDTO, User> {
+public class UserAuthServiceEventListener {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void onBeforeInsert(UserAuthDTO dto, User entity) {
+    @EventListener
+    public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<UserAuthDTO, User> event) {
+        log.debug("UserAuth before insert listener");
+        User entity = event.getModel();
+        UserAuthDTO dto = event.getDto();
         if (entity != null) {
             // password
             entity.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -31,15 +37,6 @@ public class UserAuthServiceEventListener implements BaseServiceEventListener<Us
                 entity.setRoles(new HashSet<>(Collections.singletonList(UserRole.USER.name())));
             }
         }
-    }
 
-    @Override
-    public void onBeforeSave(UserAuthDTO dto, User entity) {
-        // nothing
-    }
-
-    @Override
-    public void onBeforeUpdate(UserAuthDTO dto, User entity) {
-        // nothing
     }
 }

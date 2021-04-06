@@ -12,7 +12,6 @@ public class PersonValidator implements ConstraintValidator<PersonValid, PersonD
                 (StringUtils.hasText(person.getFirstName()) &&
                         StringUtils.hasText(person.getLastName()) &&
                         StringUtils.hasText(person.getLinkedInUrl()) &&
-                        StringUtils.hasText(person.getEmail()) &&
                         StringUtils.hasText(person.getPosition()) &&
                         person.getCompany() != null));
     }

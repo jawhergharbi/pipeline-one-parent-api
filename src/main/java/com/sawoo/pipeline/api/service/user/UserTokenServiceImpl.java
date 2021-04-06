@@ -6,6 +6,7 @@ import com.sawoo.pipeline.api.model.user.UserToken;
 import com.sawoo.pipeline.api.model.user.UserTokenType;
 import com.sawoo.pipeline.api.repository.user.UserTokenRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
+import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ import java.util.stream.Collectors;
 public class UserTokenServiceImpl extends BaseServiceImpl<UserTokenDTO, UserToken, UserTokenRepository, UserTokenMapper> implements UserTokenService {
 
     @Autowired
-    public UserTokenServiceImpl(UserTokenRepository repository, UserTokenMapper mapper) {
-        super(repository, mapper, DBConstants.USER_TOKEN_DOCUMENT);
+    public UserTokenServiceImpl(UserTokenRepository repository, UserTokenMapper mapper, AuditService audit) {
+        super(repository, mapper, DBConstants.USER_TOKEN_DOCUMENT, audit);
     }
 
     @Override
