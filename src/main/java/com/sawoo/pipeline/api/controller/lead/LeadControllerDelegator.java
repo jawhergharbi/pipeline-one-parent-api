@@ -5,9 +5,9 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
+import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.service.lead.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -98,13 +98,5 @@ public class LeadControllerDelegator extends BaseControllerDelegator<LeadDTO, Le
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
         return leadSequenceTODODelegator.evalTODOs(leadId, sequenceId, assigneeId);
-    }
-
-    @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> createTODOs(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId, String assigneeId)
-            throws ResourceNotFoundException, CommonServiceException {
-        return leadSequenceTODODelegator.createTODOs(leadId, sequenceId, assigneeId);
     }
 }

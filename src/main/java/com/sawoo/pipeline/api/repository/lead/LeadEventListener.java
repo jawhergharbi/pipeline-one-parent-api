@@ -1,9 +1,9 @@
 package com.sawoo.pipeline.api.repository.lead;
 
-import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.lead.Lead;
-import com.sawoo.pipeline.api.repository.listener.TodoCascadeOperationDelegator;
+import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.repository.listener.PersonCascadeOperationDelegator;
+import com.sawoo.pipeline.api.repository.listener.TodoCascadeOperationDelegator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;

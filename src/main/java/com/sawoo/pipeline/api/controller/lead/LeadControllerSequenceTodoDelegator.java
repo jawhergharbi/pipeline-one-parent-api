@@ -18,10 +18,4 @@ public interface LeadControllerSequenceTodoDelegator {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException;
-
-    ResponseEntity<List<TodoAssigneeDTO>> createTODOs(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String leadId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
-            String assigneeId)
-            throws ResourceNotFoundException, CommonServiceException;
 }

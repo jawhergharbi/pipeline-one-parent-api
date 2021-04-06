@@ -3,10 +3,10 @@ package com.sawoo.pipeline.api.controller.lead;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
-import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
-import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import lombok.RequiredArgsConstructor;
@@ -169,16 +169,5 @@ public class LeadController {
             @PathVariable("sequenceId") String sequenceId,
             @RequestParam(value = "assigneeId", required = false) String assigneeId) {
         return delegator.evalTODOs(leadId, sequenceId, assigneeId);
-    }
-
-    // TODO remove and move tests to CampaignController
-    @PostMapping(
-            value = "/{id}/" + ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME + "/{sequenceId}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<TodoAssigneeDTO>> createCampaignLead(
-            @PathVariable("id") String leadId,
-            @PathVariable("sequenceId") String sequenceId,
-            @RequestParam(value = "assigneeId", required = false) String assigneeId) {
-        return delegator.createTODOs(leadId, sequenceId, assigneeId);
     }
 }

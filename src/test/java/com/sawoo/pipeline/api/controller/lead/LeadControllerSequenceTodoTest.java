@@ -6,8 +6,8 @@ import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseLightControllerTest;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
-import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.mock.LeadMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.lead.Lead;
@@ -30,12 +30,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -142,96 +140,6 @@ class LeadControllerSequenceTodoTest extends BaseLightControllerTest<LeadDTO, Le
                 "/{sequenceId}/" +
                 ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
                 "/eval",
-                LEAD_ID, SEQUENCE_ID))
-
-                // Validate the response code and the content type
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the response code and content type
-                .andExpect(jsonPath("$.message", stringContainsInOrder(
-                        String.format("GET operation. Component type [%s]", DBConstants.SEQUENCE_DOCUMENT),
-                        SEQUENCE_ID)));
-    }
-
-    @Test
-    @DisplayName("POST /api/leads/{id}/sequences/{sequenceId}/todos: create todos to be created based on a sequence and a lead - Success")
-    void createTODOsWhenLeadAndSequenceFoundReturnsSuccess() throws Exception {
-        // Set up mocks
-        String LEAD_ID = getMockFactory().getComponentId();
-        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        int TODO_SIZE = 3;
-        List<TodoAssigneeDTO> todos = getTODOs(TODO_SIZE);
-
-        // setup the mocked service
-        doReturn(todos).when(service).createTODOs(LEAD_ID, SEQUENCE_ID, null);
-
-        // Execute the GET request
-        mockMvc.perform(post(getResourceURI() +
-                        "/{id}/" +
-                        ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
-                        "/{sequenceId}/" +
-                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
-                LEAD_ID, SEQUENCE_ID))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(TODO_SIZE)));
-    }
-
-    @Test
-    @DisplayName("POST /api/leads/{id}/sequences/{sequenceId}/todos: create todos to be created based on a sequence and a lead - Success")
-    void createTODOsWhenLeadAndSequenceFoundAndAssigneeProvidedReturnsSuccess() throws Exception {
-        // Set up mocks
-        String LEAD_ID = getMockFactory().getComponentId();
-        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
-        String ASSIGNEE_ID = getMockFactory().getFAKER().internet().uuid();
-        int TODO_SIZE = 3;
-        List<TodoAssigneeDTO> todos = getTODOs(TODO_SIZE, ASSIGNEE_ID);
-
-        // setup the mocked service
-        doReturn(todos).when(service).createTODOs(LEAD_ID, SEQUENCE_ID, ASSIGNEE_ID);
-
-        // Execute the GET request
-        mockMvc.perform(post(getResourceURI() +
-                        "/{id}/" +
-                        ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
-                        "/{sequenceId}/" +
-                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
-                LEAD_ID, SEQUENCE_ID)
-                .param("assigneeId", ASSIGNEE_ID))
-
-                // Validate the response code and the content type
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$", hasSize(TODO_SIZE)))
-                .andExpect(jsonPath("$[0].assignee.id", is(ASSIGNEE_ID)));
-    }
-
-    @Test
-    @DisplayName("POST /api/leads/{id}/sequences/{sequenceId}/todos: lead not found - Failure")
-    void createTODOsWhenSequenceNotFoundReturnsFailure() throws Exception {
-        // Set up mocks
-        String LEAD_ID = getMockFactory().getComponentId();
-        String SEQUENCE_ID = "wrong_sequence_id";
-
-        // setup the mocked service
-        ResourceNotFoundException exception = new ResourceNotFoundException(
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ DBConstants.SEQUENCE_DOCUMENT, SEQUENCE_ID });
-        doThrow(exception).when(service).createTODOs(LEAD_ID, SEQUENCE_ID, null);
-
-        // Execute the POST request
-        mockMvc.perform(post(getResourceURI() +
-                        "/{id}/" +
-                        ControllerConstants.SEQUENCE_CONTROLLER_RESOURCE_NAME +
-                        "/{sequenceId}/" +
-                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
                 LEAD_ID, SEQUENCE_ID))
 
                 // Validate the response code and the content type
