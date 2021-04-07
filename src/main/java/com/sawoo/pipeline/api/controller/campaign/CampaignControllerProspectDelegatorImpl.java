@@ -43,7 +43,7 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
                     .build());
         }
         CampaignProspectDTO newEntity = service.createProspect(campaignId, campaignProspect);
-        return newOrAddLead(campaignId, newEntity);
+        return newOrAddProspect(campaignId, newEntity);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @Valid CampaignProspectAddDTO campaignProspect) throws ResourceNotFoundException, CommonServiceException {
         CampaignProspectDTO newEntity = service.addProspect(campaignId, campaignProspect);
-        return newOrAddLead(campaignId, newEntity);
+        return newOrAddProspect(campaignId, newEntity);
     }
 
     @Override
@@ -77,16 +77,18 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
         return ResponseEntity.ok().body(service.findAllProspects(campaignId));
     }
 
-    private ResponseEntity<CampaignProspectDTO> newOrAddLead(String campaignId, CampaignProspectDTO campaignLead) {
+    private ResponseEntity<CampaignProspectDTO> newOrAddProspect(String campaignId, CampaignProspectDTO campaignProspect) {
         try {
             return ResponseEntity
-                    .created(new URI(
-                            ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI +
-                                    "/" +
-                                    campaignId +
-                                    "/leads/" +
-                                    campaignLead.getProspect().getId()))
-                    .body(campaignLead);
+                    .created(new URI(new StringBuilder()
+                            .append(ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI)
+                            .append("/")
+                            .append(campaignId)
+                            .append("/")
+                            .append(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME)
+                            .append("/")
+                            .append(campaignProspect.getProspect().getId()).toString()))
+                    .body(campaignProspect);
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

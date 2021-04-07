@@ -91,12 +91,12 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).createProspect(anyString(), any(CampaignProspectCreateDTO.class));
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME, COMPONENT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/leads/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/" + PROSPECT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isCreated())
@@ -117,7 +117,7 @@ class CampaignControllerProspectTest {
         CampaignProspectCreateDTO postEntity = getMockFactory().newCampaignProspectCreateDTO(null, null);
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME, COMPONENT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -132,7 +132,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/prospects/{leadId}: campaign id and campaign prospect valid - Success")
+    @DisplayName("POST /api/campaigns/{id}/prospects/{prospectId}: campaign id and campaign prospect valid - Success")
     void addProspectWhenCampaignIdAndCampaignProspectValidReturnsSuccess() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -145,12 +145,12 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).addProspect(anyString(), any(CampaignProspectAddDTO.class));
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/leads/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/" + PROSPECT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isCreated())
@@ -164,7 +164,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/prospects/{leadId}: prospect id and sequence id not informed - Failure")
+    @DisplayName("POST /api/campaigns/{id}/prospects/{prospectId}: prospect id and sequence id not informed - Failure")
     void addProspectWhenCampaignProspectNotValidProspectIdAndSequenceIdNotInformedReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -173,7 +173,7 @@ class CampaignControllerProspectTest {
         postEntity.setSequenceId(null);
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{LeadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{LeadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -188,7 +188,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("POST /api/campaigns/{id}/prospects/{leadId}: campaign not found - Failure")
+    @DisplayName("POST /api/campaigns/{id}/prospects/{prospectId}: campaign not found - Failure")
     void addProspectWhenCampaignNotFoundReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -202,7 +202,7 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).addProspect(anyString(), any(CampaignProspectAddDTO.class));
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -216,7 +216,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("DELETE /api/campaigns/{id}/prospects/{leadId}: campaign id and prospect id valid - Success")
+    @DisplayName("DELETE /api/campaigns/{id}/prospects/{prospectId}: campaign id and prospect id valid - Success")
     void removeProspectWhenCampaignIdAndCampaignProspectValidReturnsSuccess() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -228,7 +228,7 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).removeProspect(anyString(), anyString());
 
         // Execute the DELETE request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -243,7 +243,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("DELETE /api/campaigns/{id}/prospects/{leadId}: campaign not found - Failure")
+    @DisplayName("DELETE /api/campaigns/{id}/prospects/{prospectId}: campaign not found - Failure")
     void removeProspectWhenCampaignNotFoundReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -256,7 +256,7 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).removeProspect(anyString(), anyString());
 
         // Execute the DELETE request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -269,7 +269,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("PUT /api/campaigns/{id}/prospects/{leadId}: campaign not found - Failure")
+    @DisplayName("PUT /api/campaigns/{id}/prospects/{prospectId}: campaign not found - Failure")
     void updateProspectWhenCampaignNotFoundReturnsFailure() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -286,7 +286,7 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).updateProspect(anyString(), anyString(), any(CampaignProspectBaseDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(put(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -300,7 +300,7 @@ class CampaignControllerProspectTest {
     }
 
     @Test
-    @DisplayName("PUT /api/campaigns/{id}/prospects/{leadId}: campaign prospect valid - Failure")
+    @DisplayName("PUT /api/campaigns/{id}/prospects/{prospectId}: campaign prospect valid - Failure")
     void updateProspectWhenCampaignLeadNotValidReturnsSuccess() throws Exception {
         // setup the mocked entities
         String COMPONENT_ID = getMockFactory().getComponentId();
@@ -317,7 +317,7 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).updateProspect(anyString(), anyString(), any(CampaignProspectBaseDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put(getResourceURI() + "/{id}/leads/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(put(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -343,7 +343,7 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).findAllProspects(anyString());
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME, COMPONENT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -372,7 +372,7 @@ class CampaignControllerProspectTest {
         doReturn(prospects).when(service).findAllProspects(anyString());
 
         // Execute the GET request
-        mockMvc.perform(get(getResourceURI() + "/{id}/leads", COMPONENT_ID)
+        mockMvc.perform(get(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME, COMPONENT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type

@@ -72,13 +72,13 @@ class ProspectIntegrationTest extends BaseIntegrationTest<ProspectDTO, Prospect,
 
     @Test
     @Order(10)
-    @DisplayName("GET /api/leads/{id}/todos: get todos for a prospect - Success")
+    @DisplayName("GET /api/prospects/{id}/todos: get todos for a prospect - Success")
     void getTODOsWhenEntityFoundReturnsSuccess() throws Exception {
-        String LEAD_ID = "601c2aa7cb7a517712ad6be3";
+        String PROSPECT_ID = "601c2aa7cb7a517712ad6be3";
         int TODO_LIST_SIZE = 3;
 
         // Execute the GET request
-        getMockMvc().perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, LEAD_ID))
+        getMockMvc().perform(get(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())

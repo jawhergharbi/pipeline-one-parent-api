@@ -35,13 +35,13 @@ public interface ExceptionMessageConstants {
     String COMMON_METHOD_NOT_ALLOWED_EXCEPTION = "common.method-not-allowed.exception";
     String COMMON_INTERNAL_SERVER_ERROR_EXCEPTION = "common.internal-server-error.exception";
 
-    String PROSPECT_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
-    String PROSPECT_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
+    String PROSPECT_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "prospect.report-generation.internal-server.exception";
+    String PROSPECT_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "prospect.report-generation.pdf-stream-empty.error";
     String PROSPECT_TODO_ADD_PROSPECT_SLOT_ALREADY_SCHEDULED_EXCEPTION = "prospect.todo-add-todo-already-scheduled.exception";
-    String PROSPECT_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "lead.sequence-todo-personality-not-assigned.exception";
-    String PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION = "lead.lead-account-not-found.exception";
-    String PROSPECT_PROSPECT_ACCOUNT_ASSIGNEE_NOT_FOUND_EXCEPTION = "lead.lead-account-assignee-not-found.exception";
-    String PROSPECT_PROSPECT_ACCOUNT_NO_ASSIGNEE_FOUND_EXCEPTION = "lead.lead-account-no-assignee-found.exception";
+    String PROSPECT_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "prospect.sequence-todo-personality-not-assigned.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION = "prospect.prospect-account-not-found.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_ASSIGNEE_NOT_FOUND_EXCEPTION = "prospect.prospect-account-assignee-not-found.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_NO_ASSIGNEE_FOUND_EXCEPTION = "prospect.prospect-account-no-assignee-found.exception";
 
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
     String PERSON_CROSS_FIELD_VALIDATION_ERROR = "person.validation.cross-field.error";

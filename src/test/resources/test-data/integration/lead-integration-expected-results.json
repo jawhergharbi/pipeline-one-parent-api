@@ -4,7 +4,7 @@
     "values": [
       {
         "id": "1",
-        "linkedInThread": "http://linkedin.com/thread/withlead2",
+        "linkedInThread": "http://linkedin.com/thread/withprospect2",
         "person": {
           "id": "5fa2fe63gt4ed34d965da46y",
           "firstName": "Miguel",
@@ -28,18 +28,18 @@
           "created": "2020-06-02T11:59:49.494",
           "updated": "2020-06-03T05:59:49.494"
         },
-        "leadNotes": {
+        "prospectNotes": {
           "text": "here some other comments",
           "updated": "2020-06-02T11:59:49.494"
         },
         "companyNotes": {
-          "text": "here some other comments from the lead company",
+          "text": "here some other comments from the prospect company",
           "updated": "2020-06-02T11:59:49.494"
         },
         "status": {
           "value": 1,
           "notes": {
-            "text": "here some other comments with regards to the lead 2 status",
+            "text": "here some other comments with regards to the prospect 2 status",
             "updated": "2020-06-02T11:59:49.494"
           },
           "updated": "2020-06-02T12:59:49.494"

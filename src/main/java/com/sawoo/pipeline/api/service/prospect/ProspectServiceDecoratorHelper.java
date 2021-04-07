@@ -23,14 +23,14 @@ public class ProspectServiceDecoratorHelper {
 
     private final AccountRepository accountRepository;
 
-    public List<UserCommon> getUsers(String leadId) {
-        log.debug("Retrieving users for leadId [{}]", leadId);
-        Account account = findAccountByLeadId(leadId);
+    public List<UserCommon> getUsers(String prospectId) {
+        log.debug("Retrieving users for prospectId [{}]", prospectId);
+        Account account = findAccountByProspectId(prospectId);
         Set<User> users = account.getUsers();
 
-        log.debug("Account id [{}] is associated to leadId [{}] and there are [{}] users linked to this account",
+        log.debug("Account id [{}] is associated to prospectId [{}] and there are [{}] users linked to this account",
                 account.getId(),
-                leadId,
+                prospectId,
                 users.size());
 
         return users
@@ -39,9 +39,9 @@ public class ProspectServiceDecoratorHelper {
                 .collect(Collectors.toList());
     }
 
-    public UserCommon getAssignee(String leadId, String assigneeId) {
-        log.debug("Retrieving assignee user for Prospect id [{}]. Assignee id: [{}]", leadId, assigneeId);
-        Account account = findAccountByLeadId(leadId);
+    public UserCommon getAssignee(String prospectId, String assigneeId) {
+        log.debug("Retrieving assignee user for Prospect id [{}]. Assignee id: [{}]", prospectId, assigneeId);
+        Account account = findAccountByProspectId(prospectId);
         Set<User> users = account.getUsers();
         if (assigneeId != null) {
             return users.stream()
@@ -82,11 +82,11 @@ public class ProspectServiceDecoratorHelper {
                 .build();
     }
 
-    private Account findAccountByLeadId(String leadId) {
+    private Account findAccountByProspectId(String prospectId) {
         return accountRepository
-                .findByProspectId(leadId)
+                .findByProspectId(prospectId)
                 .orElseThrow(() -> new CommonServiceException(
                         ExceptionMessageConstants.PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION,
-                        new String[] {leadId}));
+                        new String[] {prospectId}));
     }
 }

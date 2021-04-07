@@ -1,7 +1,7 @@
 [
   {
     "id": "601c1e3de7681e0dbe0aa540",
-    "linkedInThread": "http://linkedin.com/thread/withlead1",
+    "linkedInThread": "http://linkedin.com/thread/withprospect1",
     "person": {
       "id": "5fa3ce63rt4ef23d963da45b",
       "firstName": "Miguel",
@@ -26,18 +26,18 @@
       "created": "2020-06-02T12:59:49.494472",
       "updated": "2020-06-02T05:59:49.494472"
     },
-    "leadNotes": {
+    "prospectNotes": {
       "text": "here some other comments",
       "updated": "2020-06-02T11:59:49.494472"
     },
     "companyNotes": {
-      "text": "here some other comments from the lead company",
+      "text": "here some other comments from the prospect company",
       "updated": "2020-06-02T11:59:49.494472"
     },
     "status": {
       "value": 1,
       "notes": {
-        "text": "here some other comments with regards to the lead 1 status",
+        "text": "here some other comments with regards to the prospect 1 status",
         "updated": "2020-06-02T11:59:49.494472"
       },
       "updated": "2020-06-02T12:59:49.494472"
@@ -53,9 +53,8 @@
           "url": "http://google.com/calendy/link1",
           "description": "calendly1"
         },
-        "note": {
-          "text": "text text text",
-          "updated": "2020-06-02T09:59:49.494472"
+        "message": {
+          "text": "text text text"
         },
         "scheduled": "2020-06-24T18:59:49.494472",
         "created": "2020-06-02T10:59:49.494472",
@@ -70,9 +69,8 @@
           "url": "http://google.com/calendy/link2",
           "description": "calendly2"
         },
-        "note": {
-          "text": "text2 tex2t text2",
-          "updated": "2020-05-02T09:59:49.494472"
+        "message": {
+          "text": "text2 tex2t text2"
         },
         "scheduled": "2020-05-24T18:59:49.494472",
         "created": "2020-05-02T10:59:49.494472",
@@ -87,9 +85,8 @@
           "url": "http://google.com/calendy/link3",
           "description": "calendly3"
         },
-        "note": {
-          "text": "text3 text3 text4",
-          "updated": "2020-05-02T09:59:49.494472"
+        "message": {
+          "text": "text3 text3 text4"
         },
         "scheduled": "2020-05-24T18:59:49.494472",
         "created": "2020-05-02T10:59:49.494472",
@@ -100,7 +97,7 @@
   },
   {
     "id": "601c1e7738fe40ad3ce1c086",
-    "linkedInThread": "http://linkedin.com/thread/withlead2",
+    "linkedInThread": "http://linkedin.com/thread/withprospect2",
     "person": {
       "id": "5fa2fe63gt4ed34d965da46y",
       "firstName": "Miguel",
@@ -124,18 +121,18 @@
       "created": "2020-06-02T11:59:49.494472",
       "updated": "2020-06-03T05:59:49.494472"
     },
-    "leadNotes": {
+    "prospectNotes": {
       "text": "here some other comments",
       "updated": "2020-06-02T11:59:49.494472"
     },
     "companyNotes": {
-      "text": "here some other comments from the lead company",
+      "text": "here some other comments from the prospect company",
       "updated": "2020-06-02T11:59:49.494472"
     },
     "status": {
       "value": 1,
       "notes": {
-        "text": "here some other comments with regards to the lead 2 status",
+        "text": "here some other comments with regards to the prospect 2 status",
         "updated": "2020-06-02T11:59:49.494472"
       },
       "updated": "2020-06-02T12:59:49.494472"

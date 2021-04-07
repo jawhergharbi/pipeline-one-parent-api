@@ -92,10 +92,10 @@
         "password": "$2a$10$JLH0b18b09G6NPi8GNZPqe7fUcnI4OU8tgI.R37X9StLrkxmKJzKe"
       }
     ],
-    "leads": [
+    "prospects": [
       {
         "id": "601bbbf0f9589897c09cb668",
-        "linkedInThread": "http://linkedin.com/thread/withlead1",
+        "linkedInThread": "http://linkedin.com/thread/withprospect1",
         "person": {
           "id": "5fa3cwr131232hju3423",
           "firstName": "Mercedes",
@@ -120,18 +120,18 @@
           "created": "2020-06-02T12:59:49.494472",
           "updated": "2020-06-02T05:59:49.494472"
         },
-        "leadNotes": {
+        "prospectNotes": {
           "text": "here some other comments",
           "updated": "2020-06-02T11:59:49.494472"
         },
         "companyNotes": {
-          "text": "here some other comments from the lead company",
+          "text": "here some other comments from the prospect company",
           "updated": "2020-06-02T11:59:49.494472"
         },
         "status": {
           "value": 1,
           "notes": {
-            "text": "here some other comments with regards to the lead 1 status",
+            "text": "here some other comments with regards to the prospect 1 status",
             "updated": "2020-06-02T11:59:49.494472"
           },
           "updated": "2020-06-02T12:59:49.494472"
