@@ -113,11 +113,11 @@ public class AccountController {
     }
 
     @DeleteMapping(
-            value = "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ProspectDTO> removeProspect(
             @PathVariable("id") String accountId,
-            @PathVariable("leadId") String prospectId) {
+            @PathVariable(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME) String prospectId) {
         return delegator.removeProspect(accountId, prospectId);
     }
 

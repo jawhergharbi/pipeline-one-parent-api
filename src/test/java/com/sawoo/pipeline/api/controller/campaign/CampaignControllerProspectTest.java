@@ -145,7 +145,12 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).addProspect(anyString(), any(CampaignProspectAddDTO.class));
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -173,7 +178,12 @@ class CampaignControllerProspectTest {
         postEntity.setSequenceId(null);
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{LeadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -202,7 +212,12 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).addProspect(anyString(), any(CampaignProspectAddDTO.class));
 
         // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(post(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -228,7 +243,12 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).removeProspect(anyString(), anyString());
 
         // Execute the DELETE request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(delete(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -256,7 +276,12 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).removeProspect(anyString(), anyString());
 
         // Execute the DELETE request
-        mockMvc.perform(delete(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(delete(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the response code and content type
@@ -286,7 +311,12 @@ class CampaignControllerProspectTest {
         doThrow(exception).when(service).updateProspect(anyString(), anyString(), any(CampaignProspectBaseDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(put(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 
@@ -317,7 +347,12 @@ class CampaignControllerProspectTest {
         doReturn(mockedEntity).when(service).updateProspect(anyString(), anyString(), any(CampaignProspectBaseDTO.class));
 
         // Execute the PUT request
-        mockMvc.perform(put(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}", COMPONENT_ID, PROSPECT_ID)
+        mockMvc.perform(put(
+                getResourceURI() +
+                        "/{id}/" +
+                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
+                COMPONENT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(postEntity)))
 

@@ -556,8 +556,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 getResourceURI() +
                         "/{id}/" +
                         ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
-                        "/" +
-                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME,
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
                 ACCOUNT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
@@ -588,8 +587,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 getResourceURI() +
                         "/{id}/" +
                         ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
-                        "/" +
-                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME,
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
                 ACCOUNT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 
@@ -616,8 +614,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 getResourceURI() +
                         "/{id}/" +
                         ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
-                        "/" +
-                        ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME,
+                        "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
                 ACCOUNT_ID, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
 

@@ -94,35 +94,35 @@ public class CampaignController {
     }
 
     @PostMapping(
-            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignProspectDTO> addProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String prospectId,
+            @PathVariable(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME) String prospectId,
             @RequestBody CampaignProspectAddDTO dto) {
         dto.setProspectId(prospectId);
         return delegator.addProspect(id, dto);
     }
 
     @PutMapping(
-            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignProspectDTO> updateProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String prospectId,
+            @PathVariable(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME) String prospectId,
             @RequestBody CampaignProspectBaseDTO dto) {
         dto.setProspectId(prospectId);
         return delegator.updateProspect(id, prospectId, dto);
     }
 
     @DeleteMapping(
-            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CampaignProspectDTO> removeProspect(
             @PathVariable("id") String id,
-            @PathVariable("leadId") String prospectId) {
+            @PathVariable(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME) String prospectId) {
         return delegator.removeProspect(id, prospectId);
     }
 

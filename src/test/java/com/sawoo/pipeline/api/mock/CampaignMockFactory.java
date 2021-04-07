@@ -74,9 +74,9 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
     }
 
     public CampaignProspectAddDTO newCampaignProspectAddDTO() {
-        String LEAD_ID = getFAKER().internet().uuid();
+        String PROSPECT_ID = getFAKER().internet().uuid();
         String SEQUENCE_ID = getFAKER().internet().uuid();
-        return newCampaignProspectAddDTO(LEAD_ID, SEQUENCE_ID);
+        return newCampaignProspectAddDTO(PROSPECT_ID, SEQUENCE_ID);
     }
 
     public CampaignProspectAddDTO newCampaignProspectAddDTO(String prospectId, String sequenceId) {
