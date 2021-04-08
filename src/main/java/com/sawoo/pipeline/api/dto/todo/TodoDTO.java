@@ -3,9 +3,11 @@ package com.sawoo.pipeline.api.dto.todo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
+import com.sawoo.pipeline.api.common.validation.EnumIntValue;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,7 +38,7 @@ public class TodoDTO extends BaseEntityDTO {
     private Integer type;
 
     @JMap
-    @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+    @EnumIntValue(enumCLass = TodoStatus.class)
     private Integer status;
 
     @JMap

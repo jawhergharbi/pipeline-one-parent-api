@@ -104,7 +104,7 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
         return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))
                 .type(step.getChannel())
-                .status(TodoStatus.SCHEDULED.getValue())
+                .status(TodoStatus.PENDING.getValue())
                 .link(step.getAttachment() == null ? null : LinkDTO.builder()
                         .description(step.getAttachment().getDescription())
                         .type(step.getAttachment().getType())

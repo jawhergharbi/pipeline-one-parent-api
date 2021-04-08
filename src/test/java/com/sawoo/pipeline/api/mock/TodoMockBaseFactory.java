@@ -33,7 +33,7 @@ public abstract class TodoMockBaseFactory<D extends TodoDTO> extends BaseMockFac
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
                         .build())
-                .status(TodoStatus.RESCHEDULED.getValue())
+                .status(TodoStatus.ON_GOING.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(2)
                 .message(TodoMessage

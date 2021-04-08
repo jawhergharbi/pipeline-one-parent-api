@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.model.common.LinkType;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -32,6 +33,11 @@ public class TodoServiceEventListener {
             } else {
                 entity.getLink().setType(LinkType.PLAIN_LINK);
             }
+        }
+
+        // Status. Not informed. It would be PENDING
+        if (entity.getStatus() == null) {
+            entity.setStatus(TodoStatus.PENDING.getValue());
         }
 
         // Source. Not informed. It would be a manual task
