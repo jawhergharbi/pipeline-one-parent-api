@@ -192,7 +192,7 @@ class AccountProspectServiceTest extends BaseLightServiceTest<AccountDTO, Accoun
                                     .mapToObj( (l) -> {
                                         String PROSPECT_ID = getMockFactory().getComponentId();
                                         Prospect prospect = getMockFactory().getProspectMockFactory().newEntity(PROSPECT_ID);
-                                        if (prospect.getStatus().getValue() == ProspectQualification.LEAD.getValue()) {
+                                        if (prospect.getQualification().getValue() == ProspectQualification.LEAD.getValue()) {
                                             deadProspectCount.getAndIncrement();
                                         }
                                         return prospect;

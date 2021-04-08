@@ -161,7 +161,7 @@ class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, P
     void createWhenProspectQualificationNotInformedReturnsSuccess() throws Exception {
         ProspectDTO postEntity = getMockFactory().newDTO(null);
         postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
-        postEntity.setStatus(Status.builder().value(ProspectQualification.TARGETABLE.getValue()).build());
+        postEntity.setQualification(Status.builder().value(ProspectQualification.TARGETABLE.getValue()).build());
         String PERSON_ID = getMockFactory().getComponentId();
         ProspectDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
@@ -182,9 +182,9 @@ class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, P
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(PERSON_ID)))
-                .andExpect(jsonPath("$.status").exists())
-                .andExpect(jsonPath("$.status.value").exists())
-                .andExpect(jsonPath("$.status.value", is(ProspectQualification.TARGETABLE.getValue())));
+                .andExpect(jsonPath("$.qualification").exists())
+                .andExpect(jsonPath("$.qualification.value").exists())
+                .andExpect(jsonPath("$.qualification.value", is(ProspectQualification.TARGETABLE.getValue())));
     }
 
     @Test
@@ -297,7 +297,7 @@ class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, P
         // Setup the mocked entities
         String PROSPECT_ID = getMockFactory().getComponentId();
         ProspectDTO mockedEntity = getMockFactory().newDTO(PROSPECT_ID);
-        mockedEntity.getStatus().setNotes(null);
+        mockedEntity.getQualification().setNotes(null);
 
         // setup the mocked service
         doReturn(mockedEntity).when(service).deleteProspectQualificationComments(anyString());

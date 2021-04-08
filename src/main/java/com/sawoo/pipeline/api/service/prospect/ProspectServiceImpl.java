@@ -109,8 +109,8 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
             throws ResourceNotFoundException {
         log.debug("Delete qualification comments for prospect id [{}]", prospectId);
         Consumer<Prospect> setNull = l -> {
-            if (l.getStatus() != null) {
-                l.getStatus().setNotes(null);
+            if (l.getQualification() != null) {
+                l.getQualification().setNotes(null);
             }
         };
         return deleteProspectNotes(prospectId, setNull);

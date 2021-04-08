@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -35,11 +34,10 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
     public ResponseEntity<CampaignProspectDTO> createProspect(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @Valid CampaignProspectCreateDTO campaignProspect) throws ResourceNotFoundException, CommonServiceException {
-        if (campaignProspect.getProspect().getStatus() == null) {
-            campaignProspect.getProspect().setStatus(Status
+        if (campaignProspect.getProspect().getQualification() == null) {
+            campaignProspect.getProspect().setQualification(Status
                     .builder()
                     .value(ProspectQualification.TARGETABLE.getValue())
-                    .updated(LocalDateTime.now())
                     .build());
         }
         CampaignProspectDTO newEntity = service.createProspect(campaignId, campaignProspect);

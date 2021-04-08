@@ -43,7 +43,7 @@ public class ProspectDTO extends BaseEntityDTO {
     private Note companyNotes;
 
     @JMap
-    private Status status;
+    private Status qualification;
 
     private AccountFieldDTO account;
 }

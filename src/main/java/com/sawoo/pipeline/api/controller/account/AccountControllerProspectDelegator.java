@@ -25,7 +25,7 @@ public interface AccountControllerProspectDelegator {
 
     ResponseEntity<List<ProspectDTO>> findAllProspects(
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
-            Integer[] prospectStatus)
+            Integer[] prospectQualification)
             throws ResourceNotFoundException;
 
     ResponseEntity<ProspectDTO> removeProspect(

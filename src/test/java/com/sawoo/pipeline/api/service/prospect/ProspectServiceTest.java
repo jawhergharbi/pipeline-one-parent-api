@@ -111,7 +111,7 @@ class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, Prospec
         String PROSPECT_LINKED_IN_CHAT_URL = getMockFactory().getFAKER().internet().url();
         ProspectDTO mockedDTOTOUpdate = new ProspectDTO();
         mockedDTOTOUpdate.setLinkedInThread(PROSPECT_LINKED_IN_CHAT_URL);
-        mockedDTOTOUpdate.setStatus(Status
+        mockedDTOTOUpdate.setQualification(Status
                 .builder()
                 .value(ProspectQualification.DEAD.getValue()).build());
         Prospect prospectEntity = getMockFactory().newEntity(PROSPECT_ID);
@@ -288,8 +288,8 @@ class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, Prospec
 
         // Assertions and verifications
         Assertions.assertNotNull(returnedDTO, "Prospect DTO can not be null");
-        Assertions.assertNotNull(returnedDTO.getStatus(), "Prospect status can not be null");
-        Assertions.assertNull(returnedDTO.getStatus().getNotes(), "Prospect qualification comments must be null");
+        Assertions.assertNotNull(returnedDTO.getQualification(), "Prospect status can not be null");
+        Assertions.assertNull(returnedDTO.getQualification().getNotes(), "Prospect qualification comments must be null");
         verify(repository, atMostOnce()).findById(anyString());
         verify(repository, atMostOnce()).save(any(Prospect.class));
     }

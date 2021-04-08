@@ -522,7 +522,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{ids}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/main", String.join(",", ACCOUNT_IDS))
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("status", String.valueOf(ProspectQualification.DEAD.getValue())))
+                .param("qualification", String.valueOf(ProspectQualification.DEAD.getValue())))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -532,7 +532,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .andExpect(jsonPath("$", hasSize(PROSPECT_LIST_SIZE)))
                 .andExpect(jsonPath("$.[0].account").exists())
                 .andExpect(jsonPath("$.[0].id", is(PROSPECT_LIST.get(0).getId())))
-                .andExpect(jsonPath("$.[0].status.value", is(ProspectQualification.DEAD.getValue())));
+                .andExpect(jsonPath("$.[0].qualification.value", is(ProspectQualification.DEAD.getValue())));
     }
 
     @Test
@@ -644,8 +644,8 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 // Validate common returned fields
                 .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
                 .andExpect(jsonPath("$.person").exists())
-                .andExpect(jsonPath("$.status").exists())
-                .andExpect(jsonPath("$.status.value", is(ProspectQualification.TARGETABLE.getValue())));
+                .andExpect(jsonPath("$.qualification").exists())
+                .andExpect(jsonPath("$.qualification.value", is(ProspectQualification.TARGETABLE.getValue())));
     }
 
     @Test
@@ -776,7 +776,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                     ProspectDTO prospect = getMockFactory().getProspectMockFactory().newDTO(COMPONENT_ID);
                     int prospectIdx = getMockFactory().getFAKER().number().numberBetween(0, accountListSize);
                     prospect.setAccount(accountList.get(prospectIdx));
-                    prospect.setStatus(Status.builder().value(ProspectQualification.DEAD.getValue()).build());
+                    prospect.setQualification(Status.builder().value(ProspectQualification.DEAD.getValue()).build());
                     return prospect;
                 })
                 .collect(Collectors.toList());

@@ -34,13 +34,12 @@
       "text": "here some other comments from the prospect company",
       "updated": "2020-06-02T11:59:49.494472"
     },
-    "status": {
+    "qualification": {
       "value": 1,
       "notes": {
         "text": "here some other comments with regards to the prospect 1 status",
         "updated": "2020-06-02T11:59:49.494472"
-      },
-      "updated": "2020-06-02T12:59:49.494472"
+      }
     },
     "created": "2020-06-02T12:59:49.494472",
     "updated": "2020-06-02T05:59:49.494472",
@@ -129,13 +128,12 @@
       "text": "here some other comments from the prospect company",
       "updated": "2020-06-02T11:59:49.494472"
     },
-    "status": {
+    "qualification": {
       "value": 1,
       "notes": {
         "text": "here some other comments with regards to the prospect 2 status",
         "updated": "2020-06-02T11:59:49.494472"
-      },
-      "updated": "2020-06-02T12:59:49.494472"
+      }
     },
     "created": "2020-06-02T12:59:49.494472",
     "updated": "2020-06-02T05:59:49.494472"

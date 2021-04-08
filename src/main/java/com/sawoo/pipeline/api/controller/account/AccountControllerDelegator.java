@@ -138,8 +138,8 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
 
     @Override
     public ResponseEntity<List<ProspectDTO>> findAllProspects(
-            String[] accountIds, Integer[] prospectStatus) throws ResourceNotFoundException {
-        return prospectDelegator.findAllProspects(accountIds, prospectStatus);
+            String[] accountIds, Integer[] prospectQualification) throws ResourceNotFoundException {
+        return prospectDelegator.findAllProspects(accountIds, prospectQualification);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class Prospect extends BaseEntity {
     private Note companyNotes;
 
     @JMap
-    private Status status;
+    private Status qualification;
 
     @DBRef
     private List<Todo> todos;

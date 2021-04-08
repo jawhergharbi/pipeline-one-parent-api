@@ -132,7 +132,7 @@ public class AccountController {
     public ResponseEntity<List<ProspectDTO>> findAllProspects(
             @NotNull
             @PathVariable("ids") String[] ids,
-            @RequestParam(value = "status", required = false) Integer[] prospectStatus) {
+            @RequestParam(value = "qualification", required = false) Integer[] prospectStatus) {
         return delegator.findAllProspects(ids, prospectStatus);
     }
 

@@ -55,9 +55,9 @@ public class AccountControllerProspectDelegatorImpl implements AccountController
     @Override
     public ResponseEntity<List<ProspectDTO>> findAllProspects(
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
-            Integer[] prospectStatus)
+            Integer[] prospectQualification)
             throws ResourceNotFoundException {
-        List<ProspectDTO> prospects = service.findAllProspects(accountIds, prospectStatus);
+        List<ProspectDTO> prospects = service.findAllProspects(accountIds, prospectQualification);
         return ResponseEntity.ok().body(prospects);
     }
 

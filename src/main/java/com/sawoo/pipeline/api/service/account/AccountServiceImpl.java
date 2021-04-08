@@ -105,9 +105,9 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
     }
 
     @Override
-    public List<ProspectDTO> findAllProspects(String[] accountIds, Integer[] prospectStatus)
+    public List<ProspectDTO> findAllProspects(String[] accountIds, Integer[] prospectQualification)
             throws ResourceNotFoundException {
-        return prospectService.findAllProspects(accountIds, prospectStatus);
+        return prospectService.findAllProspects(accountIds, prospectQualification);
     }
 
     @Override

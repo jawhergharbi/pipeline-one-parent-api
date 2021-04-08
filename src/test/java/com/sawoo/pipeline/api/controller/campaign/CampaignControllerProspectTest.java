@@ -155,7 +155,7 @@ class CampaignControllerProspectTest {
                 .content(asJsonString(postEntity)))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/" + PROSPECT_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + COMPONENT_ID + "/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/" + PROSPECT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isCreated())

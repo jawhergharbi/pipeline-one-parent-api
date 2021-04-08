@@ -50,13 +50,12 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
                         .text(getFAKER().lorem().sentence(15))
                         .updated(LocalDateTime.now()).
                         build());
-        entity.setStatus(Status.builder()
+        entity.setQualification(Status.builder()
                 .notes(Note.builder()
                         .text(getFAKER().lorem().sentence(20))
                         .updated(LocalDateTime.now())
                         .build())
                 .value(getFAKER().number().numberBetween(0, 3))
-                .updated(LocalDateTime.now())
                 .build());
         entity.setPerson(Person.builder()
                 .email(getFAKER().internet().emailAddress())
@@ -95,13 +94,12 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
                         .text(getFAKER().lorem().sentence(15))
                         .updated(now).
                         build());
-        dto.setStatus(Status.builder()
+        dto.setQualification(Status.builder()
                 .notes(Note.builder()
                         .text(getFAKER().lorem().sentence(20))
                         .updated(now)
                         .build())
                 .value(ProspectQualification.TARGETABLE.getValue())
-                .updated(now)
                 .build());
         dto.setPerson(PersonDTO
                 .builder()
@@ -134,7 +132,7 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
                 .prospectNotes(dto.getProspectNotes())
                 .companyNotes(dto.getCompanyNotes())
                 .linkedInThread(dto.getLinkedInThread())
-                .status(dto.getStatus())
+                .qualification(dto.getQualification())
                 .build();
     }
 }

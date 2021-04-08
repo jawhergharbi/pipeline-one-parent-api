@@ -93,7 +93,7 @@ class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, Campaig
                 () -> Assertions.assertEquals(
                         CampaignStatus.NOT_STARTED.getValue(),
                         returnedDTO.getStatus(),
-                        String.format("Campaign status must be [%s]", CampaignStatus.NOT_STARTED.toString())));
+                        String.format("Campaign status must be [%s]", CampaignStatus.NOT_STARTED)));
 
         verify(repository, atMostOnce()).findByComponentIdAndName(anyString(), anyString());
         verify(repository, atMostOnce()).insert(any(Campaign.class));

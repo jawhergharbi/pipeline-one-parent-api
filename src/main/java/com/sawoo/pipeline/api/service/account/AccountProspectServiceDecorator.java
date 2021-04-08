@@ -86,7 +86,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
     public List<ProspectDTO> findAllProspects(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
-            Integer[] prospectStatus) throws ResourceNotFoundException {
+            Integer[] prospectQualification) throws ResourceNotFoundException {
         log.debug("Retrieve prospects from a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
 
         List<Account> accounts = StreamSupport
@@ -101,8 +101,8 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
                     accountIds);
         }
         JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
-        Predicate<Prospect> statusFilter = (prospectStatus != null && prospectStatus.length > 0) ?
-                (l -> l.getStatus() == null || Arrays.asList(prospectStatus).contains(l.getStatus().getValue())) :
+        Predicate<Prospect> statusFilter = (prospectQualification != null && prospectQualification.length > 0) ?
+                (l -> l.getQualification() == null || Arrays.asList(prospectQualification).contains(l.getQualification().getValue())) :
                 l -> true;
         List<ProspectDTO> prospects = accounts
                 .stream().flatMap( account -> {
@@ -119,7 +119,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
         log.debug("[{}] prospect/s has/have been found for accounts with ids [{}] and status [{}]",
                 prospects.size(),
                 accountIds,
-                prospectStatus);
+                prospectQualification);
 
         return prospects;
     }
