@@ -9,22 +9,19 @@ import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectTypeRequestParam;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.model.user.UserRole;
 import com.sawoo.pipeline.api.service.account.AccountService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,8 +47,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -522,12 +517,12 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
         // setup the mocked service
         doReturn(PROSPECT_LIST)
                 .when(service)
-                .findAllProspects(ACCOUNT_IDS.toArray(String[]::new), new Integer[] {ProspectStatusList.DEAD.getStatus()});
+                .findAllProspects(ACCOUNT_IDS.toArray(String[]::new), new Integer[] {ProspectQualification.DEAD.getValue()});
 
         // Execute the GET request
         mockMvc.perform(get(getResourceURI() + "/{ids}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/main", String.join(",", ACCOUNT_IDS))
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("status", String.valueOf(ProspectStatusList.DEAD.getStatus())))
+                .param("status", String.valueOf(ProspectQualification.DEAD.getValue())))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -537,7 +532,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .andExpect(jsonPath("$", hasSize(PROSPECT_LIST_SIZE)))
                 .andExpect(jsonPath("$.[0].account").exists())
                 .andExpect(jsonPath("$.[0].id", is(PROSPECT_LIST.get(0).getId())))
-                .andExpect(jsonPath("$.[0].status.value", is(ProspectStatusList.DEAD.getStatus())));
+                .andExpect(jsonPath("$.[0].status.value", is(ProspectQualification.DEAD.getValue())));
     }
 
     @Test
@@ -627,7 +622,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
 
     @Test
     @DisplayName("POST /api/accounts/{id}/prospects: account found and prospect added - Success")
-    void createProspectWhenAccountFoundProspectTypePersonReturnSuccess() throws Exception {
+    void createProspectWhenAccountFoundQualificationNotInformedReturnSuccess() throws Exception {
         // Setup the mocked entities
         String ACCOUNT_ID = getMockFactory().getComponentId();
         String PROSPECT_ID = getMockFactory().getProspectMockFactory().getComponentId();
@@ -648,40 +643,9 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
 
                 // Validate common returned fields
                 .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
-                .andExpect(jsonPath("$.person").exists());
-    }
-
-    @Test
-    @DisplayName("POST /api/accounts/{id}/prospects: account found and prospect added - Success")
-    void createProspectWhenAccountFoundProspectTypeProspectReturnSuccess() throws Exception {
-        // Setup the mocked entities
-        String ACCOUNT_ID = getMockFactory().getComponentId();
-        String PROSPECT_ID = getMockFactory().getProspectMockFactory().getComponentId();
-        ProspectDTO postEntity = getMockFactory().getProspectMockFactory().newDTO(null);
-        ProspectDTO mockedEntity = getMockFactory().getProspectMockFactory().newDTO(PROSPECT_ID, postEntity);
-
-        // setup the mocked service
-        doReturn(mockedEntity).when(service).createProspect(anyString(), any(ProspectDTO.class));
-
-        // Execute the GET request
-        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{type}", ACCOUNT_ID, ProspectTypeRequestParam.LEAD)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
-
-                // Validate the response code and content type
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate common returned fields
-                .andExpect(jsonPath("$.id", is(PROSPECT_ID)))
-                .andExpect(jsonPath("$.person").exists());
-
-        ArgumentCaptor<ProspectDTO> prospectArgumentCaptor = ArgumentCaptor.forClass(ProspectDTO.class);
-        verify(service, times(1)).createProspect(anyString(), prospectArgumentCaptor.capture());
-        Assertions.assertEquals(
-                ProspectStatusList.HOT.getStatus(),
-                prospectArgumentCaptor.getValue().getStatus().getValue(),
-                String.format("Status must be [%s]", ProspectStatusList.HOT));
+                .andExpect(jsonPath("$.person").exists())
+                .andExpect(jsonPath("$.status").exists())
+                .andExpect(jsonPath("$.status.value", is(ProspectQualification.TARGETABLE.getValue())));
     }
 
     @Test
@@ -812,7 +776,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                     ProspectDTO prospect = getMockFactory().getProspectMockFactory().newDTO(COMPONENT_ID);
                     int prospectIdx = getMockFactory().getFAKER().number().numberBetween(0, accountListSize);
                     prospect.setAccount(accountList.get(prospectIdx));
-                    prospect.setStatus(Status.builder().value(ProspectStatusList.DEAD.getStatus()).build());
+                    prospect.setStatus(Status.builder().value(ProspectQualification.DEAD.getValue()).build());
                     return prospect;
                 })
                 .collect(Collectors.toList());

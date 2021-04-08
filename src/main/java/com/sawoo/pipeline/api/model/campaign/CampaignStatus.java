@@ -8,11 +8,12 @@ import java.util.Arrays;
 
 public enum CampaignStatus {
 
-    UNDER_CONSTRUCTION(0),
+    NOT_STARTED(0),
     RUNNING(1),
     PAUSED(2),
-    ENDED(3),
-    ARCHIVED(4);
+    DONE(3),
+    ENDED(4),
+    ARCHIVED(5);
 
     private final int value;
 

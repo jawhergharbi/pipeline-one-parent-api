@@ -5,13 +5,12 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectTypeRequestParam;
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -158,42 +157,11 @@ class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, P
     }
 
     @Test
-    @DisplayName("POST /api/prospects/{type}: type Prospect - Success")
-    void createWhenProspectTypeProspectReturnsSuccess() throws Exception {
+    @DisplayName("POST /api/prospects/{type}: qualification not informed - Success")
+    void createWhenProspectQualificationNotInformedReturnsSuccess() throws Exception {
         ProspectDTO postEntity = getMockFactory().newDTO(null);
         postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
-        postEntity.setStatus(Status.builder().value(ProspectStatusList.HOT.getStatus()).build());
-        String PERSON_ID = getMockFactory().getComponentId();
-        ProspectDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
-
-        // setup the mocked service
-        doReturn(mockedEntity).when(service).create(ArgumentMatchers.any(getDTOClass()));
-
-        // Execute the POST request
-        mockMvc.perform(post(getResourceURI() + "/{type}", ProspectTypeRequestParam.LEAD)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
-
-                // Validate the response code and the content type
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-
-                // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PERSON_ID))
-
-                // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(PERSON_ID)))
-                .andExpect(jsonPath("$.status").exists())
-                .andExpect(jsonPath("$.status.value").exists())
-                .andExpect(jsonPath("$.status.value", is(ProspectStatusList.HOT.getStatus())));
-    }
-
-    @Test
-    @DisplayName("POST /api/prospects/{type}: prospect type null - Success")
-    void createWhenProspectTypeNotInformedReturnsSuccess() throws Exception {
-        ProspectDTO postEntity = getMockFactory().newDTO(null);
-        postEntity.setPerson(PersonDTO.builder().id(getMockFactory().getComponentId()).build());
-        postEntity.setStatus(Status.builder().value(ProspectStatusList.TARGETABLE.getStatus()).build());
+        postEntity.setStatus(Status.builder().value(ProspectQualification.TARGETABLE.getValue()).build());
         String PERSON_ID = getMockFactory().getComponentId();
         ProspectDTO mockedEntity = getMockFactory().newDTO(PERSON_ID, postEntity);
 
@@ -216,7 +184,7 @@ class ProspectControllerTest extends BaseControllerTest<ProspectDTO, Prospect, P
                 .andExpect(jsonPath("$.id", is(PERSON_ID)))
                 .andExpect(jsonPath("$.status").exists())
                 .andExpect(jsonPath("$.status.value").exists())
-                .andExpect(jsonPath("$.status.value", is(ProspectStatusList.TARGETABLE.getStatus())));
+                .andExpect(jsonPath("$.status.value", is(ProspectQualification.TARGETABLE.getValue())));
     }
 
     @Test

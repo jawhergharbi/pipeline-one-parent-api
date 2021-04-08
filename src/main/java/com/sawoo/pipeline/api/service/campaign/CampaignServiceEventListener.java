@@ -21,8 +21,8 @@ public class CampaignServiceEventListener {
         Campaign entity = event.getModel();
         log.debug("Campaign before insert listener. Campaign name: {}", dto.getName());
         if (dto.getStatus() == null) {
-            log.debug("Status set to default {} for campaign name: {}", CampaignStatus.UNDER_CONSTRUCTION, dto.getName());
-            entity.setStatus(CampaignStatus.UNDER_CONSTRUCTION);
+            log.debug("Status set to default {} for campaign name: {}", CampaignStatus.NOT_STARTED, dto.getName());
+            entity.setStatus(CampaignStatus.NOT_STARTED);
         }
         if (dto.getStartDate() == null) {
             LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);

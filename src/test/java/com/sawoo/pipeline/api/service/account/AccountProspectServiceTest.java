@@ -10,7 +10,7 @@ import com.sawoo.pipeline.api.mock.AccountMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import com.sawoo.pipeline.api.service.prospect.ProspectMapper;
@@ -192,7 +192,7 @@ class AccountProspectServiceTest extends BaseLightServiceTest<AccountDTO, Accoun
                                     .mapToObj( (l) -> {
                                         String PROSPECT_ID = getMockFactory().getComponentId();
                                         Prospect prospect = getMockFactory().getProspectMockFactory().newEntity(PROSPECT_ID);
-                                        if (prospect.getStatus().getValue() == ProspectStatusList.LEAD.getStatus()) {
+                                        if (prospect.getStatus().getValue() == ProspectQualification.LEAD.getValue()) {
                                             deadProspectCount.getAndIncrement();
                                         }
                                         return prospect;
@@ -209,7 +209,7 @@ class AccountProspectServiceTest extends BaseLightServiceTest<AccountDTO, Accoun
         // Execute the service call
         List<ProspectDTO> returnedList = getService().findAllProspects(
                 ACCOUNT_IDS.toArray(String[]::new),
-                new Integer[]{ProspectStatusList.LEAD.getStatus()});
+                new Integer[]{ProspectQualification.LEAD.getValue()});
 
         // Assertions
         Assertions.assertAll(String.format("Account ids [%s] list must have prospects", ACCOUNT_IDS),

@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.model.prospect;
 
-public enum ProspectStatusList {
+public enum ProspectQualification {
 
     TARGETABLE(0),
     LEAD(1),
@@ -12,13 +12,13 @@ public enum ProspectStatusList {
     NOT_RELEVANT(31),
     INTERESTING(32);
 
-    private final int status;
+    private final int value;
 
-    ProspectStatusList(int status) {
-        this.status = status;
+    ProspectQualification(int value) {
+        this.value = value;
     }
 
-    public int getStatus() {
-        return this.status;
+    public int getValue() {
+        return this.value;
     }
 }

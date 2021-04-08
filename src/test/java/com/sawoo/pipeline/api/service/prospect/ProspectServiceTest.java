@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.Assertions;
@@ -113,7 +113,7 @@ class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, Prospec
         mockedDTOTOUpdate.setLinkedInThread(PROSPECT_LINKED_IN_CHAT_URL);
         mockedDTOTOUpdate.setStatus(Status
                 .builder()
-                .value(ProspectStatusList.DEAD.getStatus()).build());
+                .value(ProspectQualification.DEAD.getValue()).build());
         Prospect prospectEntity = getMockFactory().newEntity(PROSPECT_ID);
 
         // Set up the mocked repository

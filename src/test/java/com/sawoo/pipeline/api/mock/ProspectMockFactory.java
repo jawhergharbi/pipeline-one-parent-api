@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.person.Person;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -99,7 +100,7 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
                         .text(getFAKER().lorem().sentence(20))
                         .updated(now)
                         .build())
-                .value(getFAKER().number().numberBetween(0, 3))
+                .value(ProspectQualification.TARGETABLE.getValue())
                 .updated(now)
                 .build());
         dto.setPerson(PersonDTO

@@ -5,10 +5,8 @@ import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectTypeRequestParam;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -146,20 +143,7 @@ public class AccountController {
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
             @PathVariable(value = "id") String accountId,
-            @PathVariable(value = "type", required = false) ProspectTypeRequestParam type,
             @NotNull @RequestBody ProspectDTO prospect) {
-        if (type != null && type.equals(ProspectTypeRequestParam.LEAD)) {
-            prospect.setStatus(Status
-                    .builder()
-                    .value(ProspectStatusList.HOT.getStatus())
-                    .updated(LocalDateTime.now()).build());
-        } else {
-            prospect.setStatus(Status
-                    .builder()
-                    .value(ProspectStatusList.TARGETABLE.getStatus())
-                    .updated(LocalDateTime.now())
-                    .build());
-        }
         return delegator.createProspect(accountId, prospect);
     }
 

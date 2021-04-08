@@ -40,7 +40,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId,
             @Valid ProspectDTO prospect)
             throws ResourceNotFoundException {
-        log.debug("Creating new prospect for account id: [{}]. Person id: [{}]", accountId, prospect.getPerson().getId());
+        log.debug("Create new prospect for account id: [{}]. Person id: [{}]", accountId, prospect.getPerson().getId());
 
         Account account = findAccountById(accountId);
         List<Prospect> prospects = account.getProspects();
@@ -64,7 +64,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
     public List<ProspectDTO> findAllProspects(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String accountId)
             throws ResourceNotFoundException {
-        log.debug("Retrieving prospects for account id [{}]", accountId);
+        log.debug("Retrieve prospects for account id [{}]", accountId);
 
         Account account = findAccountById(accountId);
 
@@ -87,7 +87,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) String[] accountIds,
             Integer[] prospectStatus) throws ResourceNotFoundException {
-        log.debug("Retrieving prospects from a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
+        log.debug("Retrieve prospects from a list of accounts with the following ids [{}]", Arrays.toString(accountIds));
 
         List<Account> accounts = StreamSupport
                 .stream(repository

@@ -4,11 +4,8 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectTypeRequestParam;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
-import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -37,24 +33,10 @@ public class ProspectController {
     private final ProspectControllerDelegator delegator;
 
    @PostMapping(
-            value = { "", "/{type}"},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ProspectDTO> save(
-            @PathVariable(required = false) ProspectTypeRequestParam type,
+    public ResponseEntity<ProspectDTO> create(
             @NotNull @RequestBody ProspectDTO prospect) {
-        if (type != null && type.equals(ProspectTypeRequestParam.LEAD)) {
-            prospect.setStatus(Status
-                    .builder()
-                    .value(ProspectStatusList.HOT.getStatus())
-                    .updated(LocalDateTime.now()).build());
-        } else {
-            prospect.setStatus(Status
-                    .builder()
-                    .value(ProspectStatusList.TARGETABLE.getStatus())
-                    .updated(LocalDateTime.now())
-                    .build());
-        }
         return delegator.create(prospect);
     }
 

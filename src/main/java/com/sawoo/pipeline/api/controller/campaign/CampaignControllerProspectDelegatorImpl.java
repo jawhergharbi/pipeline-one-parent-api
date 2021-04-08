@@ -9,7 +9,7 @@ import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.prospect.ProspectStatusList;
+import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +38,7 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
         if (campaignProspect.getProspect().getStatus() == null) {
             campaignProspect.getProspect().setStatus(Status
                     .builder()
-                    .value(ProspectStatusList.TARGETABLE.getStatus())
+                    .value(ProspectQualification.TARGETABLE.getValue())
                     .updated(LocalDateTime.now())
                     .build());
         }
