@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 @Primary
 public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, AccountRepository, AccountMapper> implements AccountService {
 
-    private final AccountLeadService leadService;
+    private final AccountProspectService prospectService;
     private final AccountUserService userService;
 
     @Autowired
@@ -44,11 +44,11 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
             AccountMapper mapper,
             ApplicationEventPublisher publisher,
             AuditService audit,
-            AccountLeadService leadService,
+            AccountProspectService prospectService,
             UserAuthService userService) {
         super(repository, mapper, DBConstants.ACCOUNT_DOCUMENT, publisher, audit);
         this.userService = new AccountUserServiceDecorator(userService, this);
-        this.leadService = leadService;
+        this.prospectService = prospectService;
     }
 
     @Override
@@ -95,24 +95,24 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
     }
 
     @Override
-    public LeadDTO createLead(String accountId, LeadDTO lead) throws ResourceNotFoundException, CommonServiceException {
-        return leadService.createLead(accountId, lead);
+    public ProspectDTO createProspect(String accountId, ProspectDTO prospect) throws ResourceNotFoundException, CommonServiceException {
+        return prospectService.createProspect(accountId, prospect);
     }
 
     @Override
-    public List<LeadDTO> findAllLeads(String accountId) throws ResourceNotFoundException {
-        return leadService.findAllLeads(accountId);
+    public List<ProspectDTO> findAllProspects(String accountId) throws ResourceNotFoundException {
+        return prospectService.findAllProspects(accountId);
     }
 
     @Override
-    public List<LeadDTO> findAllLeads(String[] accountIds, Integer[] leadStatus)
+    public List<ProspectDTO> findAllProspects(String[] accountIds, Integer[] prospectQualification)
             throws ResourceNotFoundException {
-        return leadService.findAllLeads(accountIds, leadStatus);
+        return prospectService.findAllProspects(accountIds, prospectQualification);
     }
 
     @Override
-    public LeadDTO removeLead(String accountId, String leadId) throws ResourceNotFoundException {
-        return leadService.removeLead(accountId, leadId);
+    public ProspectDTO removeProspect(String accountId, String prospectId) throws ResourceNotFoundException {
+        return prospectService.removeProspect(accountId, prospectId);
     }
 
     @Override

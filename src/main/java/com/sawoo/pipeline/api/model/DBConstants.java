@@ -2,7 +2,7 @@ package com.sawoo.pipeline.api.model;
 
 public interface DBConstants {
 
-    String LEAD_DOCUMENT = "lead";
+    String PROSPECT_DOCUMENT = "prospect";
     String PERSON_DOCUMENT = "person";
     String SEQUENCE_DOCUMENT = "sequence";
     String SEQUENCE_STEP_DOCUMENT = "sequence-step";

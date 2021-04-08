@@ -15,8 +15,8 @@ public interface ExceptionMessageConstants {
     String AUTH_RESET_PASSWORD_CONFIRM_TOKEN_EXPIRED_ERROR_EXCEPTION = "auth.reset-password.confirm-token-expired-error.exception";
     String AUTH_TOKEN_EMAIL_NOT_FOUND_ERROR_EXCEPTION = "auth.token.email-not-found-error.exception";
 
-    String ACCOUNT_LEAD_REMOVE_LEAD_NOT_FOUND_EXCEPTION = "account.lead.remove-lead-not-found.exception";
-    String ACCOUNT_LEAD_CREATE_LEAD_ALREADY_ADDED_EXCEPTION = "account.lead.create-lead-already-added.exception";
+    String ACCOUNT_PROSPECT_REMOVE_PROSPECT_NOT_FOUND_EXCEPTION = "account.prospect.remove-prospect-not-found.exception";
+    String ACCOUNT_PROSPECT_CREATE_PROSPECT_ALREADY_ADDED_EXCEPTION = "account.prospect.create-prospect-already-added.exception";
 
     String COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION = "common.create.entity-already-exists.exception";
 
@@ -35,13 +35,13 @@ public interface ExceptionMessageConstants {
     String COMMON_METHOD_NOT_ALLOWED_EXCEPTION = "common.method-not-allowed.exception";
     String COMMON_INTERNAL_SERVER_ERROR_EXCEPTION = "common.internal-server-error.exception";
 
-    String LEAD_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "lead.report-generation.internal-server.exception";
-    String LEAD_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "lead.report-generation.pdf-stream-empty.error";
-    String LEAD_TODO_ADD_LEAD_SLOT_ALREADY_SCHEDULED_EXCEPTION = "lead.todo-add-todo-already-scheduled.exception";
-    String LEAD_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "lead.sequence-todo-personality-not-assigned.exception";
-    String LEAD_LEAD_ACCOUNT_NOT_FOUND_EXCEPTION = "lead.lead-account-not-found.exception";
-    String LEAD_LEAD_ACCOUNT_ASSIGNEE_NOT_FOUND_EXCEPTION = "lead.lead-account-assignee-not-found.exception";
-    String LEAD_LEAD_ACCOUNT_NO_ASSIGNEE_FOUND_EXCEPTION = "lead.lead-account-no-assignee-found.exception";
+    String PROSPECT_REPORT_GENERATION_INTERNAL_SERVER_EXCEPTION = "prospect.report-generation.internal-server.exception";
+    String PROSPECT_REPORT_GENERATION_STREAM_BUFFER_EMPTY_ERROR = "prospect.report-generation.pdf-stream-empty.error";
+    String PROSPECT_TODO_ADD_PROSPECT_SLOT_ALREADY_SCHEDULED_EXCEPTION = "prospect.todo-add-todo-already-scheduled.exception";
+    String PROSPECT_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION = "prospect.sequence-todo-personality-not-assigned.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION = "prospect.prospect-account-not-found.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_ASSIGNEE_NOT_FOUND_EXCEPTION = "prospect.prospect-account-assignee-not-found.exception";
+    String PROSPECT_PROSPECT_ACCOUNT_NO_ASSIGNEE_FOUND_EXCEPTION = "prospect.prospect-account-no-assignee-found.exception";
 
     String COMPANY_CROSS_FIELD_VALIDATION_ERROR = "company.validation.cross-field.error";
     String PERSON_CROSS_FIELD_VALIDATION_ERROR = "person.validation.cross-field.error";
@@ -61,9 +61,9 @@ public interface ExceptionMessageConstants {
     String SEQUENCE_STEP_UPDATE_STEP_NOT_FOUND_IN_THE_SEQUENCE_EXCEPTION = "sequence.step.update-step-not-found-in-the-sequence.exception";
     String SEQUENCE_STEP_UPDATE_STEP_POSITION_OR_PERSONALITY_CANT_CHANGE_EXCEPTION = "sequence.step.update-step-position-or-personality-cant-change.exception";
 
-    String CAMPAIGN_ADD_LEAD_ALREADY_ADDED_EXCEPTION = "campaign.campaign-lead.lead-already-added.exception";
-    String CAMPAIGN_REMOVE_LEAD_NOT_PRESENT_EXCEPTION = "campaign.campaign-lead.remove-lead-not-present.exception";
-    String CAMPAIGN_UPDATE_LEAD_NOT_PRESENT_EXCEPTION = "campaign.campaign-lead.update-lead-not-present.exception";
+    String CAMPAIGN_ADD_PROSPECT_ALREADY_ADDED_EXCEPTION = "campaign.campaign-prospect.prospect-already-added.exception";
+    String CAMPAIGN_REMOVE_PROSPECT_NOT_PRESENT_EXCEPTION = "campaign.campaign-prospect.remove-prospect-not-present.exception";
+    String CAMPAIGN_UPDATE_PROSPECT_NOT_PRESENT_EXCEPTION = "campaign.campaign-prospect.update-prospect-not-present.exception";
 
 
     String REPOSITORY_EXCEPTION_DATA_CONVERSATION_ERROR_EXCEPTION = "repository.data-conversation.exception";

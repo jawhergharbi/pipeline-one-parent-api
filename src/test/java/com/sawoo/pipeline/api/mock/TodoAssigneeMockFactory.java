@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
-import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

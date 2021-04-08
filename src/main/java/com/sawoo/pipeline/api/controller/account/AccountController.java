@@ -3,12 +3,10 @@ package com.sawoo.pipeline.api.controller.account;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadTypeRequestParam;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.model.account.AccountStatus;
 import com.sawoo.pipeline.api.model.common.Status;
-import com.sawoo.pipeline.api.model.lead.LeadStatusList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -91,7 +88,7 @@ public class AccountController {
     @DeleteMapping(
             value = "/{id}/company-notes",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<AccountDTO> deleteLeadCompanyComments(@PathVariable String id) {
+    public ResponseEntity<AccountDTO> deleteProspectCompanyComments(@PathVariable String id) {
         return delegator.deleteAccountCompanyNotes(id);
     }
 
@@ -113,60 +110,47 @@ public class AccountController {
     }
 
     @DeleteMapping(
-            value = "/{id}/" + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{leadId}",
+            value = "/{id}/" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{" + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME + "}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LeadDTO> removeLead(
+    public ResponseEntity<ProspectDTO> removeProspect(
             @PathVariable("id") String accountId,
-            @PathVariable("leadId") String leadId) {
-        return delegator.removeLead(accountId, leadId);
+            @PathVariable(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_PATH_VARIABLE_NAME) String prospectId) {
+        return delegator.removeProspect(accountId, prospectId);
     }
 
     @GetMapping(
-            value = "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
+            value = "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadDTO>> findAllLeads(
+    public ResponseEntity<List<ProspectDTO>> findAllProspects(
             @PathVariable("id") String accountId) {
-        return delegator.findAllLeads(accountId);
+        return delegator.findAllProspects(accountId);
     }
 
     @GetMapping(
-            value = "/{ids}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/main",
+            value = "/{ids}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadDTO>> findAllLeads(
+    public ResponseEntity<List<ProspectDTO>> findAllProspects(
             @NotNull
             @PathVariable("ids") String[] ids,
-            @RequestParam(value = "status", required = false) Integer[] leadStatus) {
-        return delegator.findAllLeads(ids, leadStatus);
+            @RequestParam(value = "qualification", required = false) Integer[] prospectStatus) {
+        return delegator.findAllProspects(ids, prospectStatus);
     }
 
     @PostMapping(
-            value = {"/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME,
-                    "/{id}/"  + ControllerConstants.LEAD_CONTROLLER_RESOURCE_NAME + "/{type}"},
+            value = {"/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME,
+                    "/{id}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/{type}"},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
             @PathVariable(value = "id") String accountId,
-            @PathVariable(value = "type", required = false) LeadTypeRequestParam type,
-            @NotNull @RequestBody LeadDTO lead) {
-        if (type != null && type.equals(LeadTypeRequestParam.LEAD)) {
-            lead.setStatus(Status
-                    .builder()
-                    .value(LeadStatusList.HOT.getStatus())
-                    .updated(LocalDateTime.now()).build());
-        } else {
-            lead.setStatus(Status
-                    .builder()
-                    .value(LeadStatusList.FUNNEL_ON_GOING.getStatus())
-                    .updated(LocalDateTime.now())
-                    .build());
-        }
-        return delegator.createLead(accountId, lead);
+            @NotNull @RequestBody ProspectDTO prospect) {
+        return delegator.createProspect(accountId, prospect);
     }
 
     @GetMapping(
             value = "/{ids}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
             @NotNull
             @PathVariable("ids") List<String> ids,
             @RequestParam(value = "status", required = false) List<Integer> status,

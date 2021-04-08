@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Company, CompanyService, CompanyMockFactory> {
+class CompanyControllerTest extends BaseControllerTest<CompanyDTO, Company, CompanyService, CompanyMockFactory> {
 
     @Autowired
     private MockMvc mockMvc;

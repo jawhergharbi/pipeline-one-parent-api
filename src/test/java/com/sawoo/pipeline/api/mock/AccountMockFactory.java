@@ -23,7 +23,7 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
     @Getter
     private final UserMockFactory userMockFactory;
     @Getter
-    private final LeadMockFactory leadMockFactory;
+    private final ProspectMockFactory prospectMockFactory;
     @Getter
     private final CompanyMockFactory companyMockFactory;
 
@@ -108,7 +108,7 @@ public class AccountMockFactory extends BaseMockFactory<AccountDTO, Account> {
     }
 
 
-    public AccountFieldDTO newLeadDTO(String id) {
+    public AccountFieldDTO newAccountDTO(String id) {
         Faker FAKER = getFAKER();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         AccountFieldDTO dto = AccountFieldDTO.

@@ -7,7 +7,7 @@ import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.model.lead.Lead;
+import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,7 +78,7 @@ public class Account extends BaseEntity {
     private Set<User> users;
 
     @DBRef(lazy = true)
-    private List<Lead> leads;
+    private List<Prospect> prospects;
 
     public Set<User> getUsers() {
         if (users == null) {
@@ -87,10 +87,10 @@ public class Account extends BaseEntity {
         return users;
     }
 
-    public List<Lead> getLeads() {
-        if (leads == null) {
-            leads = new ArrayList<>();
+    public List<Prospect> getProspects() {
+        if (prospects == null) {
+            prospects = new ArrayList<>();
         }
-        return leads;
+        return prospects;
     }
 }

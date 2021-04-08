@@ -28,8 +28,8 @@ import java.util.stream.IntStream;
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepository, AccountMockFactory> {
 
-    private static final String ACCOUNT_JSON_DATA_FILE_NAME = "account-test-data.json";
-    private static final String ACCOUNT_ID = "5fce6a364d9da6645ba36";
+    private static final String TEST_JSON_DATA_FILE_NAME = "account-test-data.json";
+    private static final String ENTITY_ID = "6030d640f3022dc07d72d786";
 
     private final CompanyRepository companyRepository;
 
@@ -37,7 +37,7 @@ class AccountRepositoryTest extends BaseRepositoryTest<Account, AccountRepositor
    public AccountRepositoryTest(AccountRepository repository,
                                 AccountMockFactory mockFactory,
                                 CompanyRepository companyRepository) {
-        super(repository, ACCOUNT_JSON_DATA_FILE_NAME, ACCOUNT_ID, Account.class.getSimpleName(), mockFactory);
+        super(repository, TEST_JSON_DATA_FILE_NAME, ENTITY_ID, Account.class.getSimpleName(), mockFactory);
         this.companyRepository = companyRepository;
     }
 

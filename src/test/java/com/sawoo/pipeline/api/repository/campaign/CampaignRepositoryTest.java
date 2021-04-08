@@ -135,10 +135,10 @@ public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, Campaig
         // Act
         List<Campaign> campaigns = getRepository().findByComponentIdInAndStatus(
                 new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)),
-                CampaignStatus.UNDER_CONSTRUCTION);
+                CampaignStatus.NOT_STARTED);
 
         // Assert
-        assertListOfCampaignsWithStatus(campaigns, ENTITIES_FOUND, CampaignStatus.UNDER_CONSTRUCTION);
+        assertListOfCampaignsWithStatus(campaigns, ENTITIES_FOUND, CampaignStatus.NOT_STARTED);
     }
 
     @Test

@@ -53,13 +53,13 @@ public class Campaign extends BaseEntity  {
     @JMap
     private LocalDateTime actualEndDate;
 
-    private List<CampaignLead> leads;
+    private List<CampaignProspect> prospects;
 
-    public List<CampaignLead> getLeads() {
-        if (leads == null) {
-            leads = new ArrayList<>();
+    public List<CampaignProspect> getProspects() {
+        if (prospects == null) {
+            prospects = new ArrayList<>();
         }
-        return leads;
+        return prospects;
     }
 
     @JMapConversion(from = {"status"}, to = {"status"})

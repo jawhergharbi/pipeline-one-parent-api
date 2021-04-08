@@ -4,11 +4,11 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
 import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadDTO;
-import com.sawoo.pipeline.api.dto.lead.LeadTodoDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
 import com.sawoo.pipeline.api.service.account.AccountService;
-import com.sawoo.pipeline.api.service.lead.LeadService;
+import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -23,36 +23,36 @@ import java.util.stream.Collectors;
 @Qualifier("accountControllerTODO")
 public class AccountControllerTodoDelegatorImpl implements AccountControllerTodoDelegator {
 
-    private final LeadService leadService;
+    private final ProspectService prospectService;
     private final AccountService accountService;
 
     @Autowired
-    public AccountControllerTodoDelegatorImpl(LeadService leadService, AccountService accountService) {
-        this.leadService = leadService;
+    public AccountControllerTodoDelegatorImpl(ProspectService prospectService, AccountService accountService) {
+        this.prospectService = prospectService;
         this.accountService = accountService;
     }
 
     @Override
-    public ResponseEntity<List<LeadTodoDTO>> findAllTODOs(
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
             List<String> accountIds,
             List<Integer> status,
             List<Integer> types) throws CommonServiceException {
-        List<LeadDTO> leads = accountService.findAllLeads(accountIds.toArray(new String[0]), null);
-        List<LeadTodoDTO> todos = Collections.emptyList();
-        if (!leads.isEmpty()) {
-            List<String> leadIds = leads.stream().map(LeadDTO::getId).collect(Collectors.toList());
-            todos = leadService.findBy(leadIds, status, types);
+        List<ProspectDTO> prospects = accountService.findAllProspects(accountIds.toArray(new String[0]), null);
+        List<ProspectTodoDTO> todos = Collections.emptyList();
+        if (!prospects.isEmpty()) {
+            List<String> prospectIds = prospects.stream().map(ProspectDTO::getId).collect(Collectors.toList());
+            todos = prospectService.findBy(prospectIds, status, types);
             todos = todos
                     .stream()
-                    .peek(i -> mapAccountData(leads, i))
+                    .peek(i -> mapAccountData(prospects, i))
                     .collect(Collectors.toList());
         }
         return ResponseEntity.ok().body(todos);
     }
 
-    private void mapAccountData(List<LeadDTO> leads, LeadTodoDTO todo) {
-        Optional<LeadDTO> lead = leads.stream().filter(l -> l.getId().equals(todo.getLead().getLeadId())).findAny();
-        lead.ifPresent(l -> {
+    private void mapAccountData(List<ProspectDTO> prospects, ProspectTodoDTO todo) {
+        Optional<ProspectDTO> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getProspect().getProspectId())).findAny();
+        prospect.ifPresent(l -> {
             AccountFieldDTO account = l.getAccount();
             todo.setAccount(account);
             if (todo.getAssigneeId() != null) {

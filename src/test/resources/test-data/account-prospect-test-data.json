@@ -1,0 +1,164 @@
+[
+  {
+    "id": "5fce6a364d9da6645ba36",
+    "fullName": "Ray Alabern",
+    "linkedInUrl": "http://linkedin.com/rayalabern",
+    "position": "Managing Director",
+    "email": "ray@gmail.com",
+    "phoneNumber": "1234568345",
+    "company": {
+      "id": "34rfae63gt43d96fe63gt45fa",
+      "name": "google",
+      "url": "http://google.com",
+      "created": "2020-06-02T12:59:49.494472",
+      "updated": "2020-06-02T05:59:49.494472",
+      "headcount": 1200
+    },
+    "notes": {
+      "text": "here some other comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "status": {
+      "value": 1,
+      "notes": {
+        "text": "here some other comments with regads to the account status",
+        "updated": "2020-06-02T11:59:49.494472"
+      }
+    },
+    "created": "2020-06-02T12:59:49.494472",
+    "updated": "2020-06-02T05:59:49.494472",
+    "users": [
+      {
+        "id": "5fa317cd0efe4d20ad3edd13",
+        "email": "miguel.maquieira@gmail.com",
+        "fullName": "Miguelín Miguelón",
+        "active": true,
+        "roles": [
+          "USER",
+          "MNG"
+        ],
+        "created": "2020-11-04T20:06:21.254Z",
+        "updated": "2020-11-04T22:16:32.833Z",
+        "password": "$2a$10$JLH0b18b09G6NPi8GNZPqe7fUcnI4OU8tgI.R37X9StLrkxmKJzKe"
+      },
+      {
+        "id": "5fa32fdd14eb800b88e47656",
+        "email": "miguel.maquieira@sawoo.io",
+        "fullName": "Miguel Maquieira",
+        "active": false,
+        "roles": [
+          "AST"
+        ],
+        "created": "2020-11-04T21:49:01.829Z",
+        "updated": "2020-11-04T22:31:35.128Z",
+        "password": "$2a$10$8cjjLINJ8e7j7RJlRP8IX.Hj4nY4WE3cB9pgK3Ic.2GnxBJJ6mU0."
+      }
+    ]
+  },
+  {
+    "id": "3ee4e66da4d966de664af",
+    "fullName": "Manuel Fernandez",
+    "linkedInUrl": "http://linkedin.com/manuel.fernandez",
+    "position": "Managing Director",
+    "email": "manuel.fernandez@gmail.com",
+    "phoneNumber": "1234568345",
+    "company": {
+      "id": "d96e63gt45ffe6343d9ae66fe63gt",
+      "name": "new_company",
+      "url": "http://new_company.com",
+      "created": "2020-06-02T12:59:49.494472",
+      "updated": "2020-06-04T05:59:49.494472",
+      "headcount": 2500
+    },
+    "notes": {
+      "text": "here some comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "created": "2020-06-02T11:59:49.494472",
+    "updated": "2020-06-03T05:59:49.494472",
+    "users": [
+      {
+        "id": "5fa317cd0efe4d20ad3edd13",
+        "email": "miguel.maquieira@gmail.com",
+        "fullName": "Miguelín Miguelón",
+        "active": true,
+        "roles": [
+          "USER",
+          "MNG"
+        ],
+        "created": "2020-11-04T20:06:21.254Z",
+        "updated": "2020-11-04T22:16:32.833Z",
+        "password": "$2a$10$JLH0b18b09G6NPi8GNZPqe7fUcnI4OU8tgI.R37X9StLrkxmKJzKe"
+      }
+    ],
+    "prospects": [
+      {
+        "id": "601bbbf0f9589897c09cb668",
+        "linkedInThread": "http://linkedin.com/thread/withprospect1",
+        "person": {
+          "id": "5fa3cwr131232hju3423",
+          "firstName": "Mercedes",
+          "lastName": "Mendez",
+          "fullName": "Mercedes Mendez",
+          "salutation": 0,
+          "linkedInUrl": "http://linkedin.com/mercedes.mendez",
+          "position": "Head of Marketing",
+          "email": "mercedes.mendez@gmail.com",
+          "phoneNumber": "+34 344394878",
+          "profilePicture": "http://linkedin.com/picture/mercedes.mendez",
+          "company": {
+            "id": "5fa2fe63gt43d963da45b",
+            "name": "knomwad",
+            "url": "http://knowmad-edu.com",
+            "created": "2020-06-02T12:59:49.494472",
+            "updated": "2020-06-02T05:59:49.494472"
+          },
+          "personality": {
+            "type": 1
+          },
+          "created": "2020-06-02T12:59:49.494472",
+          "updated": "2020-06-02T05:59:49.494472"
+        },
+        "prospectNotes": {
+          "text": "here some other comments",
+          "updated": "2020-06-02T11:59:49.494472"
+        },
+        "companyNotes": {
+          "text": "here some other comments from the prospect company",
+          "updated": "2020-06-02T11:59:49.494472"
+        },
+        "qualification": {
+          "value": 1,
+          "notes": {
+            "text": "here some other comments with regards to the prospect 1 status",
+            "updated": "2020-06-02T11:59:49.494472"
+          }
+        },
+        "created": "2020-06-02T12:59:49.494472",
+        "updated": "2020-06-02T05:59:49.494472"
+      }
+    ]
+  },
+  {
+    "id": "3eed964e66da46de664af",
+    "fullName": "Miguel fernandez",
+    "linkedInUrl": "http://linkedin.com/miguel.fernandez",
+    "position": "Managing Director",
+    "email": "miguel.fernandez@gmail.com",
+    "phoneNumber": "34342354454",
+    "company": {
+      "id": "d6fe666fe663t45fg3223red3234w",
+      "name": "other_company",
+      "url": "http://other_company.com",
+      "created": "2020-06-02T12:59:49.494472",
+      "updated": "2020-06-04T05:59:49.494472",
+      "headcount": 1500
+    },
+    "notes": {
+      "text": "here some comments",
+      "updated": "2020-06-02T11:59:49.494472"
+    },
+    "created": "2020-06-02T11:59:49.494472",
+    "updated": "2020-06-03T05:59:49.494472"
+  }
+]

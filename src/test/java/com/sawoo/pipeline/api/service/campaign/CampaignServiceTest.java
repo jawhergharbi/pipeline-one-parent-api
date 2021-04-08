@@ -76,7 +76,7 @@ class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, Campaig
         postDTO.setStatus(null);
         CampaignMapper mapper = new CampaignMapper();
         Campaign mockedEntity = mapper.getMapperIn().getDestination(postDTO);
-        mockedEntity.setStatus(CampaignStatus.UNDER_CONSTRUCTION);
+        mockedEntity.setStatus(CampaignStatus.NOT_STARTED);
         mockedEntity.setId(getMockFactory().getComponentId());
 
         // Set up the mocked repository
@@ -91,9 +91,9 @@ class CampaignServiceTest extends BaseServiceTest<CampaignDTO, Campaign, Campaig
                 () -> Assertions.assertNotNull(returnedDTO, "Campaign can not be null"),
                 () -> Assertions.assertNotNull(returnedDTO.getId(), "Campaign id can not be null"),
                 () -> Assertions.assertEquals(
-                        CampaignStatus.UNDER_CONSTRUCTION.getValue(),
+                        CampaignStatus.NOT_STARTED.getValue(),
                         returnedDTO.getStatus(),
-                        String.format("Campaign status must be [%s]", CampaignStatus.UNDER_CONSTRUCTION.toString())));
+                        String.format("Campaign status must be [%s]", CampaignStatus.NOT_STARTED)));
 
         verify(repository, atMostOnce()).findByComponentIdAndName(anyString(), anyString());
         verify(repository, atMostOnce()).insert(any(Campaign.class));

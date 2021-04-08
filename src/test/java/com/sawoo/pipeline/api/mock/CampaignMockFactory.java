@@ -2,11 +2,11 @@ package com.sawoo.pipeline.api.mock;
 
 import com.github.javafaker.Faker;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignProspectDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
-import com.sawoo.pipeline.api.model.campaign.CampaignLead;
+import com.sawoo.pipeline.api.model.campaign.CampaignProspect;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.time.ZoneOffset;
 public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> {
 
     private final AccountMockFactory accountMockFactory;
-    private final LeadMockFactory leadMockFactory;
+    private final ProspectMockFactory prospectMockFactory;
     private final SequenceMockFactory sequenceMockFactory;
 
     @Override
@@ -73,46 +73,46 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
         return dto.toBuilder().id(id).build();
     }
 
-    public CampaignLeadAddDTO newCampaignLeadAddDTO() {
-        String LEAD_ID = getFAKER().internet().uuid();
+    public CampaignProspectAddDTO newCampaignProspectAddDTO() {
+        String PROSPECT_ID = getFAKER().internet().uuid();
         String SEQUENCE_ID = getFAKER().internet().uuid();
-        return newCampaignLeadAddDTO(LEAD_ID, SEQUENCE_ID);
+        return newCampaignProspectAddDTO(PROSPECT_ID, SEQUENCE_ID);
     }
 
-    public CampaignLeadAddDTO newCampaignLeadAddDTO(String leadId, String sequenceId) {
+    public CampaignProspectAddDTO newCampaignProspectAddDTO(String prospectId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return CampaignLeadAddDTO.builder()
-                .leadId(leadId)
+        return CampaignProspectAddDTO.builder()
+                .prospectId(prospectId)
                 .sequenceId(sequenceId)
                 .startDate(now)
                 .endDate(now.plusDays(20))
                 .build();
     }
 
-    public CampaignLeadAddDTO newCampaignLeadAddDTO(String sequenceId) {
+    public CampaignProspectAddDTO newCampaignProspectAddDTO(String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return CampaignLeadAddDTO.builder()
+        return CampaignProspectAddDTO.builder()
                 .sequenceId(sequenceId)
                 .startDate(now)
                 .endDate(now.plusDays(20))
                 .build();
     }
 
-    public CampaignLeadDTO newCampaignLeadDTO(String leadId, String sequenceId) {
+    public CampaignProspectDTO newCampaignProspectDTO(String prospectId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return CampaignLeadDTO.builder()
-                .lead(leadMockFactory.newDTO(leadId))
+        return CampaignProspectDTO.builder()
+                .prospect(prospectMockFactory.newDTO(prospectId))
                 .sequence(sequenceMockFactory.newDTO(sequenceId))
                 .startDate(now)
                 .endDate(now.plusDays(10))
                 .build();
     }
 
-    public CampaignLeadCreateDTO newCampaignLeadCreateDTO(String accountId, String sequenceId) {
+    public CampaignProspectCreateDTO newCampaignProspectCreateDTO(String accountId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         String LEAD_ID = getFAKER().internet().uuid();
-        return CampaignLeadCreateDTO.builder()
-                .lead(leadMockFactory.newDTO(LEAD_ID))
+        return CampaignProspectCreateDTO.builder()
+                .prospect(prospectMockFactory.newDTO(LEAD_ID))
                 .sequenceId(sequenceId)
                 .accountId(accountId)
                 .startDate(now)
@@ -120,16 +120,16 @@ public class CampaignMockFactory extends BaseMockFactory<CampaignDTO, Campaign> 
                 .build();
     }
 
-    public CampaignLead newCampaignLeadEntity() {
-        String leadId = getFAKER().internet().uuid();
+    public CampaignProspect newCampaignProspectEntity() {
+        String prospectId = getFAKER().internet().uuid();
         String sequenceId = getFAKER().internet().uuid();
-        return newCampaignLeadEntity(leadId, sequenceId);
+        return newCampaignProspectEntity(prospectId, sequenceId);
     }
 
-    public CampaignLead newCampaignLeadEntity(String leadId, String sequenceId) {
+    public CampaignProspect newCampaignProspectEntity(String prospectId, String sequenceId) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return CampaignLead.builder()
-                .lead(leadMockFactory.newEntity(leadId))
+        return CampaignProspect.builder()
+                .prospect(prospectMockFactory.newEntity(prospectId))
                 .sequence(sequenceMockFactory.newEntity(sequenceId))
                 .startDate(now)
                 .endDate(now.plusDays(10))

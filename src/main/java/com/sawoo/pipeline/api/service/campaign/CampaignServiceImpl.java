@@ -3,10 +3,10 @@ package com.sawoo.pipeline.api.service.campaign;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
-import com.sawoo.pipeline.api.dto.campaign.CampaignLeadDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadAddDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadBaseDTO;
-import com.sawoo.pipeline.api.dto.campaign.request.CampaignLeadCreateDTO;
+import com.sawoo.pipeline.api.dto.campaign.CampaignProspectDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
+import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.campaign.CampaignRepository;
@@ -30,18 +30,18 @@ import java.util.Set;
 public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, CampaignRepository, CampaignMapper> implements CampaignService {
 
     private final CampaignAccountService campaignAccountService;
-    private final CampaignLeadService campaignLeadService;
+    private final CampaignProspectService campaignProspectService;
 
     @Autowired
     public CampaignServiceImpl(CampaignRepository repository,
                                CampaignMapper mapper,
                                ApplicationEventPublisher publisher,
                                CampaignAccountService campaignAccountService,
-                               CampaignLeadService campaignLeadService,
+                               CampaignProspectService campaignProspectService,
                                AuditService audit) {
         super(repository, mapper, DBConstants.CAMPAIGN_DOCUMENT, publisher, audit);
         this.campaignAccountService = campaignAccountService;
-        this.campaignLeadService = campaignLeadService;
+        this.campaignProspectService = campaignProspectService;
     }
 
     @Override
@@ -60,32 +60,32 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     }
 
     @Override
-    public CampaignLeadDTO createLead(String campaignId, CampaignLeadCreateDTO campaignLead)
+    public CampaignProspectDTO createProspect(String campaignId, CampaignProspectCreateDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.createLead(campaignId, campaignLead);
+        return campaignProspectService.createProspect(campaignId, campaignProspect);
     }
 
     @Override
-    public CampaignLeadDTO addLead(String campaignId, CampaignLeadAddDTO campaignLead)
+    public CampaignProspectDTO addProspect(String campaignId, CampaignProspectAddDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.addLead(campaignId, campaignLead);
+        return campaignProspectService.addProspect(campaignId, campaignProspect);
     }
 
     @Override
-    public CampaignLeadDTO removeLead(String campaignId, String leadId)
+    public CampaignProspectDTO removeProspect(String campaignId, String prospectId)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.removeLead(campaignId, leadId);
+        return campaignProspectService.removeProspect(campaignId, prospectId);
     }
 
     @Override
-    public CampaignLeadDTO updateLead(String campaignId, String campaignLeadId, CampaignLeadBaseDTO campaignLead)
+    public CampaignProspectDTO updateProspect(String campaignId, String prospectId, CampaignProspectBaseDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.updateLead(campaignId, campaignLeadId, campaignLead);
+        return campaignProspectService.updateProspect(campaignId, prospectId, campaignProspect);
     }
 
     @Override
-    public List<CampaignLeadDTO> findAllLeads(String campaignId)
+    public List<CampaignProspectDTO> findAllProspects(String campaignId)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignLeadService.findAllLeads(campaignId);
+        return campaignProspectService.findAllProspects(campaignId);
     }
 }
