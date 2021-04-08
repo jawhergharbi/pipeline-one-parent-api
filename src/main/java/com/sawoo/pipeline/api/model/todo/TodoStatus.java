@@ -2,25 +2,23 @@ package com.sawoo.pipeline.api.model.todo;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.IllegalArgumentException;
+import com.sawoo.pipeline.api.common.validation.IEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Arrays;
 
-public enum TodoStatus {
+@Getter
+@AllArgsConstructor
+public enum TodoStatus implements IEnum<Integer> {
 
-    SCHEDULED(0),
+    PENDING(0),
     CANCELLED(1),
-    DONE(2),
-    RESCHEDULED(3);
+    COMPLETED(2),
+    ON_GOING(3),
+    UNASSIGNED(4);
 
-    private final int value;
-
-    TodoStatus(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return this.value;
-    }
+    private final Integer value;
 
     public static TodoStatus fromValue(int value) {
         return Arrays

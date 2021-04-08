@@ -1,9 +1,11 @@
 package com.sawoo.pipeline.api.service.todo;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.repository.todo.TodoRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
 import org.junit.jupiter.api.Assertions;
@@ -19,10 +21,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -69,9 +73,9 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
     @DisplayName("create: when entity does not exist - Success")
     void createWhenEntityDoesNotExistReturnsSuccess() {
         // Set up mocked entities
-        String PROSPECT_TODO_ID = getMockFactory().getComponentId();
+        String TODO_ID = getMockFactory().getComponentId();
         TodoDTO mockedDTO = getMockFactory().newDTO(null);
-        Todo todo = getMockFactory().newEntity(PROSPECT_TODO_ID);
+        Todo todo = getMockFactory().newEntity(TODO_ID);
 
         // Set up the mocked repository
         doReturn(todo).when(repository).insert(any(Todo.class));
@@ -80,12 +84,12 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
         TodoDTO returnedEntity = getService().create(mockedDTO);
 
         // Assert the response
-        Assertions.assertAll(String.format("Creating prospect todo with id [[%s] must return the proper entity", PROSPECT_TODO_ID),
+        Assertions.assertAll(String.format("Creating prospect todo with id [[%s] must return the proper entity", TODO_ID),
                 () -> Assertions.assertNotNull(returnedEntity, "Entity can not be null"),
                 () -> Assertions.assertEquals(
-                        PROSPECT_TODO_ID,
+                        TODO_ID,
                         returnedEntity.getId(),
-                        String.format("Prospect todo id must be [%s]", PROSPECT_TODO_ID)));
+                        String.format("Prospect todo id must be [%s]", TODO_ID)));
 
         verify(repository, never()).findById(anyString());
         verify(repository, times(1)).insert(any(Todo.class));
@@ -115,5 +119,53 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
 
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("create: when entity does not exist but status invalid - Failure")
+    void createWhenEntityDoesNotExistAndStatusInvalidReturnsFailure() {
+        // Set up mocked entities
+        TodoDTO mockedDTO = getMockFactory().newDTO(null);
+        mockedDTO.setStatus(1000);
+
+        // Act / Assert
+        TodoService service = getService();
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () ->  service.create(mockedDTO),
+                "create must throw a ConstraintViolationException");
+
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_ILLEGAL_ENUMERATION_VALUE_EXCEPTION)
+                        .matches(exception.getMessage()));
+        Assertions.assertEquals(1, exception.getConstraintViolations().size());
+
+        verify(repository, never()).insert(any(Todo.class));
+    }
+
+    @Test
+    @DisplayName("create: when entity does not exist and status must be pending - Failure")
+    void createWhenEntityDoesNotExistAndStatusInvalidReturnsSuccess() {
+        // Set up mocked entities
+        String TODO_ID = getMockFactory().getComponentId();
+        TodoDTO mockedDTO = getMockFactory().newDTO(null);
+        mockedDTO.setStatus(null);
+        Todo todo = getMockFactory().newEntity(TODO_ID);
+
+        // Set up the mocked repository
+        doReturn(todo).when(repository).insert(any(Todo.class));
+
+        // Execute the service call
+        TodoDTO returnedEntity = getService().create(mockedDTO);
+
+        // Assert the response
+        Assertions.assertAll(String.format("Creating prospect todo with id [[%s] must return the proper entity", TODO_ID),
+                () -> Assertions.assertNotNull(returnedEntity, "Entity can not be null"),
+                () -> Assertions.assertEquals(
+                        TODO_ID,
+                        returnedEntity.getId(),
+                        String.format("Prospect todo id must be [%s]", TODO_ID)));
+
+        verify(repository, times(1)).insert(any(Todo.class));
     }
 }

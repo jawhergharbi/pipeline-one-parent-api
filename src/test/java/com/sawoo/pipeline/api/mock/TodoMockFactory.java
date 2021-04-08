@@ -29,7 +29,7 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
                         .url(getFAKER().internet().url())
                         .description(getFAKER().lebowski().quote())
                         .build())
-                .status(TodoStatus.SCHEDULED.getValue())
+                .status(TodoStatus.PENDING.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
                 .type(0)
                 .assigneeId(getFAKER().internet().uuid())

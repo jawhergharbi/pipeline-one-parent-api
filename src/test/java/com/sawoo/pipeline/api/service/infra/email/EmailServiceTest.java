@@ -52,7 +52,7 @@ import static org.hamcrest.Matchers.containsString;
 @Tags({@Tag(value = "integration")})
 @Profile(value = {"integration-tests"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class EmailServiceTest {
+class EmailServiceTest {
 
     @Autowired
     private EmailService emailService;
