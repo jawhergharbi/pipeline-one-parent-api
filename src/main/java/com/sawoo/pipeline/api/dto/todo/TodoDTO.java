@@ -53,6 +53,9 @@ public class TodoDTO extends BaseEntityDTO {
     private LocalDateTime scheduled;
 
     @JMap
+    private LocalDateTime completionDate;
+
+    @JMap
     private String componentId;
 
     @JMap
