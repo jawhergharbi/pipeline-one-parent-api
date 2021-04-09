@@ -5,9 +5,9 @@ import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.todo.Todo;
-import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.repository.todo.TodoRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -43,6 +43,9 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
 
     @MockBean
     private TodoRepository repository;
+
+    @MockBean
+    private TodoServiceEventListener serviceEventListener;
 
     @Autowired
     public TodoServiceTest(TodoMockFactory mockFactory, TodoService service) {
@@ -93,6 +96,7 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
 
         verify(repository, never()).findById(anyString());
         verify(repository, times(1)).insert(any(Todo.class));
+        verify(serviceEventListener, times(1)).handleBeforeInsertEvent(any(BaseServiceBeforeInsertEvent.class));
     }
 
     @Test

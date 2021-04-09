@@ -9,12 +9,16 @@ import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Slf4j
 @Component
@@ -57,5 +61,20 @@ public class TodoServiceEventListener {
     private UserAuthDetails getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth != null ? (UserAuthDetails) auth.getPrincipal() : null;
+    }
+
+    @EventListener
+    public void handleBeforeSaveEvent(BaseServiceBeforeSaveEvent<TodoDTO, Todo> event) {
+        log.debug("Todo before save listener");
+        Todo entity = event.getModel();
+
+        // Status: DONE. Completion Date must be informed
+        if (entity.getStatus().equals(TodoStatus.COMPLETED.getValue())) {
+            if (entity.getCompletionDate() == null) {
+                entity.setCompletionDate(LocalDateTime.now(ZoneOffset.UTC));
+            }
+        } else {
+            entity.setCompletionDate(null);
+        }
     }
 }

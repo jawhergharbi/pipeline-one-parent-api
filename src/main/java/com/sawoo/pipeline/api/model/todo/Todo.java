@@ -45,6 +45,9 @@ public class Todo extends BaseEntity {
     private LocalDateTime scheduled;
 
     @JMap
+    private LocalDateTime completionDate;
+
+    @JMap
     private String componentId;
 
     @JMap
