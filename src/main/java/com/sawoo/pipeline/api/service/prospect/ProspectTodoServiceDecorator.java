@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.todo.TodoService;
@@ -163,22 +164,27 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
 
     @Override
     public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        log.debug("Get todos from prospecst [{}] with status [{}] and types[{}]", prospectIds, status, types);
+        log.debug("Get TODOs from prospects [{}] with status [{}] and types[{}]", prospectIds, status, types);
 
-        List<TodoDTO> todos = todoService.findBy(prospectIds, status, types);
+        List<TodoDTO> todos = todoService.searchBy(prospectIds, status, types);
         if (!todos.isEmpty()) {
             List<Prospect> prospects = prospectIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(prospectIds);
+            return mapTODOsProspects(todos, prospects);
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
-            // throw exception if prospects.size < prospectIds.size
+    @Override
+    public List<ProspectTodoDTO> searchBy(TodoSearch searchCriteria) {
+        log.debug("Search TODOs with the following search criteria [{}]", searchCriteria);
 
-            return todos
-                    .stream()
-                    .map(t -> {
-                        ProspectTodoDTO todo = mapper.getTodoMapperOut().getDestination(t);
-                        Optional<Prospect> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getComponentId())).findAny();
-                        prospect.ifPresent(value -> todo.setProspect(mapper.getProspectTodoMapperOut().getDestination(value)));
-                        return todo;
-                    }).collect(Collectors.toList());
+        List<TodoDTO> todos = todoService.searchBy(searchCriteria);
+        if (!todos.isEmpty()) {
+            List<Prospect> prospects = searchCriteria.getComponentIds().isEmpty() ?
+                    Collections.emptyList() :
+                    repository.findAllByIdIn(searchCriteria.getComponentIds());
+            return mapTODOsProspects(todos, prospects);
         } else {
             return Collections.emptyList();
         }
@@ -198,6 +204,17 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
         user.ifPresent(todo::setAssignee);
         return todo;
+    }
+
+    private List<ProspectTodoDTO> mapTODOsProspects(List<TodoDTO> todos, List<Prospect> prospects) {
+        return todos
+                .stream()
+                .map(t -> {
+                    ProspectTodoDTO todo = mapper.getTodoMapperOut().getDestination(t);
+                    Optional<Prospect> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getComponentId())).findAny();
+                    prospect.ifPresent(value -> todo.setProspect(mapper.getProspectTodoMapperOut().getDestination(value)));
+                    return todo;
+                }).collect(Collectors.toList());
     }
 
     private void validateTodoScheduled(List<Todo> currentTodos, TodoDTO newTodo, String prospectId) {

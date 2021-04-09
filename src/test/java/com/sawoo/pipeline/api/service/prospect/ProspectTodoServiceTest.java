@@ -5,12 +5,14 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import com.sawoo.pipeline.api.service.todo.TodoMapper;
@@ -30,6 +32,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -470,5 +473,56 @@ class ProspectTodoServiceTest extends BaseLightServiceTest<ProspectDTO, Prospect
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
+    }
+
+    @Test
+    @DisplayName("searchBy: search criteria entity null - Failure")
+    void searchByWhenSearchInvalidFoundReturnsFailure() {
+        // Execute and assert
+        ProspectService service = getService();
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> service.searchBy(null),
+                "searchBy must throw an ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+                        .matches(exception.getMessage()));
+    }
+
+    @Test
+    @DisplayName("searchBy: search entity not null and entities found - Success")
+    void searchByWhenSearchNotNullAndEntitiesFoundReturnsSuccess() {
+        // Set up mocked entities
+        String COMPONENT_ID_1 = getMockFactory().getFAKER().internet().uuid();
+        String COMPONENT_ID_2 = getMockFactory().getFAKER().internet().uuid();
+        List<String> componentIds = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        TodoSearch search = TodoSearch.builder()
+                .componentIds(componentIds)
+                .build();
+        int TODO_SIZE = 4;
+        List<TodoDTO> todos = IntStream.range(0, TODO_SIZE).mapToObj( (idx) -> {
+            String TODO_ID = getMockFactory().getComponentId();
+            TodoDTO todo = getMockFactory().getTodoMockFactory().newDTO(TODO_ID);
+            int componentIndex = getMockFactory().getFAKER().number().numberBetween(0, 2);
+            String componentId = componentIds.get(componentIndex);
+            todo.setComponentId(componentId);
+            return todo;
+        }).collect(Collectors.toList());
+        List<Prospect> prospects = Arrays.asList(getMockFactory().newEntity(COMPONENT_ID_1), getMockFactory().newEntity(COMPONENT_ID_2));
+
+
+        // Set up the mocked repository
+        doReturn(todos).when(todoService).searchBy(any(TodoSearch.class));
+        doReturn(prospects).when(repository).findAllByIdIn(componentIds);
+
+        // Execute the service call
+        List<ProspectTodoDTO> entityList = getService().searchBy(search);
+
+        // Assertions
+        Assertions.assertAll("List of TODOs must contain results",
+                () -> Assertions.assertFalse(entityList.isEmpty(), "Todo list can not be empty"),
+                () -> Assertions.assertEquals(TODO_SIZE, entityList.size(), String.format("Todo list size must be [%d]", TODO_SIZE)));
     }
 }

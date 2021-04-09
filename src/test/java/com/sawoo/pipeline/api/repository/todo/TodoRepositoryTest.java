@@ -2,6 +2,9 @@ package com.sawoo.pipeline.api.repository.todo;
 
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
+import com.sawoo.pipeline.api.model.todo.TodoSourceType;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -79,14 +82,14 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("findByComponentIdIn: entities found - Success")
     void findByComponentIdInWhenEntitiesFoundReturnsSuccess() {
         // Assign
-        int ENTITY_SIZE = 7;
+        int ENTITY_SIZE = 8;
         List<String> COMPONENTS_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
         List<Todo> todos = getRepository().findByComponentIdIn(COMPONENTS_IDS);
 
         // Assertions
-        Assertions.assertAll(String.format("TODOs for prospect with ids [%s]", COMPONENTS_IDS.toArray()),
+        Assertions.assertAll(String.format("TODOs for componentIds with ids [%s]", COMPONENTS_IDS.toArray()),
                 () -> Assertions.assertFalse(todos.isEmpty(), "List of todos can not be null"),
                 () -> Assertions.assertEquals(
                         ENTITY_SIZE,
@@ -143,7 +146,7 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
     void findByWhenStatusListTypeListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int ENTITY_SIZE = 7;
+        int ENTITY_SIZE = 8;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -157,7 +160,7 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListNullTypeListNullAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int ENTITY_SIZE = 7;
+        int ENTITY_SIZE = 8;
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
@@ -171,7 +174,7 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
     void findByStatusAndTypeWhenStatusListTypeListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
-        int ENTITY_SIZE = 5;
+        int ENTITY_SIZE = 6;
         List<Integer> types = Collections.singletonList(1);
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
@@ -186,7 +189,7 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("findByAssigneeId: filter todos by userId - Success")
     void findByAssigneeIdWhenUserIdDoesExistReturnsSuccess() {
         // Assign
-        int ENTITY_SIZE = 5;
+        int ENTITY_SIZE = 6;
         String ASSIGNEE_ID = "5fa317cd0efe4d20ad3edd13";
 
         // Execute query
@@ -215,5 +218,118 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
                 () -> Assertions.assertTrue(
                         todos.isEmpty(),
                         "TODOs must be empty"));
+    }
+
+    @Test
+    @DisplayName("searchBy: search by status and sourceId")
+    void searchByWhenStatusAndSourceIdReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 2;
+        String SOURCE_ID = "60647e3d631a80a71795ff03";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        List<Todo> todos = getRepository().searchBy(searchBy);
+
+        Assertions.assertAll(String.format("TODOs filter by search criteria [%s]", searchBy),
+                () -> Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty"),
+                () -> Assertions.assertEquals(TODO_SIZE, todos.size(), String.format("TODOs size must be [%d]", TODO_SIZE)));
+    }
+
+    @Test
+    @DisplayName("searchBy: search by status, sourceId and sourceType")
+    void searchByWhenStatusAndSourceIdAndSourceTypeReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 1;
+        String SOURCE_ID = "wrong_source_id";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceType(Collections.singletonList(TodoSourceType.AUTOMATIC.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        List<Todo> todos = getRepository().searchBy(searchBy);
+
+        Assertions.assertTrue(todos.isEmpty(), "TODOs must be empty");
+    }
+
+    @Test
+    @DisplayName("searchBy: no entities fit the search criteria")
+    void searchByWhenNoEntitiesFitSearchCriteriaReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 1;
+        String SOURCE_ID = "60647e3d631a80a71795ff03";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceType(Collections.singletonList(TodoSourceType.AUTOMATIC.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        List<Todo> todos = getRepository().searchBy(searchBy);
+
+        Assertions.assertAll(String.format("TODOs filter by search criteria [%s]", searchBy),
+                () -> Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty"),
+                () -> Assertions.assertEquals(TODO_SIZE, todos.size(), String.format("TODOs size must be [%d]", TODO_SIZE)));
+    }
+
+    @Test
+    @DisplayName("remove: remove by status and sourceId")
+    void removeWhenStatusAndSourceIdReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 2;
+        String SOURCE_ID = "60647e3d631a80a71795ff03";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        long deleted = getRepository().remove(searchBy);
+
+        // Assertions
+        Assertions.assertEquals(TODO_SIZE, deleted, String.format("TODOs deleted must be [%d]", TODO_SIZE));
+    }
+
+    @Test
+    @DisplayName("remove: remove by status, sourceId and sourceType")
+    void removeWhenStatusAndSourceIdAndSourceTypeReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 1;
+        String SOURCE_ID = "60647e3d631a80a71795ff03";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceType(Collections.singletonList(TodoSourceType.AUTOMATIC.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        long deleted = getRepository().remove(searchBy);
+
+        // Assertions
+        Assertions.assertEquals(TODO_SIZE, deleted, String.format("TODOs deleted must be [%d]", TODO_SIZE));
+    }
+
+    @Test
+    @DisplayName("remove: no entities fit the search criteria")
+    void removeWhenNoEntitiesFitSearchCriteriaReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 0;
+        String SOURCE_ID = "wrong_source_id";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceType(Collections.singletonList(TodoSourceType.AUTOMATIC.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        long deleted = getRepository().remove(searchBy);
+
+        // Assertions
+        Assertions.assertEquals(TODO_SIZE, deleted, String.format("TODOs deleted must be [%d]", TODO_SIZE));
     }
 }

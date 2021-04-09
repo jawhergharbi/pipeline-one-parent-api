@@ -13,12 +13,15 @@ import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +31,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,8 +44,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,7 +78,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/propects/{id}/todos: prospect id and todo valid - Success")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect id and todo valid - Success")
     void addTODOWhenProspectIdAndTODOValidReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -100,7 +106,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/propects/{id}/todos: prospect id null and TODO valid - Success")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect id null and TODO valid - Success")
     void addTODOWhenProspectIdAndTODONotValidReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -123,7 +129,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/propects/{id}/todos: prospect not found and TODO valid - Success")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect not found and TODO valid - Success")
     void addTODOWhenProspectNotFoundAndTODOValidReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -148,7 +154,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/propects/{id}/todos: prospect not found and TODO valid - Failure")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect not found and TODO valid - Failure")
     void addTODOWhenProspectFoundAndTODOAlreadyScheduledReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -173,7 +179,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("DELETE /api/propects/{id}/todos/{todoId}: prospect and TODO found - Success")
+    @DisplayName("DELETE /api/prospects/{id}/todos/{todoId}: prospect and TODO found - Success")
     void removeTODOWhenProspectFoundAndTODOFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -196,7 +202,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("DELETE /api/propects/{id}/todos/{todoId}: prospect not found - Success")
+    @DisplayName("DELETE /api/prospects/{id}/todos/{todoId}: prospect not found - Success")
     void removeTODOWhenProspectNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -219,7 +225,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("DELETE /api/propects/{id}/todos/{todoId}: prospect not found and TODO found - Success")
+    @DisplayName("DELETE /api/prospects/{id}/todos/{todoId}: prospect not found and TODO found - Success")
     void removeTODOWhenTODONotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -242,7 +248,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/propects/{id}/todos: prospect found and TODO list - Success")
+    @DisplayName("GET /api/prospects/{id}/todos: prospect found and TODO list - Success")
     void getTODOsWhenProspectFoundAndTODOListFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -281,7 +287,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/propects/{id}/todos: prospect found and TODO list is empty- Success")
+    @DisplayName("GET /api/prospects/{id}/todos: prospect found and TODO list is empty- Success")
     void getTODOsWhenProspectFoundAndTODOListEmptyReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -302,7 +308,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/propects/{id}/todos: prospect not found - Failure")
+    @DisplayName("GET /api/prospects/{id}/todos: prospect not found - Failure")
     void getTODOsWhenProspectNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -326,7 +332,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/propects/{id}/todos/{todoId}: prospect and TODO found - Success")
+    @DisplayName("GET /api/prospects/{id}/todos/{todoId}: prospect and TODO found - Success")
     void getTODOWhenProspectFoundAndTODOFoundReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -362,7 +368,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/propects/{id}/todos/{todoId}: prospect not found - Failure")
+    @DisplayName("GET /api/prospects/{id}/todos/{todoId}: prospect not found - Failure")
     void getTODOWhenProspectNotFoundReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -385,5 +391,37 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
                 .andExpect(jsonPath("$.message", stringContainsInOrder(
                         String.format("GET operation. Component type [%s]", getEntityType()),
                         PROSPECT_ID)));
+    }
+
+    @Test
+    @DisplayName("GET /api/prospects/{ids}/todos/search: prospect not found - Success")
+    void searchTODOWhenTODOsFoundReturnsSuccess() throws Exception {
+        String PROSPECT_ID_1 = getMockFactory().getComponentId();
+        String PROSPECT_ID_2 = getMockFactory().getComponentId();
+        String[] prospectIds = Arrays.asList(PROSPECT_ID_1, PROSPECT_ID_2).toArray(new String[0]);
+
+
+        // setup the mocked service
+        doReturn(Collections.emptyList()).when(service).searchBy(any(TodoSearch.class));
+
+        // Execute the GET request
+        mockMvc.perform(get(
+                getResourceURI() +
+                        "/{ids}/" +
+                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
+                        "/search",
+                String.join(",", prospectIds)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        // Verify
+        ArgumentCaptor<TodoSearch> todoSearchCaptor = ArgumentCaptor.forClass(TodoSearch.class);
+        verify(service, atMostOnce()).searchBy(todoSearchCaptor.capture());
+
+        Assertions.assertTrue(
+                todoSearchCaptor.getValue().getComponentIds().contains(PROSPECT_ID_1),
+                String.format("TodoSearch componentIds must include [%s]", PROSPECT_ID_1));
     }
 }

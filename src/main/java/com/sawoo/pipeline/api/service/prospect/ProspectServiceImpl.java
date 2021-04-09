@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import com.sawoo.pipeline.api.service.infra.audit.AuditService;
@@ -92,6 +93,11 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     @Override
     public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
         return todoService.findBy(prospectIds, status, types);
+    }
+
+    @Override
+    public List<ProspectTodoDTO> searchBy(TodoSearch searchCriteria) {
+        return todoService.searchBy(searchCriteria);
     }
 
     @Override

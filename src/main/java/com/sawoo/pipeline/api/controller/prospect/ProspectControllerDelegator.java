@@ -6,8 +6,10 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerDelegator;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -69,6 +71,11 @@ public class ProspectControllerDelegator extends BaseControllerDelegator<Prospec
     @Override
     public ResponseEntity<TodoAssigneeDTO> getTODO(String prospectId, String todoId) throws ResourceNotFoundException {
         return prospectTODODelegator.getTODO(prospectId, todoId);
+    }
+
+    @Override
+    public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(TodoSearch searchCriteria) {
+        return prospectTODODelegator.searchTODOs(searchCriteria);
     }
 
     @Override
