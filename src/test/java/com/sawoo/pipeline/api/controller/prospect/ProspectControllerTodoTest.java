@@ -31,7 +31,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -394,12 +393,9 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("GET /api/prospects/{ids}/todos/search: prospect not found - Success")
+    @DisplayName("GET /api/prospects/{id}/todos/search: prospect not found - Success")
     void searchTODOWhenTODOsFoundReturnsSuccess() throws Exception {
-        String PROSPECT_ID_1 = getMockFactory().getComponentId();
-        String PROSPECT_ID_2 = getMockFactory().getComponentId();
-        String[] prospectIds = Arrays.asList(PROSPECT_ID_1, PROSPECT_ID_2).toArray(new String[0]);
-
+        String PROSPECT_ID = getMockFactory().getComponentId();
 
         // setup the mocked service
         doReturn(Collections.emptyList()).when(service).searchBy(any(TodoSearch.class));
@@ -407,10 +403,9 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         // Execute the GET request
         mockMvc.perform(get(
                 getResourceURI() +
-                        "/{ids}/" +
+                        "/{id}/" +
                         ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
-                        "/search",
-                String.join(",", prospectIds)))
+                        "/search", PROSPECT_ID))
 
                 // Validate the response code and the content type
                 .andExpect(status().isOk())
@@ -421,7 +416,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         verify(service, atMostOnce()).searchBy(todoSearchCaptor.capture());
 
         Assertions.assertTrue(
-                todoSearchCaptor.getValue().getComponentIds().contains(PROSPECT_ID_1),
-                String.format("TodoSearch componentIds must include [%s]", PROSPECT_ID_1));
+                todoSearchCaptor.getValue().getComponentIds().contains(PROSPECT_ID),
+                String.format("TodoSearch componentIds must include [%s]", PROSPECT_ID));
     }
 }

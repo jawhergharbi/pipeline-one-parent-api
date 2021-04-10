@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -139,17 +140,17 @@ public class ProspectController {
     }
 
     @GetMapping(
-            value = "/{ids}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/search",
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/search",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
-            @PathVariable("ids") List<String> prospects,
+            @PathVariable("id") String id,
             @RequestParam(value = "status", required = false) List<Integer> status,
             @RequestParam(value = "types", required = false) List<Integer> types,
             @RequestParam(value = "sourceIds", required = false) List<String> sourceIds,
             @RequestParam(value = "sourceTypes", required = false) List<Integer> sourceTypes) {
         TodoSearch search = TodoSearch.builder()
-                .componentIds(prospects)
+                .componentIds(Collections.singletonList(id))
                 .status(status)
                 .types(types)
                 .sourceId(sourceIds)
