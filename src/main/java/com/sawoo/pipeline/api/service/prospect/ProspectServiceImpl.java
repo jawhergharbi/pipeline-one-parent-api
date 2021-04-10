@@ -16,6 +16,7 @@ import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -42,8 +43,9 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
                                ProspectReportService reportService,
                                ProspectTodoService todoService,
                                ProspectSequenceTodoService sequenceTodoService,
+                               ApplicationEventPublisher publisher,
                                AuditService audit) {
-        super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, audit);
+        super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, publisher, audit);
         this.reportService = reportService;
         this.todoService = todoService;
         this.sequenceTodoService = sequenceTodoService;

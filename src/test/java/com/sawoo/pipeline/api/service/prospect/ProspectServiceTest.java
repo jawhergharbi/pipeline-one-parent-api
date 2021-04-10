@@ -10,6 +10,7 @@ import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceTest;
+import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +45,9 @@ class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, Prospec
 
     @MockBean
     private ProspectRepository repository;
+
+    @MockBean
+    private ProspectServiceEventListener eventListener;
 
     @Autowired
     public ProspectServiceTest(ProspectMockFactory mockFactory, ProspectService service) {
@@ -101,6 +105,7 @@ class ProspectServiceTest extends BaseServiceTest<ProspectDTO, Prospect, Prospec
 
         verify(repository, times(1)).findById(anyString());
         verify(repository, times(1)).insert(any(Prospect.class));
+        verify(eventListener, times(1)).handleBeforeInsertEvent(any(BaseServiceBeforeInsertEvent.class));
     }
 
     @Test
