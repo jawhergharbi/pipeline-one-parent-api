@@ -15,7 +15,7 @@ public class ProspectServiceEventListener {
 
     @EventListener
     public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<ProspectDTO, Prospect> event) {
-        log.debug("Prospect before save listener");
+        log.debug("Prospect before insert listener");
         Prospect entity = event.getModel();
         // Add default status
         if (entity.getQualification() == null) {

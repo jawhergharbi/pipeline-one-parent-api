@@ -1,13 +1,13 @@
 package com.sawoo.pipeline.api.repository.company;
 
 import com.sawoo.pipeline.api.model.company.Company;
+import com.sawoo.pipeline.api.repository.base.BaseMongoRepository;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
 @JaversSpringDataAuditable
-public interface CompanyRepository extends MongoRepository<Company, String> {
+public interface CompanyRepository extends BaseMongoRepository<Company> {
 
     Optional<Company> findByName(String name);
 }

@@ -6,9 +6,13 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoSearchDTO;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface ProspectTodoService {
@@ -35,4 +39,14 @@ public interface ProspectTodoService {
             throws ResourceNotFoundException;
 
     List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types);
+
+    List<ProspectTodoDTO> searchBy(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch searchCriteria);
+
+    long removeTODOs(
+            @Valid
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO searchCriteria);
+
+    long removeTODOs(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) List<String> todoIds);
 }

@@ -8,13 +8,16 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoSearchDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseServiceImpl;
 import com.sawoo.pipeline.api.service.infra.audit.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -41,8 +44,9 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
                                ProspectReportService reportService,
                                ProspectTodoService todoService,
                                ProspectSequenceTodoService sequenceTodoService,
+                               ApplicationEventPublisher publisher,
                                AuditService audit) {
-        super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, audit);
+        super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, publisher, audit);
         this.reportService = reportService;
         this.todoService = todoService;
         this.sequenceTodoService = sequenceTodoService;
@@ -92,6 +96,21 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     @Override
     public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
         return todoService.findBy(prospectIds, status, types);
+    }
+
+    @Override
+    public List<ProspectTodoDTO> searchBy(TodoSearch searchCriteria) {
+        return todoService.searchBy(searchCriteria);
+    }
+
+    @Override
+    public long removeTODOs(TodoSearchDTO searchCriteria) {
+        return todoService.removeTODOs(searchCriteria);
+    }
+
+    @Override
+    public long removeTODOs(List<String> todoIds) {
+        return todoService.removeTODOs(todoIds);
     }
 
     @Override

@@ -1,11 +1,14 @@
 package com.sawoo.pipeline.api.controller.prospect;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.dto.audit.VersionDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.model.todo.TodoSearch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -132,6 +137,26 @@ public class ProspectController {
     public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
             @PathVariable("id") String id) {
         return delegator.getTODOs(id);
+    }
+
+    @GetMapping(
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/search",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
+            @PathVariable("id") String id,
+            @RequestParam(value = "status", required = false) List<Integer> status,
+            @RequestParam(value = "types", required = false) List<Integer> types,
+            @RequestParam(value = "sourceIds", required = false) List<String> sourceIds,
+            @RequestParam(value = "sourceTypes", required = false) List<Integer> sourceTypes) {
+        TodoSearch search = TodoSearch.builder()
+                .componentIds(Collections.singletonList(id))
+                .status(status)
+                .types(types)
+                .sourceId(sourceIds)
+                .sourceType(sourceTypes)
+                .build();
+        return delegator.searchTODOs(search);
     }
 
     @GetMapping(

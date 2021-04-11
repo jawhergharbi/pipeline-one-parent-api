@@ -72,9 +72,9 @@ public class CampaignServiceImpl extends BaseServiceImpl<CampaignDTO, Campaign, 
     }
 
     @Override
-    public CampaignProspectDTO removeProspect(String campaignId, String prospectId)
+    public CampaignProspectDTO removeProspect(String campaignId, String prospectId, List<String> todoIds)
             throws ResourceNotFoundException, CommonServiceException {
-        return campaignProspectService.removeProspect(campaignId, prospectId);
+        return campaignProspectService.removeProspect(campaignId, prospectId, todoIds);
     }
 
     @Override

@@ -14,20 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRepository, CompanyMockFactory> {
+class CompanyRepositoryTest extends BaseRepositoryTest<Company, CompanyRepository, CompanyMockFactory> {
 
-    private static final String COMPANY_JSON_DATA_FILE_NAME = "company-test-data.json";
-    private static final String COMPANY_ID = "5fa3ce63ee4ef64d966da45b";
+    private static final String TEST_JSON_DATA_FILE_NAME = "company-test-data.json";
+    private static final String ENTITY_ID = "6072a9d36605fb3ba7f432ee";
 
     @Autowired
     public CompanyRepositoryTest(CompanyRepository repository, CompanyMockFactory mockFactory) {
-        super(repository, COMPANY_JSON_DATA_FILE_NAME, COMPANY_ID, Company.class.getSimpleName(), mockFactory);
+        super(repository, TEST_JSON_DATA_FILE_NAME, ENTITY_ID, Company.class.getSimpleName(), mockFactory);
     }
 
     @Override

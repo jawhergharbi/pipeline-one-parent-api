@@ -10,12 +10,14 @@ import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectAddDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectBaseDTO;
 import com.sawoo.pipeline.api.dto.campaign.request.CampaignProspectCreateDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoSearchDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignProspect;
 import com.sawoo.pipeline.api.model.campaign.CampaignProspectStatus;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.repository.sequence.SequenceRepository;
 import com.sawoo.pipeline.api.service.account.AccountProspectService;
 import com.sawoo.pipeline.api.service.prospect.ProspectService;
@@ -28,6 +30,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -94,7 +98,8 @@ public class CampaignProspectServiceDecorator implements CampaignProspectService
     @Override
     public CampaignProspectDTO removeProspect(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId) {
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId,
+            List<String> todoIds) {
         log.debug("Remove prospect with id [{}] to campaign id [{}]", campaignId, prospectId);
 
         Campaign campaign = findCampaignById(campaignId);
@@ -106,9 +111,22 @@ public class CampaignProspectServiceDecorator implements CampaignProspectService
                 .map(prospect -> {
                     log.debug("Prospect id [{}] for campaign id [{}] has been found", prospectId, campaignId);
 
+                    // Remove prospect from campaign
                     removeCampaignProspect(campaign, prospect);
                     campaign.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                     campaignService.getRepository().save(campaign);
+
+                    // Delete tasks
+                    if (todoIds != null && !todoIds.isEmpty()) {
+                        prospectService.removeTODOs(todoIds);
+                    } else {
+                        TodoSearchDTO search = TodoSearchDTO.builder()
+                                .componentIds(Collections.singletonList(prospect.getProspect().getId()))
+                                .sourceId(Collections.singletonList(prospect.getSequence().getId()))
+                                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.ON_GOING.getValue()))
+                                .build();
+                        prospectService.removeTODOs(search);
+                    }
 
                     return campaignService.getMapper().getMapperProspectCampaignOut().getDestination(prospect);
                 })

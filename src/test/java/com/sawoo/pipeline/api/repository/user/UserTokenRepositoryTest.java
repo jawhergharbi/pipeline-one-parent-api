@@ -22,7 +22,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserTokenRepository, UserTokenMockFactory> {
+class UserTokenRepositoryTest extends BaseRepositoryTest<UserToken, UserTokenRepository, UserTokenMockFactory> {
 
     private static final String USER_TOKEN_JSON_DATA_FILE_NAME = "user-token-test-data.json";
     private static final String TOKEN_ID = "42762a54-62c9-11eb-ae93-0242ac130002";
