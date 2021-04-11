@@ -300,7 +300,7 @@ class CampaignProspectServiceTest extends BaseLightServiceTest<CampaignDTO, Camp
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
 
         // Execute the service call
-        CampaignProspectDTO campaignProspectDTO = getService().removeProspect(CAMPAIGN_ID, PROSPECT_ID);
+        CampaignProspectDTO campaignProspectDTO = getService().removeProspect(CAMPAIGN_ID, PROSPECT_ID, null);
 
         // Assertions
         Assertions.assertAll("Campaign Prospect component must be properly informed",
@@ -330,7 +330,7 @@ class CampaignProspectServiceTest extends BaseLightServiceTest<CampaignDTO, Camp
         CampaignService service = getService();
         ResourceNotFoundException exception = Assertions.assertThrows(
                 ResourceNotFoundException.class,
-                () -> service.removeProspect(CAMPAIGN_ID, PROSPECT_ID),
+                () -> service.removeProspect(CAMPAIGN_ID, PROSPECT_ID, null),
                 "removeProspect must throw ResourceNotFoundException");
 
         // Assertions
@@ -361,7 +361,7 @@ class CampaignProspectServiceTest extends BaseLightServiceTest<CampaignDTO, Camp
         CampaignService service = getService();
         CommonServiceException exception = Assertions.assertThrows(
                 CommonServiceException.class,
-                () -> service.removeProspect(CAMPAIGN_ID, PROSPECT_ID),
+                () -> service.removeProspect(CAMPAIGN_ID, PROSPECT_ID, null),
                 "removeProspect must throw CommonServiceException");
 
         Assertions.assertEquals(

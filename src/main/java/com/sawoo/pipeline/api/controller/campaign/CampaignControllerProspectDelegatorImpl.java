@@ -57,7 +57,8 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId)
             throws ResourceNotFoundException, CommonServiceException {
-        return ResponseEntity.ok().body(service.removeProspect(campaignId, prospectId));
+        // TODO add TODOIds
+        return ResponseEntity.ok().body(service.removeProspect(campaignId, prospectId, null));
     }
 
     @Override

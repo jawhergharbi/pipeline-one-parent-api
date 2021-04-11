@@ -94,7 +94,8 @@ public class CampaignProspectServiceDecorator implements CampaignProspectService
     @Override
     public CampaignProspectDTO removeProspect(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId) {
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId,
+            List<String> todoIds) {
         log.debug("Remove prospect with id [{}] to campaign id [{}]", campaignId, prospectId);
 
         Campaign campaign = findCampaignById(campaignId);
