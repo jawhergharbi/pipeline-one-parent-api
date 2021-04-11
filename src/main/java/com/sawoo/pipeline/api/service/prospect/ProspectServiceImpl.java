@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoSearchDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.todo.TodoSearch;
@@ -100,6 +101,16 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     @Override
     public List<ProspectTodoDTO> searchBy(TodoSearch searchCriteria) {
         return todoService.searchBy(searchCriteria);
+    }
+
+    @Override
+    public long removeTODOs(TodoSearchDTO searchCriteria) {
+        return todoService.removeTODOs(searchCriteria);
+    }
+
+    @Override
+    public long removeTODOs(List<String> todoIds) {
+        return todoService.removeTODOs(todoIds);
     }
 
     @Override

@@ -101,11 +101,7 @@ class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceReposi
         String SEQUENCE_ID = "60278c41d0629e9f04279cf3";
         int SEQUENCE_STEPS_SIZE = 1;
         Optional<Sequence> sequence = getRepository().findById(SEQUENCE_ID);
-        Function<Sequence, String> getStep =
-                (s) -> (s.getSteps().isEmpty() || s.getSteps().get(0) == null) ?
-                        null :
-                        s.getSteps().get(0).getId();
-        String SEQUENCE_STEP_ID = sequence.map(getStep).orElse(null);
+        String SEQUENCE_STEP_ID = getFirstStepId(sequence);
 
         // Act
         getRepository().deleteById(SEQUENCE_ID);
@@ -445,6 +441,30 @@ class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceReposi
         Assertions.assertTrue(sequence.isEmpty(), String.format("Sequence with id: [%s] can not be found", COMPONENT_ID));
     }
 
+    @Test
+    @DisplayName("deleteByIdIn: entity  found - Success")
+    void deleteByIdInWhenEntitiesFoundAndOneEntityIsLeftReturnsSuccess() {
+        // Arrange
+        int LIST_SIZE = 2;
+        String COMPONENT_ID = "60278c41d0629e9f04279cf3";
+        int REMAINING_SIZE = getDocumentSize() - LIST_SIZE;
+        Optional<Sequence> sequence = getRepository().findById(COMPONENT_ID);
+        String SEQUENCE_STEP_ID = getFirstStepId(sequence);
+
+
+        // Act
+        List<Sequence> deletes = getRepository().deleteByIdIn(Arrays.asList(getComponentId(), COMPONENT_ID));
+        List<Sequence> sequences = getRepository().findAll();
+        Optional<SequenceStep> step = sequenceStepRepository.findById(SEQUENCE_STEP_ID);
+
+        // Assert
+        Assertions.assertFalse(deletes.isEmpty(), "List of deleted entities can not be empty");
+        Assertions.assertEquals(LIST_SIZE, deletes.size(), String.format("Size of the list of deleted entities must be [%d]", LIST_SIZE));
+        Assertions.assertFalse(sequences.isEmpty(), "List of remaining entities can not be empty");
+        Assertions.assertEquals(REMAINING_SIZE, sequences.size(), String.format("Size of the list of entities must be [%d]", REMAINING_SIZE));
+        Assertions.assertFalse(step.isPresent(), String.format("Step with id: [%s] from sequence id: [%s]", SEQUENCE_STEP_ID, COMPONENT_ID));
+    }
+
     private void assertListOfSequence(List<Sequence> sequences, int expectedSize) {
         if (expectedSize > 0) {
             Assertions.assertFalse(sequences.isEmpty(), "Sequence list can not be empty");
@@ -468,5 +488,13 @@ class SequenceRepositoryTest extends BaseRepositoryTest<Sequence, SequenceReposi
                     sequences.isEmpty(),
                     String.format("Sequence list for status [%s] must be not empty", status));
         }
+    }
+
+    private String getFirstStepId(Optional<Sequence> sequence) {
+        Function<Sequence, String> getStep =
+                (s) -> (s.getSteps().isEmpty() || s.getSteps().get(0) == null) ?
+                        null :
+                        s.getSteps().get(0).getId();
+        return sequence.map(getStep).orElse(null);
     }
 }

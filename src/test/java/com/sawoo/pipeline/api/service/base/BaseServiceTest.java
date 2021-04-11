@@ -5,21 +5,23 @@ import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.mock.MockFactory;
 import com.sawoo.pipeline.api.model.BaseEntity;
+import com.sawoo.pipeline.api.repository.base.BaseMongoRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.verify;
 
 @NoArgsConstructor
 @Getter
-public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRepository<M, String>, S extends BaseService<D>, F extends MockFactory<D, M>> {
+public abstract class BaseServiceTest<D, M extends BaseEntity, R extends BaseMongoRepository<M>, S extends BaseService<D>, F extends MockFactory<D, M>> {
 
     @Setter
     private R repository;
@@ -87,8 +89,8 @@ public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRe
                 () -> service.findById(COMPONENT_ID),
                 "findById must throw a ResourceNotFoundException");
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -112,8 +114,8 @@ public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRe
                 "create must throw a CommonServiceException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
                 ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION,
+                exception.getMessage(),
                 "Exception message must be " + ExceptionMessageConstants.COMMON_CREATE_ENTITY_ALREADY_EXISTS_EXCEPTION);
         Assertions.assertEquals(
                 2,
@@ -183,6 +185,28 @@ public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRe
     }
 
     @Test
+    @DisplayName("deleteByIdIn: entities found and delete - Success")
+    void deleteByIdInWhenThereAreNoEntitiesReturnsSuccess() {
+        // Set up mocked entities
+        String COMPONENT_ID_1 = getMockFactory().getFAKER().internet().uuid();
+        String COMPONENT_ID_2 = getMockFactory().getFAKER().internet().uuid();
+        List<String> ids = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        int LIST_SIZE = 2;
+        List<M> entityList = IntStream.range(0, LIST_SIZE)
+                .mapToObj((idx) -> getMockFactory().newEntity(ids.get(idx))).collect(Collectors.toList());
+
+        // Set up the mocked repository
+        doReturn(entityList).when(repository).deleteByIdIn(anyList());
+
+        // Execute the service call
+        List<D> returnedList = service.deleteByIds(ids);
+
+        Assertions.assertFalse(returnedList.isEmpty(), "Returned list can not be empty");
+
+        verify(repository, times(1)).deleteByIdIn(anyList());
+    }
+
+    @Test
     @DisplayName("delete: entity not found - failure")
     void deleteWhenEntityNotFoundReturnsResourceNotFoundException() {
         // Set up mocked entities
@@ -198,8 +222,8 @@ public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRe
                 "update must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_DELETE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(anyString());
@@ -222,8 +246,8 @@ public abstract class BaseServiceTest<D, M extends BaseEntity, R extends MongoRe
                 "update must throw an ResourceNotFoundException");
 
         Assertions.assertEquals(
-                exception.getMessage(),
-                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION);
+                ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                exception.getMessage());
         Assertions.assertEquals(2, exception.getArgs().length);
 
         verify(repository, times(1)).findById(COMPONENT_ID);

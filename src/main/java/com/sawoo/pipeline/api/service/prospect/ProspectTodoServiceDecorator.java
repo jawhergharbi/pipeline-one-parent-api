@@ -7,6 +7,7 @@ import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoSearchDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.todo.Todo;
@@ -188,6 +189,19 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public long removeTODOs(TodoSearchDTO searchCriteria) {
+        log.debug("Remove TODOs with the following search criteria [{}]", searchCriteria);
+        return todoService.remove(searchCriteria);
+    }
+
+    @Override
+    public long removeTODOs(List<String> todoIds) {
+        log.debug("Remove TODOs with the following ids [{}]", todoIds);
+        return todoService.deleteByIds(todoIds).stream().count();
+
     }
 
     private Prospect findProspectById(String prospectId) throws ResourceNotFoundException {

@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -76,7 +77,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends BaseMon
     @Override
     public D findById(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String id)
             throws ResourceNotFoundException {
-        log.debug("Retrieving [{}] by id. Id: [{}]", entityType, id);
+        log.debug("Retrieve [{}] by id. Id: [{}]", entityType, id);
 
         return repository
                 .findById(id)
@@ -89,7 +90,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends BaseMon
 
     @Override
     public List<D> findAll() {
-        log.debug("Retrieving all entities. Entity: [{}]", entityType);
+        log.debug("Retrieve all entities. Entity: [{}]", entityType);
         List<D> entities = repository
                 .findAll()
                 .stream()
@@ -101,7 +102,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends BaseMon
 
     @Override
     public D delete(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)  String id) throws ResourceNotFoundException {
-        log.debug("Deleting [{}] entity with id: [{}]", entityType, id);
+        log.debug("Delete [{}] entity with id: [{}]", entityType, id);
 
         return repository
                 .findById(id)
@@ -119,7 +120,7 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends BaseMon
     public D update(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR)  String id,
             D dto) throws ResourceNotFoundException {
-        log.debug("Updating entity type [{}] with id: [{}]", entityType, id);
+        log.debug("Update entity type [{}] with id: [{}]", entityType, id);
 
         return getRepository()
                 .findById(id)
@@ -150,6 +151,20 @@ public abstract class BaseServiceImpl<D, M extends BaseEntity, R extends BaseMon
                         new ResourceNotFoundException(
                                 ExceptionMessageConstants.COMMON_UPDATE_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                                 new String[]{ getEntityType(), id }));
+    }
+
+    @Override
+    public List<D> deleteByIds(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) List<String> ids) {
+        log.debug("Delete [{}] entity with ids: [{}]", entityType, ids);
+
+        List<D> entities = repository
+                .deleteByIdIn(ids)
+                .stream()
+                .map(mapper.getMapperOut()::getDestination)
+                .collect(Collectors.toList());
+        log.debug("[{}] entity/entities of type [{}] has/have deleted", entities.size(), entityType);
+        return entities;
     }
 
     @Override
