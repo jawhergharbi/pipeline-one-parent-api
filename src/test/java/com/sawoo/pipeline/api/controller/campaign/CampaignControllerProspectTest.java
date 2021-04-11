@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -240,7 +241,7 @@ class CampaignControllerProspectTest {
         CampaignProspectDTO mockedEntity = getMockFactory().newCampaignProspectDTO(PROSPECT_ID, SEQUENCE_ID);
 
         // setup the mocked service
-        doReturn(mockedEntity).when(service).removeProspect(anyString(), anyString());
+        doReturn(mockedEntity).when(service).removeProspect(anyString(), anyString(), eq(null));
 
         // Execute the DELETE request
         mockMvc.perform(delete(
@@ -273,7 +274,7 @@ class CampaignControllerProspectTest {
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
                 new String[]{ DBConstants.CAMPAIGN_DOCUMENT, COMPONENT_ID });
-        doThrow(exception).when(service).removeProspect(anyString(), anyString());
+        doThrow(exception).when(service).removeProspect(anyString(), anyString(), eq(null));
 
         // Execute the DELETE request
         mockMvc.perform(delete(

@@ -10,16 +10,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Getter
-public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>, F extends MockFactory<?, M>> {
+public abstract class BaseRepositoryTest<M, R extends BaseMongoRepository<M>, F extends MockFactory<?, M>> {
 
     private final R repository;
     private final F mockFactory;
@@ -118,5 +118,30 @@ public abstract class BaseRepositoryTest<M, R extends MongoRepository<M, String>
                         "Number of entities of type [%s] stored in the collection must be equal to %d",
                         entityType,
                         getDocumentSize() + 1));
+    }
+
+    @Test
+    @DisplayName("deleteByIdIn: entity  found - Success")
+    void deleteByIdInWhenEntitiesFoundReturnsSuccess() {
+        int LIST_SIZE = 1;
+        List<M> deletes = getRepository().deleteByIdIn(Collections.singletonList(getComponentId()));
+
+        Assertions.assertFalse(deletes.isEmpty(), "List of deleted entities can not be null");
+        Assertions.assertEquals(LIST_SIZE, deletes.size(), String.format("Size of the list of deleted entities must be [%d]", LIST_SIZE));
+    }
+
+    @Test
+    @DisplayName("deleteByIdIn: entity  found - Success")
+    void deleteByIdInWhenEntitiesFoundAndOneEntityIsLeftReturnsSuccess() {
+        int LIST_SIZE = 1;
+        int REMAINING_SIZE = getDocumentSize() - LIST_SIZE;
+        List<M> deletes = getRepository().deleteByIdIn(Collections.singletonList(getComponentId()));
+
+        List<M> companies = getRepository().findAll();
+
+        Assertions.assertFalse(deletes.isEmpty(), "List of deleted entities can not be empty");
+        Assertions.assertEquals(LIST_SIZE, deletes.size(), String.format("Size of the list of deleted entities must be [%d]", LIST_SIZE));
+        Assertions.assertFalse(companies.isEmpty(), "List of remaining entities can not be empty");
+        Assertions.assertEquals(REMAINING_SIZE, companies.size(), String.format("Size of the list of entities must be [%d]", REMAINING_SIZE));
     }
 }

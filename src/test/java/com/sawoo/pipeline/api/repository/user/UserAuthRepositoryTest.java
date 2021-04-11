@@ -25,13 +25,13 @@ import java.util.Optional;
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 class UserAuthRepositoryTest extends BaseRepositoryTest<User, UserRepository, UserMockFactory> {
 
-    private static final String AUTHENTICATION_JSON_DATA_FILE_NAME = "user-auth-test-data.json";
+    private static final String TEST_JSON_DATA_FILE_NAME = "user-auth-test-data.json";
     private static final int ADMIN_USERS = 1;
-    private static final String USER_ID = "6027a2ff4542c0de858d2936";
+    private static final String ENTITY_ID = "6027a2ff4542c0de858d2936";
 
     @Autowired
     public UserAuthRepositoryTest(UserRepository repository, UserMockFactory mockFactory) {
-        super(repository, AUTHENTICATION_JSON_DATA_FILE_NAME, USER_ID, User.class.getSimpleName(), mockFactory);
+        super(repository, TEST_JSON_DATA_FILE_NAME, ENTITY_ID, User.class.getSimpleName(), mockFactory);
     }
 
     @Override

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class AccountUserRepositoryTest {
+class AccountUserRepositoryTest {
 
     private static final File ACCOUNT_USER_JSON_DATA = Paths.get("src", "test", "resources", "test-data", "account-user-test-data.json").toFile();
     private static final String ACCOUNT_ID_NO_USERS = "3eed964e66da46de664af";
