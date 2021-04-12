@@ -14,4 +14,5 @@ public class TodoMessage {
 
     private String text;
     private MessageTemplate template;
+    private boolean valid;
 }
