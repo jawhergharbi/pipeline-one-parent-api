@@ -60,4 +60,19 @@ class TodoMessagePatternTest {
         Assertions.assertEquals(PROSPECT_NAME_VARIABLE, matches.get(0), String.format("First match variable must be [%s]", PROSPECT_NAME_VARIABLE));
         Assertions.assertEquals(COMPANY_NAME_VARIABLE, matches.get(1), String.format("Second match variable must be [%s]", COMPANY_NAME_VARIABLE));
     }
+
+    @Test
+    @DisplayName("results: message with 1 matches and text html- Success")
+    void matchesWhenTextHasOneMatchAndTextIsHTMLReturnsSuccess() {
+        String PROSPECT_NAME_VARIABLE = "prospect_name";
+        String message = "<p>This is a message with variables {{prospect_name}}. Testing.</p><ul><li>sdasdas</li><li>asdasdas</li><li>asdasd</li></ul><p>asdasdasdas asdaThis is a message with variables {{prospect_name}}. Testing.</p><ul><li>sdasdas</li><li>asdasdas</li><li>asdasd</li></ul> <p>asdasdasdas asda</p>";
+        int LIST_MATCHES = 2;
+        Matcher matcher = MESSAGE_PATTERN.matcher(message);
+        List<String> matches = new ArrayList<>();
+        while (matcher.find()) {
+            matches.add(matcher.group(1));
+        }
+        Assertions.assertEquals(LIST_MATCHES, matches.size(), String.format("Matches must be: [%d]. Message: [%s]", LIST_MATCHES, message));
+        Assertions.assertEquals(PROSPECT_NAME_VARIABLE, matches.get(0), String.format("First match variable must be [%s]", PROSPECT_NAME_VARIABLE));
+    }
 }

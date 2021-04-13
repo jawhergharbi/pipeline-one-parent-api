@@ -18,4 +18,7 @@ public class TodoMessageDTO {
 
     @JMap
     private MessageTemplateDTO template;
+
+    @JMap
+    private boolean valid;
 }

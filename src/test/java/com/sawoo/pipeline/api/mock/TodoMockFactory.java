@@ -3,6 +3,8 @@ package com.sawoo.pipeline.api.mock;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
+import com.sawoo.pipeline.api.model.todo.TodoSource;
+import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,10 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
                 .message(TodoMessageDTO
                         .builder()
                         .text(getFAKER().lorem().sentence(25))
+                        .build())
+                .source(TodoSource.builder()
+                        .type(TodoSourceType.MANUAL)
+                        .sourceId(getFAKER().internet().uuid())
                         .build())
                 .build();
         todo.setCreated(now);

@@ -103,20 +103,22 @@ public class TodoServiceEventListener {
         if (Strings.isNotBlank(message)) {
             Matcher matcher = MESSAGE_PATTERN.matcher(message);
             boolean template = matcher.matches();
-            if (template && todo.getSource().getType().equals(TodoSourceType.MANUAL)) {
-                updateTemplate(todoMessage, matcher);
-            }
             todoMessage.setValid(!template);
+            if (template && todo.getSource().getType().equals(TodoSourceType.MANUAL)) {
+                updateTemplate(todoMessage);
+            }
         } else {
             todoMessage.setValid(false);
         }
     }
 
-    private void updateTemplate(TodoMessage todoMessage, Matcher matcher) {
+    private void updateTemplate(TodoMessage todoMessage) {
         MessageTemplate template = todoMessage.getTemplate() != null ?
                 todoMessage.getTemplate() :
                 MessageTemplate.builder().build();
         template.setText(todoMessage.getText());
+        Matcher matcher = MESSAGE_PATTERN.matcher(todoMessage.getText());
+        todoMessage.setTemplate(template);
 
         // Variables
         List<String> matches = new ArrayList<>();

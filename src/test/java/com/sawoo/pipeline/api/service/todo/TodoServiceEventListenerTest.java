@@ -135,17 +135,32 @@ class TodoServiceEventListenerTest {
         TodoDTO postDTO = mockFactory.newDTO(null);
         postDTO.setStatus(TodoStatus.ON_GOING.getValue());
         Todo entity = mapper.getMapperIn().getDestination(postDTO);
+        int VARIABLES = 2;
         TodoMessage message = TodoMessage.builder()
-                .text("This a message with variables. {{prospect_name}} So it should be an invalid message")
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message. Another variable {{company_name}}. Repeat variable {{prospect_name}}")
                 .build();
         entity.setMessage(message);
 
         // Execute the service call
         listener.handleBeforeSaveEvent(new BaseServiceBeforeSaveEvent<>(postDTO, entity));
+        TodoMessage messageEntity = entity.getMessage();
 
         // Assertions
-        Assertions.assertFalse(
-                entity.getMessage().isValid(),
-                String.format("Message [%s] must be valid", entity.getMessage().getText()));
+        Assertions.assertAll(String.format("Validate Message: [%s]", message),
+                () -> Assertions.assertFalse(
+                        messageEntity.isValid(),
+                        String.format("Message [%s] must be valid", entity.getMessage().getText())),
+                () -> Assertions.assertNotNull(messageEntity.getTemplate(), "Template can not be null"),
+                () -> Assertions.assertFalse(messageEntity.getTemplate().getVariables().isEmpty(), "Template variables map can not be null"),
+                () -> Assertions.assertEquals(
+                        VARIABLES,
+                        messageEntity.getTemplate().getVariables().size(),
+                        String.format("THere must be [%d] variables in the variables map", VARIABLES)));
+
+
+
+
+        Assertions.assertNotNull(messageEntity.getTemplate(), "Template can not be null");
+
     }
 }
