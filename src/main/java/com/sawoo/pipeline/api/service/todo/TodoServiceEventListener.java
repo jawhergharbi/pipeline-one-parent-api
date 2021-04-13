@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.common.LinkType;
 import com.sawoo.pipeline.api.model.common.MessageTemplate;
+import com.sawoo.pipeline.api.model.common.TodoType;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.todo.TodoMessage;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
@@ -102,7 +103,7 @@ public class TodoServiceEventListener {
         String message = todoMessage.getText();
         if (Strings.isNotBlank(message)) {
             Matcher matcher = MESSAGE_PATTERN.matcher(message);
-            boolean template = matcher.matches();
+            boolean template = matcher.matches() && isMessageType(todo);
             todoMessage.setValid(!template);
             if (template && todo.getSource().getType().equals(TodoSourceType.MANUAL)) {
                 updateTemplate(todoMessage);
@@ -110,6 +111,14 @@ public class TodoServiceEventListener {
         } else {
             todoMessage.setValid(false);
         }
+    }
+
+    private boolean isMessageType(Todo todo) {
+        int type = todo.getType();
+        return type == TodoType.LINKED_IN.getValue() ||
+                type == TodoType.SMS.getValue() ||
+                type == TodoType.WHATS_APP.getValue() ||
+                type == TodoType.EMAIL.getValue();
     }
 
     private void updateTemplate(TodoMessage todoMessage) {
