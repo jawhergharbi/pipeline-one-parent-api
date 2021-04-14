@@ -9,8 +9,10 @@ import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
+import com.sawoo.pipeline.api.model.common.LinkType;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
@@ -74,7 +76,7 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
         UserCommon assignee = helper.getAssignee(prospectId, assigneeId);
         return steps
                 .stream()
-                .map(s -> mapSequenceStepToTODO(s, assignee, prospectId, sequenceId, startDate))
+                .map(s -> mapSequenceStepToTODO(s, assignee, prospect, sequenceId, startDate))
                 .collect(Collectors.toList());
     }
 
@@ -99,21 +101,17 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
                                 new String[]{ DBConstants.PROSPECT_DOCUMENT, prospectId }));
     }
 
-    private TodoAssigneeDTO mapSequenceStepToTODO(SequenceStepDTO step, UserCommon assignee, String prospectId, String sequenceId, LocalDateTime startDate) {
+    private TodoAssigneeDTO mapSequenceStepToTODO(SequenceStepDTO step, UserCommon assignee, Prospect prospect, String sequenceId, LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))
                 .type(step.getChannel())
                 .status(TodoStatus.PENDING.getValue())
-                .link(step.getAttachment() == null ? null : LinkDTO.builder()
-                        .description(step.getAttachment().getDescription())
-                        .type(step.getAttachment().getType())
-                        .url(step.getAttachment().getUrl())
-                        .build())
+                .link(createLink(step, prospect))
                 .message(TodoMessageDTO.builder()
                         .text(step.getMessageTemplate().getText())
                         .build())
-                .componentId(prospectId)
+                .componentId(prospect.getId())
                 .assignee(assignee)
                 .assigneeId(assignee.getId())
                 .source(TodoSource.builder()
@@ -123,5 +121,24 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
                 .updated(now)
                 .created(now)
                 .build();
+    }
+
+    private LinkDTO createLink(SequenceStepDTO step, Prospect prospect) {
+        if (step.getAttachment() != null) {
+            return LinkDTO.builder()
+                    .description(step.getAttachment().getDescription())
+                    .type(step.getAttachment().getType())
+                    .url(step.getAttachment().getUrl())
+                    .build();
+        } else {
+            if (step.getChannel().equals(SequenceStepChannel.LINKED_IN.getValue())) {
+                return LinkDTO.builder()
+                        .description("LinkedIn chat")
+                        .type(LinkType.PLAIN_LINK)
+                        .url(prospect.getLinkedInThread())
+                        .build();
+            }
+            return null;
+        }
     }
 }

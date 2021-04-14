@@ -243,7 +243,6 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
     @DisplayName("searchBy: search by status, sourceId and sourceType")
     void searchByWhenStatusAndSourceIdAndSourceTypeReturnsSuccess() {
         // Assign
-        int TODO_SIZE = 1;
         String SOURCE_ID = "wrong_source_id";
         TodoSearch searchBy = TodoSearch.builder()
                 .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
@@ -312,6 +311,30 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
 
         // Assertions
         Assertions.assertEquals(TODO_SIZE, deleted, String.format("TODOs deleted must be [%d]", TODO_SIZE));
+    }
+
+    @Test
+    @DisplayName("findAllAndRemove: remove by status, sourceId and sourceType")
+    void findAllAndRemoveWhenStatusAndSourceIdAndSourceTypeReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 1;
+        int REMAINING_ENTITIES_SIZE = getDocumentSize() - TODO_SIZE;
+        String SOURCE_ID = "60647e3d631a80a71795ff03";
+        TodoSearch searchBy = TodoSearch.builder()
+                .status(Arrays.asList(TodoStatus.PENDING.getValue(), TodoStatus.CANCELLED.getValue()))
+                .sourceType(Collections.singletonList(TodoSourceType.AUTOMATIC.getValue()))
+                .sourceId(Collections.singletonList(SOURCE_ID))
+                .build();
+
+        // Execute query
+        List<Todo> entitiesDeleted = getRepository().findAllAndRemove(searchBy);
+        List<Todo> remainingEntities = getRepository().findAll();
+
+        // Assertions
+        Assertions.assertFalse(entitiesDeleted.isEmpty(), "Deleted entities list can not be empty");
+        Assertions.assertEquals(TODO_SIZE, entitiesDeleted.size(), String.format("Number of TODOs deleted must be [%d]", TODO_SIZE));
+        Assertions.assertFalse(remainingEntities.isEmpty(), "Remaining entities list can not be empty");
+        Assertions.assertEquals(REMAINING_ENTITIES_SIZE, remainingEntities.size(), String.format("Number of remaining TODOs must be [%d]", REMAINING_ENTITIES_SIZE));
     }
 
     @Test

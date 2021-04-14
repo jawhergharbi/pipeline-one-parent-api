@@ -62,7 +62,7 @@ public class TodoServiceImpl extends BaseServiceImpl<TodoDTO, Todo, TodoReposito
 
     @Override
     public List<TodoDTO> searchBy(@NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch search) {
-        log.debug("Getting TODOs with the following search criteria: [{}]", search);
+        log.debug("Get TODOs with the following search criteria: [{}]", search);
         List<TodoDTO> todos = getRepository()
                 .searchBy(search)
                 .stream()
@@ -73,10 +73,23 @@ public class TodoServiceImpl extends BaseServiceImpl<TodoDTO, Todo, TodoReposito
     }
 
     @Override
-    public long remove(@Valid @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO searchCriteria) {
-        log.debug("Deleting TODOs with the following search criteria: [{}]", searchCriteria);
+    public long remove(
+            @Valid @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO searchCriteria) {
+        log.debug("Delete TODOs with the following search criteria: [{}]", searchCriteria);
         long deleted = getRepository().remove(getMapper().getMapperTodoSearchIn().getDestination(searchCriteria));
         log.debug("[{}] todo/s has/have been deleted with the following search criteria: [{}]", deleted, searchCriteria);
         return deleted;
+    }
+
+    @Override
+    public List<TodoDTO> findAllAndRemove(
+            @Valid @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO searchCriteria) {
+        log.debug("FindAllAndRemove TODOs with the following search criteria: [{}]", searchCriteria);
+
+        List<Todo> todos = getRepository().findAllAndRemove(getMapper().getMapperTodoSearchIn().getDestination(searchCriteria));
+
+        log.debug("[{}] todo/s has/have been deleted with the following search criteria: [{}]", todos.size(), searchCriteria);
+
+        return todos.stream().map(getMapper().getMapperOut()::getDestination).collect(Collectors.toList());
     }
 }

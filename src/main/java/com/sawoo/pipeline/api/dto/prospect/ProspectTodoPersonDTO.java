@@ -24,4 +24,7 @@ public class ProspectTodoPersonDTO {
 
     @JMap("${person.linkedInUrl}")
     private String linkedInUrl;
+
+    @JMap("${linkedInThread}")
+    private String linkedInChat;
 }

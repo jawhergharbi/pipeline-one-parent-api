@@ -194,7 +194,27 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     @Override
     public long removeTODOs(TodoSearchDTO searchCriteria) {
         log.debug("Remove TODOs with the following search criteria [{}]", searchCriteria);
-        return todoService.remove(searchCriteria);
+        List<TodoDTO> todos = todoService.findAllAndRemove(searchCriteria);
+        if (todos != null && !todos.isEmpty()) {
+            List<String> prospectIds = searchCriteria.getComponentIds();
+            log.debug("[{}] TODOs will be removed from their prospects [{}]", todos.size(), prospectIds);
+            prospectIds.forEach(prospectId -> removeDeletedTodos(prospectId, todos));
+        }
+        return todos != null ? todos.size() : 0;
+    }
+
+    private void removeDeletedTodos(String prospectId, List<TodoDTO> todos) {
+        Predicate<Todo> isContained = t -> todos.stream().anyMatch(todo -> todo.getId().equals(t.getId()));
+        Prospect prospect = findProspectById(prospectId);
+        List<Todo> updatedTodos = prospect
+                .getTodos()
+                .stream()
+                .filter(isContained)
+                .collect(Collectors.toList());
+        prospect.setTodos(updatedTodos);
+        prospect.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        repository.save(prospect);
+        log.debug("Prospect TODOs updated. Prospect id: [{}]. Remove some TODOs", prospectId);
     }
 
     @Override
