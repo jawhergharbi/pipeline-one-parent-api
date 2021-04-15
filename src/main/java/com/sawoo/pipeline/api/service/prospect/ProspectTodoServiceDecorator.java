@@ -221,7 +221,6 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     public long removeTODOs(List<String> todoIds) {
         log.debug("Remove TODOs with the following ids [{}]", todoIds);
         return todoService.deleteByIds(todoIds).stream().count();
-
     }
 
     private Prospect findProspectById(String prospectId) throws ResourceNotFoundException {
