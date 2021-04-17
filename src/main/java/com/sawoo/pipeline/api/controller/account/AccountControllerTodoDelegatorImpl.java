@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.controller.account;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -53,7 +53,7 @@ public class AccountControllerTodoDelegatorImpl implements AccountControllerTodo
     private void mapAccountData(List<ProspectDTO> prospects, ProspectTodoDTO todo) {
         Optional<ProspectDTO> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getProspect().getProspectId())).findAny();
         prospect.ifPresent(l -> {
-            AccountFieldDTO account = l.getAccount();
+            AccountDTO account = l.getAccount();
             todo.setAccount(account);
             if (todo.getAssigneeId() != null) {
                 Optional<UserAuthDTO> assignee = account.getUsers()

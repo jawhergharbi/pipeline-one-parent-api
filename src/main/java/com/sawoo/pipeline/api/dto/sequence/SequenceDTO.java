@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.sequence.SequenceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +36,7 @@ public class SequenceDTO extends SequenceBaseDTO {
 
     private String ownerId;
 
-    private AccountFieldDTO account;
+    private AccountDTO account;
 
     @JMapConversion(from = {"status"}, to = {"status"})
     public Integer statusConversion(SequenceStatus status) {

@@ -6,7 +6,6 @@ import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
 import com.sawoo.pipeline.api.controller.base.BaseControllerTest;
 import com.sawoo.pipeline.api.dto.account.AccountDTO;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
@@ -469,13 +468,13 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
     void findAllProspectsWhenAccountsFoundAndProspectsFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         int ACCOUNT_LIST_SIZE = 2;
-        List<AccountFieldDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+        List<AccountDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
                 .mapToObj( (obj) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
-                    return getMockFactory().newAccountDTO(COMPONENT_ID);
+                    return getMockFactory().newDTO(COMPONENT_ID);
                 })
                 .collect(Collectors.toList());
-        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountFieldDTO::getId).collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountDTO::getId).collect(Collectors.toList());
         int PROSPECT_LIST_SIZE = 4;
         List<ProspectDTO> PROSPECT_LIST = createProspectList(PROSPECT_LIST_SIZE, ACCOUNT_LIST_SIZE, ACCOUNT_LIST);
 
@@ -504,13 +503,13 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
     void findAllProspectsWhenAccountsFoundAndProspectStatusDeadAndProspectsFoundReturnsSuccess() throws Exception {
         // Setup the mocked entities
         int ACCOUNT_LIST_SIZE = 1;
-        List<AccountFieldDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
+        List<AccountDTO> ACCOUNT_LIST = IntStream.range(0, ACCOUNT_LIST_SIZE)
                 .mapToObj( (obj) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
-                    return getMockFactory().newAccountDTO(COMPONENT_ID);
+                    return getMockFactory().newDTO(COMPONENT_ID);
                 })
                 .collect(Collectors.toList());
-        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountFieldDTO::getId).collect(Collectors.toList());
+        List<String> ACCOUNT_IDS = ACCOUNT_LIST.stream().map(AccountDTO::getId).collect(Collectors.toList());
         int PROSPECT_LIST_SIZE = 3;
         List<ProspectDTO> PROSPECT_LIST = createProspectList(PROSPECT_LIST_SIZE, ACCOUNT_LIST_SIZE, ACCOUNT_LIST);
 
@@ -769,7 +768,7 @@ class AccountControllerTest extends BaseControllerTest<AccountDTO, Account, Acco
                 .andExpect(jsonPath("$.companyNotes").doesNotExist());
     }
 
-    private List<ProspectDTO> createProspectList(int prospectListSize, int accountListSize, List<AccountFieldDTO> accountList) {
+    private List<ProspectDTO> createProspectList(int prospectListSize, int accountListSize, List<AccountDTO> accountList) {
         return IntStream.range(0, prospectListSize)
                 .mapToObj( (obj) -> {
                     String COMPONENT_ID = getMockFactory().getComponentId();
