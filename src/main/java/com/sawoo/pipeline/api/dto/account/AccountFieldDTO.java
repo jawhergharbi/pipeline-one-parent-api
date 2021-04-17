@@ -4,6 +4,7 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
 import com.sawoo.pipeline.api.dto.user.UserAuthDTO;
+import com.sawoo.pipeline.api.model.common.Personality;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +34,12 @@ public class AccountFieldDTO extends BaseEntityDTO {
 
     @JMap
     private String linkedInUrl;
+
+    @JMap
+    private String profilePicture;
+
+    @JMap
+    private Personality personality;
 
     @JMap
     private CompanyDTO company;

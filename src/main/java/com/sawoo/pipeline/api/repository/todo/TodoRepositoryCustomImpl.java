@@ -63,6 +63,14 @@ public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
         return result.getDeletedCount();
     }
 
+    @Override
+    public List<Todo> findAllAndRemove(TodoSearch searchCriteria) {
+        Criteria criteria = new Criteria();
+        List<Criteria> andCriteria = buildAndCriteria(searchCriteria);
+        criteria.andOperator(andCriteria.toArray(new Criteria[0]));
+        return mongoTemplate.findAllAndRemove(new Query(criteria), Todo.class);
+    }
+
     private List<Criteria> buildAndCriteria(TodoSearch searchCriteria) {
         List<Criteria> andCriteria = new ArrayList<>();
 

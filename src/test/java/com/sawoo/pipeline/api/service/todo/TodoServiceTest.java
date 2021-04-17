@@ -249,7 +249,7 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
     }
 
     @Test
-    @DisplayName("remove: search criteria entity mot null but componentIds empty - Failure")
+    @DisplayName("remove: search criteria entity not null but componentIds empty - Failure")
     void removeWhenSearchInvalidComponentIdsNullFoundReturnsFailure() {
         TodoSearchDTO search = TodoSearchDTO.builder()
                 .componentIds(Collections.emptyList())
@@ -278,6 +278,52 @@ class TodoServiceTest extends BaseServiceTest<TodoDTO, Todo, TodoRepository, Tod
                 ConstraintViolationException.class,
                 () -> service.remove(null),
                 "searchBy must throw an ConstraintViolationException");
+
+        // Assertions
+        Assertions.assertTrue(
+                containsString(ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+                        .matches(exception.getMessage()));
+    }
+
+    @Test
+    @DisplayName("findAllAndRemove: search entity not null and entities found - Success")
+    void findAllAndRemoveWhenSearchNotNullAndEntitiesFoundReturnsSuccess() {
+        // Set up mocked entities
+        String COMPONENT_ID_1 = getMockFactory().getFAKER().internet().uuid();
+        String COMPONENT_ID_2 = getMockFactory().getFAKER().internet().uuid();
+        List<String> componentIds = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
+        TodoSearchDTO search = TodoSearchDTO.builder()
+                .componentIds(componentIds)
+                .build();
+        int TODO_SIZE = 4;
+        List<Todo> todoEntities = IntStream.range(0, TODO_SIZE).mapToObj( (idx) -> {
+            String TODO_ID = getMockFactory().getComponentId();
+            Todo todo = getMockFactory().newEntity(TODO_ID);
+            int componentIdIdx = getMockFactory().getFAKER().number().numberBetween(0, 2);
+            todo.setComponentId(componentIds.get(componentIdIdx));
+            return todo;
+        }).collect(Collectors.toList());
+
+        // Set up the mocked repository
+        doReturn(todoEntities).when(repository).findAllAndRemove(any(TodoSearch.class));
+
+        // Execute the service call
+        List<TodoDTO> deletedEntities = getService().findAllAndRemove(search);
+
+        // Assertions
+        Assertions.assertFalse(deletedEntities.isEmpty(), "List of todo deleted elements can not be null");
+        Assertions.assertEquals(TODO_SIZE, deletedEntities.size(), String.format("Size of the list of deleted TODOs must be [%d]", TODO_SIZE));
+    }
+
+    @Test
+    @DisplayName("findAllAndRemove: search criteria entity null - Failure")
+    void findAllAndRemoveWhenSearchInvalidFoundReturnsFailure() {
+        // Execute and assert
+        TodoService service = getService();
+        ConstraintViolationException exception = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> service.findAllAndRemove(null),
+                "findAllAndRemove must throw an ConstraintViolationException");
 
         // Assertions
         Assertions.assertTrue(

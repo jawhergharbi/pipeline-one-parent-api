@@ -20,4 +20,6 @@ public interface TodoService extends BaseService<TodoDTO>, BaseProxyService<Todo
 
     long remove(@Valid @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO search);
 
+    List<TodoDTO> findAllAndRemove(@Valid @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearchDTO search);
+
 }

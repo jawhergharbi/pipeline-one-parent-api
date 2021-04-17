@@ -14,4 +14,6 @@ public interface TodoRepositoryCustom {
     List<Todo> searchBy(TodoSearch searchCriteria);
 
     long remove(TodoSearch searchCriteria);
+
+    List<Todo> findAllAndRemove(TodoSearch searchCriteria);
 }

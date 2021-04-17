@@ -148,13 +148,15 @@ public class ProspectController {
             @RequestParam(value = "status", required = false) List<Integer> status,
             @RequestParam(value = "types", required = false) List<Integer> types,
             @RequestParam(value = "sourceIds", required = false) List<String> sourceIds,
-            @RequestParam(value = "sourceTypes", required = false) List<Integer> sourceTypes) {
+            @RequestParam(value = "sourceTypes", required = false) List<Integer> sourceTypes,
+            @RequestParam(value = "accountIds", required = false) List<String> accountIds) {
         TodoSearch search = TodoSearch.builder()
                 .componentIds(Collections.singletonList(id))
                 .status(status)
                 .types(types)
                 .sourceId(sourceIds)
                 .sourceType(sourceTypes)
+                .accountIds(accountIds)
                 .build();
         return delegator.searchTODOs(search);
     }

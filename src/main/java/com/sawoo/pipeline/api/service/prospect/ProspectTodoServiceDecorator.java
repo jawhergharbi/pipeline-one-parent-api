@@ -170,7 +170,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         List<TodoDTO> todos = todoService.searchBy(prospectIds, status, types);
         if (!todos.isEmpty()) {
             List<Prospect> prospects = prospectIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(prospectIds);
-            return mapTODOsProspects(todos, prospects);
+            return mapTODOsProspects(todos, prospects, null);
         } else {
             return Collections.emptyList();
         }
@@ -185,7 +185,8 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
             List<Prospect> prospects = searchCriteria.getComponentIds().isEmpty() ?
                     Collections.emptyList() :
                     repository.findAllByIdIn(searchCriteria.getComponentIds());
-            return mapTODOsProspects(todos, prospects);
+            List<UserCommon> users = helper.getUsersByAccountIdIn(searchCriteria.getAccountIds());
+            return mapTODOsProspects(todos, prospects, users);
         } else {
             return Collections.emptyList();
         }
@@ -194,14 +195,33 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     @Override
     public long removeTODOs(TodoSearchDTO searchCriteria) {
         log.debug("Remove TODOs with the following search criteria [{}]", searchCriteria);
-        return todoService.remove(searchCriteria);
+        List<TodoDTO> todos = todoService.findAllAndRemove(searchCriteria);
+        if (todos != null && !todos.isEmpty()) {
+            List<String> prospectIds = searchCriteria.getComponentIds();
+            log.debug("[{}] TODOs will be removed from their prospects [{}]", todos.size(), prospectIds);
+            prospectIds.forEach(prospectId -> removeDeletedTodos(prospectId, todos));
+        }
+        return todos != null ? todos.size() : 0;
+    }
+
+    private void removeDeletedTodos(String prospectId, List<TodoDTO> todos) {
+        Predicate<Todo> isContained = t -> todos.stream().anyMatch(todo -> todo.getId().equals(t.getId()));
+        Prospect prospect = findProspectById(prospectId);
+        List<Todo> updatedTodos = prospect
+                .getTodos()
+                .stream()
+                .filter(isContained)
+                .collect(Collectors.toList());
+        prospect.setTodos(updatedTodos);
+        prospect.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+        repository.save(prospect);
+        log.debug("Prospect TODOs updated. Prospect id: [{}]. Remove some TODOs", prospectId);
     }
 
     @Override
     public long removeTODOs(List<String> todoIds) {
         log.debug("Remove TODOs with the following ids [{}]", todoIds);
         return todoService.deleteByIds(todoIds).stream().count();
-
     }
 
     private Prospect findProspectById(String prospectId) throws ResourceNotFoundException {
@@ -220,13 +240,15 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         return todo;
     }
 
-    private List<ProspectTodoDTO> mapTODOsProspects(List<TodoDTO> todos, List<Prospect> prospects) {
+    private List<ProspectTodoDTO> mapTODOsProspects(List<TodoDTO> todos, List<Prospect> prospects, List<UserCommon> users) {
         return todos
                 .stream()
                 .map(t -> {
                     ProspectTodoDTO todo = mapper.getTodoMapperOut().getDestination(t);
                     Optional<Prospect> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getComponentId())).findAny();
+                    Optional<UserCommon> user = users == null ? Optional.empty() : users.stream().filter(l -> l.getId().equals(todo.getAssigneeId())).findAny();
                     prospect.ifPresent(value -> todo.setProspect(mapper.getProspectTodoMapperOut().getDestination(value)));
+                    user.ifPresent(todo::setAssignee);
                     return todo;
                 }).collect(Collectors.toList());
     }

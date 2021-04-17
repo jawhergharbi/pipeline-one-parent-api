@@ -3,6 +3,7 @@ package com.sawoo.pipeline.api.service.todo;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.todo.Todo;
+import com.sawoo.pipeline.api.model.todo.TodoMessage;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
@@ -75,7 +76,7 @@ class TodoServiceEventListenerTest {
     }
 
     @Test
-    @DisplayName("onBeforeInsert: status set to completed - Success")
+    @DisplayName("onBeforeSave: status set to completed - Success")
     void onBeforeSaveWhenStatusDoneReturnsSuccess() {
         // Set up mocked entities
         TodoDTO postDTO = mockFactory.newDTO(null);
@@ -91,7 +92,7 @@ class TodoServiceEventListenerTest {
     }
 
     @Test
-    @DisplayName("onBeforeInsert: status set to completed - Success")
+    @DisplayName("onBeforeSave: status set to completed - Success")
     void onBeforeSaveWhenStatusIsNotDoneButItWasDoneBeforeReturnsSuccess() {
         // Set up mocked entities
         TodoDTO postDTO = mockFactory.newDTO(null);
@@ -104,5 +105,62 @@ class TodoServiceEventListenerTest {
 
         // Assertions
         Assertions.assertNull(entity.getCompletionDate(), "CompletionDate must be null");
+    }
+
+    @Test
+    @DisplayName("onBeforeSave: message should be valid - Success")
+    void onBeforeSaveWhenValidMessageReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setStatus(TodoStatus.ON_GOING.getValue());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+        TodoMessage message = TodoMessage.builder()
+                .text("This a message without variables. So it should be a valid message")
+                .build();
+        entity.setMessage(message);
+
+        // Execute the service call
+        listener.handleBeforeSaveEvent(new BaseServiceBeforeSaveEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertTrue(
+                entity.getMessage().isValid(),
+                String.format("Message [%s] must be valid", entity.getMessage().getText()));
+    }
+
+    @Test
+    @DisplayName("onBeforeSave: message should be invalid - Success")
+    void onBeforeSaveWhenInValidMessageReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setStatus(TodoStatus.ON_GOING.getValue());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+        int VARIABLES = 2;
+        TodoMessage message = TodoMessage.builder()
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message. Another variable {{company_name}}. Repeat variable {{prospect_name}}")
+                .build();
+        entity.setMessage(message);
+
+        // Execute the service call
+        listener.handleBeforeSaveEvent(new BaseServiceBeforeSaveEvent<>(postDTO, entity));
+        TodoMessage messageEntity = entity.getMessage();
+
+        // Assertions
+        Assertions.assertAll(String.format("Validate Message: [%s]", message),
+                () -> Assertions.assertFalse(
+                        messageEntity.isValid(),
+                        String.format("Message [%s] must be valid", entity.getMessage().getText())),
+                () -> Assertions.assertNotNull(messageEntity.getTemplate(), "Template can not be null"),
+                () -> Assertions.assertFalse(messageEntity.getTemplate().getVariables().isEmpty(), "Template variables map can not be null"),
+                () -> Assertions.assertEquals(
+                        VARIABLES,
+                        messageEntity.getTemplate().getVariables().size(),
+                        String.format("THere must be [%d] variables in the variables map", VARIABLES)));
+
+
+
+
+        Assertions.assertNotNull(messageEntity.getTemplate(), "Template can not be null");
+
     }
 }

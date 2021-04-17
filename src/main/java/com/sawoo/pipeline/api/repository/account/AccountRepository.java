@@ -11,6 +11,8 @@ import java.util.Optional;
 @JaversSpringDataAuditable
 public interface AccountRepository extends BaseMongoRepository<Account>, AccountRepositoryCustom {
 
+    List<Account> findByIdIn(List<String> ids);
+
     Optional<Account> findByEmail(String email);
 
     Optional<Account> findByLinkedInUrl(String linkedInUrl);
