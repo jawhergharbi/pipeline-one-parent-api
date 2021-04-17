@@ -4,7 +4,7 @@ import com.googlecode.jmapper.annotations.JMap;
 import com.googlecode.jmapper.annotations.JMapConversion;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,7 +60,7 @@ public class CampaignDTO extends BaseEntityDTO {
 
     private List<CampaignProspectDTO> prospects;
 
-    private AccountFieldDTO account;
+    private AccountDTO account;
 
     public List<CampaignProspectDTO> getProspects() {
         if (prospects == null) {

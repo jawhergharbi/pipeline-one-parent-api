@@ -1,6 +1,6 @@
 package com.sawoo.pipeline.api.dto.prospect;
 
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class ProspectTodoDTO extends TodoAssigneeDTO {
 
-    private AccountFieldDTO account;
+    private AccountDTO account;
 
     private ProspectTodoPersonDTO prospect;
 }

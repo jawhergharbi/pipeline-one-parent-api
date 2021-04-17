@@ -3,7 +3,7 @@ package com.sawoo.pipeline.api.dto.prospect;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.dto.BaseEntityDTO;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
 import com.sawoo.pipeline.api.dto.person.PersonValid;
 import com.sawoo.pipeline.api.model.common.Note;
@@ -45,5 +45,5 @@ public class ProspectDTO extends BaseEntityDTO {
     @JMap
     private Status qualification;
 
-    private AccountFieldDTO account;
+    private AccountDTO account;
 }

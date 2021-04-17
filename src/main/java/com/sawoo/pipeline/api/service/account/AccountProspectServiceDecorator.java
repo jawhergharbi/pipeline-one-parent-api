@@ -1,10 +1,9 @@
 package com.sawoo.pipeline.api.service.account;
 
-import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
+import com.sawoo.pipeline.api.dto.account.AccountDTO;
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.account.Account;
@@ -34,6 +33,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
 
     private final AccountRepository repository;
     private final ProspectService prospectService;
+    private final AccountMapper accountMapper;
 
     @Override
     public ProspectDTO createProspect(
@@ -70,8 +70,7 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
 
         log.debug("[{}] prospect/s has/have been found for account id [{}]", account.getProspects().size(), accountId);
 
-        JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
-        AccountFieldDTO accountProspect = accountMapper.getDestination(account);
+        AccountDTO accountProspect = accountMapper.getMapperOut().getDestination(account);
         return account.getProspects()
                 .stream()
                 .map( l -> {
@@ -100,13 +99,12 @@ public class AccountProspectServiceDecorator implements AccountProspectService {
                     accounts.size(),
                     accountIds);
         }
-        JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
         Predicate<Prospect> statusFilter = (prospectQualification != null && prospectQualification.length > 0) ?
                 (l -> l.getQualification() == null || Arrays.asList(prospectQualification).contains(l.getQualification().getValue())) :
                 l -> true;
         List<ProspectDTO> prospects = accounts
                 .stream().flatMap( account -> {
-                    AccountFieldDTO prospectAccount = accountMapper.getDestination(account);
+                    AccountDTO prospectAccount = accountMapper.getMapperOut().getDestination(account);
                     return account.getProspects()
                             .stream()
                             .filter(statusFilter)

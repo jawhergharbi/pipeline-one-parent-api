@@ -1,13 +1,12 @@
 package com.sawoo.pipeline.api.service.campaign;
 
-import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
-import com.sawoo.pipeline.api.dto.account.AccountFieldDTO;
 import com.sawoo.pipeline.api.dto.campaign.CampaignDTO;
 import com.sawoo.pipeline.api.model.account.Account;
 import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.repository.account.AccountRepository;
+import com.sawoo.pipeline.api.service.account.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -26,11 +25,15 @@ public class CampaignAccountServiceDecorator implements CampaignAccountService {
 
     private final AccountRepository accountRepository;
     private final CampaignService campaignService;
+    private final AccountMapper accountMapper;
 
     @Autowired
-    public CampaignAccountServiceDecorator(@Lazy CampaignService campaignService, AccountRepository accountRepository) {
+    public CampaignAccountServiceDecorator(@Lazy CampaignService campaignService,
+                                           AccountRepository accountRepository,
+                                           AccountMapper accountMapper) {
         this.campaignService = campaignService;
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
     }
 
     @Override
@@ -53,12 +56,11 @@ public class CampaignAccountServiceDecorator implements CampaignAccountService {
                     accountIds);
         }
 
-        JMapper<AccountFieldDTO, Account> accountMapper = new JMapper<>(AccountFieldDTO.class, Account.class);
         return campaigns.stream().map(s -> {
             CampaignDTO campaign = campaignService.getMapper().getMapperOut().getDestination(s);
             Optional<Account> account = accountList.stream().filter(a -> a.getId().equals(campaign.getComponentId())).findFirst();
             account.ifPresentOrElse(
-                    a -> campaign.setAccount(accountMapper.getDestination(a)),
+                    a -> campaign.setAccount(accountMapper.getMapperOut().getDestination(a)),
                     () -> log.warn("Campaign id [{}] where component with id [{}] has not been found",
                             campaign.getId(),
                             campaign.getComponentId()));
