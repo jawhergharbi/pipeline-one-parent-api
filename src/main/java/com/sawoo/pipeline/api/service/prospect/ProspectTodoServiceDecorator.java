@@ -170,7 +170,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         List<TodoDTO> todos = todoService.searchBy(prospectIds, status, types);
         if (!todos.isEmpty()) {
             List<Prospect> prospects = prospectIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(prospectIds);
-            return mapTODOsProspects(todos, prospects);
+            return mapTODOsProspects(todos, prospects, null);
         } else {
             return Collections.emptyList();
         }
@@ -185,7 +185,8 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
             List<Prospect> prospects = searchCriteria.getComponentIds().isEmpty() ?
                     Collections.emptyList() :
                     repository.findAllByIdIn(searchCriteria.getComponentIds());
-            return mapTODOsProspects(todos, prospects);
+            List<UserCommon> users = helper.getUsersByAccountIdIn(searchCriteria.getAccountIds());
+            return mapTODOsProspects(todos, prospects, users);
         } else {
             return Collections.emptyList();
         }
@@ -239,13 +240,15 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         return todo;
     }
 
-    private List<ProspectTodoDTO> mapTODOsProspects(List<TodoDTO> todos, List<Prospect> prospects) {
+    private List<ProspectTodoDTO> mapTODOsProspects(List<TodoDTO> todos, List<Prospect> prospects, List<UserCommon> users) {
         return todos
                 .stream()
                 .map(t -> {
                     ProspectTodoDTO todo = mapper.getTodoMapperOut().getDestination(t);
                     Optional<Prospect> prospect = prospects.stream().filter(l -> l.getId().equals(todo.getComponentId())).findAny();
+                    Optional<UserCommon> user = users == null ? Optional.empty() : users.stream().filter(l -> l.getId().equals(todo.getAssigneeId())).findAny();
                     prospect.ifPresent(value -> todo.setProspect(mapper.getProspectTodoMapperOut().getDestination(value)));
+                    user.ifPresent(todo::setAssignee);
                     return todo;
                 }).collect(Collectors.toList());
     }

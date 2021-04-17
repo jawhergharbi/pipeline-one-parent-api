@@ -23,6 +23,9 @@ public class TodoSearchDTO {
     private List<String> componentIds;
 
     @JMap
+    private List<String> accountIds;
+
+    @JMap
     private List<Integer> status;
 
     @JMap

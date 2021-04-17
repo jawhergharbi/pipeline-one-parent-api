@@ -24,7 +24,7 @@ public class ProspectServiceDecoratorHelper {
     private final AccountRepository accountRepository;
 
     public List<UserCommon> getUsers(String prospectId) {
-        log.debug("Retrieving users for prospectId [{}]", prospectId);
+        log.debug("Retrieving users by prospectId [{}]", prospectId);
         Account account = findAccountByProspectId(prospectId);
         Set<User> users = account.getUsers();
 
@@ -32,6 +32,37 @@ public class ProspectServiceDecoratorHelper {
                 account.getId(),
                 prospectId,
                 users.size());
+
+        return users
+                .stream()
+                .map(this::mapUser)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserCommon> getUsersByAccountId(String accountId) {
+        log.debug("Retrieving users by accountId [{}]", accountId);
+        Account account = findAccountById(accountId);
+        Set<User> users = account.getUsers();
+
+        log.debug("Account id [{}] is associated to prospectId [{}] and there are [{}] users linked to this account",
+                account.getId(),
+                accountId,
+                users.size());
+
+        return users
+                .stream()
+                .map(this::mapUser)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserCommon> getUsersByAccountIdIn(List<String> accountIds) {
+        log.debug("Retrieving users by accountId in [{}]", accountIds);
+        List<Account> accounts = findAccountByIdIn(accountIds);
+        Set<User> users = accounts.stream()
+                .flatMap(a -> a.getUsers().stream())
+                .collect(Collectors.toSet());
+
+        log.debug("Users [{}] linked to account with ids [{}]", users.size(), accountIds);
 
         return users
                 .stream()
@@ -88,5 +119,18 @@ public class ProspectServiceDecoratorHelper {
                 .orElseThrow(() -> new CommonServiceException(
                         ExceptionMessageConstants.PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION,
                         new String[] {prospectId}));
+    }
+
+    private Account findAccountById(String accountId) {
+        return accountRepository
+                .findById(accountId)
+                .orElseThrow(() -> new CommonServiceException(
+                        ExceptionMessageConstants.PROSPECT_PROSPECT_ACCOUNT_NOT_FOUND_EXCEPTION,
+                        new String[] {accountId}));
+    }
+
+    private List<Account> findAccountByIdIn(List<String> accountIds) {
+        return accountRepository
+                .findByIdIn(accountIds);
     }
 }
