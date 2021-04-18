@@ -148,10 +148,18 @@ public class AccountControllerDelegator extends BaseControllerDelegator<AccountD
     }
 
     @Override
-    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOsIn(
             List<String> accountIds, List<Integer> status, List<Integer> types)
             throws CommonServiceException {
-        return todoDelegator.findAllTODOs(accountIds, status, types);
+        return todoDelegator.findAllTODOsIn(accountIds, status, types);
+    }
+
+    @Override
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
+            String accountId,
+            List<Integer> status,
+            List<Integer> types) throws CommonServiceException {
+        return todoDelegator.findAllTODOs(accountId, status, types);
     }
 
     @Override
