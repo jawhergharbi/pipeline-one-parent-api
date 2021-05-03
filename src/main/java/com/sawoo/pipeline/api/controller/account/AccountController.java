@@ -126,27 +126,6 @@ public class AccountController {
         return delegator.findAllProspects(accountId);
     }
 
-    // TODO Move to Account or Campaign
-    /*@GetMapping(
-            value = "/{ids}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/search",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(
-            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
-            @PathVariable("ids") List<String> prospects,
-            @RequestParam(value = "status", required = false) List<Integer> status,
-            @RequestParam(value = "types", required = false) List<Integer> types,
-            @RequestParam(value = "sourceIds", required = false) List<String> sourceIds,
-            @RequestParam(value = "sourceTypes", required = false) List<Integer> sourceTypes) {
-        TodoSearch search = TodoSearch.builder()
-                .componentIds(prospects)
-                .status(status)
-                .types(types)
-                .sourceId(sourceIds)
-                .sourceType(sourceTypes)
-                .build();
-        return delegator.searchTODOs(search);
-    }*/
-
     @GetMapping(
             value = "/{ids}/"  + ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME + "/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -176,6 +155,17 @@ public class AccountController {
             @PathVariable("ids") List<String> ids,
             @RequestParam(value = "status", required = false) List<Integer> status,
             @RequestParam(value = "types", required = false) List<Integer> types) {
-        return delegator.findAllTODOs(ids, status, types);
+        return delegator.findAllTODOsIn(ids, status, types);
+    }
+
+    @GetMapping(
+            value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
+            @NotNull
+            @PathVariable("id") String id,
+            @RequestParam(value = "status", required = false) List<Integer> status,
+            @RequestParam(value = "types", required = false) List<Integer> types) {
+        return delegator.findAllTODOs(id, status, types);
     }
 }

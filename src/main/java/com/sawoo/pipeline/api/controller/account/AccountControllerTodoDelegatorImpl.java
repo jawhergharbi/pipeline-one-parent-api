@@ -1,5 +1,6 @@
 package com.sawoo.pipeline.api.controller.account;
 
+import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.UserCommonType;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +35,8 @@ public class AccountControllerTodoDelegatorImpl implements AccountControllerTodo
     }
 
     @Override
-    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
-            List<String> accountIds,
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOsIn(
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) List<String> accountIds,
             List<Integer> status,
             List<Integer> types) throws CommonServiceException {
         List<ProspectDTO> prospects = accountService.findAllProspects(accountIds.toArray(new String[0]), null);
@@ -48,6 +50,14 @@ public class AccountControllerTodoDelegatorImpl implements AccountControllerTodo
                     .collect(Collectors.toList());
         }
         return ResponseEntity.ok().body(todos);
+    }
+
+    @Override
+    public ResponseEntity<List<ProspectTodoDTO>> findAllTODOs(
+            @NotEmpty (message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String accountId,
+            List<Integer> status,
+            List<Integer> types) throws CommonServiceException {
+        return findAllTODOsIn(Collections.singletonList(accountId), status, types);
     }
 
     private void mapAccountData(List<ProspectDTO> prospects, ProspectTodoDTO todo) {

@@ -51,6 +51,7 @@ public class Prospect extends BaseEntity {
     private Status qualification;
 
     @DBRef
+    @ToString.Exclude
     private List<Todo> todos;
     public List<Todo> getTodos() {
         if (todos == null) {
