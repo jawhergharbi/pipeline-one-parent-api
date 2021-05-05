@@ -18,20 +18,25 @@ import java.util.regex.Pattern;
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
 class TodoMessagePatternTest {
 
-    private static final Pattern MESSAGE_PATTERN = Pattern.compile(".*?\\{\\{(.*?)\\}\\}.*?");
+    private static final Pattern MESSAGE_PATTERN = Pattern.compile(".*?\\{\\{(.*?)\\}\\}.*?", Pattern.DOTALL);
 
     @Test
     @DisplayName("matches: message with parentheses")
     void matchesWhenTextHasParenthesesReturnsInvalid() {
-        String message = "This a message with variables. {{prospect_name}} So it should be an invalid message";
-        Matcher matcher = MESSAGE_PATTERN.matcher(message);
-        Assertions.assertTrue(matcher.matches(), String.format("Message: [%s] must match", message));
+        String message1 = "This a message with variables. {{prospect_name}} So it should be an invalid message";
+        Matcher matcher1 = MESSAGE_PATTERN.matcher(message1);
+        Assertions.assertTrue(matcher1.matches(), String.format("Message: [%s] must match", message1));
+
+        //String message2 = "My first message for an analytical prospect.Hello {{ctx:prospect_name}}. Nice to e-meet you. Saludos.";
+        String message2 = "My first message for an analytical prospect.\n\nHello {{ctx:prospect_name}}. Nice to e-meet you.\n\nSaludos.";
+        Matcher matcher2 = MESSAGE_PATTERN.matcher(message2);
+        Assertions.assertTrue(matcher2.matches(), String.format("Message: [%s] must match", message2));
     }
 
     @Test
     @DisplayName("matches: message with parentheses")
     void matchesWhenTextHasParenthesesTwiceReturnsInvalid() {
-        String message = "This a message with variables. {{prospect_name}} So it should be an invalid message. More parentheses {{company_name}}";
+        String message = "This a message with variables. {{ctx:prospect_name}} So it should be an invalid message. More parentheses {{company_name}}";
         Matcher matcher = MESSAGE_PATTERN.matcher(message);
         Assertions.assertTrue(matcher.matches(), String.format("Message: [%s] must match", message));
     }

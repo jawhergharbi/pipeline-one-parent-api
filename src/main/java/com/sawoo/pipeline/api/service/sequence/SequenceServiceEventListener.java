@@ -58,7 +58,7 @@ public class SequenceServiceEventListener {
         log.debug("Sequence before save listener");
         SequenceDTO dto = event.getDto();
         Set<SequenceUserDTO> users = dto.getUsers();
-        if (users != null && users.size() > 0) {
+        if (users != null && !users.isEmpty()) {
             Consumer<SequenceUserDTO> setTimeStamps = u -> {
                 u.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
                 if (u.getCreated() == null) {
@@ -110,7 +110,7 @@ public class SequenceServiceEventListener {
         } else {
             storedUsers.stream().filter(u -> u.getUserId().equals(user.getUserId()))
                     .findAny()
-                    .ifPresentOrElse((storedUser) -> updateUser(user, storedUser), () -> addUser(user, storedUsers));
+                    .ifPresentOrElse(storedUser -> updateUser(user, storedUser), () -> addUser(user, storedUsers));
         }
     }
 
