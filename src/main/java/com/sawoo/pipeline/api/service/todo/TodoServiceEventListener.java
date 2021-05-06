@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 @Component
 public class TodoServiceEventListener {
 
-    private static final Pattern MESSAGE_PATTERN = Pattern.compile(".*?\\{\\{(.*?)\\}\\}.*?");
+    private static final Pattern MESSAGE_PATTERN = Pattern.compile(".*?\\{\\{(.*?)\\}\\}.*?", Pattern.DOTALL);
 
     @EventListener
     public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<TodoDTO, Todo> event) {
