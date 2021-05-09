@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.dto.BaseEntityDTO;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
+import com.sawoo.pipeline.api.model.todo.TodoType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +36,7 @@ public class TodoDTO extends BaseEntityDTO {
 
     @JMap
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
-    private Integer type;
+    private Integer channel;
 
     @JMap
     @EnumIntValue(enumCLass = TodoStatus.class)
@@ -64,4 +65,7 @@ public class TodoDTO extends BaseEntityDTO {
 
     @JMap
     private TodoSource source;
+
+    @JMap
+    private TodoType type;
 }

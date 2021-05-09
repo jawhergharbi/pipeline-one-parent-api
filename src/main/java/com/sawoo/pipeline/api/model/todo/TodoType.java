@@ -2,32 +2,28 @@ package com.sawoo.pipeline.api.model.todo;
 
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.IllegalArgumentException;
+import com.sawoo.pipeline.api.common.validation.IEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Arrays;
 
-public enum TodoSourceType {
+@Getter
+@AllArgsConstructor
+public enum TodoType implements IEnum<Integer> {
 
-    MANUAL(0),
-    AUTOMATIC(1),
-    MANUAL_INCOMING(2);
+    OUT_GOING_INTERACTION(0),
+    IN_COMING_INTERACTION(1);
 
-    private final int value;
+    private final Integer value;
 
-    TodoSourceType(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public static TodoSourceType fromValue(int value) {
+    public static TodoType fromValue(int value) {
         return Arrays
-                .stream(TodoSourceType.values())
+                .stream(TodoType.values())
                 .filter(s -> s.getValue() == value)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         ExceptionMessageConstants.COMMON_ENUM_WRONG_VALUE_ILLEGAL_ARGUMENT_EXCEPTION,
-                        new Object[] {TodoSourceType.class.getSimpleName(), TodoSourceType.values(), value}));
+                        new Object[] {TodoType.class.getSimpleName(), TodoType.values(), value}));
     }
 }

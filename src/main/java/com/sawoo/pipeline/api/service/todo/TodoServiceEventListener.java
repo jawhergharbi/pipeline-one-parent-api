@@ -5,12 +5,13 @@ import com.sawoo.pipeline.api.dto.user.UserAuthDetails;
 import com.sawoo.pipeline.api.model.common.Link;
 import com.sawoo.pipeline.api.model.common.LinkType;
 import com.sawoo.pipeline.api.model.common.MessageTemplate;
-import com.sawoo.pipeline.api.model.common.TodoType;
+import com.sawoo.pipeline.api.model.common.TodoChannel;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.todo.TodoMessage;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
+import com.sawoo.pipeline.api.model.todo.TodoType;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,11 @@ public class TodoServiceEventListener {
             }
         }
 
+        // Type. Not informed. It would be a OUT_GOING_INTERACTION
+        if (entity.getType() == null) {
+            entity.setType(TodoType.OUT_GOING_INTERACTION);
+        }
+
         // Valid message?
         if (entity.getMessage() != null) {
             updateTodoMessage(entity);
@@ -114,11 +120,11 @@ public class TodoServiceEventListener {
     }
 
     private boolean isMessageType(Todo todo) {
-        int type = todo.getType();
-        return type == TodoType.LINKED_IN.getValue() ||
-                type == TodoType.SMS.getValue() ||
-                type == TodoType.WHATS_APP.getValue() ||
-                type == TodoType.EMAIL.getValue();
+        int type = todo.getChannel();
+        return type == TodoChannel.LINKED_IN.getValue() ||
+                type == TodoChannel.SMS.getValue() ||
+                type == TodoChannel.WHATS_APP.getValue() ||
+                type == TodoChannel.EMAIL.getValue();
     }
 
     private void updateTemplate(TodoMessage todoMessage) {

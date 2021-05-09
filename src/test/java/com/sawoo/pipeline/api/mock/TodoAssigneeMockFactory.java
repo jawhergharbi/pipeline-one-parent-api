@@ -31,7 +31,7 @@ public class TodoAssigneeMockFactory extends TodoMockBaseFactory<TodoAssigneeDTO
                         .build())
                 .status(TodoStatus.ON_GOING.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(0)
+                .channel(0)
                 .message(TodoMessageDTO
                         .builder()
                         .text(getFAKER().lorem().sentence(25))

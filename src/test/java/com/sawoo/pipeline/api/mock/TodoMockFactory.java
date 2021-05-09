@@ -33,7 +33,7 @@ public class TodoMockFactory extends TodoMockBaseFactory<TodoDTO> {
                         .build())
                 .status(TodoStatus.PENDING.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(0)
+                .channel(0)
                 .assigneeId(getFAKER().internet().uuid())
                 .message(TodoMessageDTO
                         .builder()

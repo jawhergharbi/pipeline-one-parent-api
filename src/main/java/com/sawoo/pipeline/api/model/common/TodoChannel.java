@@ -5,7 +5,7 @@ import com.sawoo.pipeline.api.common.exceptions.IllegalArgumentException;
 
 import java.util.Arrays;
 
-public enum TodoType {
+public enum TodoChannel {
 
     LINKED_IN(0),
     EMAIL(1),
@@ -19,7 +19,7 @@ public enum TodoType {
 
     private final int value;
 
-    TodoType(int value) {
+    TodoChannel(int value) {
         this.value = value;
     }
 
@@ -27,13 +27,13 @@ public enum TodoType {
         return this.value;
     }
 
-    public static TodoType fromValue(int value) {
+    public static TodoChannel fromValue(int value) {
         return Arrays
-                .stream(TodoType.values())
+                .stream(TodoChannel.values())
                 .filter(s -> s.getValue() == value)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         ExceptionMessageConstants.COMMON_ENUM_WRONG_VALUE_ILLEGAL_ARGUMENT_EXCEPTION,
-                        new Object[] {TodoType.class.getSimpleName(), TodoType.values(), value}));
+                        new Object[] {TodoChannel.class.getSimpleName(), TodoChannel.values(), value}));
     }
 }

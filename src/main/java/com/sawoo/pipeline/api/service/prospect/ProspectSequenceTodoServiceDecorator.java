@@ -105,7 +105,7 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))
-                .type(step.getChannel())
+                .channel(step.getChannel())
                 .status(TodoStatus.PENDING.getValue())
                 .link(createLink(step, prospect))
                 .message(TodoMessageDTO.builder()
