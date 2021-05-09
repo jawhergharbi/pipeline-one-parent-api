@@ -8,8 +8,7 @@ import java.util.Arrays;
 public enum TodoSourceType {
 
     MANUAL(0),
-    AUTOMATIC(1),
-    MANUAL_INCOMING(2);
+    AUTOMATIC(1);
 
     private final int value;
 

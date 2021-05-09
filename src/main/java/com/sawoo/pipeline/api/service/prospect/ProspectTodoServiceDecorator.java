@@ -4,6 +4,7 @@ import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
+import com.sawoo.pipeline.api.dto.UserCommonType;
 import com.sawoo.pipeline.api.dto.prospect.ProspectTodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
@@ -132,7 +133,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
             final List<UserCommon> users = helper.getUsers(prospectId);
             assigneeTODOs = todos
                     .stream()
-                    .map(i -> mapTODO(i, users))
+                    .map(t -> mapTODO(t, users, prospect))
                     .collect(Collectors.toList());
         }
         log.debug("[{}] todos has been found for prospect id [{}]", prospectId, todos.size());
@@ -155,7 +156,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
                 .map(i -> {
                     log.debug("Todo id [{}] for prospect id [{}] has been found. \nTodo: [{}]", todoId, prospectId, i);
                     List<UserCommon> users = helper.getUsers(prospectId);
-                    return mapTODO(i, users);
+                    return mapTODO(i, users, prospect);
                 })
                 .orElseThrow( () ->
                         new ResourceNotFoundException(
@@ -233,10 +234,18 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
                                 new String[]{ DBConstants.PROSPECT_DOCUMENT, prospectId }));
     }
 
-    private TodoAssigneeDTO mapTODO(Todo t, List<UserCommon> users) {
+    private TodoAssigneeDTO mapTODO(Todo t, List<UserCommon> users, Prospect prospect) {
         TodoAssigneeDTO todo = todoService.getMapper().getAssigneeMapperOut().getDestination(t);
-        Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
-        user.ifPresent(todo::setAssignee);
+        if (todo.getAssigneeId().equals(prospect.getId())) {
+            todo.setAssignee(UserCommon.builder()
+                    .id(prospect.getId())
+                    .fullName(prospect.getPerson().getFullName())
+                    .type(UserCommonType.PROSPECT)
+                    .build());
+        } else {
+            Optional<UserCommon> user = users.stream().filter(u -> u.getId().equals(todo.getAssigneeId())).findAny();
+            user.ifPresent(todo::setAssignee);
+        }
         return todo;
     }
 
