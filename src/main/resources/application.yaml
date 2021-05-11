@@ -95,7 +95,11 @@ spring:
   data:
     mongodb:
       auto-index-creation: false
-      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core?retryWrites=true&w=majority
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-dev?retryWrites=true&w=majority
+
+javers:
+  mongodb:
+    uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-dev-audit?retryWrites=true&w=majority
 
 app:
   server: http://localhost:8080
@@ -176,7 +180,11 @@ spring:
   data:
     mongodb:
       auto-index-creation: false
-      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core?retryWrites=true&w=majority
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-dev?retryWrites=true&w=majority
+
+javers:
+  mongodb:
+    uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-dev-audit?retryWrites=true&w=majority
 
 # To fix GAE issue:
 # App is listening on port 8080, it should instead listen on the port defined by the PORT environment variable.
@@ -193,7 +201,6 @@ app:
     contact-account: miguel.maquieira@sawoo.io
   cors:
     allowed-origins: https://pipeline-one-dev.ew.r.appspot.com
-
 ---
 spring:
   profiles: test

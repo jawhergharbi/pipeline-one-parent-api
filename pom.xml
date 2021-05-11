@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sawoo</groupId>
     <artifactId>pipeline-one-api</artifactId>
-    <version>0-6-00-snapshot</version>
+    <version>0-6-00</version>
     <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
@@ -322,6 +322,25 @@
                 <appEngineProjectId>pipeline-one-dev</appEngineProjectId>
                 <rootLogLevel>INFO</rootLogLevel>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>
+                                -Djdk.tls.client.protocols=TLSv1.2
+                            </jvmArguments>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>test</id>
