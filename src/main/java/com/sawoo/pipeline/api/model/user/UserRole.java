@@ -8,7 +8,7 @@ public enum UserRole {
     ADMIN(1),
     AST(2),
     MNG(3),
-    CLIENT(4);
+    SALES_USER(4);
 
     private final int roleValue;
 
@@ -29,8 +29,8 @@ public enum UserRole {
                 return MNG;
             } else if (roles.contains(AST.name())) {
                 return AST;
-            } else if (roles.contains(CLIENT.name())) {
-                return CLIENT;
+            } else if (roles.contains(SALES_USER.name())) {
+                return SALES_USER;
             }
         }
         return defaultRole;

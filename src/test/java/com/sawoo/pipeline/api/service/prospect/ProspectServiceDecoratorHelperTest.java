@@ -184,7 +184,7 @@ class ProspectServiceDecoratorHelperTest {
         Account accountEntity = getAccountMockFactory().newEntity(ACCOUNT_ID);
         User userAssignee = newUser(ASSIGNEE_AST_ID, UserRole.AST);
         accountEntity.getUsers().add(userAssignee);
-        User userSalesAssignee = newUser(ASSIGNEE_USER_SALES_ID, UserRole.CLIENT);
+        User userSalesAssignee = newUser(ASSIGNEE_USER_SALES_ID, UserRole.SALES_USER);
         accountEntity.getUsers().add(userSalesAssignee);
 
         // Set up the mocked repository
@@ -207,7 +207,7 @@ class ProspectServiceDecoratorHelperTest {
         String ASSIGNEE_USER_SALES_ID = getAccountMockFactory().getFAKER().internet().uuid();
         String ACCOUNT_ID = getAccountMockFactory().getComponentId();
         Account accountEntity = getAccountMockFactory().newEntity(ACCOUNT_ID);
-        User userSalesAssignee = newUser(ASSIGNEE_USER_SALES_ID, UserRole.CLIENT);
+        User userSalesAssignee = newUser(ASSIGNEE_USER_SALES_ID, UserRole.SALES_USER);
         accountEntity.getUsers().add(userSalesAssignee);
 
         // Set up the mocked repository

@@ -85,7 +85,7 @@ public class ProspectServiceDecoratorHelper {
         } else {
             User user = getUserByRole(users, UserRole.AST);
             if (user == null) {
-                user = getUserByRole(users, UserRole.CLIENT);
+                user = getUserByRole(users, UserRole.SALES_USER);
             }
             if (user != null) {
                 return mapUser(user);

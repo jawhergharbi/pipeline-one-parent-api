@@ -95,7 +95,7 @@ public class AccountUserServiceDecorator implements AccountUserService {
                 .email(email)
                 .password(password)
                 .confirmPassword(password)
-                .roles(new HashSet<>( Arrays.asList( UserRole.USER.name(), UserRole.CLIENT.name() ) ))
+                .roles(new HashSet<>( Arrays.asList( UserRole.USER.name(), UserRole.SALES_USER.name() ) ))
                 .build();
         // TODO we may check if the user is already created but not active
         user = userService.create(user);
