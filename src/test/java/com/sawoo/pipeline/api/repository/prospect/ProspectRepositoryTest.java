@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.repository.prospect;
 
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.person.Person;
+import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.repository.base.BaseRepositoryTest;
 import com.sawoo.pipeline.api.repository.company.CompanyRepository;
 import com.sawoo.pipeline.api.repository.person.PersonRepository;

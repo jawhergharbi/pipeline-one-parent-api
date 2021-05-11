@@ -30,7 +30,7 @@ public class Todo extends BaseEntity {
     private String id;
 
     @JMap
-    private Integer type;
+    private Integer channel;
 
     @JMap
     private Integer status;
@@ -55,4 +55,7 @@ public class Todo extends BaseEntity {
 
     @JMap
     private TodoSource source;
+
+    @JMap
+    private TodoType type;
 }

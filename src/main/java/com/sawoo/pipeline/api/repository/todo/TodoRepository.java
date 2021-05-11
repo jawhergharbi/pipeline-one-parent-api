@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.repository.todo;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.repository.base.BaseMongoRepository;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 

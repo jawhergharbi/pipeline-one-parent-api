@@ -4,7 +4,6 @@ import com.sawoo.pipeline.api.model.campaign.Campaign;
 import com.sawoo.pipeline.api.model.campaign.CampaignStatus;
 import com.sawoo.pipeline.api.repository.base.BaseMongoRepository;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;

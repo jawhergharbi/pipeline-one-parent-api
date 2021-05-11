@@ -35,7 +35,7 @@ public abstract class TodoMockBaseFactory<D extends TodoDTO> extends BaseMockFac
                         .build())
                 .status(TodoStatus.ON_GOING.getValue())
                 .scheduled(now.plusDays(10).plusHours(10))
-                .type(2)
+                .channel(2)
                 .message(TodoMessage
                         .builder()
                         .text(getFAKER().lorem().sentence(25))

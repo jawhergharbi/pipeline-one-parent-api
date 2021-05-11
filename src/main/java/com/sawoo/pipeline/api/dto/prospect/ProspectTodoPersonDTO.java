@@ -3,7 +3,6 @@ package com.sawoo.pipeline.api.dto.prospect;
 import com.googlecode.jmapper.annotations.JMap;
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.model.common.Personality;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

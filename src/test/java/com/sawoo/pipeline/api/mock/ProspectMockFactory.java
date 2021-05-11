@@ -2,14 +2,14 @@ package com.sawoo.pipeline.api.mock;
 
 import com.sawoo.pipeline.api.dto.PersonalityDTO;
 import com.sawoo.pipeline.api.dto.company.CompanyDTO;
-import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.dto.person.PersonDTO;
+import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.model.common.Note;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.common.Status;
 import com.sawoo.pipeline.api.model.company.Company;
-import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.person.Person;
+import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.prospect.ProspectQualification;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
