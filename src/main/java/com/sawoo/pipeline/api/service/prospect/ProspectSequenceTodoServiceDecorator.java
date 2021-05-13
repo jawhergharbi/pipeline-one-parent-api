@@ -16,6 +16,7 @@ import com.sawoo.pipeline.api.model.sequence.SequenceStepChannel;
 import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
+import com.sawoo.pipeline.api.model.todo.TodoType;
 import com.sawoo.pipeline.api.service.sequence.SequenceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,7 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
         return TodoAssigneeDTO.builder()
                 .scheduled(startDate.plusDays(step.getTimespan()))
                 .channel(step.getChannel())
+                .type(TodoType.OUT_GOING_INTERACTION)
                 .status(TodoStatus.PENDING.getValue())
                 .link(createLink(step, prospect))
                 .message(TodoMessageDTO.builder()
