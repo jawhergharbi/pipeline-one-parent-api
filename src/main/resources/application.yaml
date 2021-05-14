@@ -207,7 +207,11 @@ spring:
   data:
     mongodb:
       auto-index-creation: false
-      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-one-test?retryWrites=true&w=majority
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-test?retryWrites=true&w=majority
+
+  javers:
+    mongodb:
+      uri: mongodb+srv://pipeline-core-user:verysecretpassword@cluster0.ag5sn.mongodb.net/pipeline-core-test-audit?retryWrites=true&w=majority
 
 server:
   port: 8081
