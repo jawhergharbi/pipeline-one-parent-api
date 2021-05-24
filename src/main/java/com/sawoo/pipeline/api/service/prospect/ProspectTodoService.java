@@ -38,7 +38,7 @@ public interface ProspectTodoService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException;
 
-    List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types);
+    List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels);
 
     List<ProspectTodoDTO> searchBy(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch searchCriteria);

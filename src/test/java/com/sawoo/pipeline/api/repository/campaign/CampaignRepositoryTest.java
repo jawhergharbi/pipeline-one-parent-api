@@ -24,7 +24,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, CampaignRepository, CampaignMockFactory> {
+class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, CampaignRepository, CampaignMockFactory> {
 
     private static final String CAMPAIGN_JSON_DATA_FILE_NAME = "campaign-test-data.json";
     private static final String CAMPAIGN_ID = "60488a88959ceb1ce1e518fa";

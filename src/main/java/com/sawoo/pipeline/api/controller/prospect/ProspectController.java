@@ -153,7 +153,7 @@ public class ProspectController {
         TodoSearch search = TodoSearch.builder()
                 .componentIds(Collections.singletonList(id))
                 .status(status)
-                .types(types)
+                .channels(types)
                 .sourceId(sourceIds)
                 .sourceType(sourceTypes)
                 .accountIds(accountIds)

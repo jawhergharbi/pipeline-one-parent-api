@@ -94,8 +94,8 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     }
 
     @Override
-    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        return todoService.findBy(prospectIds, status, types);
+    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels) throws CommonServiceException {
+        return todoService.findBy(prospectIds, status, channels);
     }
 
     @Override

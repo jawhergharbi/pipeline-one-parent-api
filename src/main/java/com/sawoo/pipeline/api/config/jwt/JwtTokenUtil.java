@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.config.jwt;
 
 import com.sawoo.pipeline.api.common.contants.CommonConstants;
+import com.sawoo.pipeline.api.common.contants.JwtConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -64,7 +65,7 @@ public class JwtTokenUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + CommonConstants.JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JwtConstants.TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS256, getEncodedSecret(secret))
                 .compact();
     }

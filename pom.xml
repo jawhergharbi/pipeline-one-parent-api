@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sawoo</groupId>
     <artifactId>pipeline-one-api</artifactId>
-    <version>0-6-1</version>
+    <version>0-6-3</version>
     <name>pipeline-one-api</name>
     <description>pipeline.one API</description>
 
@@ -22,7 +22,6 @@
         <jmapper-core.version>1.6.1.CR2</jmapper-core.version>
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
         <spring-cloud-gcp.version>2.0.0</spring-cloud-gcp.version>
-        <mongock.version>4.1.19</mongock.version>
         <mongock.version>4.1.19</mongock.version>
         <hamcrest.version>2.2</hamcrest.version>
         <javafaker.version>1.0.2</javafaker.version>

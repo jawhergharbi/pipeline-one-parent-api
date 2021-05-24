@@ -51,6 +51,9 @@ public class Todo extends BaseEntity {
     private String componentId;
 
     @JMap
+    private String campaignId;
+
+    @JMap
     private String assigneeId;
 
     @JMap

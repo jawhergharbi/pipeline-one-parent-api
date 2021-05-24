@@ -165,10 +165,10 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
-    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        log.debug("Get TODOs from prospects [{}] with status [{}] and types[{}]", prospectIds, status, types);
+    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels) throws CommonServiceException {
+        log.debug("Get TODOs from prospects [{}] with status [{}] and channels[{}]", prospectIds, status, channels);
 
-        List<TodoDTO> todos = todoService.searchBy(prospectIds, status, types);
+        List<TodoDTO> todos = todoService.searchBy(prospectIds, status, channels);
         if (!todos.isEmpty()) {
             List<Prospect> prospects = prospectIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(prospectIds);
             return mapTODOsProspects(todos, prospects, null);

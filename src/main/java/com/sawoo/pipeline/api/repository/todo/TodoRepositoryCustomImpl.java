@@ -21,14 +21,14 @@ public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<Todo> findBy(Integer status, Integer type, List<String> componentIds) {
+    public List<Todo> findBy(Integer status, Integer channel, List<String> componentIds) {
         Criteria criteria = new Criteria();
         List<Criteria> andCriteria = new ArrayList<>();
         if (status != null) {
             andCriteria.add(Criteria.where("status").is(status));
         }
-        if (type != null) {
-            andCriteria.add(Criteria.where("type").is(type));
+        if (channel != null) {
+            andCriteria.add(Criteria.where("channel").is(channel));
         }
         if (componentIds != null && !componentIds.isEmpty()) {
             andCriteria.add(Criteria.where("componentId").in(componentIds));
@@ -37,10 +37,10 @@ public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
         return mongoTemplate.find(new Query(criteria), Todo.class);
     }
 
-    public List<Todo> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> componentIds) {
+    public List<Todo> findByStatusAndChannel(List<Integer> status, List<Integer> channels, List<String> componentIds) {
         TodoSearch searchCriteria = TodoSearch.builder()
                 .status(status)
-                .types(type)
+                .channels(channels)
                 .componentIds(componentIds)
                 .build();
         return searchBy(searchCriteria);
@@ -79,9 +79,14 @@ public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
             andCriteria.add(Criteria.where("status").in(status));
         }
 
-        List<Integer> type = searchCriteria.getTypes();
-        if (type != null && !type.isEmpty()) {
-            andCriteria.add(Criteria.where("type").in(type));
+        List<Integer> channels = searchCriteria.getChannels();
+        if (channels != null && !channels.isEmpty()) {
+            andCriteria.add(Criteria.where("channel").in(channels));
+        }
+
+        List<String> campaignIds = searchCriteria.getCampaignIds();
+        if (campaignIds != null && !campaignIds.isEmpty()) {
+            andCriteria.add(Criteria.where("campaignId").in(campaignIds));
         }
 
         List<String> componentIds = searchCriteria.getComponentIds();

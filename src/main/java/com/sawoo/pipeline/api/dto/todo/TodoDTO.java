@@ -60,6 +60,9 @@ public class TodoDTO extends BaseEntityDTO {
     private String componentId;
 
     @JMap
+    private String campaignId;
+
+    @JMap
     @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
     private String assigneeId;
 

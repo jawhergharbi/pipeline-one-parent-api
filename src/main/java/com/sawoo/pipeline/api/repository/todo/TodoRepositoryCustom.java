@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TodoRepositoryCustom {
 
-    List<Todo> findBy(Integer status, Integer type, List<String> componentIds);
+    List<Todo> findBy(Integer status, Integer channel, List<String> componentIds);
 
-    List<Todo> findByStatusAndType(List<Integer> status, List<Integer> type, List<String> componentIds);
+    List<Todo> findByStatusAndChannel(List<Integer> status, List<Integer> channel, List<String> componentIds);
 
     List<Todo> searchBy(TodoSearch searchCriteria);
 
