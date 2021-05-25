@@ -56,7 +56,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         validateTodoScheduled(todos, todo, prospectId);
 
         todo.setComponentId(prospectId);
-        final TodoDTO savedTODO = todoService.create(todo);
+                final TodoDTO savedTODO = todoService.create(todo);
 
         log.debug("Prospect todo has been created for prospect id: [{}]. Todo id [{}]", prospectId, todo.getId());
 
@@ -68,20 +68,20 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
-    public <T extends TodoDTO> List<TodoDTO> addTODOList(
+    public List<TodoDTO> addTODOList(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @Valid List<T> todoList) throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Add a list of Todos for prospect id: [{}]. List size [{}]", prospectId, todoList.size());
+            @Valid List<TodoDTO> todoList) throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Add a list of TODOs for prospect id: [{}]. List size [{}]", prospectId, todoList.size());
 
         Prospect prospect = findProspectById(prospectId);
         List<Todo> todos = prospect.getTodos();
 
-        // TODO add signature to create multiple todos in one single insert
+        // TODO add signature to create multiple TODOs in one single insert
         List<TodoDTO> newTodoList = todoList.stream().map(t -> {
             validateTodoScheduled(todos, t, prospectId);
             t.setComponentId(prospectId);
             TodoDTO savedTODO = todoService.create(t);
-            log.debug("Prospect todo has been created for prospect id: [{}]. Todo id [{}]", prospectId, savedTODO.getId());
+            log.debug("Prospect TODO has been created for prospect id: [{}]. TODO id [{}]", prospectId, savedTODO.getId());
             return savedTODO;
         }).collect(Collectors.toList());
 
@@ -200,12 +200,12 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         if (todos != null && !todos.isEmpty()) {
             List<String> prospectIds = searchCriteria.getComponentIds();
             log.debug("[{}] TODOs will be removed from their prospects [{}]", todos.size(), prospectIds);
-            prospectIds.forEach(prospectId -> removeDeletedTodos(prospectId, todos));
+            prospectIds.forEach(prospectId -> removeDeletedTODOs(prospectId, todos));
         }
         return todos != null ? todos.size() : 0;
     }
 
-    private void removeDeletedTodos(String prospectId, List<TodoDTO> todos) {
+    private void removeDeletedTODOs(String prospectId, List<TodoDTO> todos) {
         Predicate<Todo> isContained = t -> todos.stream().anyMatch(todo -> todo.getId().equals(t.getId()));
         Prospect prospect = findProspectById(prospectId);
         List<Todo> updatedTodos = prospect

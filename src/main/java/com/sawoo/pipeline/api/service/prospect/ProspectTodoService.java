@@ -21,8 +21,8 @@ public interface ProspectTodoService {
                     @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException;
 
-    <T extends TodoDTO> List<TodoDTO> addTODOList(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-                    @Valid List<T> todoList)
+    List<TodoDTO> addTODOList(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+                    @Valid List<TodoDTO> todoList)
             throws ResourceNotFoundException, CommonServiceException;
 
     TodoDTO removeTODO(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,

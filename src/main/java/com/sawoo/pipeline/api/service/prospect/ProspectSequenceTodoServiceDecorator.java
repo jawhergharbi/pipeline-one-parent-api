@@ -1,11 +1,13 @@
 package com.sawoo.pipeline.api.service.prospect;
 
+import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
@@ -85,7 +87,13 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
             throws ResourceNotFoundException, CommonServiceException {
         log.debug("Create TODOs based on sequence id: [{}] and for prospect id [{}]", prospectId, sequenceId);
         List<TodoAssigneeDTO> todos = evalTODOs(prospectId, sequenceId, assigneeId);
-        prospectService.addTODOList(prospectId, todos);
+        if (todos != null && !todos.isEmpty()) {
+            JMapper<TodoDTO, TodoAssigneeDTO> mapper = prospectService.getMapper().getTodoAssigneeMapper();
+            List<TodoDTO> todoDTOs = todos.stream().map(mapper::getDestination).collect(Collectors.toList());
+            prospectService.addTODOList(prospectId, todoDTOs);
+        } else {
+            log.info("No TODOs are going to be created for sequence id: [{}] and prospect id: [{}]", sequenceId, prospectId);
+        }
         return todos;
     }
 

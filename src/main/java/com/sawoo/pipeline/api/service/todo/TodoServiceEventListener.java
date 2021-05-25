@@ -37,7 +37,7 @@ public class TodoServiceEventListener {
 
     @EventListener
     public void handleBeforeInsertEvent(BaseServiceBeforeInsertEvent<TodoDTO, Todo> event) {
-        log.debug("Todo before insert listener");
+        log.debug("TODO before insert listener");
         Todo entity = event.getModel();
 
         // Link init
@@ -81,7 +81,7 @@ public class TodoServiceEventListener {
 
     @EventListener
     public void handleBeforeSaveEvent(BaseServiceBeforeSaveEvent<TodoDTO, Todo> event) {
-        log.debug("Todo before save listener");
+        log.debug("TODO before save listener");
         Todo entity = event.getModel();
 
         // Status: DONE. Completion Date must be informed
