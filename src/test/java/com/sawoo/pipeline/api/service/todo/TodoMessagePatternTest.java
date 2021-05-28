@@ -27,7 +27,6 @@ class TodoMessagePatternTest {
         Matcher matcher1 = MESSAGE_PATTERN.matcher(message1);
         Assertions.assertTrue(matcher1.matches(), String.format("Message: [%s] must match", message1));
 
-        //String message2 = "My first message for an analytical prospect.Hello {{ctx:prospect_name}}. Nice to e-meet you. Saludos.";
         String message2 = "My first message for an analytical prospect.\n\nHello {{ctx:prospect_name}}. Nice to e-meet you.\n\nSaludos.";
         Matcher matcher2 = MESSAGE_PATTERN.matcher(message2);
         Assertions.assertTrue(matcher2.matches(), String.format("Message: [%s] must match", message2));

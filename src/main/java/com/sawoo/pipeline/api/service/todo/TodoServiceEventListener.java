@@ -114,9 +114,7 @@ public class TodoServiceEventListener {
             if (template && todo.getSource().getType().equals(TodoSourceType.MANUAL)) {
                 updateTemplate(todoMessage);
             }
-        } else {
-            todoMessage.setValid(false);
-        }
+        } else todoMessage.setValid(!Strings.isBlank(message) || !isMessageType(todo));
     }
 
     private boolean isMessageType(Todo todo) {
