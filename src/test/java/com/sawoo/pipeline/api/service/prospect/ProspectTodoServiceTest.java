@@ -188,10 +188,11 @@ class ProspectTodoServiceTest extends BaseLightServiceTest<ProspectDTO, Prospect
     }
 
     @Test
-    @DisplayName("addTODO: prospect does exist and each prospect todo is valid - Success")
+    @DisplayName("addTODOList: prospect does exist and each prospect todo is valid - Success")
     void addTODOListWhenProspectExistsAndProspectTODOValidReturnsSuccess() {
         // Set up mocked entities
         String PROSPECT_ID = getMockFactory().getComponentId();
+        Prospect prospectEntity = getMockFactory().newEntity(PROSPECT_ID);
 
         // Execute the service call
         /*List<TodoDTO> returnedDTOList = getService().addTODOList(PROSPECT_ID, null);*/

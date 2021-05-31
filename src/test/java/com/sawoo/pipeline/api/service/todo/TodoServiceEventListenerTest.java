@@ -5,6 +5,7 @@ import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
 import com.sawoo.pipeline.api.model.common.LinkType;
+import com.sawoo.pipeline.api.model.common.TodoChannel;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.todo.TodoMessage;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
@@ -133,7 +134,7 @@ class TodoServiceEventListenerTest {
     }
 
     @Test
-    @DisplayName("onBeforeInsert: message informed and invalid - Success")
+    @DisplayName("onBeforeInsert: message informed and invalid but variables - Success")
     void onBeforeInsertWhenMessageInformedAndInvalidWithTemplateVariablesReturnsSuccess() {
         // Set up mocked entities
         TodoDTO postDTO = mockFactory.newDTO(null);
@@ -153,6 +154,24 @@ class TodoServiceEventListenerTest {
                 VARIABLE_SIZE,
                 entity.getMessage().getTemplate().getVariables().size(),
                 String.format("Template variables size must be %d", VARIABLE_SIZE));
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: not a message - Success")
+    void onBeforeInsertWhenMessageValidWhenTypeNonMessageReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setMessage(TodoMessageDTO.builder()
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message")
+                .build());
+        postDTO.setChannel(TodoChannel.PHONE.getValue());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertTrue(entity.getMessage().isValid(), "Message must be valid");
     }
 
     @Test
