@@ -1,6 +1,7 @@
 package com.sawoo.pipeline.api.service.prospect;
 
 
+import com.sawoo.pipeline.api.common.contants.MessageConstants;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
@@ -13,15 +14,22 @@ import com.sawoo.pipeline.api.model.todo.TodoSource;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.model.todo.TodoType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Locale;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ProspectSequenceTodoHelper {
+
+    private final MessageSource messageSource;
 
     public TodoAssigneeDTO mapSequenceStepToTODO(SequenceStepDTO step, UserCommon assignee, Prospect prospect, String sequenceId, LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
@@ -54,9 +62,10 @@ public class ProspectSequenceTodoHelper {
                     .url(step.getAttachment().getUrl())
                     .build();
         } else {
+            Locale locale = LocaleContextHolder.getLocale();
             if (step.getChannel().equals(SequenceStepChannel.LINKED_IN.getValue())) {
                 return LinkDTO.builder()
-                        .description("LinkedIn chat")
+                        .description(messageSource.getMessage(MessageConstants.PROSPECT_SEQUENCE_STEP_LINKED_IN_CHAT_DEFAULT_LABEL, null, locale))
                         .type(LinkType.PLAIN_LINK)
                         .url(prospect.getLinkedInThread())
                         .build();
