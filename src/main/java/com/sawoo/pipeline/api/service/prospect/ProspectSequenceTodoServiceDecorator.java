@@ -104,8 +104,13 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
 
     private TodoAssigneeDTO mapSequenceStepToTODO(SequenceStepDTO step, UserCommon assignee, Prospect prospect, String sequenceId, LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        LocalDateTime startDateBody = now;
+        if(step.getTimespan()!=0)
+        {
+            startDateBody = startDate.plusDays(step.getTimespan());
+        }
         return TodoAssigneeDTO.builder()
-                .scheduled(startDate.plusDays(step.getTimespan()))
+                .scheduled(startDateBody)
                 .channel(step.getChannel())
                 .type(TodoType.OUT_GOING_INTERACTION)
                 .status(TodoStatus.PENDING.getValue())
