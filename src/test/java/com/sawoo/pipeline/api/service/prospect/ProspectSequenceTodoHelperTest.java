@@ -8,6 +8,7 @@ import com.sawoo.pipeline.api.mock.ProspectMockFactory;
 import com.sawoo.pipeline.api.mock.SequenceStepMockFactory;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.todo.TodoSourceType;
+import com.sawoo.pipeline.api.model.todo.TodoStatus;
 import com.sawoo.pipeline.api.model.todo.TodoType;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,6 @@ import org.springframework.context.annotation.Profile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Random;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -76,12 +76,10 @@ class ProspectSequenceTodoHelperTest {
     void mapSequenceStepToTODOWhenTypeDefaultValueIsOutGoingAndReturnsSuccess() {
         // Set up mocked entities
         String PROSPECT_ID = getProspectMockFactory().getComponentId();
-        Random random = new Random();
         String STEP_ID = getSequenceStepMockFactory().getComponentId();
         String SEQUENCE_ID = getProspectMockFactory().getFAKER().internet().uuid();
         Prospect mockProspect = getProspectMockFactory().newEntity(PROSPECT_ID);
         SequenceStepDTO mockSequenceStep = getSequenceStepMockFactory().newDTO(STEP_ID);
-        mockSequenceStep.setTimespan(random.nextInt(10 - 0 + 1) + 0);
         UserCommon user = UserCommon.builder()
                 .fullName(getProspectMockFactory().getFAKER().name().fullName())
                 .id(getProspectMockFactory().getFAKER().internet().uuid())
@@ -93,32 +91,17 @@ class ProspectSequenceTodoHelperTest {
         TodoAssigneeDTO todo = sequenceTodoHelper.mapSequenceStepToTODO(mockSequenceStep, user, mockProspect, SEQUENCE_ID, startDate);
 
         // Assertions
-        Assertions.assertTrue((todo.getType().equals(TodoType.OUT_GOING_INTERACTION)), "Type should match default type");
-    }
-
-
-    @Test
-    @DisplayName("mapSequenceStepToTODO: todo source type should match default value 1  - Success")
-    void mapSequenceStepToTODOWhenSourceTypeDefaultValueIsAutomaticAndReturnsSuccess() {
-        // Set up mocked entities
-        String PROSPECT_ID = getProspectMockFactory().getComponentId();
-        Random random = new Random();
-        String STEP_ID = getSequenceStepMockFactory().getComponentId();
-        String SEQUENCE_ID = getProspectMockFactory().getFAKER().internet().uuid();
-        Prospect mockProspect = getProspectMockFactory().newEntity(PROSPECT_ID);
-        SequenceStepDTO mockSequenceStep = getSequenceStepMockFactory().newDTO(STEP_ID);
-        mockSequenceStep.setTimespan(random.nextInt(10 - 0 + 1) + 0);
-        UserCommon user = UserCommon.builder()
-                .fullName(getProspectMockFactory().getFAKER().name().fullName())
-                .id(getProspectMockFactory().getFAKER().internet().uuid())
-                .type(UserCommonType.PROSPECT)
-                .build();
-        LocalDateTime startDate = LocalDateTime.now(ZoneOffset.UTC);
-
-        // Execute the call
-        TodoAssigneeDTO todo = sequenceTodoHelper.mapSequenceStepToTODO(mockSequenceStep, user, mockProspect, SEQUENCE_ID, startDate);
-
-        // Assertions
-        Assertions.assertTrue((todo.getSource().getType().equals(TodoSourceType.AUTOMATIC)), "Source type should match default value automatic");
+        Assertions.assertEquals(
+                TodoType.OUT_GOING_INTERACTION,
+                todo.getType(),
+                String.format("Todo property type must be initialized with the default value %s", TodoType.OUT_GOING_INTERACTION));
+        Assertions.assertEquals(
+                TodoSourceType.AUTOMATIC,
+                todo.getSource().getType(),
+                String.format("Source type should match default value %s", TodoSourceType.AUTOMATIC));
+        Assertions.assertEquals(
+                TodoStatus.PENDING.getValue(),
+                todo.getStatus(),
+                String.format("Status should match default value %s", TodoStatus.PENDING.getValue()));
     }
 }
