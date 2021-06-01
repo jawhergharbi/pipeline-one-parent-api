@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.doReturn;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class DummyServiceTest {
+class DummyServiceTest {
 
     @Autowired
     private DummyService service;
@@ -35,7 +37,7 @@ public class DummyServiceTest {
     void findByIdWhenDummyExitsReturnsSuccess() {
         // Set up mock dummy
         String DUMMY_ID = "my_dummy_id";
-        DummyEntity mockDummy = new DummyEntity(DUMMY_ID, "hello my friend", 15, 1);
+        DummyEntity mockDummy = new DummyEntity(DUMMY_ID, "hello my friend", 15, 1, LocalDateTime.now(ZoneOffset.UTC));
 
         // Set up the mocked repository
         doReturn(Optional.of(mockDummy)).when(repository).findById(DUMMY_ID);
@@ -68,8 +70,9 @@ public class DummyServiceTest {
     @DisplayName("Dummy Service: findAll - Success")
     void findAllWhenTwoDummyEntitiesFoundReturnsSuccess() {
         // Set up mock dummy entities
-        DummyEntity mockDummy1 = new DummyEntity("dummy_id_1", "name1", 15, 1);
-        DummyEntity mockDummy2 = new DummyEntity("dummy_id_2", "name2", 25, 2);
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        DummyEntity mockDummy1 = new DummyEntity("dummy_id_1", "name1", 15, 1, now);
+        DummyEntity mockDummy2 = new DummyEntity("dummy_id_2", "name2", 25, 2, now);
 
         // Set up the mocked repository
         doReturn(Arrays.asList(mockDummy1, mockDummy2)).when(repository).findAll();

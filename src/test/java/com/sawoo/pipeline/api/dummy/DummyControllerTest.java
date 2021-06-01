@@ -17,6 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -38,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @Tag(value = "controller")
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class DummyControllerTest {
+class DummyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -191,8 +193,8 @@ public class DummyControllerTest {
         DummyEntity putDummy = new DummyEntity();
         putDummy.setName("hello my dear friend");
         putDummy.setNumber(124);
-        DummyEntity mockEntity = new DummyEntity("my_dummy_id", "hello my dear", 14, 1);
-        DummyEntity mockUpdatedEntity = new DummyEntity("my_dummy_id", "hello my dear friend", 124, 2);
+        DummyEntity mockEntity = new DummyEntity("my_dummy_id", "hello my dear", 14, 1, LocalDateTime.now(ZoneOffset.UTC));
+        DummyEntity mockUpdatedEntity = new DummyEntity("my_dummy_id", "hello my dear friend", 124, 2, LocalDateTime.now(ZoneOffset.UTC));
 
         // Setup the mocked service
         doReturn(Optional.of(mockEntity)).when(service).findById("my_dummy_id");

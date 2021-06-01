@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +30,8 @@ public class DummyServiceImpl implements DummyService {
     public DummyEntity save(DummyEntity dummy) {
         if (dummy.getVersion() == null) dummy.setVersion(1);
         if (dummy.getId() == null) dummy.setId(UUID.randomUUID().toString());
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        dummy.setDateTime(now);
         return repository.save(dummy);
     }
 
