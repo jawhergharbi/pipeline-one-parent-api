@@ -30,9 +30,6 @@ public class ProspectMockFactory extends BaseMockFactory<ProspectDTO, Prospect> 
     @Getter
     private final TodoAssigneeMockFactory todoAssigneeMockFactory;
 
-    @Getter
-    private final SequenceMockFactory sequenceMockFactory;
-
     @Override
     public String getComponentId() {
         return getFAKER().internet().uuid();

@@ -1,8 +1,8 @@
 package com.sawoo.pipeline.api.service.prospect; // Set up mocked entities
 
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
-import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
+import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
 import com.sawoo.pipeline.api.model.sequence.Sequence;
@@ -23,12 +23,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -44,9 +41,12 @@ class ProspectSequenceTodoServiceTest extends BaseLightServiceTest<ProspectDTO, 
     @MockBean
     private SequenceService sequenceService;
 
+    private final SequenceMockFactory sequenceMockFactory;
+
     @Autowired
-    public ProspectSequenceTodoServiceTest(ProspectMockFactory mockFactory, ProspectService service) {
+    public ProspectSequenceTodoServiceTest(ProspectMockFactory mockFactory, ProspectService service, SequenceMockFactory sequenceMockFactory) {
         super(mockFactory, DBConstants.PROSPECT_DOCUMENT, service);
+        this.sequenceMockFactory = sequenceMockFactory;
     }
 
     @BeforeAll
@@ -70,10 +70,10 @@ class ProspectSequenceTodoServiceTest extends BaseLightServiceTest<ProspectDTO, 
     }
 
     private Sequence newSequenceWithSteps(String sequenceId, int stepsNumber) {
-        Sequence mockEntity = getMockFactory().getSequenceMockFactory().newEntity(sequenceId);
+        Sequence mockEntity = sequenceMockFactory.newEntity(sequenceId);
         List<SequenceStep> steps = IntStream.range(0, stepsNumber).mapToObj( (idx) -> {
-            String SEQUENCE_STEP_ID = getMockFactory().getSequenceMockFactory().getSequenceStepMockFactory().getComponentId();
-            return getMockFactory().getSequenceMockFactory().getSequenceStepMockFactory().newSequenceStepEntity(SEQUENCE_STEP_ID, idx + 1);
+            String SEQUENCE_STEP_ID = sequenceMockFactory.getSequenceStepMockFactory().getComponentId();
+            return sequenceMockFactory.getSequenceStepMockFactory().newSequenceStepEntity(SEQUENCE_STEP_ID, idx + 1);
         }).collect(Collectors.toList());
         mockEntity.setSteps(steps);
         return mockEntity;
