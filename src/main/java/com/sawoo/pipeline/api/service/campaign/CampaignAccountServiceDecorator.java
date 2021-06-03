@@ -28,9 +28,7 @@ public class CampaignAccountServiceDecorator implements CampaignAccountService {
 
     @Autowired
     public CampaignAccountServiceDecorator(@Lazy CampaignService campaignService,
-                                           AccountRepository accountRepository,
-                                           AccountService accountService,
-                                           AccountMapper accountMapper) {
+                                           @Lazy AccountService accountService) {
         this.campaignService = campaignService;
         this.accountService = accountService;
     }

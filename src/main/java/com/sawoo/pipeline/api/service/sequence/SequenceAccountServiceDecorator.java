@@ -26,15 +26,12 @@ public class SequenceAccountServiceDecorator implements SequenceAccountService {
 
     private final AccountService accountService;
     private final SequenceService sequenceService;
-    private final AccountMapper accountMapper;
 
     @Autowired
     public SequenceAccountServiceDecorator(@Lazy SequenceService sequenceService,
-                                           AccountService accountService,
-                                           AccountMapper accountMapper) {
+                                           @Lazy AccountService accountService) {
         this.sequenceService = sequenceService;
         this.accountService = accountService;
-        this.accountMapper = accountMapper;
     }
 
     @Override
