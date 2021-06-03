@@ -169,8 +169,8 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     }
 
     @Override
-    public List<TodoAssigneeDTO> createTODOs(String prospectId, String sequenceId, String assigneeId)
+    public List<TodoAssigneeDTO> createTODOs(String prospectId, String campaignId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return prospectSequenceTodoService.createTODOs(prospectId, sequenceId, assigneeId);
+        return prospectSequenceTodoService.createTODOs(prospectId, campaignId, sequenceId, assigneeId);
     }
 }

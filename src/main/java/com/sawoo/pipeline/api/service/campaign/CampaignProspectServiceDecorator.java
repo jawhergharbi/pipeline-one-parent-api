@@ -198,7 +198,7 @@ public class CampaignProspectServiceDecorator implements CampaignProspectService
         log.debug("Campaign prospect has been correctly created. Campaign Prospect: [{}]", campaignProspectEntity);
 
         // Create todos based on the sequence
-        prospectService.createTODOs(campaignProspect.getProspectId(), campaignProspect.getSequenceId(), campaignProspect.getAssigneeId());
+        prospectService.createTODOs(campaignProspect.getProspectId(), campaign.getId(), campaignProspect.getSequenceId(), campaignProspect.getAssigneeId());
 
         return campaignService.getMapper().getMapperProspectCampaignOut().getDestination(campaignProspectEntity);
     }

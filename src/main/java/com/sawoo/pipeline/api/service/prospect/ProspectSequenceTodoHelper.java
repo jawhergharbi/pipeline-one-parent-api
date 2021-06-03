@@ -54,6 +54,7 @@ public class ProspectSequenceTodoHelper {
                 .build();
     }
 
+    // TODO this probably requires a especialization based on the step channel
     private LinkDTO createLink(SequenceStepDTO step, Prospect prospect) {
         if (step.getAttachment() != null) {
             return LinkDTO.builder()

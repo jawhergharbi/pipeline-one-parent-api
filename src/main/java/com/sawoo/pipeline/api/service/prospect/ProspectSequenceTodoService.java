@@ -18,6 +18,7 @@ public interface ProspectSequenceTodoService {
 
     List<TodoAssigneeDTO> createTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException;
