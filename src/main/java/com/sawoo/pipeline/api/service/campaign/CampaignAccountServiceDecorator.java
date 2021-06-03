@@ -41,7 +41,7 @@ public class CampaignAccountServiceDecorator implements CampaignAccountService {
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) Set<String> accountIds)
             throws CommonServiceException {
         log.debug("Retrieve the list of campaigns for accounts [ids: {}]", accountIds);
-        List<Campaign> campaigns = campaignService.getRepository().findByComponentIdIn(accountIds);
+        List<Campaign> campaigns = campaignService.getRepository().findByComponentIdInShort(accountIds);
 
         log.debug("[{}] campaign/s has/have been found for account [ids: {}]", campaigns.size(), accountIds);
 
