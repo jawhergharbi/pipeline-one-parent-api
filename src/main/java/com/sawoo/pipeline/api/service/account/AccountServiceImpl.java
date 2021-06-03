@@ -23,11 +23,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -131,6 +135,24 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountDTO, Account, Acc
         log.debug("Delete account company notes for account id [{}]", accountId);
         Consumer<Account> setNull = l -> l.setCompanyNotes(null);
         return deleteAccountNotes(accountId, setNull);
+    }
+
+    @Override
+    public List<AccountDTO> findAllById(
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Size(min = 1, message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_BELLOW_MIN_SIZE_ERROR)
+                    Set<String> accountIds) {
+        Iterable<Account> accounts = getRepository().findAllById(accountIds);
+        List<Account> accountList = StreamSupport
+                .stream(accounts.spliterator(), false)
+                .collect(Collectors.toList());
+        if (accountList.size() < accountIds.spliterator().getExactSizeIfKnown()) {
+            log.warn(
+                    "[{}] account/s found for the following account ids [{}]. Number of account found does not match the accounts requested",
+                    accounts.spliterator().getExactSizeIfKnown(),
+                    accountIds);
+        }
+        return accountList.stream().map(getMapper().getMapperOut()::getDestination).collect(Collectors.toList());
     }
 
     private AccountDTO deleteAccountNotes(String accountId, Consumer<Account> setNull) {
