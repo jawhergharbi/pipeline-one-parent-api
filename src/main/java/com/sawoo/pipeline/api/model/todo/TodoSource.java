@@ -14,5 +14,6 @@ public class TodoSource {
     private TodoSourceType type;
     private String sourceId;
     private String sourceDescription;
+    private int step;
 
 }

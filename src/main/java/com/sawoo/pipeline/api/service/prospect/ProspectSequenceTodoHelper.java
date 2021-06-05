@@ -48,6 +48,7 @@ public class ProspectSequenceTodoHelper {
                 .source(TodoSource.builder()
                         .type(TodoSourceType.AUTOMATIC)
                         .sourceId(sequenceId)
+                        .step(step.getPosition())
                         .build())
                 .updated(now)
                 .created(now)
