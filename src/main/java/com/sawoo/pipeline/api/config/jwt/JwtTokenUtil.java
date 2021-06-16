@@ -20,7 +20,9 @@ public class JwtTokenUtil {
     @Value("${app.jwt.secret}")
     private String secret;
 
-    private String getEncodedSecret(String secret){return Base64.getEncoder().encodeToString(secret.getBytes());}
+    private String getEncodedSecret(String secret) {
+        return Base64.getEncoder().encodeToString(secret.getBytes());
+    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -63,7 +65,7 @@ public class JwtTokenUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + CommonConstants.JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS256,getEncodedSecret(secret))
+                .signWith(SignatureAlgorithm.HS256, getEncodedSecret(secret))
                 .compact();
     }
 
