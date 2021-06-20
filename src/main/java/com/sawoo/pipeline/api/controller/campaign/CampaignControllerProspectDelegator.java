@@ -17,23 +17,28 @@ import java.util.List;
 @Validated
 public interface CampaignControllerProspectDelegator {
 
-    ResponseEntity<CampaignProspectDTO> createProspect(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-                                                       @Valid CampaignProspectCreateDTO campaignProspect)
+    ResponseEntity<CampaignProspectDTO> createProspect(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @Valid CampaignProspectCreateDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException;
 
-    ResponseEntity<CampaignProspectDTO> addProspect(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-                                                    @Valid CampaignProspectAddDTO campaignProspect)
+    ResponseEntity<CampaignProspectDTO> addProspect(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @Valid CampaignProspectAddDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException;
 
-    ResponseEntity<CampaignProspectDTO> removeProspect(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-                                                       @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId)
+    ResponseEntity<CampaignProspectDTO> removeProspect(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId)
             throws ResourceNotFoundException, CommonServiceException;
 
-    ResponseEntity<CampaignProspectDTO> updateProspect(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
-                                                       @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId,
-                                                       @Valid CampaignProspectBaseDTO campaignProspect)
+    ResponseEntity<CampaignProspectDTO> updateProspect(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String prospectId,
+            @Valid CampaignProspectBaseDTO campaignProspect)
             throws ResourceNotFoundException, CommonServiceException;
 
-    ResponseEntity<List<CampaignProspectDTO>> findAllProspects(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId)
+    ResponseEntity<List<CampaignProspectDTO>> findAllProspects(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_OR_NULL_ERROR) String campaignId)
             throws ResourceNotFoundException, CommonServiceException;
 }

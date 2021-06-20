@@ -31,6 +31,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +42,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.atMostOnce;
@@ -77,36 +80,36 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/prospects/{id}/todos: prospect id and todo valid - Success")
-    void addTODOWhenProspectIdAndTODOValidReturnsSuccess() throws Exception {
+    @DisplayName("POST /api/prospects/{id}/todos: prospect id and a single valid TODO - Success")
+    void addTODOsWhenProspectIdAndOneSingleTODOValidReturnsSuccess() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
-        String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
-        TodoDTO postEntity = getMockFactory().getTodoMockFactory().newDTO(null);
-        TodoDTO createdTODO = getMockFactory().getTodoMockFactory().newDTO(TODO_ID, postEntity);
+        List<TodoDTO> postEntityList = Collections.singletonList(getMockFactory().getTodoMockFactory().newDTO(null));
+        List<String> todoIds = new ArrayList<>();
+        List<TodoDTO> createdTODOs = getCreatedTODOs(postEntityList, todoIds);
 
         // setup the mocked service
-        doReturn(createdTODO).when(service).addTODO(anyString(), any(TodoDTO.class));
+        doReturn(createdTODOs).when(service).addTODOList(eq(PROSPECT_ID), anyList());
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
+                .content(asJsonString(postEntityList)))
 
                 // Validate the response code and the content type
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, getResourceURI() + "/" + PROSPECT_ID + "/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/" + TODO_ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, getAddTODOsHeader(PROSPECT_ID, todoIds)))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(TODO_ID)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
-    @DisplayName("POST /api/prospects/{id}/todos: prospect id null and TODO valid - Success")
-    void addTODOWhenProspectIdAndTODONotValidReturnsFailure() throws Exception {
+    @DisplayName("POST /api/prospects/{id}/todos: prospect id and single invalid TODO - Success")
+    void addTODOsWhenProspectIdAndOneSingleTODONotValidReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
         TodoDTO postEntity = getMockFactory().getTodoMockFactory().newDTO(null);
@@ -115,7 +118,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
+                .content(asJsonString(Collections.singletonList(postEntity))))
 
                 // Validate the response code and the content type
                 .andExpect(status().isBadRequest())
@@ -128,7 +131,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/prospects/{id}/todos: prospect not found and TODO valid - Success")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect not found and one single valid TODO - Success")
     void addTODOWhenProspectNotFoundAndTODOValidReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -138,12 +141,12 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
                 new String[]{ getEntityType(), String.valueOf(PROSPECT_ID) });
 
         // setup the mocked service
-        doThrow(exception).when(service).addTODO(anyString(), any(TodoDTO.class));
+        doThrow(exception).when(service).addTODOList(anyString(), anyList());
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
+                .content(asJsonString(Collections.singletonList(postEntity))))
 
                 // Validate the response code and content type
                 .andExpect(status().isNotFound())
@@ -153,7 +156,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
     }
 
     @Test
-    @DisplayName("POST /api/prospects/{id}/todos: prospect not found and TODO valid - Failure")
+    @DisplayName("POST /api/prospects/{id}/todos: prospect found but TODO valid but already scheduled - Failure")
     void addTODOWhenProspectFoundAndTODOAlreadyScheduledReturnsFailure() throws Exception {
         // Set up mocks
         String PROSPECT_ID = getMockFactory().getComponentId();
@@ -163,18 +166,46 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         CommonServiceException exception = new CommonServiceException(
                 ExceptionMessageConstants.PROSPECT_TODO_ADD_PROSPECT_SLOT_ALREADY_SCHEDULED_EXCEPTION,
                 new String[]{ PROSPECT_ID, postEntity.getScheduled().toString() });
-        doThrow(exception).when(service).addTODO(anyString(), any(TodoDTO.class));
+        doThrow(exception).when(service).addTODOList(anyString(), anyList());
 
         // Execute the POST request
         mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(postEntity)))
+                .content(asJsonString(Collections.singletonList(postEntity))))
 
                 // Validate the response code and content type
                 .andExpect(status().isInternalServerError());
-                /*.andExpect(jsonPath("$.message", stringContainsInOrder(
-                        "Prospect add TODO exception for prospect id",
-                        PROSPECT_ID)));*/
+    }
+
+    @Test
+    @DisplayName("POST /api/prospects/{id}/todos: prospect id and a list of valid TODOs - Success")
+    void addTODOsWhenProspectIdAndTODOsValidReturnsSuccess() throws Exception {
+        // Set up mocks
+        String PROSPECT_ID = getMockFactory().getComponentId();
+        int TODO_LIST_SIZE = 3;
+        List<TodoDTO> postEntityList = IntStream
+                .range(0, TODO_LIST_SIZE)
+                .mapToObj((i) -> getMockFactory().getTodoMockFactory().newDTO(null)).collect(Collectors.toList());
+        List<String> todoIds = new ArrayList<>();
+        List<TodoDTO> createdTODOs = getCreatedTODOs(postEntityList, todoIds);
+
+        // setup the mocked service
+        doReturn(createdTODOs).when(service).addTODOList(eq(PROSPECT_ID), anyList());
+
+        // Execute the POST request
+        mockMvc.perform(post(getResourceURI() + "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME, PROSPECT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(postEntityList)))
+
+                // Validate the response code and the content type
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, getAddTODOsHeader(PROSPECT_ID, todoIds)))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(TODO_LIST_SIZE)));
     }
 
     @Test
@@ -208,7 +239,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ getEntityType(), String.valueOf(PROSPECT_ID) });
+                new String[]{getEntityType(), String.valueOf(PROSPECT_ID)});
 
         // setup the mocked service
         doThrow(exception).when(service).removeTODO(anyString(), anyString());
@@ -231,7 +262,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ DBConstants.TODO_DOCUMENT, String.valueOf(TODO_ID) });
+                new String[]{DBConstants.TODO_DOCUMENT, String.valueOf(TODO_ID)});
 
         // setup the mocked service
         doThrow(exception).when(service).removeTODO(anyString(), anyString());
@@ -260,7 +291,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
                 .type(UserCommonType.USER).build();
         List<TodoAssigneeDTO> todoList = IntStream
                 .range(0, TODO_LIST_SIZE)
-                .mapToObj( (i) -> {
+                .mapToObj((i) -> {
                     String TODO_ID = getMockFactory().getFAKER().internet().uuid();
                     TodoAssigneeDTO todo = getMockFactory().getTodoAssigneeMockFactory().newDTO(TODO_ID);
                     todo.setAssignee(user);
@@ -313,7 +344,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         String PROSPECT_ID = getMockFactory().getComponentId();
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ getEntityType(), PROSPECT_ID });
+                new String[]{getEntityType(), PROSPECT_ID});
 
         // setup the mocked service
         doThrow(exception).when(service).getTODOs(anyString());
@@ -374,7 +405,7 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         String TODO_ID = getMockFactory().getTodoMockFactory().getComponentId();
         ResourceNotFoundException exception = new ResourceNotFoundException(
                 ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
-                new String[]{ getEntityType(), String.valueOf(PROSPECT_ID) });
+                new String[]{getEntityType(), String.valueOf(PROSPECT_ID)});
 
         // setup the mocked service
         doThrow(exception).when(service).getTODO(anyString(), anyString());
@@ -418,5 +449,27 @@ class ProspectControllerTodoTest extends BaseLightControllerTest<ProspectDTO, Pr
         Assertions.assertTrue(
                 todoSearchCaptor.getValue().getComponentIds().contains(PROSPECT_ID),
                 String.format("TodoSearch componentIds must include [%s]", PROSPECT_ID));
+    }
+
+    private String getAddTODOsHeader(String prospectId, List<String> todoIds) {
+        return
+                getResourceURI() +
+                        "/" +
+                        prospectId +
+                        "/" +
+                        ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME +
+                        "/" +
+                        String.join(",", todoIds);
+    }
+
+    private List<TodoDTO> getCreatedTODOs(List<TodoDTO> postEntityList, List<String> todoIds) {
+        return postEntityList
+                .stream()
+                .map(t -> {
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    todoIds.add(TODO_ID);
+                    return getMockFactory().getTodoMockFactory().newDTO(TODO_ID, t);
+                })
+                .collect(Collectors.toList());
     }
 }

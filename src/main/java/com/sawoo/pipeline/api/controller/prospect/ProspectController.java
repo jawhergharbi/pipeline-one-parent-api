@@ -116,10 +116,10 @@ public class ProspectController {
             value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> addTODO(
+    public ResponseEntity<List<TodoDTO>> addTODOs(
             @PathVariable("id") String id,
-            @NotNull @RequestBody TodoDTO todo) {
-        return delegator.addTODO(id, todo);
+            @RequestBody List<TodoDTO> todos) {
+        return delegator.addTODOs(id, todos);
     }
 
     @DeleteMapping(

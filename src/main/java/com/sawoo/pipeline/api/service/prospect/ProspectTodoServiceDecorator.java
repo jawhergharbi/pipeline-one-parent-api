@@ -76,7 +76,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         Prospect prospect = findProspectById(prospectId);
         List<Todo> todos = prospect.getTodos();
 
-        // TODO add signature to create multiple TODOs in one single insert
+        // TODO add contract to create multiple TODOs in one single insert
         List<TodoDTO> newTodoList = todoList.stream().map(t -> {
             validateTodoScheduled(todos, t, prospectId);
             t.setComponentId(prospectId);

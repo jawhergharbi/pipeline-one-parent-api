@@ -53,9 +53,9 @@ public class ProspectControllerDelegator extends BaseControllerDelegator<Prospec
     }
 
     @Override
-    public ResponseEntity<TodoDTO> addTODO(String prospectId, TodoDTO todo)
+    public ResponseEntity<List<TodoDTO>> addTODOs(String prospectId, List<TodoDTO> todos)
             throws ResourceNotFoundException, CommonServiceException {
-        return prospectTODODelegator.addTODO(prospectId, todo);
+        return prospectTODODelegator.addTODOs(prospectId, todos);
     }
 
     @Override
