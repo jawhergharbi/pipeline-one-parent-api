@@ -51,9 +51,9 @@ public class ProspectControllerTodoDelegatorImpl implements ProspectControllerTo
     }
 
     @Override
-    public ResponseEntity<TodoDTO> removeTODO(String prospectId, String todoId)
+    public ResponseEntity<List<TodoDTO>> removeTODOs(String prospectId, List<String> todoIds)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.removeTODO(prospectId, todoId));
+        return ResponseEntity.ok().body(service.removeTODOList(prospectId, todoIds));
     }
 
     @Override

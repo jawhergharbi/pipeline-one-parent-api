@@ -84,6 +84,11 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     }
 
     @Override
+    public List<TodoDTO> removeTODOList(String prospectId, List<String> todoIds) throws ResourceNotFoundException {
+        return todoService.removeTODOList(prospectId, todoIds);
+    }
+
+    @Override
     public List<TodoAssigneeDTO> getTODOs(String prospectId) throws ResourceNotFoundException {
         return todoService.getTODOs(prospectId);
     }

@@ -59,8 +59,8 @@ public class ProspectControllerDelegator extends BaseControllerDelegator<Prospec
     }
 
     @Override
-    public ResponseEntity<TodoDTO> removeTODO(String prospectId, String todoId) {
-        return prospectTODODelegator.removeTODO(prospectId, todoId);
+    public ResponseEntity<List<TodoDTO>> removeTODOs(String prospectId, List<String> todoIds) {
+        return prospectTODODelegator.removeTODOs(prospectId, todoIds);
     }
 
     @Override

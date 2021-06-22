@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.atLeast;
@@ -278,6 +280,49 @@ class ProspectTodoServiceTest extends BaseLightServiceTest<ProspectDTO, Prospect
     }
 
     @Test
+    @DisplayName("removeTODOs: prospect does exist and TODOs found - Success")
+    void removeTODOsWhenProspectExistsAndProspectTODOsFoundReturnsSuccess() {
+        // Set up mocked entities
+        String PROSPECT_ID = getMockFactory().getComponentId();
+        Prospect spyProspectEntity = spy(getMockFactory().newEntity(PROSPECT_ID));
+        int TODO_LIST_SIZE = 3;
+        List<String> todoIds = new ArrayList<>();
+        List<Todo> todoList = IntStream
+                .range(0, TODO_LIST_SIZE)
+                .mapToObj( (i) -> {
+                    String TODO_ID = getMockFactory().getFAKER().internet().uuid();
+                    todoIds.add(TODO_ID);
+                    Todo todo = getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
+                    todo.setAssigneeId(PROSPECT_ID);
+                    return todo;
+                }).collect(Collectors.toList());
+        spyProspectEntity.setTodos(todoList);
+        TodoDTO todoDTO = (new TodoMapper()).getMapperOut().getDestination(todoList.get(0));
+
+        // Set up the mocked repository
+        doReturn(Optional.of(spyProspectEntity)).when(repository).findById(anyString());
+        doReturn(Collections.singletonList(todoDTO)).when(todoService).deleteByIds(anyList());
+
+        // Execute the service call
+        List<TodoDTO> returnedDTOList = getService()
+                .removeTODOList(PROSPECT_ID, Collections.singletonList(todoIds.get(0)));
+
+        Assertions.assertAll(String.format("Prospect id [%s] must be updated with a new todo", PROSPECT_ID),
+                () -> Assertions.assertNotNull(returnedDTOList, "Prospect TODO list can not be null"),
+                () -> Assertions.assertEquals(
+                        1,
+                        returnedDTOList.size(),
+                        String.format("Deleted TODO list size must be [%d]", 1)));
+
+        Assertions.assertFalse(
+                spyProspectEntity.getTodos().isEmpty(),
+                String.format("Todo list can not be empty for prospect id [%s]", PROSPECT_ID));
+
+        verify(repository, times(1)).findById(anyString());
+        verify(repository, times(1)).save(any(Prospect.class));
+    }
+
+    @Test
     @DisplayName("getTODOs: prospect found - Success")
     void getTODOsWhenProspectFoundReturnsSuccess() {
         // Set up mocked entities
@@ -288,7 +333,9 @@ class ProspectTodoServiceTest extends BaseLightServiceTest<ProspectDTO, Prospect
                 .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
                     String TODO_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
+                    Todo todo = getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
+                    todo.setAssigneeId(PROSPECT_ID);
+                    return todo;
                 }).collect(Collectors.toList());
         prospectEntity.setTodos(todoList);
 
@@ -396,7 +443,9 @@ class ProspectTodoServiceTest extends BaseLightServiceTest<ProspectDTO, Prospect
                 .range(0, TODO_LIST_SIZE)
                 .mapToObj( (i) -> {
                     String TODO_ID = getMockFactory().getFAKER().internet().uuid();
-                    return getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
+                    Todo todo = getMockFactory().getTodoMockFactory().newEntity(TODO_ID);
+                    todo.setAssigneeId(PROSPECT_ID);
+                    return todo;
                 }).collect(Collectors.toList());
         prospectEntity.setTodos(todoList);
         int TODO_IDX = new Random().nextInt(3);

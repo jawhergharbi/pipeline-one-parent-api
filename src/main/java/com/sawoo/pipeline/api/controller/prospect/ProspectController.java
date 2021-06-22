@@ -123,12 +123,12 @@ public class ProspectController {
     }
 
     @DeleteMapping(
-            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
+            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoIds}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> removeTODO(
+    public ResponseEntity<List<TodoDTO>> removeTODOs(
             @PathVariable("id") String id,
-            @PathVariable("todoId") String todoId) throws ResourceNotFoundException {
-        return delegator.removeTODO(id, todoId);
+            @PathVariable("todoIds") List<String> todoIds) throws ResourceNotFoundException {
+        return delegator.removeTODOs(id, todoIds);
     }
 
     @GetMapping(

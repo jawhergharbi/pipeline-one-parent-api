@@ -23,6 +23,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
@@ -121,10 +123,39 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
+    public List<TodoDTO> removeTODOList(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_ILLEGAL_ENUMERATION_VALUE_EXCEPTION) List<String> todoIds)
+            throws ResourceNotFoundException {
+        Prospect prospect = findProspectById(prospectId);
+
+        List<Todo> todosToBeDeleted = prospect.getTodos()
+                .stream()
+                .filter(t -> todoIds.contains(t.getId()))
+                .collect(Collectors.toList());
+
+        List<String> idsTodoToBeDeleted = todosToBeDeleted.stream().map(Todo::getId).collect(Collectors.toList());
+
+        if (idsTodoToBeDeleted.size() != todoIds.size()) {
+            todoIds.removeAll(idsTodoToBeDeleted);
+            throw new ResourceNotFoundException(
+                    ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                    new String[]{ DBConstants.TODO_DOCUMENT, String.join(",", todoIds) });
+        } else {
+            prospect.getTodos().removeAll(todosToBeDeleted);
+            prospect.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+            repository.save(prospect);
+            log.debug("Todo/s with id/s [{}] for prospect id [{}] has been deleted.", todoIds, prospectId);
+            return todoService.deleteByIds(idsTodoToBeDeleted);
+        }
+    }
+
+    @Override
     public List<TodoAssigneeDTO> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId)
             throws ResourceNotFoundException {
-        log.debug("Get todos from prospect id: [{}].", prospectId);
+        log.debug("Get TODOs from prospect id: [{}].", prospectId);
 
         Prospect prospect = findProspectById(prospectId);
         List<Todo> todos = prospect.getTodos();
