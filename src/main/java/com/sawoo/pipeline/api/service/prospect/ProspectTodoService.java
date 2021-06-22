@@ -21,12 +21,19 @@ public interface ProspectTodoService {
                     @Valid TodoDTO todo)
             throws ResourceNotFoundException, CommonServiceException;
 
-    <T extends TodoDTO> List<TodoDTO> addTODOList(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-                    @Valid List<T> todoList)
+    List<TodoDTO> addTODOList(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+                    @Valid List<TodoDTO> todoList)
             throws ResourceNotFoundException, CommonServiceException;
 
     TodoDTO removeTODO(@NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
                        @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
+            throws ResourceNotFoundException;
+
+
+    List<TodoDTO> removeTODOList(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_ILLEGAL_ENUMERATION_VALUE_EXCEPTION) List<String> todoIds)
             throws ResourceNotFoundException;
 
     List<TodoAssigneeDTO> getTODOs(
@@ -38,7 +45,7 @@ public interface ProspectTodoService {
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
             throws ResourceNotFoundException;
 
-    List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types);
+    List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels);
 
     List<ProspectTodoDTO> searchBy(
             @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch searchCriteria);

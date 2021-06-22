@@ -116,19 +116,19 @@ public class ProspectController {
             value = "/{id}/" + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> addTODO(
+    public ResponseEntity<List<TodoDTO>> addTODOs(
             @PathVariable("id") String id,
-            @NotNull @RequestBody TodoDTO todo) {
-        return delegator.addTODO(id, todo);
+            @RequestBody List<TodoDTO> todos) {
+        return delegator.addTODOs(id, todos);
     }
 
     @DeleteMapping(
-            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoId}",
+            value = "/{id}/"  + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME + "/{todoIds}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TodoDTO> removeTODO(
+    public ResponseEntity<List<TodoDTO>> removeTODOs(
             @PathVariable("id") String id,
-            @PathVariable("todoId") String todoId) throws ResourceNotFoundException {
-        return delegator.removeTODO(id, todoId);
+            @PathVariable("todoIds") List<String> todoIds) throws ResourceNotFoundException {
+        return delegator.removeTODOs(id, todoIds);
     }
 
     @GetMapping(
@@ -145,6 +145,7 @@ public class ProspectController {
     public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(
             @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR)
             @PathVariable("id") String id,
+            @RequestParam(value = "campaignIds", required = false) List<String> campaignIds,
             @RequestParam(value = "status", required = false) List<Integer> status,
             @RequestParam(value = "types", required = false) List<Integer> types,
             @RequestParam(value = "sourceIds", required = false) List<String> sourceIds,
@@ -152,8 +153,9 @@ public class ProspectController {
             @RequestParam(value = "accountIds", required = false) List<String> accountIds) {
         TodoSearch search = TodoSearch.builder()
                 .componentIds(Collections.singletonList(id))
+                .campaignIds(campaignIds)
                 .status(status)
-                .types(types)
+                .channels(types)
                 .sourceId(sourceIds)
                 .sourceType(sourceTypes)
                 .accountIds(accountIds)

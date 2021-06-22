@@ -24,7 +24,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tags(value = {@Tag(value = "data")})
 @Profile(value = {"unit-tests", "unit-tests-embedded"})
-public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, CampaignRepository, CampaignMockFactory> {
+class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, CampaignRepository, CampaignMockFactory> {
 
     private static final String CAMPAIGN_JSON_DATA_FILE_NAME = "campaign-test-data.json";
     private static final String CAMPAIGN_ID = "60488a88959ceb1ce1e518fa";
@@ -167,6 +167,53 @@ public class CampaignRepositoryTest extends BaseRepositoryTest<Campaign, Campaig
 
         // Assert
         Assertions.assertTrue(campaign.isEmpty(), String.format("Campaign with id: [%s] can not be found", COMPONENT_ID));
+    }
+
+    @Test
+    @DisplayName("findByComponentIdShort: campaigns by component id and entities found - Success")
+    void findByComponentIdShortWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID = "6030d65af796188aabff390c";
+        int ENTITIES_FOUND = 1;
+
+        // Act
+        List<Campaign> campaigns = getRepository().findByComponentIdShort(COMPONENT_ID);
+        List<Campaign> campaignsWithProspects = getRepository().findByComponentId(COMPONENT_ID);
+
+        // Assert
+        Assertions.assertFalse(campaigns.isEmpty(), "Campaign list can not be empty");
+        Assertions.assertEquals(
+                ENTITIES_FOUND,
+                campaigns.size(),
+                String.format("Campaign list size must be %d", ENTITIES_FOUND));
+        campaigns.forEach( (c) -> Assertions.assertNotNull(c.getUpdated(), "Updated datetime must be null"));
+
+        Assertions.assertFalse(campaignsWithProspects.isEmpty(), "CampaignWithProspects list can not be empty");
+        Assertions.assertEquals(
+                ENTITIES_FOUND,
+                campaignsWithProspects.size(),
+                String.format("CampaignWithProspects list size must be %d", ENTITIES_FOUND));
+        campaignsWithProspects.forEach( (c) -> Assertions.assertFalse(c.getProspects().isEmpty(), "Prospect size can not be empty"));
+    }
+
+    @Test
+    @DisplayName("findByComponentIdInShort: campaigns by component id and entities found - Success")
+    void findByComponentIdInShortWhenEntitiesFoundReturnsSuccess() {
+        // Arrange
+        String COMPONENT_ID_1 = "6030d640f3022dc07d72d786";
+        String COMPONENT_ID_2 = "6030d65af796188aabff390b";
+        int ENTITIES_FOUND = 3;
+
+        // Act
+        List<Campaign> campaigns = getRepository().findByComponentIdInShort(new HashSet<>(Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2)));
+
+        // Assert
+        Assertions.assertFalse(campaigns.isEmpty(), "Campaign list can not be empty");
+        Assertions.assertEquals(
+                ENTITIES_FOUND,
+                campaigns.size(),
+                String.format("Campaign list size must be %d", ENTITIES_FOUND));
+        campaigns.forEach( (c) -> Assertions.assertNotNull(c.getUpdated(), "Updated datetime must be null"));
     }
 
     private void assertListOfCampaigns(List<Campaign> campaigns, int expectedSize) {

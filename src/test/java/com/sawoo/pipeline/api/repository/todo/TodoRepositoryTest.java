@@ -133,10 +133,10 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
         // Assign
         int ENTITY_SIZE = 2;
         int STATUS = 1;
-        int TYPE = 0;
+        int CHANNEL = 0;
 
         // Execute query
-        List<Todo> todos = getRepository().findBy(STATUS, TYPE, null);
+        List<Todo> todos = getRepository().findBy(STATUS, CHANNEL, null);
 
         Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty");
         Assertions.assertEquals(ENTITY_SIZE, todos.size(), String.format("TODOs size must be [%d]", ENTITY_SIZE));
@@ -164,22 +164,22 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Todo> todos = getRepository().findByStatusAndType(null, null, COMPONENT_IDS);
+        List<Todo> todos = getRepository().findByStatusAndChannel(null, null, COMPONENT_IDS);
 
         Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty");
         Assertions.assertEquals(ENTITY_SIZE, todos.size(), String.format("TODOs size must be [%d]", ENTITY_SIZE));
     }
 
     @Test
-    @DisplayName("findBy: filter by status, type, componentIds and entities found - Success")
-    void findByStatusAndTypeWhenStatusListTypeListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
+    @DisplayName("findBy: filter by status, channel, componentIds and entities found - Success")
+    void findByStatusAndTypeWhenStatusListChannelListAndComponentIdsAndEntitiesFoundReturnsSuccess() {
         // Assign
         int ENTITY_SIZE = 6;
-        List<Integer> types = Collections.singletonList(1);
+        List<Integer> channels = Collections.singletonList(1);
         List<String> COMPONENT_IDS = Arrays.asList(COMPONENT_ID_1, COMPONENT_ID_2);
 
         // Execute query
-        List<Todo> todos = getRepository().findByStatusAndType(null, types, COMPONENT_IDS);
+        List<Todo> todos = getRepository().findByStatusAndChannel(null, channels, COMPONENT_IDS);
 
         Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty");
         Assertions.assertEquals(ENTITY_SIZE, todos.size(), String.format("TODOs size must be [%d]", ENTITY_SIZE));
@@ -354,5 +354,45 @@ class TodoRepositoryTest extends BaseRepositoryTest<Todo, TodoRepository, TodoMo
 
         // Assertions
         Assertions.assertEquals(TODO_SIZE, deleted, String.format("TODOs deleted must be [%d]", TODO_SIZE));
+    }
+
+    @Test
+    @DisplayName("searchBy: campaign id and neither done not cancelled")
+    void searchByWhenCampaignAnyStatusExceptDoneAndCancelledReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 1;
+        String CAMPAIGN_ID = "60488a88959ceb1ce1e518fa";
+        TodoSearch searchBy = TodoSearch.builder()
+                .campaignIds(Collections.singletonList(CAMPAIGN_ID))
+                .status(Arrays.asList(
+                        TodoStatus.PENDING.getValue(),
+                        TodoStatus.ON_GOING.getValue(),
+                        TodoStatus.UNASSIGNED.getValue()))
+                .build();
+
+        // Execute query
+        List<Todo> todos = getRepository().searchBy(searchBy);
+
+        Assertions.assertAll(String.format("TODOs filter by search criteria [%s]", searchBy),
+                () -> Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty"),
+                () -> Assertions.assertEquals(TODO_SIZE, todos.size(), String.format("TODOs size must be [%d]", TODO_SIZE)));
+    }
+
+    @Test
+    @DisplayName("searchBy: campaign id")
+    void searchByWhenCampaignReturnsSuccess() {
+        // Assign
+        int TODO_SIZE = 2;
+        String CAMPAIGN_ID = "60488a88959ceb1ce1e518fa";
+        TodoSearch searchBy = TodoSearch.builder()
+                .campaignIds(Collections.singletonList(CAMPAIGN_ID))
+                .build();
+
+        // Execute query
+        List<Todo> todos = getRepository().searchBy(searchBy);
+
+        Assertions.assertAll(String.format("TODOs filter by search criteria [%s]", searchBy),
+                () -> Assertions.assertFalse(todos.isEmpty(), "TODOs can not be empty"),
+                () -> Assertions.assertEquals(TODO_SIZE, todos.size(), String.format("TODOs size must be [%d]", TODO_SIZE)));
     }
 }

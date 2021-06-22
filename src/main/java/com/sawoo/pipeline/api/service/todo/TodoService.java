@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface TodoService extends BaseService<TodoDTO>, BaseProxyService<TodoRepository, TodoMapper> {
 
-    List<TodoDTO> searchBy(List<String> componentIds, List<Integer> status, List<Integer> types);
+    List<TodoDTO> searchBy(List<String> componentIds, List<Integer> status, List<Integer> channels);
 
     List<TodoDTO> searchBy(@NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch search);
 

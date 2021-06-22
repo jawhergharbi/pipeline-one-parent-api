@@ -79,14 +79,13 @@ public class CampaignControllerProspectDelegatorImpl implements CampaignControll
     private ResponseEntity<CampaignProspectDTO> newOrAddProspect(String campaignId, CampaignProspectDTO campaignProspect) {
         try {
             return ResponseEntity
-                    .created(new URI(new StringBuilder()
-                            .append(ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI)
-                            .append("/")
-                            .append(campaignId)
-                            .append("/")
-                            .append(ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME)
-                            .append("/")
-                            .append(campaignProspect.getProspect().getId()).toString()))
+                    .created(new URI(ControllerConstants.CAMPAIGN_CONTROLLER_API_BASE_URI +
+                            "/" +
+                            campaignId +
+                            "/" +
+                            ControllerConstants.PROSPECT_CONTROLLER_RESOURCE_NAME +
+                            "/" +
+                            campaignProspect.getProspect().getId()))
                     .body(campaignProspect);
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

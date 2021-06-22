@@ -23,6 +23,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
@@ -56,7 +58,7 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         validateTodoScheduled(todos, todo, prospectId);
 
         todo.setComponentId(prospectId);
-        final TodoDTO savedTODO = todoService.create(todo);
+                final TodoDTO savedTODO = todoService.create(todo);
 
         log.debug("Prospect todo has been created for prospect id: [{}]. Todo id [{}]", prospectId, todo.getId());
 
@@ -68,20 +70,20 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
-    public <T extends TodoDTO> List<TodoDTO> addTODOList(
+    public List<TodoDTO> addTODOList(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @Valid List<T> todoList) throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Add a list of Todos for prospect id: [{}]. List size [{}]", prospectId, todoList.size());
+            @Valid List<TodoDTO> todoList) throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Add a list of TODOs for prospect id: [{}]. List size [{}]", prospectId, todoList.size());
 
         Prospect prospect = findProspectById(prospectId);
         List<Todo> todos = prospect.getTodos();
 
-        // TODO add signature to create multiple todos in one single insert
+        // TODO add contract to create multiple TODOs in one single insert
         List<TodoDTO> newTodoList = todoList.stream().map(t -> {
             validateTodoScheduled(todos, t, prospectId);
             t.setComponentId(prospectId);
             TodoDTO savedTODO = todoService.create(t);
-            log.debug("Prospect todo has been created for prospect id: [{}]. Todo id [{}]", prospectId, savedTODO.getId());
+            log.debug("Prospect TODO has been created for prospect id: [{}]. TODO id [{}]", prospectId, savedTODO.getId());
             return savedTODO;
         }).collect(Collectors.toList());
 
@@ -121,10 +123,39 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
+    public List<TodoDTO> removeTODOList(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_ILLEGAL_ENUMERATION_VALUE_EXCEPTION) List<String> todoIds)
+            throws ResourceNotFoundException {
+        Prospect prospect = findProspectById(prospectId);
+
+        List<Todo> todosToBeDeleted = prospect.getTodos()
+                .stream()
+                .filter(t -> todoIds.contains(t.getId()))
+                .collect(Collectors.toList());
+
+        List<String> idsTodoToBeDeleted = todosToBeDeleted.stream().map(Todo::getId).collect(Collectors.toList());
+
+        if (idsTodoToBeDeleted.size() != todoIds.size()) {
+            todoIds.removeAll(idsTodoToBeDeleted);
+            throw new ResourceNotFoundException(
+                    ExceptionMessageConstants.COMMON_GET_COMPONENT_RESOURCE_NOT_FOUND_EXCEPTION,
+                    new String[]{ DBConstants.TODO_DOCUMENT, String.join(",", todoIds) });
+        } else {
+            prospect.getTodos().removeAll(todosToBeDeleted);
+            prospect.setUpdated(LocalDateTime.now(ZoneOffset.UTC));
+            repository.save(prospect);
+            log.debug("Todo/s with id/s [{}] for prospect id [{}] has been deleted.", todoIds, prospectId);
+            return todoService.deleteByIds(idsTodoToBeDeleted);
+        }
+    }
+
+    @Override
     public List<TodoAssigneeDTO> getTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId)
             throws ResourceNotFoundException {
-        log.debug("Get todos from prospect id: [{}].", prospectId);
+        log.debug("Get TODOs from prospect id: [{}].", prospectId);
 
         Prospect prospect = findProspectById(prospectId);
         List<Todo> todos = prospect.getTodos();
@@ -165,10 +196,10 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
     }
 
     @Override
-    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        log.debug("Get TODOs from prospects [{}] with status [{}] and types[{}]", prospectIds, status, types);
+    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels) throws CommonServiceException {
+        log.debug("Get TODOs from prospects [{}] with status [{}] and channels[{}]", prospectIds, status, channels);
 
-        List<TodoDTO> todos = todoService.searchBy(prospectIds, status, types);
+        List<TodoDTO> todos = todoService.searchBy(prospectIds, status, channels);
         if (!todos.isEmpty()) {
             List<Prospect> prospects = prospectIds.isEmpty() ? Collections.emptyList() : repository.findAllByIdIn(prospectIds);
             return mapTODOsProspects(todos, prospects, null);
@@ -200,12 +231,12 @@ public class ProspectTodoServiceDecorator implements ProspectTodoService {
         if (todos != null && !todos.isEmpty()) {
             List<String> prospectIds = searchCriteria.getComponentIds();
             log.debug("[{}] TODOs will be removed from their prospects [{}]", todos.size(), prospectIds);
-            prospectIds.forEach(prospectId -> removeDeletedTodos(prospectId, todos));
+            prospectIds.forEach(prospectId -> removeDeletedTODOs(prospectId, todos));
         }
         return todos != null ? todos.size() : 0;
     }
 
-    private void removeDeletedTodos(String prospectId, List<TodoDTO> todos) {
+    private void removeDeletedTODOs(String prospectId, List<TodoDTO> todos) {
         Predicate<Todo> isContained = t -> todos.stream().anyMatch(todo -> todo.getId().equals(t.getId()));
         Prospect prospect = findProspectById(prospectId);
         List<Todo> updatedTodos = prospect

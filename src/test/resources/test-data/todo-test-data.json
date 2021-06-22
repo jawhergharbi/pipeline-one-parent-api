@@ -1,7 +1,7 @@
 [
   {
     "id": "60647db4559c7e603cd1a0f5",
-    "type": 0,
+    "channel": 0,
     "status": 1,
     "link": {
       "url": "http://google.com/calendy/link1",
@@ -14,11 +14,12 @@
     "created": "2020-06-02T10:59:49.494472",
     "updated": "2020-06-02T15:59:49.494472",
     "componentId":"5fa3c963da6ra335fa2s323d45b",
+    "campaignId": "60488a88959ceb1ce1e518fa",
     "assigneeId": "5fa2e7c58b7a2a51f31f2bed"
   },
   {
     "id": "60647deadd1717ece5401746",
-    "type": 1,
+    "channel": 1,
     "status": 0,
     "link": {
       "url": "http://google.com/calendy/link2",
@@ -31,11 +32,12 @@
     "created": "2020-05-02T10:59:49.494472",
     "updated": "2020-05-02T15:59:49.494472",
     "componentId":"5fa3c963da6ra335fa2s323d45b",
+    "campaignId": "60488a88959ceb1ce1e518fa",
     "assigneeId": "5fa2e7c58b7a2a51f31f2bed"
   },
   {
     "id": "60647f458d90142b9a977b96",
-    "type": 1,
+    "channel": 1,
     "status": 1,
     "link": {
       "url": "http://google.com/calendy/link3",
@@ -48,11 +50,12 @@
     "created": "2020-05-02T10:59:49.494472",
     "updated": "2020-05-02T15:59:49.494472",
     "componentId":"5fa3c963da6ra335fa2s323d45b",
+    "campaignId": "60488a914281bac3387007f6",
     "assigneeId": "5fa317cd0efe4d20ad3edd13"
   },
   {
     "id": "60647f4e40c6bd1399fb5c36",
-    "type": 0,
+    "channel": 0,
     "status": 1,
     "link": {
       "url": "http://google.com/calendy/link3",
@@ -69,7 +72,7 @@
   },
   {
     "id": "60647df7b61815c54b49a094",
-    "type": 1,
+    "channel": 1,
     "status":0,
     "link": {
       "url": "http://google.com/calendy/link6",
@@ -86,7 +89,7 @@
   },
   {
     "id": "60647e06c873b273a5491ecb",
-    "type": 1,
+    "channel": 1,
     "status":0,
     "link": {
       "url": "http://google.com/calendy/link7",
@@ -107,7 +110,7 @@
   },
   {
     "id": "60707115387a43ae1fe4bff9",
-    "type": 1,
+    "channel": 1,
     "status":0,
     "link": {
       "url": "http://google.com/calendy/link10",
@@ -128,7 +131,7 @@
   },
   {
     "id": "60647ee4aff601c136551cae",
-    "type": 1,
+    "channel": 1,
     "status":2,
     "link": {
       "url": "http://google.com/calendy/link8",

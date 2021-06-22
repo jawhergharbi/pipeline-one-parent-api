@@ -34,5 +34,25 @@
     "endDate": "2021-08-01T08:08:00.000Z",
     "created": "2020-11-10T16:41:25.130Z",
     "updated": "2020-11-11T07:31:47.545Z"
+  },
+  {
+    "id": "60488a963657dc04809c0cfe",
+    "name": "Campaign for CEOs with prospects",
+    "description": "Use this campaign to reach out only CEOs but we'll include already some prospects",
+    "status": 3,
+    "componentId": "6030d65af796188aabff390c",
+    "startDate": "2021-06-11T08:00:00.000Z",
+    "endDate": "2021-08-10T08:00:00.000Z",
+    "created": "2021-06-01T18:23:35.130Z",
+    "updated": "2020-06-02T09:23:23.545Z",
+    "prospects": [
+      {
+        "prospect": null,
+        "sequence": null,
+        "startDate": "2020-06-02T09:23:23.545Z",
+        "endDate": "2020-06-02T09:23:23.545Z",
+        "status": 2
+      }
+    ]
   }
 ]

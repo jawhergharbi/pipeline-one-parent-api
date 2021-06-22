@@ -1,11 +1,13 @@
 package com.sawoo.pipeline.api.service.prospect;
 
+import com.googlecode.jmapper.JMapper;
 import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.dto.UserCommon;
 import com.sawoo.pipeline.api.dto.sequence.SequenceStepDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoAssigneeDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoDTO;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.common.Personality;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
@@ -50,15 +52,44 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
             String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Evaluating todos to be created based on sequence id: [{}] and prospect id [{}]", prospectId, sequenceId);
+        log.debug("Evaluating TODOs to be created based on sequence id: [{}] and prospect id [{}]", prospectId, sequenceId);
+
+        return createTODOsFromSequence(prospectId, sequenceId, assigneeId);
+    }
+
+    @Override
+    public List<TodoAssigneeDTO> createTODOs(
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String campaignId,
+            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId,
+            String assigneeId)
+            throws ResourceNotFoundException, CommonServiceException {
+        log.debug("Create TODOs based on sequence id: [{}] and for prospect id [{}]", prospectId, sequenceId);
+        List<TodoAssigneeDTO> todos = createTODOsFromSequence(prospectId, sequenceId, assigneeId);
+
+        if (todos != null && !todos.isEmpty()) {
+            JMapper<TodoDTO, TodoAssigneeDTO> mapper = prospectService.getMapper().getTodoAssigneeMapper();
+            List<TodoDTO> todoDTOs = todos
+                    .stream()
+                    .peek(t -> t.setCampaignId(campaignId))
+                    .map(mapper::getDestination)
+                    .collect(Collectors.toList());
+            prospectService.addTODOList(prospectId, todoDTOs);
+        } else {
+            log.info("No TODOs are going to be created for [campaignId: {}, sequenceId: {}, prospectId: {}]", campaignId, sequenceId, prospectId);
+        }
+        return todos;
+    }
+
+    private List<TodoAssigneeDTO> createTODOsFromSequence(String prospectId, String sequenceId, String assigneeId) {
         Prospect prospect = findProspectById(prospectId);
 
         // Check prospect personality
         Personality personality = prospect.getPerson().getPersonality();
         if (personality == null || personality.getType() == null) {
-                throw new CommonServiceException(
-                        ExceptionMessageConstants.PROSPECT_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION,
-                        new String[]{sequenceId, prospectId});
+            throw new CommonServiceException(
+                    ExceptionMessageConstants.PROSPECT_SEQUENCE_TODO_PERSONALITY_NOT_ASSIGNED_EXCEPTION,
+                    new String[]{sequenceId, prospectId});
         }
 
         // Add up timespan for each of the steps
@@ -76,17 +107,6 @@ public class ProspectSequenceTodoServiceDecorator implements ProspectSequenceTod
                 .stream()
                 .map(s -> sequenceTodoHelper.mapSequenceStepToTODO(s, assignee, prospect, sequenceId, startDate))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TodoAssigneeDTO> createTODOs(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String sequenceId, String assigneeId)
-            throws ResourceNotFoundException, CommonServiceException {
-        log.debug("Create TODOs based on sequence id: [{}] and for prospect id [{}]", prospectId, sequenceId);
-        List<TodoAssigneeDTO> todos = evalTODOs(prospectId, sequenceId, assigneeId);
-        prospectService.addTODOList(prospectId, todos);
-        return todos;
     }
 
     private Prospect findProspectById(String prospectId) throws ResourceNotFoundException {

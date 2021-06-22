@@ -12,20 +12,23 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Validated
 public interface ProspectControllerTodoDelegator {
 
-    ResponseEntity<TodoDTO> addTODO(
+    ResponseEntity<List<TodoDTO>> addTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @Valid TodoDTO todo)
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @Valid @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) List<TodoDTO> todos)
             throws ResourceNotFoundException, CommonServiceException;
 
-    ResponseEntity<TodoDTO> removeTODO(
+    ResponseEntity<List<TodoDTO>> removeTODOs(
             @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
+            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR)
+            @NotEmpty(message = ExceptionMessageConstants.COMMON_LIST_FIELD_CAN_NOT_BE_EMPTY_ERROR) List<String> todoIds)
             throws ResourceNotFoundException;
 
     ResponseEntity<List<TodoAssigneeDTO>> getTODOs(

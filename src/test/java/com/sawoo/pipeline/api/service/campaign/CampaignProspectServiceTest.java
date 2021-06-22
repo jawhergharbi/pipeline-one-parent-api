@@ -129,7 +129,7 @@ class CampaignProspectServiceTest extends BaseLightServiceTest<CampaignDTO, Camp
         doReturn(Optional.of(campaignEntity)).when(repository).findById(anyString());
         doReturn(prospectRepository).when(prospectService).getRepository();
         doReturn(Optional.of(prospectEntity)).when(prospectRepository).findById(anyString());
-        doReturn(Collections.emptyList()).when(prospectService).createTODOs(anyString(), anyString(), anyString());
+        doReturn(Collections.emptyList()).when(prospectService).createTODOs(anyString(), anyString(), anyString(), anyString());
         doReturn(Optional.of(sequenceEntity)).when(sequenceRepository).findById(anyString());
 
         // Execute the service call

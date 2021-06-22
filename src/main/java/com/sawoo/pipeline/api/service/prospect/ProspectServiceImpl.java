@@ -37,19 +37,19 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
 
     private final ProspectReportService reportService;
     private final ProspectTodoService todoService;
-    private final ProspectSequenceTodoService sequenceTodoService;
+    private final ProspectSequenceTodoService prospectSequenceTodoService;
 
     @Autowired
     public ProspectServiceImpl(ProspectRepository repository, ProspectMapper mapper,
                                ProspectReportService reportService,
                                ProspectTodoService todoService,
-                               ProspectSequenceTodoService sequenceTodoService,
+                               ProspectSequenceTodoService prospectSequenceTodoService,
                                ApplicationEventPublisher publisher,
                                AuditService audit) {
         super(repository, mapper, DBConstants.PROSPECT_DOCUMENT, publisher, audit);
         this.reportService = reportService;
         this.todoService = todoService;
-        this.sequenceTodoService = sequenceTodoService;
+        this.prospectSequenceTodoService = prospectSequenceTodoService;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     }
 
     @Override
-    public <T extends TodoDTO> List<TodoDTO> addTODOList(String prospectId, List<T> todoList)
+    public List<TodoDTO> addTODOList(String prospectId, List<TodoDTO> todoList)
             throws ResourceNotFoundException, CommonServiceException {
         return todoService.addTODOList(prospectId, todoList);
     }
@@ -81,6 +81,11 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     @Override
     public TodoDTO removeTODO(String prospectId, String todoId) throws ResourceNotFoundException {
         return todoService.removeTODO(prospectId, todoId);
+    }
+
+    @Override
+    public List<TodoDTO> removeTODOList(String prospectId, List<String> todoIds) throws ResourceNotFoundException {
+        return todoService.removeTODOList(prospectId, todoIds);
     }
 
     @Override
@@ -94,8 +99,8 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     }
 
     @Override
-    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> types) throws CommonServiceException {
-        return todoService.findBy(prospectIds, status, types);
+    public List<ProspectTodoDTO> findBy(List<String> prospectIds, List<Integer> status, List<Integer> channels) throws CommonServiceException {
+        return todoService.findBy(prospectIds, status, channels);
     }
 
     @Override
@@ -165,12 +170,12 @@ public class ProspectServiceImpl extends BaseServiceImpl<ProspectDTO, Prospect, 
     @Override
     public List<TodoAssigneeDTO> evalTODOs(String prospectId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return sequenceTodoService.evalTODOs(prospectId, sequenceId, assigneeId);
+        return prospectSequenceTodoService.evalTODOs(prospectId, sequenceId, assigneeId);
     }
 
     @Override
-    public List<TodoAssigneeDTO> createTODOs(String prospectId, String sequenceId, String assigneeId)
+    public List<TodoAssigneeDTO> createTODOs(String prospectId, String campaignId, String sequenceId, String assigneeId)
             throws ResourceNotFoundException, CommonServiceException {
-        return sequenceTodoService.createTODOs(prospectId, sequenceId, assigneeId);
+        return prospectSequenceTodoService.createTODOs(prospectId, campaignId, sequenceId, assigneeId);
     }
 }

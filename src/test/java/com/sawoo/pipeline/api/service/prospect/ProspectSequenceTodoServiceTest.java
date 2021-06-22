@@ -1,9 +1,12 @@
-package com.sawoo.pipeline.api.service.prospect;
+package com.sawoo.pipeline.api.service.prospect; // Set up mocked entities
 
 import com.sawoo.pipeline.api.dto.prospect.ProspectDTO;
 import com.sawoo.pipeline.api.mock.ProspectMockFactory;
+import com.sawoo.pipeline.api.mock.SequenceMockFactory;
 import com.sawoo.pipeline.api.model.DBConstants;
 import com.sawoo.pipeline.api.model.prospect.Prospect;
+import com.sawoo.pipeline.api.model.sequence.Sequence;
+import com.sawoo.pipeline.api.model.sequence.SequenceStep;
 import com.sawoo.pipeline.api.repository.prospect.ProspectRepository;
 import com.sawoo.pipeline.api.service.base.BaseLightServiceTest;
 import com.sawoo.pipeline.api.service.sequence.SequenceService;
@@ -19,6 +22,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.mockito.Mockito.doReturn;
+
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Tag(value = "service")
@@ -32,9 +41,12 @@ class ProspectSequenceTodoServiceTest extends BaseLightServiceTest<ProspectDTO, 
     @MockBean
     private SequenceService sequenceService;
 
+    private final SequenceMockFactory sequenceMockFactory;
+
     @Autowired
-    public ProspectSequenceTodoServiceTest(ProspectMockFactory mockFactory, ProspectService service) {
+    public ProspectSequenceTodoServiceTest(ProspectMockFactory mockFactory, ProspectService service, SequenceMockFactory sequenceMockFactory) {
         super(mockFactory, DBConstants.PROSPECT_DOCUMENT, service);
+        this.sequenceMockFactory = sequenceMockFactory;
     }
 
     @BeforeAll
@@ -45,6 +57,25 @@ class ProspectSequenceTodoServiceTest extends BaseLightServiceTest<ProspectDTO, 
     @Test
     @DisplayName("evalTODOs: prospect and sequence found - Success")
     void evalTODOsWhenProspectAndSequenceFoundReturnsSuccess() {
+        // Set up mocked entities
+        String PROSPECT_ID = getMockFactory().getComponentId();
+        String SEQUENCE_ID = getMockFactory().getFAKER().internet().uuid();
+        Prospect prospectEntity = getMockFactory().newEntity(PROSPECT_ID);
+        /*List<SequenceStepDTO> steps = newSequenceWithSteps(SEQUENCE_ID, 3);*/
 
+
+        // Set up the mocked repository
+        doReturn(prospectEntity).when(repository).findById(PROSPECT_ID);
+        /*doReturn(steps).when(sequenceService).getStepsByPersonality(anyString(), anyInt());*/
+    }
+
+    private Sequence newSequenceWithSteps(String sequenceId, int stepsNumber) {
+        Sequence mockEntity = sequenceMockFactory.newEntity(sequenceId);
+        List<SequenceStep> steps = IntStream.range(0, stepsNumber).mapToObj( (idx) -> {
+            String SEQUENCE_STEP_ID = sequenceMockFactory.getSequenceStepMockFactory().getComponentId();
+            return sequenceMockFactory.getSequenceStepMockFactory().newSequenceStepEntity(SEQUENCE_STEP_ID, idx + 1);
+        }).collect(Collectors.toList());
+        mockEntity.setSteps(steps);
+        return mockEntity;
     }
 }

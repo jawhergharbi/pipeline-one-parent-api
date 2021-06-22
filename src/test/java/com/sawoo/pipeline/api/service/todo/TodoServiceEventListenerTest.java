@@ -1,10 +1,15 @@
 package com.sawoo.pipeline.api.service.todo;
 
+import com.sawoo.pipeline.api.dto.common.LinkDTO;
 import com.sawoo.pipeline.api.dto.todo.TodoDTO;
+import com.sawoo.pipeline.api.dto.todo.TodoMessageDTO;
 import com.sawoo.pipeline.api.mock.TodoMockFactory;
+import com.sawoo.pipeline.api.model.common.LinkType;
+import com.sawoo.pipeline.api.model.common.TodoChannel;
 import com.sawoo.pipeline.api.model.todo.Todo;
 import com.sawoo.pipeline.api.model.todo.TodoMessage;
 import com.sawoo.pipeline.api.model.todo.TodoStatus;
+import com.sawoo.pipeline.api.model.todo.TodoType;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeInsertEvent;
 import com.sawoo.pipeline.api.service.base.event.BaseServiceBeforeSaveEvent;
 import org.junit.jupiter.api.Assertions;
@@ -73,6 +78,142 @@ class TodoServiceEventListenerTest {
                 TODO_STATUS_ON_GOING,
                 entity.getStatus(),
                 String.format("Status must contain the given value: [%d]", TODO_STATUS_ON_GOING));
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: type not informed - Success")
+    void onBeforeInsertWhenTypeNotInformedReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setType(null);
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertNotNull(entity.getType(), "Type must be informed");
+        Assertions.assertEquals(
+                TodoType.OUT_GOING_INTERACTION,
+                entity.getType(),
+                String.format("Type must contain the default value: [%s]", TodoType.OUT_GOING_INTERACTION));
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: message informed and valid - Success")
+    void onBeforeInsertWhenMessageInformedAndValidReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setMessage(TodoMessageDTO.builder()
+                .text(mockFactory.getFAKER().chuckNorris().fact())
+                .build());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertTrue(entity.getMessage().isValid(), "Message must be valid");
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: message informed and invalid - Success")
+    void onBeforeInsertWhenMessageInformedAndInvalidReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setMessage(TodoMessageDTO.builder()
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message")
+                .build());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertFalse(entity.getMessage().isValid(), "Message can not be valid");
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: message informed and invalid but variables - Success")
+    void onBeforeInsertWhenMessageInformedAndInvalidWithTemplateVariablesReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        int VARIABLE_SIZE = 1;
+        postDTO.setMessage(TodoMessageDTO.builder()
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message")
+                .build());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertFalse(entity.getMessage().isValid(), "Message can not be valid");
+        Assertions.assertNotNull(entity.getMessage().getTemplate().getVariables(), "Template variables can not be null");
+        Assertions.assertEquals(
+                VARIABLE_SIZE,
+                entity.getMessage().getTemplate().getVariables().size(),
+                String.format("Template variables size must be %d", VARIABLE_SIZE));
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: not a message - Success")
+    void onBeforeInsertWhenMessageValidWhenTypeNonMessageReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        postDTO.setMessage(TodoMessageDTO.builder()
+                .text("This a message with variables. {{prospect_name}} So it should be an invalid message")
+                .build());
+        postDTO.setChannel(TodoChannel.PHONE.getValue());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertTrue(entity.getMessage().isValid(), "Message must be valid");
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: link not informed - Success")
+    void onBeforeInsertWhenLinkTypeNotInformedAndNoLinkDescriptionProvidedReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        LinkDTO link = postDTO.getLink();
+        link.setType(null);
+        link.setDescription(null);
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertNotNull(entity.getStatus(), "Link type must be informed");
+        Assertions.assertEquals(
+                LinkType.PLAIN_LINK,
+                entity.getLink().getType(),
+                String.format("Link type must contain the default value: [%s]", LinkType.PLAIN_LINK));
+    }
+
+    @Test
+    @DisplayName("onBeforeInsert: link not informed - Success")
+    void onBeforeInsertWhenLinkTypeNotInformedReturnsSuccess() {
+        // Set up mocked entities
+        TodoDTO postDTO = mockFactory.newDTO(null);
+        LinkDTO link = postDTO.getLink();
+        link.setType(null);
+        link.setDescription(mockFactory.getFAKER().lebowski().quote());
+        Todo entity = mapper.getMapperIn().getDestination(postDTO);
+
+        // Execute the service call
+        listener.handleBeforeInsertEvent(new BaseServiceBeforeInsertEvent<>(postDTO, entity));
+
+        // Assertions
+        Assertions.assertNotNull(entity.getStatus(), "Link type must be informed");
+        Assertions.assertEquals(
+                LinkType.EMBEDDED_LINK,
+                entity.getLink().getType(),
+                String.format("Link type must contain the default value: [%s]", LinkType.EMBEDDED_LINK));
     }
 
     @Test
@@ -156,9 +297,6 @@ class TodoServiceEventListenerTest {
                         VARIABLES,
                         messageEntity.getTemplate().getVariables().size(),
                         String.format("THere must be [%d] variables in the variables map", VARIABLES)));
-
-
-
 
         Assertions.assertNotNull(messageEntity.getTemplate(), "Template can not be null");
 

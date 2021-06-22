@@ -45,24 +45,24 @@ public class TodoServiceImpl extends BaseServiceImpl<TodoDTO, Todo, TodoReposito
     }
 
     @Override
-    public List<TodoDTO> searchBy(List<String> componentIds, List<Integer> status, List<Integer> types) {
-        log.debug("Getting todos from components with ids [{}] and status [{}] and types[{}]", componentIds, status, types);
+    public List<TodoDTO> searchBy(List<String> componentIds, List<Integer> status, List<Integer> channels) {
+        log.debug("Getting todos from components with ids [{}] and status [{}] and channels[{}]", componentIds, status, channels);
         List<TodoDTO> todos = getRepository()
-                .findByStatusAndType(status, types, componentIds)
+                .findByStatusAndChannel(status, channels, componentIds)
                 .stream()
                 .map(getMapper().getMapperOut()::getDestination)
                 .collect(Collectors.toList());
-        log.debug("[{}] todo/s has/have been found from components with ids [{}] and status [{}] and types [{}]",
+        log.debug("[{}] todo/s has/have been found from components with ids [{}] and status [{}] and channels [{}]",
                 todos.size(),
                 componentIds,
                 status,
-                types);
+                channels);
         return todos;
     }
 
     @Override
     public List<TodoDTO> searchBy(@NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch search) {
-        log.debug("Get TODOs with the following search criteria: [{}]", search);
+        log.debug("Search TODOs with the following search criteria: [{}]", search);
         List<TodoDTO> todos = getRepository()
                 .searchBy(search)
                 .stream()

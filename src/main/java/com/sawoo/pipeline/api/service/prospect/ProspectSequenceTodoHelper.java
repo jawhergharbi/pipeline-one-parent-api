@@ -48,12 +48,14 @@ public class ProspectSequenceTodoHelper {
                 .source(TodoSource.builder()
                         .type(TodoSourceType.AUTOMATIC)
                         .sourceId(sequenceId)
+                        .step(step.getPosition())
                         .build())
                 .updated(now)
                 .created(now)
                 .build();
     }
 
+    // TODO this probably requires a especialization based on the step channel
     private LinkDTO createLink(SequenceStepDTO step, Prospect prospect) {
         if (step.getAttachment() != null) {
             return LinkDTO.builder()

@@ -23,13 +23,16 @@ public class TodoSearchDTO {
     private List<String> componentIds;
 
     @JMap
+    private List<String> campaignIds;
+
+    @JMap
     private List<String> accountIds;
 
     @JMap
     private List<Integer> status;
 
     @JMap
-    private List<Integer> types;
+    private List<Integer> channels;
 
     @JMap
     private List<String> sourceId;

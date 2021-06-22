@@ -76,7 +76,7 @@ public class CampaignController {
     }
 
     @GetMapping(
-            value = "/accounts/{accountIds}/main",
+            value = "/" + ControllerConstants.ACCOUNT_CONTROLLER_RESOURCE_NAME + "/{accountIds}/main",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<CampaignDTO>> findByAccountIds(
             @PathVariable(value = "accountIds") Set<String> accountIds) {

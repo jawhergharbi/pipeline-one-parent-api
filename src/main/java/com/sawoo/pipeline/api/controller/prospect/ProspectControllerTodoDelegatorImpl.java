@@ -1,6 +1,5 @@
 package com.sawoo.pipeline.api.controller.prospect;
 
-import com.sawoo.pipeline.api.common.contants.ExceptionMessageConstants;
 import com.sawoo.pipeline.api.common.exceptions.CommonServiceException;
 import com.sawoo.pipeline.api.common.exceptions.ResourceNotFoundException;
 import com.sawoo.pipeline.api.controller.ControllerConstants;
@@ -15,12 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Qualifier("prospectControllerTODO")
@@ -34,12 +31,11 @@ public class ProspectControllerTodoDelegatorImpl implements ProspectControllerTo
     }
 
     @Override
-    public ResponseEntity<TodoDTO> addTODO(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @Valid TodoDTO todo)
+    public ResponseEntity<List<TodoDTO>> addTODOs(String prospectId, List<TodoDTO> todos)
             throws ResourceNotFoundException, CommonServiceException {
-        TodoDTO newEntity = service.addTODO(prospectId, todo);
+        List<TodoDTO> createdTODOs = service.addTODOList(prospectId, todos);
         try {
+            String ids = createdTODOs.stream().map(TodoDTO::getId).collect(Collectors.joining(","));
             return ResponseEntity
                     .created(new URI(ControllerConstants.PROSPECT_CONTROLLER_API_BASE_URI
                             + "/"
@@ -47,39 +43,33 @@ public class ProspectControllerTodoDelegatorImpl implements ProspectControllerTo
                             + "/"
                             + ControllerConstants.TODO_CONTROLLER_RESOURCE_NAME
                             + "/"
-                            + newEntity.getId()))
-                    .body(newEntity);
+                            + ids))
+                    .body(createdTODOs);
         } catch (URISyntaxException exc) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Override
-    public ResponseEntity<TodoDTO> removeTODO(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
+    public ResponseEntity<List<TodoDTO>> removeTODOs(String prospectId, List<String> todoIds)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(service.removeTODO(prospectId, todoId));
+        return ResponseEntity.ok().body(service.removeTODOList(prospectId, todoIds));
     }
 
     @Override
-    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId)
+    public ResponseEntity<List<TodoAssigneeDTO>> getTODOs(String prospectId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.getTODOs(prospectId));
     }
 
     @Override
-    public ResponseEntity<TodoAssigneeDTO> getTODO(
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String prospectId,
-            @NotBlank(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_EMPTY_ERROR) String todoId)
+    public ResponseEntity<TodoAssigneeDTO> getTODO(String prospectId, String todoId)
             throws ResourceNotFoundException {
         return ResponseEntity.ok().body(service.getTODO(prospectId, todoId));
     }
 
     @Override
-    public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(
-            @NotNull(message = ExceptionMessageConstants.COMMON_FIELD_CAN_NOT_BE_NULL_ERROR) TodoSearch searchCriteria) {
+    public ResponseEntity<List<ProspectTodoDTO>> searchTODOs(TodoSearch searchCriteria) {
         return ResponseEntity.ok().body(service.searchBy(searchCriteria));
     }
 }
